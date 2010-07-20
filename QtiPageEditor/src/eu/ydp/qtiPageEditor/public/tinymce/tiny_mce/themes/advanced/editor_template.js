@@ -1113,12 +1113,11 @@
 
 		_mceNewDocument : function() {
 			var ed = this.editor;
-			
 			ed.windowManager.confirm('advanced.newdocument', function(s) {
 				if (s) {
-					ed.selection.dom.doc.body.innerHTML = ed.selection.dom.doc.body.innerHTML.replace(/(<!-- <itemBody> -->).*(<!-- <\/itemBody> -->)/gi, '$1$2');
-					ed.selection.dom.doc.body.innerHTML = ed.selection.dom.doc.body.innerHTML.replace(/(<!-- <assessmentItem [^>]*> -->).*(<!-- <itemBody> -->)/gi, '$1$2');
-					ed.selection.dom.doc.body.innerHTML = ed.selection.dom.doc.body.innerHTML.replace(/(<!-- <\/itemBody> -->).*(<!-- <\/assessmentItem> -->)/gi, '$1$2');
+					ed.selection.dom.doc.body.innerHTML = ed.selection.dom.doc.body.innerHTML.replace(/(<!-- <itemBody> -->)[\s\S]*(<!-- <\/itemBody> -->)/gi, '$1$2');
+					ed.selection.dom.doc.body.innerHTML = ed.selection.dom.doc.body.innerHTML.replace(/(<!-- <assessmentItem [^>]*> -->)[\s\S]*(<!-- <itemBody> -->)/gi, '$1$2');
+					ed.selection.dom.doc.body.innerHTML = ed.selection.dom.doc.body.innerHTML.replace(/(<!-- <\/itemBody> -->)[\s\S]*(<!-- <\/assessmentItem> -->)/gi, '$1$2');
 				}
 			});
 		},
