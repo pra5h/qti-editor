@@ -26,7 +26,6 @@ public class ApplicationFasade extends Facade implements IFacade {
 	
 	protected ApplicationFasade(String key) {
 		super(key);
-		// TODO Auto-generated constructor stub
 	}	
 	
 	public void startup(StartupData startupData)
@@ -37,7 +36,7 @@ public class ApplicationFasade extends Facade implements IFacade {
 		
 		sendNotification( STARTUP, startupData);		
 		sendNotification(CONFIGURE_PROXY, startupData.getEnv());
-		if(base != null){
+		if(base != null && !base.equals("")){
 			sendNotification(Constances.LOAD_PAGES, hrefs);
 			sendNotification(Constances.CONFIGURE_PAGE_EDITOR_VIEW, base );
 			sendNotification(Constances.ADD_PAGE_REF, hrefs[0]);
