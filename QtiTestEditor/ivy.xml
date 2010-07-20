@@ -13,6 +13,6 @@
 		<artifact name="qtiTestEditor" type="jar" conf="default" ext="jar"/>
 	</publications>
 	<dependencies>		
-		<dependency org="eu.ydp" name="qtiPageEditor" rev="latest.integration" conf="default" transitive="true" />														
+		<dependency org="eu.ydp" name="qtiPageEditor" rev="latest.integration" conf="default" transitive="true" />
 	</dependencies>
 </ivy-module>

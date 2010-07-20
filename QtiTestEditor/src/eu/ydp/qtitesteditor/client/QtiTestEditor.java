@@ -1,7 +1,7 @@
 package eu.ydp.qtitesteditor.client;
 
 import com.google.gwt.core.client.EntryPoint;
-
+import com.google.gwt.core.client.GWT;
 
 import eu.ydp.qtiPageEditor.client.constance.Constances;
 import eu.ydp.qtiPageEditor.client.controller.startupdata.StartupData;
@@ -14,8 +14,10 @@ import eu.ydp.qtiPageEditor.client.serviceregistry.ServiceFactory;
 import eu.ydp.qtiPageEditor.client.serviceregistry.ServicesRegistry;
 import eu.ydp.qtiPageEditor.client.session.SessionSustainer;
 import eu.ydp.qtiPageEditor.client.view.component.AlertWindow;
+import eu.ydp.webapistorage.client.storage.IStorage;
 import eu.ydp.webapistorage.client.storage.apierror.IApiError;
 import eu.ydp.webapistorage.client.storage.impl.Storage;
+import eu.ydp.webapistorage.client.storage.rpc.impl.RPCStorage;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
@@ -58,7 +60,14 @@ public class QtiTestEditor implements EntryPoint {
 	private void register(ModuleConfig conf)
 	{
 		ServicesRegistry reg = new ServicesRegistry(new ServiceFactory());
-		IEditorEnvirnoment env = new EditorEnvirnoment(conf.getPageURL(), "script_00001/media", Storage.getInstance(), reg);		
+		
+		Boolean isHostedMode = GWT.getPermutationStrongName().equals( GWT.HOSTED_MODE_PERMUTATION_STRONG_NAME);
+		IStorage storage = isHostedMode? RPCStorage.getInstance() : Storage.getInstance();
+		// hardcoded path to edited resources - put files in war folder to run app in hosted mode 
+		String resourcesPath = "/resources/66/script_00001.utt";
+		String pageURL = isHostedMode? resourcesPath : conf.getPageURL();
+
+		IEditorEnvirnoment env = new EditorEnvirnoment(pageURL, "script_00001/media/", storage, reg);		
 		
 		SessionSustainer sessionSustainer = new SessionSustainer(env.getBasePath(), env.getStorage());
 		
