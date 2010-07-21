@@ -289,8 +289,12 @@ var feedbackDialog = {
 					///////////
 					$('#middle_container').append('<input id="' + pairId + '" type="hidden" name="pair[]" value="' + pairId + '">');
 					$('#feedback_pair').attr('value', pairId);
-					$('#feedback_text').attr('value', tinyMCE.feedback[feedbackDialog.matchIdentifier].text[pairId]);
-					$('#fdb_sound').attr('value', tinyMCE.feedback[feedbackDialog.matchIdentifier].sound[pairId]);
+					if(tinyMCE.feedback[feedbackDialog.matchIdentifier].text != undefined) {
+						$('#feedback_text').attr('value', tinyMCE.feedback[feedbackDialog.matchIdentifier].text[pairId]);
+					}
+					if(tinyMCE.feedback[feedbackDialog.matchIdentifier].sound != undefined) {
+						$('#fdb_sound').attr('value', tinyMCE.feedback[feedbackDialog.matchIdentifier].sound[pairId]);
+					}
 					$('#feedback_text').attr('style','width: 100%; background-color: #ffffff;');
 					$('#feedback_text').removeAttr('disabled');
 					$('#feedback_text').focus();

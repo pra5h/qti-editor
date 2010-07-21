@@ -58,8 +58,6 @@
 
 			// Add command for external usage
 			ed.addCommand('mceInsertClipboardContent', function(u, o) {
-				console.log(u);
-				console.log(o);
 				process(o);
 			});
 
