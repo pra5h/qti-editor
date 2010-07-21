@@ -179,8 +179,8 @@ function actionOnQTI(e) {
 			}
 			var body = ed.selection.dom.doc.body.innerHTML;
 			
-			rg = new RegExp('<modalFeedback[^>]*outcomeIdentifier="' + id + '"[^>]*showHide="show"[^>]*>([^<]*)<\/modalFeedback>','gi');
-			var onok = rg.exec(body);
+			rg = new RegExp('<feedbackInline[^>]*showHide="show"[^>]*>([^<]*)<\/feedbackInline>','gi');
+			var onok = rg.exec(ed.selection.getNode().previousSibling.data);
 			if(onok != undefined) {
 				var oo = onok[1];
 			} else {
@@ -193,8 +193,8 @@ function actionOnQTI(e) {
 			} else {
 				var oo_snd = '';
 			}
-			rg = new RegExp('<modalFeedback[^>]*outcomeIdentifier="' + id + '"[^>]*showHide="hide"[^>]*>([^<]*)<\/modalFeedback>','gi');
-			var onwrong = rg.exec(body);
+			rg = new RegExp('<feedbackInline[^>]*showHide="hide"[^>]*>([^<]*)<\/feedbackInline>','gi');
+			var onwrong = rg.exec(ed.selection.getNode().previousSibling.data);
 			if(onwrong != undefined) {
 				var ow = onwrong[1];
 			} else {
@@ -220,6 +220,7 @@ function actionOnQTI(e) {
 			var ids = new Array();
 			var fixed = new Array();
 			var data = new Array();
+			var fdb = new Array();
 			
 			var inlineChoiceSpan = ed.selection.getNode();
 			while(inlineChoiceSpan.id != 'inlineChoiceInteraction') {
@@ -238,16 +239,16 @@ function actionOnQTI(e) {
 				var identifier = inlineChoiceSpan.parentNode.previousSibling.data.match(/<inlineChoiceInteraction responseIdentifier="([^"]+)"[^>]*>/i);
 				var shuffle = inlineChoiceSpan.parentNode.previousSibling.data.match(/<inlineChoiceInteraction.*?shuffle="([^"]*)"[^>]*>/i);
 			}
-			var answers_paragraph = choiceSectionHTML.match(/<!-- <inlineChoice identifier="[^"]*"[^>]*>[^<]*<\/inlineChoice> --><span id="inlineChoiceAnswer" style="[^"]*"[^>]*>([^<]*)(<span[^>]*>[^<]*<\/span>)?<\/span>/gi);
+			var answers_paragraph = choiceSectionHTML.match(/<!-- <inlineChoice identifier="[^"]*"[^>]*>[^<]*(?:<feedbackInline[^>]*>([^<]*)<\/feedbackInline>)?<\/inlineChoice> --><span id="inlineChoiceAnswer" style="[^"]*"[^>]*>([^<]*)(<span[^>]*>[^<]*<\/span>)?<\/span>/gi);
 			var values = new Array();
 			for (ans in answers_paragraph) {
-				values.push(answers_paragraph[ans].match(/<!-- <inlineChoice identifier="([^"]*)"\s*(?:fixed="([^"]*)")?[^>]*>[^<]*<\/inlineChoice> --><span id="inlineChoiceAnswer" style="[^"]*"[^>]*>([^<]*)(<span[^>]*>[^<]*<\/span>)?<\/span>/i));
+				values.push(answers_paragraph[ans].match(/<!-- <inlineChoice identifier="([^"]*)"\s*(?:fixed="([^"]*)")?[^>]*>[^<]*(?:<feedbackInline[^>]*>([^<]*)<\/feedbackInline>)?<\/inlineChoice> --><span id="inlineChoiceAnswer" style="[^"]*"[^>]*>([^<]*)(<span[^>]*>[^<]*<\/span>)?<\/span>/i));
 			}
 			var i=0;
 			while(values[i] != undefined) {
 				ids.push(values[i][1]);
-				answers.push(values[i][3]);
-				if(values[i][4] != undefined) {
+				answers.push(values[i][4]);
+				if(values[i][5] != undefined) {
 					points.push(1);
 				} else {
 					points.push(0);
@@ -257,6 +258,7 @@ function actionOnQTI(e) {
 				} else {
 					fixed.push('false');
 				}
+				fdb[values[i][1]] = values[i][3];
 				i++;
 			}
 			
@@ -267,20 +269,10 @@ function actionOnQTI(e) {
 			data.push(identifier[1]);
 			data.push(shuffle[1]);
 			data.push(fixed);
+			data.push(fdb);
 			
 			var body = ed.selection.dom.doc.body.innerHTML;
 			
-			rg = new RegExp('<modalFeedback[^>]*senderIdentifier="' + identifier[1] + '"[^>]*identifier="([^"]*)"[^>]*>([^<]*)<\/modalFeedback>','gi');
-			var fdArr = body.match(rg);
-			if(fdArr != undefined) {
-				var fd = new Array;
-				for (i in fdArr) {
-					rg = new RegExp('<modalFeedback[^>]*senderIdentifier="' + identifier[1] + '"[^>]*identifier="([^"]*)"[^>]*>([^<]*)<\/modalFeedback>','i');
-					var arr = rg.exec(fdArr[i]);
-					fd[arr[1]] = arr[2]
-				}
-				data.push(fd);
-			}
 			rg = new RegExp('<modalFeedback[^>]*senderIdentifier="' + identifier[1] + '"[^>]*identifier="([^"]*)"[^>]*sound="([^"]*)"[^>]*>','gi');
 			var fdArr = body.match(rg);
 			if(fdArr != undefined) {
@@ -429,6 +421,7 @@ function actionOnQTI(e) {
 			var ids = new Array();
 			var fixed = new Array();
 			var data = new Array();
+			var fdb = new Array();
 			
 			var sectionDiv = ed.selection.getNode();
 			while(sectionDiv.nodeName != 'DIV' || sectionDiv.id != 'matchInteraction') {
@@ -486,6 +479,16 @@ function actionOnQTI(e) {
 				responsePairs.push(valuesArr[i].match(/<value>([^<]*)<\/value>/i)[1]);
 			}
 			
+			var rg = new RegExp('<feedbackInline[^>]*identifier="([^"]*)"[^>]*>([^<]*)<\/feedbackInline>',"gi");
+			var fdbArr = matchSectionHTML.match(rg);
+			for(i in fdbArr) {
+				var val = rg.exec(fdbArr[i]);
+				var val2 = fdbArr[i].match(rg); // lol?
+				if(val != undefined) {
+					fdb[val[1]] = val[2];
+				}
+			}
+			
 			data.push(question[1]);
 			data.push(identifier[1]);
 			data.push(shuffle[1]);
@@ -496,20 +499,10 @@ function actionOnQTI(e) {
 			data.push(leftSetFixed);
 			data.push(rightSetFixed);
 			data.push(responsePairs);
+			data.push(fdb);
 			
 			var body = ed.selection.dom.doc.body.innerHTML;
 			
-			rg = new RegExp('<modalFeedback[^>]*senderIdentifier="' + identifier[1] + '"[^>]*identifier="([^"]*)"[^>]*>([^<]*)<\/modalFeedback>','gi');
-			var fdArr = body.match(rg);
-			if(fdArr != undefined) {
-				var fd = new Array;
-				for (i in fdArr) {
-					rg = new RegExp('<modalFeedback[^>]*senderIdentifier="' + identifier[1] + '"[^>]*identifier="([^"]*)"[^>]*>([^<]*)<\/modalFeedback>','i');
-					var arr = rg.exec(fdArr[i]);
-					fd[arr[1]] = arr[2]
-				}
-				data.push(fd);
-			} 
 			rg = new RegExp('<modalFeedback[^>]*senderIdentifier="' + identifier[1] + '"[^>]*identifier="([^"]*)"[^>]*sound="([^"]*)"[^>]*>','gi');
 			var fdArr = body.match(rg);
 			if(fdArr != undefined) {

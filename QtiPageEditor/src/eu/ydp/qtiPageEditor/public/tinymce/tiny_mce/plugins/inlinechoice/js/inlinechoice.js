@@ -150,7 +150,13 @@ var choiceDialog = {
 				if(fixed[i] == 1) {
 					choiceSection += ' fixed="true" ';
 				}
-				choiceSection += '>' + answers[i] + '</inlineChoice> -->';
+				choiceSection += '>' + answers[i];
+				
+				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].text[ids[i]] != undefined) {
+					choiceSection += '<feedbackInline identifier="' + ids[i] + '" showHide="show">' + tinyMCE.feedback[identifier].text[ids[i]] + '</feedbackInline>'
+				} 
+				
+				choiceSection += '</inlineChoice> -->';
 				if(points[i] == 1) {
 					responseDeclaration += '<value>' + ids[i] + '</value>';
 					choiceSection += '<span id="inlineChoiceAnswer" style="border: none; color: blue; background-color: #f0f0f0;">' + answers[i] + '<span style="color: green; font-weight: bold;"> &raquo;</span></span>';
@@ -191,7 +197,13 @@ var choiceDialog = {
 				if(fixed[i] == 1) {
 					choiceSection += ' fixed="true" ';
 				}
-				choiceSection += '>' + answers[i] + '</inlineChoice> -->';
+				choiceSection += '>' + answers[i];
+				
+				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].text[ids[i]] != undefined) {
+					choiceSection += '<feedbackInline identifier="' + ids[i] + '" showHide="show">' + tinyMCE.feedback[identifier].text[ids[i]] + '</feedbackInline>'
+				} 
+				
+				choiceSection += '</inlineChoice> -->';
 				
 				if(points[i] == 1) {
 					responseDeclaration += '<value>' + ids[i] + '</value>';
@@ -222,12 +234,12 @@ var choiceDialog = {
 			if(tinyMCE.feedback[identifier] != undefined) {
 				
 				var mf = '';
-				for (i in tinyMCE.feedback[identifier].text) {
+				for (i in tinyMCE.feedback[identifier].sound) {
 					mf += '<!-- <modalFeedback senderIdentifier="' + identifier + '" identifier="' + i + '" showHide="show"';
 					if(tinyMCE.feedback[identifier].sound[i] != undefined && tinyMCE.feedback[identifier].sound[i] != '') {
 						mf += ' sound="' + tinyMCE.feedback[identifier].sound[i] + '"';
 					}
-					mf += '>' + tinyMCE.feedback[identifier].text[i] + '</modalFeedback> -->'
+					mf += '></modalFeedback> -->'
 				}
 				tinyMCE.activeEditor.dom.doc.body.innerHTML = tinyMCE.activeEditor.dom.doc.body.innerHTML.replace(/(<!-- <\/itemBody> -->)/i, '$1' + mf);
 				tinyMCE.feedback = new Array;

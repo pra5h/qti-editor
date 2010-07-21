@@ -1971,11 +1971,11 @@ tinymce.create('static tinymce.util.XHR', {
 			// Gaps support
 			for(var i in answers) {
 				for(var j in answers[i][0]) {
-					var gap_rg = new RegExp('(<textEntryInteraction responseIdentifier="' + i + '"[^>]*\/>)(?! -->)', "gi");
+					var gap_rg = new RegExp('(<textEntryInteraction responseIdentifier="' + i + '"[^>]*>[^<]*(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/textEntryInteraction>)(?! -->)', "gi");
 					h = h.replace(gap_rg, '<!-- $1 --><span id="gap" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">' + answers[i][0][j] + '</span>');
 				}
 			}
-			h = h.replace(/(<textEntryInteraction[^>]*\/>)(?! -->)/gi, "<!-- $1 --><span id=\"gap\" class=\"mceNonEditable\" style=\"border: 1px solid blue; color: blue; background-color: #f0f0f0;\">$2</span>");
+			h = h.replace(/(<textEntryInteraction[^>]*>[^<]*(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/textEntryInteraction>)(?! -->)/gi, "<!-- $1 --><span id=\"gap\" class=\"mceNonEditable\" style=\"border: 1px solid blue; color: blue; background-color: #f0f0f0;\">$2</span>");
 			
 			//Order support
 			h = h.replace(/(<orderInteraction[^>]*>)(?! -->)/gi, '<!-- $1 --><div id="orderInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">');
@@ -2013,21 +2013,21 @@ tinymce.create('static tinymce.util.XHR', {
 			h = h.replace(/(<inlineChoiceInteraction responseIdentifier="[^"]+" shuffle="[^"]+"[^>]*>)(?! -->)/gi, '<!-- $1 --><span id="inlineChoiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">');
 			for(var i in answers) {
 				for(var j in answers[i][0]) {
-					var inlineChoice = new RegExp('(<inlineChoice identifier="' + answers[i][0][j] + '"[^>]*>([^<]*)<\/inlineChoice>)(?! -->)', "gi");
+					var inlineChoice = new RegExp('(<inlineChoice identifier="' + answers[i][0][j] + '"[^>]*>([^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/inlineChoice>)(?! -->)', "gi");
 					h = h.replace(inlineChoice, '<!-- $1 --><span id="inlineChoiceAnswer" style="border: none; color: blue; background-color: #f0f0f0;">$2<span style="color: green; font-weight: bold;"> &raquo;</span></span>');
 				}
 			}
-			h = h.replace(/(<inlineChoice[^>]*>([^<]*)<\/inlineChoice>)(?! -->)/gi, '<!-- $1 --><span id="inlineChoiceAnswer" style="display: none;">$2</span>');
+			h = h.replace(/(<inlineChoice[^>]*>([^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/inlineChoice>)(?! -->)/gi, '<!-- $1 --><span id="inlineChoiceAnswer" style="display: none;">$2</span>');
 			h = h.replace(/<\/inlineChoiceInteraction>/gi, '</span><!-- end of inlineChoiceInteraction -->');
 			
 			//Match support
 			h = h.replace(/(<matchInteraction[^>]*>)(?! -->)/gi, '<!-- $1 --><div id="matchInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">');
 			h = h.replace(/(<prompt>([^<]*)<\/prompt>)(?=\s*<simpleMatchSet)/gi, '<p id="matchInteraction">$2</p><table align="center" border=0 style="border: none;"><tbody><tr valign="top" style="border: none;">');
 			h = h.replace(/(<simpleMatchSet>)(?! -->)/gi, '<!-- $1 --><td align="center" style="border: none;"><table class="mceNonEditable" width="100%" border=0 style="border: none;"><tbody>');
-			h = h.replace(/(<simpleAssociableChoice identifier="([^"]*)" fixed="true"[^>]*>([^<]*)<\/simpleAssociableChoice>)(?! -->)/gi, '<!-- $1 --><tr id="matchset" style="border: none;"><td align="center" style="border: none;"><span id="span_identifier" style="display: none;">$2</span><span id="span_fixed" style="display: none;">true</span><span id="matchInteraction" style="border: 1px solid blue; color: blue;">$3</span></td></tr>');
-			h = h.replace(/(<simpleAssociableChoice identifier="([^"]*)" fixed="true"[^>]*>([^<]*)<img([^>]*)>([^<]*)<\/simpleAssociableChoice>)(?! -->)/gi, '<!-- $1 --><tr id="matchset" style="border: none;"><td align="center" style="border: none;"><span id="span_identifier" style="display: none;">$2</span><span id="span_fixed" style="display: none;">true</span><span id="matchInteraction" style="border: 1px solid blue; color: blue;">$3<img$4 height="16px">$5</span></td></tr>');
-			h = h.replace(/(<simpleAssociableChoice identifier="([^"]*)"[^>]*>([^<]*)<\/simpleAssociableChoice>)(?! -->)/gi, '<!-- $1 --><tr id="matchset" style="border: none;"><td align="center" style="border: none;"><span id="span_identifier" style="display: none;">$2</span><span id="span_fixed" style="display: none;">false</span><span id="matchInteraction" style="border: 1px solid blue; color: blue;">$3</span></td></tr>');
-			h = h.replace(/(<simpleAssociableChoice identifier="([^"]*)"[^>]*>([^<]*)<img([^>]*)>([^<]*)<\/simpleAssociableChoice>)(?! -->)/gi, '<!-- $1 --><tr id="matchset" style="border: none;"><td align="center" style="border: none;"><span id="span_identifier" style="display: none;">$2</span><span id="span_fixed" style="display: none;">false</span><span id="matchInteraction" style="border: 1px solid blue; color: blue;">$3<img$4 height="16px">$5</span></td></tr>');
+			h = h.replace(/(<simpleAssociableChoice identifier="([^"]*)" fixed="true"[^>]*>([^<]*)(?:<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/simpleAssociableChoice>)(?! -->)/gi, '<!-- $1 --><tr id="matchset" style="border: none;"><td align="center" style="border: none;"><span id="span_identifier" style="display: none;">$2</span><span id="span_fixed" style="display: none;">true</span><span id="matchInteraction" style="border: 1px solid blue; color: blue;">$3</span></td></tr>');
+			h = h.replace(/(<simpleAssociableChoice identifier="([^"]*)" fixed="true"[^>]*>([^<]*)<img([^>]*)>([^<]*)(?:<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/simpleAssociableChoice>)(?! -->)/gi, '<!-- $1 --><tr id="matchset" style="border: none;"><td align="center" style="border: none;"><span id="span_identifier" style="display: none;">$2</span><span id="span_fixed" style="display: none;">true</span><span id="matchInteraction" style="border: 1px solid blue; color: blue;">$3<img$4 height="16px">$5</span></td></tr>');
+			h = h.replace(/(<simpleAssociableChoice identifier="([^"]*)"[^>]*>([^<]*)(?:<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/simpleAssociableChoice>)(?! -->)/gi, '<!-- $1 --><tr id="matchset" style="border: none;"><td align="center" style="border: none;"><span id="span_identifier" style="display: none;">$2</span><span id="span_fixed" style="display: none;">false</span><span id="matchInteraction" style="border: 1px solid blue; color: blue;">$3</span></td></tr>');
+			h = h.replace(/(<simpleAssociableChoice identifier="([^"]*)"[^>]*>([^<]*)<img([^>]*)>([^<]*)(?:<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/simpleAssociableChoice>)(?! -->)/gi, '<!-- $1 --><tr id="matchset" style="border: none;"><td align="center" style="border: none;"><span id="span_identifier" style="display: none;">$2</span><span id="span_fixed" style="display: none;">false</span><span id="matchInteraction" style="border: 1px solid blue; color: blue;">$3<img$4 height="16px">$5</span></td></tr>');
 			h = h.replace(/(<\/simpleMatchSet>)(?! -->)/gi, '<!-- $1 --></tbody></table></td>');
 			h = h.replace(/(<!-- <\/simpleMatchSet> --><\/tbody><\/table><\/td>)[^<]*(<!-- <simpleMatchSet> --><td[^>]*>)/gi, '$1<td id="canvas_td" width="200px" style="border: none;"><canvas id="canvas" width="200px" style="border: 1px solid blue;"></canvas></td>$2');
 			h = h.replace(/(<\/matchInteraction>)(?! -->)/gi, '</tr></tbody></table></div><!-- end of matchInteraction -->');
@@ -6502,7 +6502,7 @@ window.tinymce.dom.Sizzle = Sizzle;
 			h = h.replace(/<!-- (<\/itemBody>) -->/gi,'$1');
 			
 			// Gaps support
-			h = h.replace(/<!-- (<textEntryInteraction[^>]*\/>) --><span id="gap" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">([^<]*)<\/span>/gi, '$1');
+			h = h.replace(/<!-- (<textEntryInteraction[^>]*>[^<]*(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/textEntryInteraction>) --><span id="gap" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">([^<]*)<\/span>/gi, '$1');
 			
 			//Choices support
 			h = h.replace(/(?:<p>)?<!-- (<choiceInteraction[^>]*>) -->(?:<\/p>)?<div id="choiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">/gi, '$1');
@@ -6513,7 +6513,7 @@ window.tinymce.dom.Sizzle = Sizzle;
 			
 			//Inline choices support
 			h = h.replace(/(?:<p>)?<!-- (<inlineChoiceInteraction[^>]*>) -->(?:<\/?p>)?<span id="inlineChoiceInteraction" class="mceNonEditable" style="[^"]*">/gi, '$1');
-			h = h.replace(/<!-- (<inlineChoice[^>]*>[^<]*<\/inlineChoice>) --><span id="inlineChoiceAnswer" style="[^"]*">[^<]*(?:<span[^>]*>[^<]*<\/span>)?<\/span>/gi,'$1');
+			h = h.replace(/<!-- (<inlineChoice[^>]*>[^<]*(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/inlineChoice>) --><span id="inlineChoiceAnswer" style="[^"]*">[^<]*(?:<span[^>]*>[^<]*<\/span>)?<\/span>/gi,'$1');
 			h = h.replace(/<\/span>[^<]*(?:<\/p>)?[^<]*<!-- end of inlineChoiceInteraction -->/gi,'</inlineChoiceInteraction>');
 			
 			//Order support
@@ -6529,7 +6529,7 @@ window.tinymce.dom.Sizzle = Sizzle;
 			h = h.replace(/<td id="canvas_td"[^>]*><canvas[^>]*><\/canvas><\/td>/gi, '');
 			h = h.replace(/<!-- (<simpleMatchSet>) --><td[^>]*><table class="mceNonEditable"[^>]*><tbody>/gi, '$1');
 			h = h.replace(/(<tr id="canvas_tr"[^>]*><td[^>]*><canvas id="canvas"[^>]*><\/canvas><\/td><\/tr>)/gi,'');
-			h = h.replace(/<!-- (<simpleAssociableChoice[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)<\/simpleAssociableChoice>) --><tr[^>]*><td[^>]*><span[^>]*>[^<]*<\/span><span[^>]*>[^<]*<\/span><span[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)<\/span><\/td><\/tr>/gi, '$1');
+			h = h.replace(/<!-- (<simpleAssociableChoice[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)(?:<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/simpleAssociableChoice>) --><tr[^>]*><td[^>]*><span[^>]*>[^<]*<\/span><span[^>]*>[^<]*<\/span><span[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)<\/span><\/td><\/tr>/gi, '$1');
 			h = h.replace(/<!-- (<\/simpleMatchSet>) --><\/tbody><\/table><\/td>/gi, '$1');
 			h = h.replace(/<\/tr><\/tbody><\/table><\/div><!-- end of matchInteraction -->/gi, '</matchInteraction>');
 			

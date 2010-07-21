@@ -50,7 +50,14 @@ var gapDialog = {
 			ed.selection.moveToBookmark(ed.selection.getBookmark());
 			if(form.addnew != undefined && form.addnew.getAttribute('value') == '1') {
 				
-				var gapTag = '<!-- <textEntryInteraction responseIdentifier="' + identifier + '" expectedLength="' + gap.length + '" /> --><span id="gap" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">' + gap + '</span>&nbsp;';
+				var gapTag = '<!-- <textEntryInteraction responseIdentifier="' + identifier + '" expectedLength="' + gap.length + '">';
+				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].onok != undefined) {
+					gapTag += '<feedbackInline identifier="' + identifier + '" showHide="show">' + tinyMCE.feedback[identifier].onok + '</feedbackInline>'
+				} 
+				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].onwrong != undefined) {
+					gapTag += '<feedbackInline identifier="' + identifier + '" showHide="hide">' + tinyMCE.feedback[identifier].onwrong + '</feedbackInline>'
+				} 
+				gapTag += '</textEntryInteraction> --><span id="gap" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">' + gap + '</span>&nbsp;';
 				tinyMCE.execCommand('mceInsertContent', false, gapTag);
 				responseDeclaration = '<!-- <responseDeclaration identifier="' + identifier + '" cardinality="single" baseType="string"><correctResponse>';
 				responseDeclaration += '<value>' + gap + '</value>';
@@ -67,7 +74,14 @@ var gapDialog = {
 			
 				var gapTag = ed.selection.getNode();
 				gapTag.innerHTML = gap;
-				gapTag.previousSibling.data = gapTag.previousSibling.data.replace(/ <textEntryInteraction responseIdentifier="([^"]*)" expectedLength="([^"]*)" \/> /gi, ' <textEntryInteraction responseIdentifier="$1" expectedLength="' + gap.length + '" /> ');
+				var fdb = '';
+				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].onok != undefined) {
+					fdb += '<feedbackInline identifier="' + identifier + '" showHide="show">' + tinyMCE.feedback[identifier].onok + '</feedbackInline>'
+				} 
+				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].onwrong != undefined) {
+					fdb += '<feedbackInline identifier="' + identifier + '" showHide="hide">' + tinyMCE.feedback[identifier].onwrong + '</feedbackInline>'
+				}
+				gapTag.previousSibling.data = gapTag.previousSibling.data.replace(/ <textEntryInteraction responseIdentifier="([^"]*)" expectedLength="([^"]*)">[^<]*(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/textEntryInteraction> /gi, ' <textEntryInteraction responseIdentifier="$1" expectedLength="' + gap.length + '">' + fdb + '</textEntryInteraction> ');
 				responseDeclaration = '<value>' + gap + '</value>';
 				
 				body = ed.selection.getNode();
@@ -95,16 +109,14 @@ var gapDialog = {
 				
 				var mf_onok = '<!-- <modalFeedback outcomeIdentifier="' + identifier + '" identifier="' + gap + '" showHide="show"';
 				if(tinyMCE.feedback[identifier].sound_onok != undefined && tinyMCE.feedback[identifier].sound_onok != '') {
-					console.log(tinyMCE.feedback[identifier].sound_onok);
 					mf_onok += ' sound="' + tinyMCE.feedback[identifier].sound_onok + '"';
 				}
-				mf_onok += '>' + tinyMCE.feedback[identifier].onok + '</modalFeedback> -->'
+				mf_onok += '></modalFeedback> -->'
 				var mf_onwrong = '<!-- <modalFeedback outcomeIdentifier="' + identifier + '" identifier="' + gap + '" showHide="hide"';
 				if(tinyMCE.feedback[identifier].sound_onwrong != undefined && tinyMCE.feedback[identifier].sound_onwrong != '') {
-					console.log(tinyMCE.feedback[identifier].sound_onwrong);
 					mf_onwrong += ' sound="' + tinyMCE.feedback[identifier].sound_onwrong + '"';
 				}
-				mf_onwrong += '>' + tinyMCE.feedback[identifier].onwrong + '</modalFeedback> -->'
+				mf_onwrong += '></modalFeedback> -->'
 				
 				tinyMCE.activeEditor.dom.doc.body.innerHTML = tinyMCE.activeEditor.dom.doc.body.innerHTML.replace(/(<!-- <\/itemBody> -->)/i, '$1' + mf_onok + mf_onwrong);
 				tinyMCE.feedback = new Array;

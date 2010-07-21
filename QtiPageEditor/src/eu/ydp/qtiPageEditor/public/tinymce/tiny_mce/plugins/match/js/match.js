@@ -618,7 +618,16 @@ var matchDialog = {
 				} else {
 					var fx = 'false';
 				}
-				matchSection += ' matchMax="0">' + answers_left[i] + '</simpleAssociableChoice> --><tr style="border: none;"><td align="center" style="border: none;"><span id="span_identifier" style="display: none;">' + ids_left[i] + '</span><span id="span_fixed" style="display: none;">' + fx + '</span><span id="matchInteraction" style="border: 1px solid blue; color: blue;">';
+				matchSection += ' matchMax="0">' + answers_left[i];
+				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].text != undefined) {
+					for(j in tinyMCE.feedback[identifier].text) {
+						jArr = j.split(' ');
+						if(jArr[0] == ids_left[i]) {
+							matchSection += '<feedbackInline outcomeIdentifier="' + identifier + '" identifier="' + j + '" showHide="show">' + tinyMCE.feedback[identifier].text[j] + '</feedbackInline>';
+						}
+					}
+				} 
+				matchSection += '</simpleAssociableChoice> --><tr style="border: none;"><td align="center" style="border: none;"><span id="span_identifier" style="display: none;">' + ids_left[i] + '</span><span id="span_fixed" style="display: none;">' + fx + '</span><span id="matchInteraction" style="border: 1px solid blue; color: blue;">';
 				if(answers_left[i].match(/<img[^>]*\/>/i)) {
 					var an = answers_left[i].replace(/([^<]*)<img([^>]*)\/>([^<]*)/i, '$1<img$2 height="16px"/>$3');
 					matchSection += an + '</span></td></tr>';
@@ -704,7 +713,16 @@ var matchDialog = {
 				} else {
 					var fx = 'false';
 				}
-				matchSection += ' matchMax="0">' + answers_left[i] + '</simpleAssociableChoice> --><tr style="border: none;"><td align="center" style="border: none;"><span id="span_identifier" style="display: none;">' + ids_left[i] + '</span><span id="span_fixed" style="display: none;">' + fx + '</span><span id="matchInteraction" style="border: 1px solid blue; color: blue;">';
+				matchSection += ' matchMax="0">' + answers_left[i];
+				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].text != undefined) {
+					for(j in tinyMCE.feedback[identifier].text) {
+						jArr = j.split(' ');
+						if(jArr[0] == ids_left[i]) {
+							matchSection += '<feedbackInline outcomeIdentifier="' + identifier + '" identifier="' + j + '" showHide="show">' + tinyMCE.feedback[identifier].text[j] + '</feedbackInline>';
+						}
+					}
+				} 
+				matchSection += '</simpleAssociableChoice> --><tr style="border: none;"><td align="center" style="border: none;"><span id="span_identifier" style="display: none;">' + ids_left[i] + '</span><span id="span_fixed" style="display: none;">' + fx + '</span><span id="matchInteraction" style="border: 1px solid blue; color: blue;">';
 				if(answers_left[i].match(/<img[^>]*\/>/i)) {
 					var an = answers_left[i].replace(/([^<]*)<img([^>]*)\/>([^<]*)/i, '$1<img$2 height="16px"/>$3');
 					matchSection += an + '</span></td></tr>';
@@ -780,12 +798,14 @@ var matchDialog = {
 			if(tinyMCE.feedback[identifier] != undefined) {
 				
 				var mf = '';
-				for (i in tinyMCE.feedback[identifier].text) {
-					mf += '<!-- <modalFeedback senderIdentifier="' + identifier + '" identifier="' + i + '" showHide="show"';
-					if(tinyMCE.feedback[identifier].sound[i] != undefined && tinyMCE.feedback[identifier].sound[i] != '') {
-						mf += ' sound="' + tinyMCE.feedback[identifier].sound[i] + '"';
+				for (i in tinyMCE.feedback[identifier].sound) {
+					if(tinyMCE.feedback[identifier].sound[i] != '') {
+						mf += '<!-- <modalFeedback senderIdentifier="' + identifier + '" identifier="' + i + '" showHide="show"';
+						if(tinyMCE.feedback[identifier].sound[i] != undefined && tinyMCE.feedback[identifier].sound[i] != '') {
+							mf += ' sound="' + tinyMCE.feedback[identifier].sound[i] + '"';
+						}
+						mf += '></modalFeedback> -->'
 					}
-					mf += '>' + tinyMCE.feedback[identifier].text[i] + '</modalFeedback> -->'
 				}
 				tinyMCE.activeEditor.dom.doc.body.innerHTML = tinyMCE.activeEditor.dom.doc.body.innerHTML.replace(/(<!-- <\/itemBody> -->)/i, '$1' + mf);
 				tinyMCE.feedback = new Array;
