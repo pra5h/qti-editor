@@ -8,7 +8,10 @@
 	<property name ="webinf.classes.dir" value="${webinf.dir}/classes" />
 	<property name ="webinf.lib.dir" value ="${webinf.dir}/lib" />	
 	<property name ="ivylib.dir" value="./ivy-lib" />	
-	<property name ="dist.dir" value="./dist" />
+	<property name ="dist.dir" value="./dist" />	
+	<property name ="test.dir" value="./test"/>
+	<property name ="webinf.test.classes.dir" value="${webinf.dir}/test-classes" />
+	<property name ="test.report.dir" value="./test-report"/>
 	
 	
 	<condition property="XstartOnFirstThread" value="-XstartOnFirstThread">
@@ -21,6 +24,12 @@
 	<path id="project.class.path">
 		<pathelement location="${webinf.classes.dir}"/>		
 		<fileset dir="${webinf.lib.dir}" includes="**/*.jar"/>
+	</path>
+	
+	<path id="project.test.class.path">		
+			<pathelement location="${webinf.test.classes.dir}"/>
+			<pathelement location="${webinf.classes.dir}"/>
+			<fileset dir="${webinf.lib.dir}" includes="**/*.jar"/>				
 	</path>
 
 	<target name="resolve" description="--> retrieve dependencies with ivy">
@@ -73,8 +82,13 @@
 		<delete dir="${dist.dir}"/>
 		<delete dir="${war.dir}/qtipageeditor" failonerror="false"/>
 		<delete dir="${webinf.classes.dir}" failonerror="false"/> 
-		<delete dir="${webinf.lib.dir}" failonerror="false" />	    
-		<delete dir="${ivylib.dir}" failonerror="false" />
+		<delete dir="${webinf.lib.dir}" failonerror="false" />	  
+		<delete dir="${webinf.test.classes.dir}" failonerror="false"/>
+		<delete dir="${ivylib.dir}" failonerror="false" />		
+		<delete dir="${test.report.dir}" failonerror="false" />
+		<delete dir="./.gwt-tmp" failonerror="false" />
+		<delete dir="./tomcat" failonerror="false" />
+		<delete dir="./test-classes" failonerror="false" />
 		<delete file="./project.xml"/>
 	</target>	
 	  
@@ -103,6 +117,35 @@
 				<expandproperties/>
 			</filterchain>
 		</copy>
+	</target>
+	
+	<target name="compileTest" description="Compile java unit tests source">
+				<mkdir dir="${webinf.test.classes.dir}"/>
+			    <javac srcdir="${test.dir}" includes="**" encoding="utf-8"
+			    	destdir="${webinf.test.classes.dir}"
+				    source="1.6" target="1.6" nowarn="true"
+				    debug="true" debuglevel="lines,vars,source">
+				    <classpath refid="project.class.path"/>
+			    </javac>
+				<copy todir="${webinf.test.classes.dir}">
+					<fileset dir="${test.dir}"/>
+				</copy>
+		</target>
+	
+	<target name="test" depends="compileTest" description="runs all JUnit tests">		
+			<mkdir dir="${test.report.dir}/raw"/>
+			<junit printsummary="yes" haltonfailure="yes" showoutput="yes" >			
+				<jvmarg value="-Dgwt.args=-runStyle HtmlUnit:IE7" />
+				<jvmarg value="-Xmx256M"/>
+				<jvmarg line="${XstartOnFirstThread}"/>
+				<classpath refid="project.test.class.path"/>		
+				<formatter type="xml"/>
+				<batchtest fork="yes" todir="${test.report.dir}/raw">		    	
+			        <fileset dir="${webinf.test.classes.dir}">
+			           	<include name="**/*TestSuite*.java"/>
+			        </fileset>				
+			     </batchtest>
+			</junit>	    	    
 	</target>
 	
 	<target name="publish" depends="dist,project.file" description="Publish artifacts in Ivy repository">			
