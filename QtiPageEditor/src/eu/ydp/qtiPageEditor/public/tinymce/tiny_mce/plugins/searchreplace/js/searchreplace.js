@@ -34,7 +34,7 @@ var SearchReplaceDialog = {
 
 	searchNext : function(a) {
 		var ed = tinyMCEPopup.editor, se = ed.selection, r = se.getRng(), f, m = this.lastMode, s, b, fl = 0, w = ed.getWin(), wm = ed.windowManager, fo = 0;
-
+		
 		// Get input
 		f = document.forms[0];
 		s = f[m + '_panel_searchstring'].value;
@@ -53,6 +53,9 @@ var SearchReplaceDialog = {
 		};
 
 		function replace() {
+			if(ed.selection.getNode().attributes != undefined && ed.selection.getNode().getAttribute('class') == 'mceNonEditable') {
+				return;
+			}
 			if (tinymce.isIE)
 				ed.selection.getRng().duplicate().pasteHTML(rs); // Needs to be duplicated due to selection bug in IE
 			else
