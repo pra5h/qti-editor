@@ -33,7 +33,10 @@ public class QtiPageEditor implements EntryPoint {
 		
 		publish();		
 	}		
-	
+	/**
+	 * Provides methods for portal - editor communication
+	 * Registers qti_page_editor namespace on window object
+	 */
 	private native void publish()/*-{	
 		
 		var me = this	
@@ -73,6 +76,12 @@ public class QtiPageEditor implements EntryPoint {
 		
 	}-*/;
 	
+	/**
+	 * Builds application facade and runs editor.
+	 * This method is called from portal and configuration is passes 
+	 * @param conf module editor configuration i.e path to page, cell id where editor will be drawn
+	 * @see eu.ydp.qtiPageEditor.client.model.jso.ModuleConfig
+	 */
 	private void register(ModuleConfig conf )
 	{		
 		ServicesRegistry sr = new ServicesRegistry(new ServiceFactory());
@@ -103,6 +112,13 @@ public class QtiPageEditor implements EntryPoint {
 		ApplicationFasade.getInstance(ApplicationFasade.KEY).startup(startupData);			
 	}
 	
+	/**
+	 * Error handler for session sustainer.
+	 * Called when "ping" request fails.
+	 * @param error error details
+	 * @see eu.ydp.webapistorage.client.storage.apierror.IApiError
+	 * @see eu.ydp.qtiPageEditor.client.session.SessionSustainer
+	 */
 	private void onSessionPingError(IApiError error){
 		AlertWindow alert = new AlertWindow();
 		alert.showErrorMessage(error.getType(), error.getDetails(), error.getErrorCode());
@@ -110,6 +126,11 @@ public class QtiPageEditor implements EntryPoint {
 		
 	}
 	
+	/**
+	 * Sets new page path for editor. It allows to change path passed in ModuleConfig object
+	 * Called from portal application
+	 * @param path base path of new page
+	 */
 	private void setPath(String path){		
 		ApplicationFasade facade = ApplicationFasade.getInstance(ApplicationFasade.KEY);
 		_env.setBasePath(path);
@@ -117,7 +138,9 @@ public class QtiPageEditor implements EntryPoint {
 			facade.sendNotification(Constances.SET_PAGE_PATH, path);
 		}
 	}
-	
+	/**
+	 * Reloads page. Called from portal application usually after setPath method 
+	 */
 	private void loadPage(){
 		ApplicationFasade facade = ApplicationFasade.getInstance(ApplicationFasade.KEY);
 		if(facade != null){
@@ -125,6 +148,11 @@ public class QtiPageEditor implements EntryPoint {
 		}
 	}
 	
+	/**
+	 * Sets callback to portal application for save page event
+	 * @param callback callback to portal for save event
+	 * @see eu.ydp.qtiPageEditor.client.appcallback.SaveCallback
+	 */
 	private void setJsSaveCallback(SaveCallback callback){
 		ApplicationFasade facade = ApplicationFasade.getInstance(ApplicationFasade.KEY);
 		if(facade != null){
@@ -132,6 +160,10 @@ public class QtiPageEditor implements EntryPoint {
 		}	
 	}
 	
+	/**
+	 * Sets tinyMce width. Called from portal
+	 * @param width new tinyMCE width
+	 */
 	private void onSetTinyMceWidth(String width){
 		
 		ApplicationFasade facade = ApplicationFasade.getInstance(ApplicationFasade.KEY);
@@ -140,6 +172,11 @@ public class QtiPageEditor implements EntryPoint {
 		
 	}
 	
+	
+	/**
+	 * Sets tinyMCE height
+	 * @param height new tinyMCE height
+	 */
 	private void onSetTinyMceHeight(String height){
 		ApplicationFasade facade = ApplicationFasade.getInstance(ApplicationFasade.KEY);
 		if(facade != null)

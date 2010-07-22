@@ -4,6 +4,13 @@ import eu.ydp.qtiPageEditor.client.env.IEditorEnvirnoment;
 import eu.ydp.qtiPageEditor.client.serviceregistry.ServicesRegistry;
 import eu.ydp.webapistorage.client.storage.IStorage;
 
+/**
+ * 
+ * @author thanczewski
+ * Envirnoment for editor, implementation of eu.ydp.qtiPageEditor.client.env.IEditorEnvirnoment interface
+ * @see eu.ydp.qtiPageEditor.client.env.IEditorEnvirnoment
+ *
+ */
 public class EditorEnvirnoment implements IEditorEnvirnoment {
 
 	String _basePath;
