@@ -35,6 +35,11 @@
 					var comment_id = '';
 				}
 				
+				if(commented_text == '') {
+					tinyMCE.execCommand('mceCommentRemove');
+					return false;
+				}
+				
 				ed.windowManager.open({
 					file : url + '/comment.htm',
 					width : 400,

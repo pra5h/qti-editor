@@ -128,17 +128,20 @@ function actionOnQTI(e) {
 			var idref = ed.selection.getNode().getAttribute('id');
 			idref = idref.replace(/^ref_([0-9]+)/i, '$1');
 			var commented_text = ed.selection.getNode().nextSibling;
-			if(commented_text.nodeName != 'SPAN' || commented_text.id != idref) {
-				for(i in commented_text.children) {
-					if(commented_text.children[i].nodeName == 'SPAN' && commented_text.children[i].id == idref) {
-						commented_text = commented_text.children[i];
-						break;
+				if(commented_text != undefined && commented_text.nodeName != 'SPAN' || commented_text.id != idref) {
+					for(i in commented_text.children) {
+						if(commented_text.children[i].nodeName == 'SPAN' && commented_text.children[i].id == idref) {
+							commented_text = commented_text.children[i];
+							break;
+						}
 					}
+					commented_text = commented_text.innerHTML;
+					tinyMCE.execCommand('mceComment', false, {comment_content: comment_content, comment_id: idref, commented_text: commented_text});
+				} else {
+					tinyMCE.execCommand('mceComment', false, {comment_content: comment_content, comment_id: idref, commented_text: ''});
 				}
-			}
-			commented_text = commented_text.innerHTML;
-			tinyMCE.execCommand('mceComment', false, {comment_content: comment_content, comment_id: idref, commented_text: commented_text});
-			
+		
+				
 		}
 		
 		//Imglib

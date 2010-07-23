@@ -5,9 +5,10 @@ var commentDialog = {
 		
 		var ed = ed;
 		var f = document.forms[0]; 
-		var comment_content = tinyMCEPopup.getWindowArg("comment_content");
-		var commented_text = tinyMCEPopup.getWindowArg("commented_text");
-		var comment_id = tinyMCEPopup.getWindowArg("comment_id");
+		
+		var comment_content = tinyMCEPopup.params.comment_content;
+		var commented_text = tinyMCEPopup.params.commented_text;
+		var comment_id = tinyMCEPopup.params.comment_id;
 		
 		if(commented_text == '' || commented_text == undefined) {
 			tinyMCEPopup.close();
