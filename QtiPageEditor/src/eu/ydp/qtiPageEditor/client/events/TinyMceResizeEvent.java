@@ -3,6 +3,12 @@ package eu.ydp.qtiPageEditor.client.events;
 import com.google.gwt.event.shared.GwtEvent;
 import eu.ydp.qtiPageEditor.client.events.handler.TinyMceResizeHandler;
 
+/**
+ * 
+ * @author thanczewski
+ * Event dispatched when TinyMCE control is resized.
+ *
+ */
 public class TinyMceResizeEvent extends GwtEvent<TinyMceResizeHandler> {
 	
 	public static final Type<TinyMceResizeHandler> TYPE = new Type<TinyMceResizeHandler>();

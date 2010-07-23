@@ -5,6 +5,10 @@ import com.google.gwt.event.shared.GwtEvent;
 import eu.ydp.qtiPageEditor.client.events.handler.SessionSustainerErrorHandler;
 import eu.ydp.webapistorage.client.storage.apierror.IApiError;
 
+/**
+ *  @author thanczewski
+ *  Dispatched when sessions sustainer "ping" request fails.
+ */
 public class SessionSustainerErrorEvent extends GwtEvent<SessionSustainerErrorHandler> {
 	
 	public static final Type<SessionSustainerErrorHandler> TYPE = new Type<SessionSustainerErrorHandler>();

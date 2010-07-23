@@ -7,7 +7,7 @@ import eu.ydp.webapistorage.client.storage.IStorage;
 /**
  * 
  * @author thanczewski
- * Envirnoment for editor, implementation of eu.ydp.qtiPageEditor.client.env.IEditorEnvirnoment interface
+ * Environment for editor, implementation of eu.ydp.qtiPageEditor.client.env.IEditorEnvirnoment interface
  * @see eu.ydp.qtiPageEditor.client.env.IEditorEnvirnoment
  *
  */
