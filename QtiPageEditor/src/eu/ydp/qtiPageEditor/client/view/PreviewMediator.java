@@ -42,7 +42,7 @@ public class PreviewMediator extends Mediator {
 		String pagePath = pageInfo.getPath();
 		pagePath = pagePath.substring(0, pagePath.lastIndexOf("/")+1);		
 		
-		XMLData assessment = new XMLData(testProxy.getDocument(), testPath);
+		XMLData assessment = new XMLData(testProxy.getAssessmentForPage(pageProxy.getSelectedIndex()), testPath);
 		XMLData[] items = new XMLData[]{new XMLData(liveDoc, pagePath)};
 		
 		

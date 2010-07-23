@@ -83,6 +83,10 @@ public class QTITestModelProxy extends QtiProxyBase {
 		return getVO().getDocument();		
 	}
 	
+	public Document getAssessmentForPage(int ix){
+		return getVO().getAssessmentForPage(ix);
+	}
+	
 	public QtiTestModel getVO(){
 		return (QtiTestModel)getData();
 		

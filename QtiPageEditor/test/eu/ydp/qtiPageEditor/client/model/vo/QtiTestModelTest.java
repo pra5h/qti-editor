@@ -1,6 +1,9 @@
 package eu.ydp.qtiPageEditor.client.model.vo;
 
 import com.google.gwt.junit.client.GWTTestCase;
+import com.google.gwt.xml.client.Document;
+import com.google.gwt.xml.client.Element;
+import com.google.gwt.xml.client.NodeList;
 
 
 public class QtiTestModelTest extends GWTTestCase {
@@ -163,6 +166,31 @@ public class QtiTestModelTest extends GWTTestCase {
 		assertTrue(model.getItemsHrefs()[2].indexOf("page_3") > -1);
 		assertTrue(model.getItemsHrefs()[3].indexOf("page_0") > -1);
 		
+		
+	}
+	
+	public void testGetAssessmentForPage(){
+		QtiTestModel model = new QtiTestModel();	
+		QtiTestModel modelForPage;
+		Document assessment;
+		int i;
+		
+		for(i = 0; i < 4; i++)
+			model.addNewPage();
+		
+		for(i = 0; i < 4; i++){
+			
+			assessment = model.getAssessmentForPage(i);
+			NodeList nodes = assessment.getElementsByTagName("assessmentItemRef");		
+			assertEquals(1, nodes.getLength());
+			
+			modelForPage = new QtiTestModel();
+			modelForPage.setContent(assessment.toString());
+			
+			assertTrue(modelForPage.getItemsHrefs()[0].indexOf("page_"+i) > -1);
+			assertTrue(modelForPage.getItemsHrefs().length == 1);
+			
+		}	
 		
 	}
 
