@@ -5193,10 +5193,14 @@ window.tinymce.dom.Sizzle = Sizzle;
 
 				// Make sure we wrap it compleatly, Opera fails with a simple select call
 				r = d.createRange();
-				r.setStartBefore(c);
-				r.setEndAfter(c);
-				t.setRng(r);
-
+				if(c != undefined) {
+					r.setStartBefore(c);
+					r.setEndAfter(c);
+					t.setRng(r);
+				} else {
+					console.log('YDP Note: skipped setRng(), tinymce.js line ~5200');
+				}
+				
 				// Delete the marker, and hopefully the caret gets placed in the right location
 				// Removed this since it seems to remove &nbsp; in FF and simply deleting it
 				// doesn't seem to affect the caret position in any browser

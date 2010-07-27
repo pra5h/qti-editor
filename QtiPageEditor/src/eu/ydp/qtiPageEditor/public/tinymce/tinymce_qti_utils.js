@@ -40,13 +40,12 @@ function actionOnQTI(e) {
 					//reduceNumberOfSpans();
 					return true;
 				} else {
-					var myBookmark = ed.selection.getBookmark();
-					ed.selection.moveToBookmark(myBookmark);
+					//var myBookmark = ed.selection.getBookmark();
+					//ed.selection.moveToBookmark(myBookmark);
 					tinyMCE.execCommand('mceInsertContent', false, '<span class="changestracking_new" style="color: red; text-decoration: underline;" title="Changes tracking: new content">' + String.fromCharCode(e.charCode) + '</span>');
-					myBookmark.start++;
-					myBookmark.end++;
-					ed.selection.moveToBookmark(myBookmark);
-					//reduceNumberOfSpans();
+					//myBookmark.start++;
+					//myBookmark.end++;
+					//ed.selection.moveToBookmark(myBookmark);
 					return false;
 				}
 			}

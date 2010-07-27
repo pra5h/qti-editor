@@ -36,28 +36,9 @@
 					
 					tinyMCE.changesTracking = false;
 					ed.controlManager.setActive('enablechangestracking', false);
-					var bodyContent = tinyMCE.activeEditor.selection.dom.doc.body;
-					var spans = bodyContent.getElementsByTagName('span');
-					var spans_old = new Array;
-					var spans_new = new Array;
-					if(spans.length > 0) {
-						for(var i in spans) {
-							if(spans[i].attributes != undefined && spans[i].getAttribute('class') == 'changestracking_original') {
-								spans_old.push(spans[i]);
-							} else if(spans[i].attributes != undefined && spans[i].getAttribute('class') == 'changestracking_new') {
-								spans_new.push(spans[i]);
-							}
-						}
-						for(i in spans_old) {
-							tinyMCE.activeEditor.dom.remove(spans_old[i]);
-						}
-						for(i in spans_new) {
-							var c = spans_new[i].innerHTML;
-							ed.selection.select(spans_new[i]);
-							tinyMCE.activeEditor.dom.remove(spans_new[i]);
-							tinyMCE.execCommand('mceInsertContent', false, c);
-						}
-					}
+					
+					confirmChanges(ed);
+					
 					ed.selection.dom.doc.body.innerHTML = ed.selection.dom.doc.body.innerHTML.replace(/<!-- <changesTracking state="on"> -->/gi, '');
 					
 				}
@@ -67,7 +48,7 @@
 			ed.addButton('disablechangestracking', {title : 'Accept changes', cmd : 'mceDisableChangesTracking'});
 			
 		},
-
+		
 		/**
 		 * Returns information about the plugin as a name/value array.
 		 * The current keys are longname, author, authorurl, infourl and version.
@@ -88,3 +69,31 @@
 	// Register plugin
 	tinymce.PluginManager.add('trackchanges', tinymce.plugins.trackChanges);
 })();
+
+function confirmChanges(ed) {
+		
+	var bodyContent = tinyMCE.activeEditor.selection.dom.doc.body;
+	var spans = bodyContent.getElementsByTagName('span');
+	var spans_old = new Array;
+	var spans_new = new Array;
+	if(spans.length > 0) {
+		for(var i in spans) {
+			if(spans[i] != undefined && spans[i].attributes != undefined && spans[i].getAttribute('class') == 'changestracking_original') {
+				spans_old.push(spans[i]);
+			} else if(spans[i] != undefined && spans[i].attributes != undefined && spans[i].getAttribute('class') == 'changestracking_new') {
+				spans_new.push(spans[i]);
+			}
+		}
+		for(i in spans_old) {
+			tinyMCE.activeEditor.dom.remove(spans_old[i]);
+		}
+		for(i in spans_new) {
+			var c = spans_new[i].innerHTML;
+			ed.selection.select(spans_new[i]);
+			tinyMCE.activeEditor.dom.remove(spans_new[i]);
+			tinyMCE.execCommand('mceInsertContent', false, c);
+		}
+	}
+	
+}
+		
