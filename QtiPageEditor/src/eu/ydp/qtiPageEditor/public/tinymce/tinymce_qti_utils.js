@@ -145,7 +145,7 @@ function actionOnQTI(e) {
 		}
 		
 		//Imglib
-		if(ed.selection.getNode().nodeName == 'IMG' || (ed.selection.getNode().nodeName == 'DIV' && ed.selection.getNode().id == 'runFileUploadLib')) {
+		if(ed.selection.getNode().nodeName == 'IMG' || (ed.selection.getNode().nodeName == 'FIELDSET' && ed.selection.getNode().id == 'runFileUploadLib')) {
 			if(ed.selection.getNode().nodeName == 'IMG') {
 				var node = ed.selection.getNode();
 			} else {
