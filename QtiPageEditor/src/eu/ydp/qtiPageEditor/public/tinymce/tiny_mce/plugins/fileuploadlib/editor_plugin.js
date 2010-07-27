@@ -113,6 +113,16 @@
 			
 			});
 			
+			ed.addCommand('mceRemoveMedia', function(ui, data) {
+				
+				var node = ed.selection.getNode();
+				while(node.nodeName != 'FIELDSET') {
+					node = node.parentNode;
+				}
+				ed.dom.remove(node);
+				
+			});
+			
 			ed.addButton('fileuploadlib_image', {title : 'Upload / insert image', cmd : 'mceAppendImageToPage'});
 			
 		},

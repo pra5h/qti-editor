@@ -78,8 +78,20 @@
 				m.add({title : 'advanced.unlink_desc', icon : 'unlink', cmd : 'UnLink'});
 			}
 
+			t.onContextMenu.dispatch(t, m, el, col);
+			
 			m.addSeparator();
-			m.add({title : 'advanced.image_desc', icon : 'image', cmd : ed.plugins.advimage ? 'mceAdvImage' : 'mceImage', ui : true});
+			//m.add({title : 'advanced.image_desc', icon : 'image', cmd : ed.plugins.advimage ? 'mceAdvImage' : 'mceImage', ui : true});
+			am = m.addMenu({title : 'Media files support'});
+			if((el.id != undefined && el.id == 'runFileUploadLib') || (el.nodeName != undefined && el.nodeName == 'IMG')) {
+				am.add({title : 'Insert image', icon : 'fileuploadlib_image', cmd : 'mceAppendImageToPage'}).setDisabled(true);
+				am.add({title : 'Insert flash / video movie', icon : 'addvideo', cmd : 'mceAddVideo'}).setDisabled(true);
+				am.add({title : 'Remove media file', icon : '', cmd : 'mceRemoveMedia'});
+			} else {
+				am.add({title : 'Insert image', icon : 'fileuploadlib_image', cmd : 'mceAppendImageToPage'});
+				am.add({title : 'Insert flash / video movie', icon : 'addvideo', cmd : 'mceAddVideo'});
+				am.add({title : 'Remove media file', icon : '', cmd : 'mceRemoveMedia'}).setDisabled(true);
+			}
 
 			m.addSeparator();
 			am = m.addMenu({title : 'contextmenu.align'});
@@ -87,8 +99,6 @@
 			am.add({title : 'contextmenu.center', icon : 'justifycenter', cmd : 'JustifyCenter'});
 			am.add({title : 'contextmenu.right', icon : 'justifyright', cmd : 'JustifyRight'});
 			am.add({title : 'contextmenu.full', icon : 'justifyfull', cmd : 'JustifyFull'});
-			
-			t.onContextMenu.dispatch(t, m, el, col);
 			
 			if(tinymce.plugins.gapPlugin != undefined && tinymce.plugins.choicePlugin != undefined  && tinymce.plugins.inlineChoicePlugin != undefined) {
 			
