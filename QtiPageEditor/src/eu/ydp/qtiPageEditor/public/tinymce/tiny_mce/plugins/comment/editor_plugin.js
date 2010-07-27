@@ -62,17 +62,22 @@
 				refid = refid.replace("ref_","");
 				
 				var span = selectedNode.nextSibling;
-				if(span.nodeName != 'SPAN' || span.id != refid) {
-					for(i in span.children) {
-						if(span.children[i].nodeName == 'SPAN' && span.children[i].id == refid) {
-							span = span.children[i];
-							break;
+				if(span != undefined) {
+					if(span.nodeName != 'SPAN' || span.id != refid) {
+						for(i in span.children) {
+							if(span.children[i].nodeName == 'SPAN' && span.children[i].id == refid) {
+								span = span.children[i];
+								break;
+							}
 						}
 					}
 				}
-				
 				selectedNode.parentNode.removeChild(selectedNode);
-				var commentedText = span.innerHTML;
+				if(span != undefined) {
+					var commentedText = span.innerHTML;
+				} else {
+					var commentedText = '';
+				}
 				ed.selection.moveToBookmark(ed.selection.getBookmark());
 				tinyMCE.execCommand('mceInsertContent', false, commentedText);
 				span.parentNode.removeChild(span);
