@@ -34,20 +34,30 @@ function actionOnQTI(e) {
 			if(e.type=='keypress' && (e.charCode != 0 || e.keyCode == 86)) {
 				
 				if(ed.selection.getContent() != '') {
+					
+					// replace selected text
 					ed.windowManager.alert('Text replacing is not allowed in changes tracking mode');
 					return false;
+					
 				} else if(ed.selection.getNode().nodeName != undefined && ed.selection.getNode().nodeName == 'SPAN' && ed.selection.getNode().attributes != undefined && ed.selection.getNode().getAttribute('class') == 'changestracking_new') {
-					//reduceNumberOfSpans();
+					
+					// type inside previously added text
 					return true;
+					
+				} else if(ed.selection.getNode().nodeName != undefined && ed.selection.getNode().nodeName == 'SPAN' && ed.selection.getNode().className != undefined && ed.selection.getNode().className == 'AMedit') {
+					
+					// type inside math expressions
+					ed.selection.getNode().setAttribute('style','color: red;');
+					return true;
+					
 				} else {
-					//var myBookmark = ed.selection.getBookmark();
-					//ed.selection.moveToBookmark(myBookmark);
+					
+					// type new text
 					tinyMCE.execCommand('mceInsertContent', false, '<span class="changestracking_new" style="color: red; text-decoration: underline;" title="Changes tracking: new content">' + String.fromCharCode(e.charCode) + '</span>');
-					//myBookmark.start++;
-					//myBookmark.end++;
-					//ed.selection.moveToBookmark(myBookmark);
 					return false;
+					
 				}
+				
 			}
 			
 			// Actions on normal text
@@ -62,6 +72,11 @@ function actionOnQTI(e) {
 						tinyMCE.execCommand('mceInsertContent', false, '<span class="changestracking_original" style="color: red; text-decoration: line-through;" title="Changes tracking: original content">' + content + '</span>');
 						myBookmark.end = myBookmark.start;
 						ed.selection.moveToBookmark(myBookmark);
+						
+					} else if(ed.selection.getNode().nodeName != undefined && ed.selection.getNode().nodeName == 'SPAN' && ed.selection.getNode().className != undefined && ed.selection.getNode().className == 'AMedit') {
+						
+						ed.selection.getNode().setAttribute('style','color: red;');
+						return true;
 						
 					} else {
 						
