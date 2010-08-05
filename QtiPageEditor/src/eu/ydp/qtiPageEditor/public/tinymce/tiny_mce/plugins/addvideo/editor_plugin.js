@@ -31,7 +31,7 @@
 					
 				}
 				
-				var extensions = [".mp4",".swf", ".flv", ".avi"];
+				var extensions = [".mp4", ".swf", ".flv", ".avi"];
 				
 				var assetBrowser = tinyMCE.gwtProxy.getAssetBrowser();
 				

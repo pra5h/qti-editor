@@ -37,7 +37,7 @@
 				ed.windowManager.open({
 					file : url + '/gap.htm',
 					width : 400,
-					height : 110,
+					height : 130,
 					inline : 1
 				}, {
 					plugin_url : url, // Plugin absolute URL

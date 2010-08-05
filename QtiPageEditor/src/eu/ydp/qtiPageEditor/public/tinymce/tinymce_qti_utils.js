@@ -3,17 +3,20 @@ function actionOnQTI(e) {
 	
 	var ed = tinymce.EditorManager.activeEditor;
 	
-	// fix for writing content before xml tamplate
+	// fix for writing content before xml template
 	if(ed.selection.getStart().attributes != undefined && ed.selection.getStart().hasAttribute('_moz_editor_bogus_node')) {
 		ed.selection.dom.doc.body.innerHTML = ed.selection.dom.doc.body.innerHTML.replace(/(.*)(<!-- \?xml[^\?]*\? -->[^<]*<!-- <assessmentItem[^>]*> -->[^<]*<!-- <itemBody> -->)/gi,'$2$1');
 	}
 	
-	if(ed.selection.getRng().startContainer.nodeName == 'BODY') {
-		if(ed.selection.dom.doc.body.getElementsByTagName('p')[0] != undefined && tinyMCE.originalBookmark == undefined) {
-			ed.selection.select(ed.selection.dom.doc.body.getElementsByTagName('p')[0]);
-			//ed.selection.moveToBookmark(ed.selection.getBookmark());
+	// TODO: ZNALEZC OBEJSCIE DLA IE !! WAZNE !!
+	if(!tinymce.isIE) { 
+		if(ed.selection.getRng().startContainer.nodeName == 'BODY') {
+			if(ed.selection.dom.doc.body.getElementsByTagName('p')[0] != undefined && tinyMCE.originalBookmark == undefined) {
+				ed.selection.select(ed.selection.dom.doc.body.getElementsByTagName('p')[0]);
+				//ed.selection.moveToBookmark(ed.selection.getBookmark());
+			}
 		}
-	}
+	} 
 	
 	if(tinyMCE.changesTracking != undefined) {
 		if(tinyMCE.changesTracking === true) {
@@ -187,6 +190,7 @@ function actionOnQTI(e) {
 		
 		//Gap
 		if (ed.selection.getNode().nodeName == 'SPAN' && ed.selection.getNode().id == 'gap') {
+		
 			var id = ed.selection.getNode().previousSibling.data;
 			rg = new RegExp('<textEntryInteraction responseIdentifier="([^"]*)"[^>]*>',"gi");
 			id = rg.exec(id);
