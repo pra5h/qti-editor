@@ -1,6 +1,6 @@
-package eu.ydp.qtiPageEditor.client.constance;
+package eu.ydp.qtiPageEditor.client.constants;
 
-public class Constances {
+public class Notifications {
 	
 	public static final String CONFIGURE_PROXY = "configureProxy";
 	public static final String CONFIGURE_PAGE_EDITOR_VIEW = "configurePageEditorView";

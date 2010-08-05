@@ -3,7 +3,7 @@ package eu.ydp.qtitesteditor.client;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 
-import eu.ydp.qtiPageEditor.client.constance.Constances;
+import eu.ydp.qtiPageEditor.client.constants.Notifications;
 import eu.ydp.qtiPageEditor.client.controller.startupdata.StartupData;
 import eu.ydp.qtiPageEditor.client.env.IEditorEnvirnoment;
 import eu.ydp.qtiPageEditor.client.env.impl.EditorEnvirnoment;
@@ -85,21 +85,21 @@ public class QtiTestEditor implements EntryPoint {
 		
 		
 		StartupData startupData = new StartupData(env, conf.getCellId(), conf.getTinyMceCreatedCallback());
-		QtiTestEditorFasade.getInstance(QtiTestEditorFasade.KEY).startup(startupData);
+		QtiTestEditorFacade.getInstance(QtiTestEditorFacade.KEY).startup(startupData);
 	}
 	
 	private void onSetTinyMceWidth(String width){
 		
-		QtiTestEditorFasade facade = QtiTestEditorFasade.getInstance(QtiTestEditorFasade.KEY);
+		QtiTestEditorFacade facade = QtiTestEditorFacade.getInstance(QtiTestEditorFacade.KEY);
 		if(facade != null)
-			facade.sendNotification(Constances.SET_TINY_CELL_SIZE, width, "width");
+			facade.sendNotification(Notifications.SET_TINY_CELL_SIZE, width, "width");
 		
 	}
 	
 	private void onSetTinyMceHeight(String height){
-		QtiTestEditorFasade facade = QtiTestEditorFasade.getInstance(QtiTestEditorFasade.KEY);
+		QtiTestEditorFacade facade = QtiTestEditorFacade.getInstance(QtiTestEditorFacade.KEY);
 		if(facade != null)
-			facade.sendNotification(Constances.SET_TINY_CELL_SIZE, height, "height");
+			facade.sendNotification(Notifications.SET_TINY_CELL_SIZE, height, "height");
 	}
 	
 	

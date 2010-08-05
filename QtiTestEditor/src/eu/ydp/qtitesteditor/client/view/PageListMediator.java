@@ -6,7 +6,7 @@ import org.puremvc.java.multicore.patterns.mediator.Mediator;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
-import eu.ydp.qtiPageEditor.client.constance.Constances;
+import eu.ydp.qtiPageEditor.client.constants.Notifications;
 import eu.ydp.qtiPageEditor.client.model.QTIPageModelProxy;
 import eu.ydp.qtiPageEditor.client.view.PageEditorViewMediator;
 import eu.ydp.qtiPageEditor.client.view.component.PageEditorView;
@@ -46,10 +46,10 @@ public class PageListMediator extends Mediator implements IMediator, ChangeHandl
 		String oldState = pagesProxy.getPageContent(oldIx);
 		
 		if(newState != oldState)
-			sendNotification(Constances.UPDATE_PAGE_STATE,newState);
+			sendNotification(Notifications.UPDATE_PAGE_STATE,newState);
 		
-		sendNotification(Constances.SET_MODEL_SELECTED_INDEX, ix); 
-		sendNotification(Constances.SHOW_PAGE, ix);
+		sendNotification(Notifications.SET_MODEL_SELECTED_INDEX, ix); 
+		sendNotification(Notifications.SHOW_PAGE, ix);
 		
 	}
 	
@@ -57,26 +57,26 @@ public class PageListMediator extends Mediator implements IMediator, ChangeHandl
 	public void handleNotification(INotification notification) {		
 		String n = notification.getName();
 		
-		if(n == Constances.PAGES_LOADED)
+		if(n == Notifications.PAGES_LOADED)
 			showPages((String[])notification.getBody());
-		else if(n == Constances.ADD_PAGE_TO_LIST)
+		else if(n == Notifications.ADD_PAGE_TO_LIST)
 			addPage((String)notification.getBody());
-		else if(n == Constances.REMOVE_PAGE_FROM_LIST)
+		else if(n == Notifications.REMOVE_PAGE_FROM_LIST)
 			removePage((Integer)notification.getBody());
-		else if(n == Constances.MOVE_PAGE_UP_LIST)
+		else if(n == Notifications.MOVE_PAGE_UP_LIST)
 			moveUpPage((Integer)notification.getBody());
-		else if(n == Constances.MOVE_PAGE_DOWN_LIST)
+		else if(n == Notifications.MOVE_PAGE_DOWN_LIST)
 			moveDownPage((Integer)notification.getBody());			
 		
 	}
 	
 	@Override
 	public String[] listNotificationInterests() {		
-		return new String[]{Constances.PAGES_LOADED,
-				Constances.ADD_PAGE_TO_LIST,
-				Constances.REMOVE_PAGE_FROM_LIST,
-				Constances.MOVE_PAGE_UP_LIST,
-				Constances.MOVE_PAGE_DOWN_LIST};				 
+		return new String[]{Notifications.PAGES_LOADED,
+				Notifications.ADD_PAGE_TO_LIST,
+				Notifications.REMOVE_PAGE_FROM_LIST,
+				Notifications.MOVE_PAGE_UP_LIST,
+				Notifications.MOVE_PAGE_DOWN_LIST};				 
 	}
 	
 	
@@ -86,18 +86,18 @@ public class PageListMediator extends Mediator implements IMediator, ChangeHandl
 		PageListView view = (PageListView)getViewComponent();
 		view.showPages(titles);
 		view.setSelectedIndex(0);
-		sendNotification(Constances.SHOW_PAGE, 0);
+		sendNotification(Notifications.SHOW_PAGE, 0);
 	}
 	
 	private void addPage(String title){
 		PageListView view = (PageListView)getViewComponent();
 		if(view.getItemCount() == 0)
-			sendNotification(Constances.BLOCK_EDITOR, false);
+			sendNotification(Notifications.BLOCK_EDITOR, false);
 		
 		view.addPage(title);
 		view.setSelectedIndex(view.getItemCount()-1);
-		sendNotification(Constances.SET_MODEL_SELECTED_INDEX,view.getItemCount()-1 );		
-		sendNotification(Constances.SHOW_PAGE, view.getSelectedIndex());
+		sendNotification(Notifications.SET_MODEL_SELECTED_INDEX,view.getItemCount()-1 );		
+		sendNotification(Notifications.SHOW_PAGE, view.getSelectedIndex());
 		
 	}
 	
@@ -106,14 +106,14 @@ public class PageListMediator extends Mediator implements IMediator, ChangeHandl
 		view.removePage(ix);
 		if(view.getItemCount() > 0)		{			
 			view.setSelectedIndex(ix-1);			
-			sendNotification(Constances.SHOW_PAGE, view.getSelectedIndex());
+			sendNotification(Notifications.SHOW_PAGE, view.getSelectedIndex());
 		}
 		else{
-			sendNotification(Constances.CLEAR_EDITOR);
-			sendNotification(Constances.BLOCK_EDITOR, true);
+			sendNotification(Notifications.CLEAR_EDITOR);
+			sendNotification(Notifications.BLOCK_EDITOR, true);
 		}
 			
-		sendNotification(Constances.SET_MODEL_SELECTED_INDEX, view.getSelectedIndex() );
+		sendNotification(Notifications.SET_MODEL_SELECTED_INDEX, view.getSelectedIndex() );
 	}
 	
 	private void moveUpPage(int ix){
@@ -124,7 +124,7 @@ public class PageListMediator extends Mediator implements IMediator, ChangeHandl
 		else
 			view.setSelectedIndex(view.getItemCount() - 1);
 		
-		sendNotification(Constances.SET_MODEL_SELECTED_INDEX,view.getSelectedIndex() );
+		sendNotification(Notifications.SET_MODEL_SELECTED_INDEX,view.getSelectedIndex() );
 	}
 	
 	private void moveDownPage(int ix){
@@ -135,7 +135,7 @@ public class PageListMediator extends Mediator implements IMediator, ChangeHandl
 		else
 			view.setSelectedIndex(0);
 		
-		sendNotification(Constances.SET_MODEL_SELECTED_INDEX,view.getSelectedIndex()); 
+		sendNotification(Notifications.SET_MODEL_SELECTED_INDEX,view.getSelectedIndex()); 
 		
 	}
 }

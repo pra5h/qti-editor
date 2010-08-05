@@ -4,7 +4,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 
 import eu.ydp.qtiPageEditor.client.appcallback.SaveCallback;
-import eu.ydp.qtiPageEditor.client.constance.Constances;
+import eu.ydp.qtiPageEditor.client.constants.Notifications;
 import eu.ydp.qtiPageEditor.client.controller.startupdata.StartupData;
 import eu.ydp.qtiPageEditor.client.env.IEditorEnvirnoment;
 import eu.ydp.qtiPageEditor.client.env.impl.EditorEnvirnoment;
@@ -109,7 +109,7 @@ public class QtiPageEditor implements EntryPoint {
 			sessionSustainer.start();
 		
 		StartupData startupData = new StartupData(_env, conf.getCellId(), conf.getTinyMceCreatedCallback());
-		ApplicationFasade.getInstance(ApplicationFasade.KEY).startup(startupData);			
+		ApplicationFacade.getInstance(ApplicationFacade.KEY).startup(startupData);			
 	}
 	
 	/**
@@ -132,19 +132,19 @@ public class QtiPageEditor implements EntryPoint {
 	 * @param path base path of new page
 	 */
 	private void setPath(String path){		
-		ApplicationFasade facade = ApplicationFasade.getInstance(ApplicationFasade.KEY);
+		ApplicationFacade facade = ApplicationFacade.getInstance(ApplicationFacade.KEY);
 		_env.setBasePath(path);
 		if(facade != null){
-			facade.sendNotification(Constances.SET_PAGE_PATH, path);
+			facade.sendNotification(Notifications.SET_PAGE_PATH, path);
 		}
 	}
 	/**
 	 * Reloads page. Called from portal application usually after setPath method 
 	 */
 	private void loadPage(){
-		ApplicationFasade facade = ApplicationFasade.getInstance(ApplicationFasade.KEY);
+		ApplicationFacade facade = ApplicationFacade.getInstance(ApplicationFacade.KEY);
 		if(facade != null){
-			facade.sendNotification(Constances.RELOAD_PAGE,0);
+			facade.sendNotification(Notifications.RELOAD_PAGE,0);
 		}
 	}
 	
@@ -154,9 +154,9 @@ public class QtiPageEditor implements EntryPoint {
 	 * @see eu.ydp.qtiPageEditor.client.appcallback.SaveCallback
 	 */
 	private void setJsSaveCallback(SaveCallback callback){
-		ApplicationFasade facade = ApplicationFasade.getInstance(ApplicationFasade.KEY);
+		ApplicationFacade facade = ApplicationFacade.getInstance(ApplicationFacade.KEY);
 		if(facade != null){
-			facade.sendNotification(Constances.SET_JS_SAVE_CALLBACK, callback);
+			facade.sendNotification(Notifications.SET_JS_SAVE_CALLBACK, callback);
 		}	
 	}
 	
@@ -166,9 +166,9 @@ public class QtiPageEditor implements EntryPoint {
 	 */
 	private void onSetTinyMceWidth(String width){
 		
-		ApplicationFasade facade = ApplicationFasade.getInstance(ApplicationFasade.KEY);
+		ApplicationFacade facade = ApplicationFacade.getInstance(ApplicationFacade.KEY);
 		if(facade != null)
-			facade.sendNotification(Constances.SET_TINY_CELL_SIZE, width, "width");
+			facade.sendNotification(Notifications.SET_TINY_CELL_SIZE, width, "width");
 		
 	}
 	
@@ -178,8 +178,8 @@ public class QtiPageEditor implements EntryPoint {
 	 * @param height new tinyMCE height
 	 */
 	private void onSetTinyMceHeight(String height){
-		ApplicationFasade facade = ApplicationFasade.getInstance(ApplicationFasade.KEY);
+		ApplicationFacade facade = ApplicationFacade.getInstance(ApplicationFacade.KEY);
 		if(facade != null)
-			facade.sendNotification(Constances.SET_TINY_CELL_SIZE, height, "height");
+			facade.sendNotification(Notifications.SET_TINY_CELL_SIZE, height, "height");
 	}
 }

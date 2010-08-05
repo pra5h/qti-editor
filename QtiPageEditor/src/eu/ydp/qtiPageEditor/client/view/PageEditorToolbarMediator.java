@@ -8,7 +8,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.CellPanel;
 
-import eu.ydp.qtiPageEditor.client.constance.Constances;
+import eu.ydp.qtiPageEditor.client.constants.Notifications;
 import eu.ydp.qtiPageEditor.client.view.component.PageEditorToolbarView;
 import eu.ydp.webapistorage.client.storage.apierror.IApiError;
 
@@ -45,7 +45,7 @@ public class PageEditorToolbarMediator extends Mediator {
 	@Override
 	public void handleNotification(INotification notification) {
 		String not = notification.getName();
-		if(not == Constances.SAVE_PAGE_ERROR)
+		if(not == Notifications.SAVE_PAGE_ERROR)
 		{
 			IApiError error = (IApiError)notification.getBody();
 			Window.alert(error.getType() + "\n error code" +error.getErrorCode() + "\n" +error.getDetails()  );
@@ -54,7 +54,7 @@ public class PageEditorToolbarMediator extends Mediator {
 	
 	@Override
 	public String[] listNotificationInterests() {
-		return new String[]{Constances.SAVE_PAGE_ERROR}; 
+		return new String[]{Notifications.SAVE_PAGE_ERROR}; 
 				 
 	}
 

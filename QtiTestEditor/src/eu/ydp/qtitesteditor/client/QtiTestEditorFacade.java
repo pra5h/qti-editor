@@ -2,7 +2,7 @@ package eu.ydp.qtitesteditor.client;
 
 import org.puremvc.java.multicore.patterns.facade.Facade;
 
-import eu.ydp.qtiPageEditor.client.constance.Constances;
+import eu.ydp.qtiPageEditor.client.constants.Notifications;
 import eu.ydp.qtiPageEditor.client.controller.LoadPagesCommand;
 import eu.ydp.qtiPageEditor.client.controller.SavePageCommand;
 import eu.ydp.qtiPageEditor.client.controller.UpdatePageCommand;
@@ -16,21 +16,21 @@ import eu.ydp.qtitesteditor.client.controller.SaveTestCommand;
 import eu.ydp.qtitesteditor.client.controller.SetSelectedIndexCommand;
 import eu.ydp.qtitesteditor.client.controller.StartupCommand;
 
-public class QtiTestEditorFasade extends Facade {
+public class QtiTestEditorFacade extends Facade {
 	
 	public static final String  KEY = "QtiTestEditorFacadeKey";	
 	public static final String  NAME = "QtiTestEditorFacade";	
 	public static final String STARTUP= NAME + "StartUp";	
 	
-	protected QtiTestEditorFasade(String key) {
+	protected QtiTestEditorFacade(String key) {
 		super(key);		
 	}
 	
 	public void startup(StartupData startupData)
 	{
 		sendNotification(STARTUP,startupData);
-		sendNotification(Constances.CONFIGURE_PROXY, startupData.getEnv());
-		sendNotification(Constances.LOAD_TEST);
+		sendNotification(Notifications.CONFIGURE_PROXY, startupData.getEnv());
+		sendNotification(Notifications.LOAD_TEST);
 	}
 	
 	
@@ -38,29 +38,29 @@ public class QtiTestEditorFasade extends Facade {
 	{ 	            
 		super.initializeController();
 		registerCommand(STARTUP, new StartupCommand());
-		registerCommand(Constances.CONFIGURE_PROXY, new ConfigureProxyCommand());
-		registerCommand(Constances.LOAD_TEST, new LoadTestCommand());
-		registerCommand(Constances.LOAD_PAGES, new LoadPagesCommand());
-		registerCommand(Constances.ADD_NEW_PAGE_TO_MODEL,new AddNewPageCommand());
-		registerCommand(Constances.SAVE_PAGE, new SavePageCommand());		
-		registerCommand(Constances.SAVE_TEST, new SaveTestCommand());
-		registerCommand(Constances.REMOVE_PAGE_FROM_MODEL, new RemovePageCommand());
-		registerCommand(Constances.MOVE_PAGE_MODEL, new MovePageCommand());
-		registerCommand(Constances.UPDATE_PAGE_STATE, new UpdatePageCommand());
-		registerCommand(Constances.SET_MODEL_SELECTED_INDEX, new SetSelectedIndexCommand());
+		registerCommand(Notifications.CONFIGURE_PROXY, new ConfigureProxyCommand());
+		registerCommand(Notifications.LOAD_TEST, new LoadTestCommand());
+		registerCommand(Notifications.LOAD_PAGES, new LoadPagesCommand());
+		registerCommand(Notifications.ADD_NEW_PAGE_TO_MODEL,new AddNewPageCommand());
+		registerCommand(Notifications.SAVE_PAGE, new SavePageCommand());		
+		registerCommand(Notifications.SAVE_TEST, new SaveTestCommand());
+		registerCommand(Notifications.REMOVE_PAGE_FROM_MODEL, new RemovePageCommand());
+		registerCommand(Notifications.MOVE_PAGE_MODEL, new MovePageCommand());
+		registerCommand(Notifications.UPDATE_PAGE_STATE, new UpdatePageCommand());
+		registerCommand(Notifications.SET_MODEL_SELECTED_INDEX, new SetSelectedIndexCommand());
 		
 	}
 	
-	public synchronized static QtiTestEditorFasade getInstance(String key )
+	public synchronized static QtiTestEditorFacade getInstance(String key )
 	{
 		if (instanceMap.get(key) == null) {
 			try {
-				 new QtiTestEditorFasade(key); 
+				 new QtiTestEditorFacade(key); 
 			} 
 				catch (Exception e) {
 			}
 		}
-		return (QtiTestEditorFasade)instanceMap.get(key);
+		return (QtiTestEditorFacade)instanceMap.get(key);
 	}
 
 }

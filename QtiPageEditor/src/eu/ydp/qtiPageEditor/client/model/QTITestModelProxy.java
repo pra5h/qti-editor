@@ -2,7 +2,7 @@ package eu.ydp.qtiPageEditor.client.model;
 
 import com.google.gwt.xml.client.Document;
 
-import eu.ydp.qtiPageEditor.client.constance.Constances;
+import eu.ydp.qtiPageEditor.client.constants.Notifications;
 import eu.ydp.qtiPageEditor.client.model.QtiProxyBase;
 import eu.ydp.qtiPageEditor.client.model.vo.QtiTestModel;
 import eu.ydp.webapistorage.client.storage.IResource;
@@ -24,7 +24,7 @@ public class QTITestModelProxy extends QtiProxyBase {
 			@Override
 			public void onRequestError(IResource resource, String command,
 					IApiError error) {
-				sendNotification(Constances.LOAD_TEST_ERROR, error);
+				sendNotification(Notifications.LOAD_TEST_ERROR, error);
 				
 			}
 			
@@ -39,12 +39,12 @@ public class QTITestModelProxy extends QtiProxyBase {
 				{
 					String base = _testPath.substring(0, _testPath.lastIndexOf("/")+1);
 					String pagePath = base + hrefs[0];
-					sendNotification(Constances.CONFIGURE_PAGE_EDITOR_VIEW, pagePath);
-					sendNotification(Constances.LOAD_PAGES, hrefs);
+					sendNotification(Notifications.CONFIGURE_PAGE_EDITOR_VIEW, pagePath);
+					sendNotification(Notifications.LOAD_PAGES, hrefs);
 					
 				}
 				else				
-					sendNotification(Constances.ADD_NEW_PAGE_TO_MODEL);				
+					sendNotification(Notifications.ADD_NEW_PAGE_TO_MODEL);				
 				
 			}
 		});
@@ -106,7 +106,7 @@ public class QTITestModelProxy extends QtiProxyBase {
 			@Override
 			public void onRequestError(IResource resource, String command,
 					IApiError error) {
-				sendNotification(Constances.SAVE_TEST_ERROR, error);
+				sendNotification(Notifications.SAVE_TEST_ERROR, error);
 				
 			}
 			

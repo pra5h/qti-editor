@@ -3,7 +3,7 @@ package eu.ydp.qtitesteditor.client.controller;
 import org.puremvc.java.multicore.interfaces.INotification;
 import org.puremvc.java.multicore.patterns.command.SimpleCommand;
 
-import eu.ydp.qtiPageEditor.client.constance.Constances;
+import eu.ydp.qtiPageEditor.client.constants.Notifications;
 import eu.ydp.qtiPageEditor.client.model.QTIPageModelProxy;
 import eu.ydp.qtiPageEditor.client.model.QTITestModelProxy;
 import eu.ydp.qtitesteditor.client.view.PageListMediator;
@@ -23,16 +23,16 @@ public class MovePageCommand extends SimpleCommand {
 			{
 				testProxy.moveUp(ix);
 				pagesProxy.moveUp(ix);			
-				sendNotification(Constances.MOVE_PAGE_UP_LIST, ix);
+				sendNotification(Notifications.MOVE_PAGE_UP_LIST, ix);
 			}
 			else
 			{
 				testProxy.moveDown(ix);
 				pagesProxy.moveDown(ix);			
-				sendNotification(Constances.MOVE_PAGE_DOWN_LIST, ix);
+				sendNotification(Notifications.MOVE_PAGE_DOWN_LIST, ix);
 			}
 			
-			sendNotification(Constances.SAVE_TEST);
+			sendNotification(Notifications.SAVE_TEST);
 		}
 		
 		

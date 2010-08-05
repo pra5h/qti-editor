@@ -2,7 +2,8 @@ package eu.ydp.qtiPageEditor.client.view;
 
 import org.puremvc.java.multicore.interfaces.INotification;
 import org.puremvc.java.multicore.patterns.mediator.Mediator;
-import eu.ydp.qtiPageEditor.client.constance.Constances;
+
+import eu.ydp.qtiPageEditor.client.constants.Notifications;
 import eu.ydp.qtiPageEditor.client.controller.startupdata.StartupData;
 import eu.ydp.qtiPageEditor.client.events.TinyMcePreviewEvent;
 import eu.ydp.qtiPageEditor.client.events.TinyMceResizeEvent;
@@ -63,25 +64,25 @@ public class PageEditorViewMediator extends Mediator implements TinyMceSaveEvent
 	
 	@Override
 	public String[] listNotificationInterests() {
-		return new String[]{Constances.SHOW_PAGE, 
-				Constances.SET_TINY_CELL_SIZE,
-				Constances.CONFIGURE_PAGE_EDITOR_VIEW,
-				Constances.BLOCK_EDITOR,
-				Constances.CLEAR_EDITOR};				 
+		return new String[]{Notifications.SHOW_PAGE, 
+				Notifications.SET_TINY_CELL_SIZE,
+				Notifications.CONFIGURE_PAGE_EDITOR_VIEW,
+				Notifications.BLOCK_EDITOR,
+				Notifications.CLEAR_EDITOR};				 
 	}
 	
 	@Override
 	public void handleNotification(INotification notification) {
 		String n = notification.getName();		
-		if(n == Constances.SHOW_PAGE)
+		if(n == Notifications.SHOW_PAGE)
 			showPage((Integer)notification.getBody());
-		else if(n == Constances.SET_TINY_CELL_SIZE)
+		else if(n == Notifications.SET_TINY_CELL_SIZE)
 			setTinySize((String)notification.getBody(), notification.getType());
-		else if(n == Constances.CONFIGURE_PAGE_EDITOR_VIEW)
+		else if(n == Notifications.CONFIGURE_PAGE_EDITOR_VIEW)
 			configView((String)notification.getBody());
-		else if(n == Constances.BLOCK_EDITOR)
+		else if(n == Notifications.BLOCK_EDITOR)
 			blockEditor((Boolean)notification.getBody());
-		else if(n == Constances.CLEAR_EDITOR)
+		else if(n == Notifications.CLEAR_EDITOR)
 			clearEditorContent();
 			
 	}
@@ -92,7 +93,7 @@ public class PageEditorViewMediator extends Mediator implements TinyMceSaveEvent
 		PageEditorView view = (PageEditorView)getViewComponent();
 		String content = view.getText();
 		
-		sendNotification(Constances.UPDATE_PAGE_STATE, content);
+		sendNotification(Notifications.UPDATE_PAGE_STATE, content);
 	} 
 	
 	//---------------------------------------------------------
@@ -100,12 +101,12 @@ public class PageEditorViewMediator extends Mediator implements TinyMceSaveEvent
 	public void onShowPreview(TinyMcePreviewEvent event){		
 		PageEditorView view = (PageEditorView)getViewComponent();
 		String content = view.getText();
-		sendNotification(Constances.SHOW_PREVIEW,content);
+		sendNotification(Notifications.SHOW_PREVIEW,content);
 	}
 	
 	//--------------------------------------------------------------
 	
 	public void onTinyResize(TinyMceResizeEvent event){
-		sendNotification(Constances.TINY_RESIZE, event);
+		sendNotification(Notifications.TINY_RESIZE, event);
 	}
 }

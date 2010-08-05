@@ -11,7 +11,7 @@
 	<classpathentry kind="lib" path="/QtiPageEditor/libs/gwt-voices-1.7.0.jar"/>
 	<classpathentry kind="lib" path="ivy-lib/gwt-log.jar"/>
 	<classpathentry kind="lib" path="ivy-lib/commons-fileupload.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/WebApiStorageGWT"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/QtiPageEditor"/>
+	<classpathentry kind="lib" path="ivy-lib/webapistorageGWT.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

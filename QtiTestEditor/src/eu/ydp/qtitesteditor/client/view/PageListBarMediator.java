@@ -5,7 +5,7 @@ import org.puremvc.java.multicore.patterns.mediator.Mediator;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 
-import eu.ydp.qtiPageEditor.client.constance.Constances;
+import eu.ydp.qtiPageEditor.client.constants.Notifications;
 import eu.ydp.qtiPageEditor.client.events.DialogYesNoEvent;
 import eu.ydp.qtiPageEditor.client.events.handler.DialogYesNoHandler;
 import eu.ydp.qtiPageEditor.client.model.QTIPageModelProxy;
@@ -43,9 +43,9 @@ public class PageListBarMediator extends Mediator implements ClickHandler {
 		 else if(b.equals(view.getRemovePageButton()))
 			 onRemovePage();			 
 		 else if(b.equals(view.getMoveUpButton()))
-			 sendNotification(Constances.MOVE_PAGE_MODEL,1);
+			 sendNotification(Notifications.MOVE_PAGE_MODEL,1);
 		 else if(b.equals(view.getMoveDownButton()))
-			 sendNotification(Constances.MOVE_PAGE_MODEL,0);
+			 sendNotification(Notifications.MOVE_PAGE_MODEL,0);
 		 
 	 }
 	 
@@ -61,7 +61,7 @@ public class PageListBarMediator extends Mediator implements ClickHandler {
 				@Override
 				public void onYesNoClick(DialogYesNoEvent event) {
 					if(event.getResult() == DialogYesNoEvent.DIALOG_YES)
-						sendNotification(Constances.REMOVE_PAGE_FROM_MODEL);				
+						sendNotification(Notifications.REMOVE_PAGE_FROM_MODEL);				
 				}
 			});
 			 
@@ -79,9 +79,9 @@ public class PageListBarMediator extends Mediator implements ClickHandler {
 			 oldContent = proxy.getPageContent(ix);
 			 
 		 if(oldContent != content)
-			 sendNotification(Constances.UPDATE_PAGE_STATE, content);
+			 sendNotification(Notifications.UPDATE_PAGE_STATE, content);
 		 
-		 sendNotification(Constances.ADD_NEW_PAGE_TO_MODEL);
+		 sendNotification(Notifications.ADD_NEW_PAGE_TO_MODEL);
 		
 	 }
 	 

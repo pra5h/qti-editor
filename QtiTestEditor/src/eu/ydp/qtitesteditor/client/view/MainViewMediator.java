@@ -4,11 +4,10 @@ import org.puremvc.java.multicore.interfaces.IMediator;
 import org.puremvc.java.multicore.interfaces.INotification;
 import org.puremvc.java.multicore.patterns.mediator.Mediator;
 
-
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.RootPanel;
 
-import eu.ydp.qtiPageEditor.client.constance.Constances;
+import eu.ydp.qtiPageEditor.client.constants.Notifications;
 import eu.ydp.qtiPageEditor.client.controller.startupdata.StartupData;
 import eu.ydp.qtiPageEditor.client.view.PageEditorViewMediator;
 import eu.ydp.qtiPageEditor.client.view.PreviewMediator;
@@ -75,20 +74,20 @@ public class MainViewMediator extends Mediator implements IMediator {
 	
 	@Override
 	public String[] listNotificationInterests() {
-		return new String[]{Constances.LOAD_TEST_ERROR, 
-				Constances.LOAD_PAGE_ERROR, 
-				Constances.SAVE_TEST_ERROR,
-				Constances.SAVE_PAGE_ERROR};
+		return new String[]{Notifications.LOAD_TEST_ERROR, 
+				Notifications.LOAD_PAGE_ERROR, 
+				Notifications.SAVE_TEST_ERROR,
+				Notifications.SAVE_PAGE_ERROR};
 	}
 	
 	@Override
 	public void handleNotification(INotification notification) {
 		String n = notification.getName();
 		
-		if(n == Constances.LOAD_TEST_ERROR ||
-				n == Constances.LOAD_PAGE_ERROR ||
-				n == Constances.SAVE_PAGE_ERROR ||
-				n == Constances.SAVE_TEST_ERROR)
+		if(n == Notifications.LOAD_TEST_ERROR ||
+				n == Notifications.LOAD_PAGE_ERROR ||
+				n == Notifications.SAVE_PAGE_ERROR ||
+				n == Notifications.SAVE_TEST_ERROR)
 			showErrorPopup((IApiError)notification.getBody());
 
 	}

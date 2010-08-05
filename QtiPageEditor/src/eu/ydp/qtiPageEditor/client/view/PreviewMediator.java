@@ -6,7 +6,8 @@ import org.puremvc.java.multicore.patterns.mediator.Mediator;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.XMLParser;
 import com.qtitools.player.client.util.xml.document.XMLData;
-import eu.ydp.qtiPageEditor.client.constance.Constances;
+
+import eu.ydp.qtiPageEditor.client.constants.Notifications;
 import eu.ydp.qtiPageEditor.client.model.QTIPageModelProxy;
 import eu.ydp.qtiPageEditor.client.model.QTITestModelProxy;
 import eu.ydp.qtiPageEditor.client.model.vo.QTIPageModel;
@@ -53,14 +54,14 @@ public class PreviewMediator extends Mediator {
 	@Override
 	public void handleNotification(INotification notification) {
 		String n = notification.getName();
-		if(n == Constances.SHOW_PREVIEW){
+		if(n == Notifications.SHOW_PREVIEW){
 			showPreview(notification);
 		}
 	}
 	
 	@Override
 	public String[] listNotificationInterests() {
-		return new String[]{Constances.SHOW_PREVIEW};
+		return new String[]{Notifications.SHOW_PREVIEW};
 	}
 	
 	

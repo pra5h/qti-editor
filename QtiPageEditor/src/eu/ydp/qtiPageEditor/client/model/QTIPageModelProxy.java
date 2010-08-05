@@ -1,12 +1,7 @@
 package eu.ydp.qtiPageEditor.client.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
-import com.google.gwt.user.client.Window;
-
 import eu.ydp.qtiPageEditor.client.appcallback.SaveCallback;
-import eu.ydp.qtiPageEditor.client.constance.Constances;
+import eu.ydp.qtiPageEditor.client.constants.Notifications;
 import eu.ydp.qtiPageEditor.client.model.vo.ModelPageList;
 import eu.ydp.qtiPageEditor.client.model.vo.QTIPageModel;
 import eu.ydp.webapistorage.client.storage.IResource;
@@ -52,7 +47,7 @@ public class QTIPageModelProxy extends QtiProxyBase{
 			@Override
 			public void onRequestError(IResource resource, String command,
 					IApiError error) {
-				sendNotification(Constances.LOAD_PAGE_ERROR, error);
+				sendNotification(Notifications.LOAD_PAGE_ERROR, error);
 				
 			}
 			
@@ -77,7 +72,7 @@ public class QTIPageModelProxy extends QtiProxyBase{
 						titles[i] = pages.getPage(i).getTitle();
 					
 					_selectedIndex = 0;		
-					sendNotification(Constances.PAGES_LOADED, titles);
+					sendNotification(Notifications.PAGES_LOADED, titles);
 				}
 							
 			}
@@ -94,7 +89,7 @@ public class QTIPageModelProxy extends QtiProxyBase{
 			
 			@Override
 			public void onRequestError(IResource resource, String command, IApiError error) {				
-				sendNotification(Constances.LOAD_PAGE_ERROR, error);
+				sendNotification(Notifications.LOAD_PAGE_ERROR, error);
 			}
 			
 			@Override
@@ -106,7 +101,7 @@ public class QTIPageModelProxy extends QtiProxyBase{
 				for(i = 0;i < pages.getPageCount(); i++)
 					titles[i] = pages.getPage(i).getTitle();
 				
-				sendNotification(Constances.PAGES_LOADED, titles);
+				sendNotification(Notifications.PAGES_LOADED, titles);
 			}
 		});
 
@@ -206,7 +201,7 @@ public class QTIPageModelProxy extends QtiProxyBase{
 			
 			@Override
 			public void onRequestError(IResource resource, String command,IApiError error) {
-				sendNotification(Constances.SAVE_PAGE_ERROR, error);
+				sendNotification(Notifications.SAVE_PAGE_ERROR, error);
 				if(_jsSaveCallback != null)
 					_jsSaveCallback.onSaveError(ApiErrorToJs.toJs(error));
 				

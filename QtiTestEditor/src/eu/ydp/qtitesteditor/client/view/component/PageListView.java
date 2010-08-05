@@ -1,6 +1,5 @@
 package eu.ydp.qtitesteditor.client.view.component;
 
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ListBox;
 public class PageListView extends Composite {
