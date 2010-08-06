@@ -1,26 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module rename-to='qtitesteditor'>
-  <!-- Inherit the core Web Toolkit stuff.                        -->
-  <inherits name='com.google.gwt.user.User'/>
+	<!-- Inherit the core Web Toolkit stuff. -->
+	<inherits name='com.google.gwt.user.User' />
 
-  <!-- Inherit the default GWT style sheet.  You can change       -->
-  <!-- the theme of your GWT application by uncommenting          -->
-  <!-- any one of the following lines.                            -->
-  <inherits name='com.google.gwt.user.theme.standard.Standard'/>
-  <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
-  <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
+	<!-- Inherit the default GWT style sheet. You can change -->
+	<!-- the theme of your GWT application by uncommenting -->
+	<!-- any one of the following lines. -->
+	<inherits name='com.google.gwt.user.theme.standard.Standard' />
+	<!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
+	<!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/> -->
 
-  <!-- Other module inherits                                      -->
-  <inherits name="org.puremvc.PureMVC_Java_MultiCore" />  
-  <inherits name="eu.ydp.webapistorage.WebApiStorageGWT" />
-  <inherits name="eu.ydp.qtiPageEditor.QtiPageEditor"/>   
+	<!-- Other module inherits -->
+	<inherits name="org.puremvc.PureMVC_Java_MultiCore" />
+	<inherits name="eu.ydp.webapistorage.WebApiStorageGWT" />
+	<inherits name="eu.ydp.qtiPageEditor.QtiPageEditor" />
 
-  <!-- Specify the app entry point class.                         -->
-  <entry-point class='eu.ydp.qtitesteditor.client.QtiTestEditor'/>
+	<!-- Specify the app entry point class. -->
+	<entry-point class='eu.ydp.qtitesteditor.client.QtiTestEditor' />
 
-  <!-- Specify the paths for translatable code                    -->
-  <source path='client'/> 
- 	
+	<!-- Specify the paths for translatable code -->
+	<source path='client' />
+
+	<servlet path="/api" class="eu.ydp.webapistorage.server.StorageServiceImpl" />
+	<servlet path="/fileupload" class="eu.ydp.webapistorage.server.FileUpload" />
+
 	<!-- Application standard css (override standard.css) -->
-	<stylesheet src="QtiTestEditor.css" /> 
+	<stylesheet src="QtiTestEditor.css" />
 </module>
