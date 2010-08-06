@@ -16,7 +16,7 @@ public class UpdatePageCommand extends SimpleCommand {
 		
 		if(ix > -1)
 		{	
-			proxy.updatePageState(ix, content);		
+			proxy.updatePageState(ix, content);
 			sendNotification(Notifications.SAVE_PAGE, ix);
 		}	
 		

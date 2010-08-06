@@ -166,10 +166,14 @@ public class QTIPageModelProxy extends QtiProxyBase {
 		getDataVO().moveUp(ix);
 	}
 
-	public ModelPageList getDataVO() {
+	protected ModelPageList getDataVO() {
 		return (ModelPageList) getData();
 	}
-
+	
+	public int getPageCount() {
+		return getDataVO().getPageCount();
+	}
+	
 	public void updatePageState(int ix, String content) {
 		getDataVO().getPage(ix).setContent(content);
 	}

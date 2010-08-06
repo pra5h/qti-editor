@@ -89,9 +89,12 @@ public class QTITestModelProxy extends QtiProxyBase {
 		return getVO().getAssessmentForPage(ix);
 	}
 
-	public QtiTestModel getVO() {
+	protected QtiTestModel getVO() {
 		return (QtiTestModel) getData();
-
+	}
+	
+	public String[] getItemsHrefs() {
+		return getVO().getItemsHrefs();
 	}
 
 	public String getHref() {

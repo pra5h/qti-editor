@@ -75,7 +75,7 @@ public class PageListBarMediator extends Mediator implements ClickHandler {
 		 String oldContent = null;
 		 QTIPageModelProxy proxy = (QTIPageModelProxy)getFacade().retrieveProxy(QTIPageModelProxy.NAME);		 
 		 
-		 if(proxy.getDataVO().getPageCount() > 0)
+		 if(proxy.getPageCount() > 0)
 			 oldContent = proxy.getPageContent(ix);
 			 
 		 if(oldContent != content)

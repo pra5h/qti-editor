@@ -3,7 +3,7 @@ package eu.ydp.qtiPageEditor.client;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 
-import eu.ydp.qtiPageEditor.client.appcallback.SaveCallback;
+import eu.ydp.qtiPageEditor.client.appcallback.SaveCallbackJSO;
 import eu.ydp.qtiPageEditor.client.constants.Notifications;
 import eu.ydp.qtiPageEditor.client.controller.startupdata.StartupData;
 import eu.ydp.qtiPageEditor.client.env.IEditorEnvirnoment;
@@ -58,7 +58,7 @@ public class QtiPageEditor implements EntryPoint {
 				}
 				
 				$wnd.qti_page_editor.setSaveCallback = function(callback){					
-					me.@eu.ydp.qtiPageEditor.client.QtiPageEditor::setJsSaveCallback(Leu/ydp/qtiPageEditor/client/appcallback/SaveCallback;)(callback);	
+					me.@eu.ydp.qtiPageEditor.client.QtiPageEditor::setJsSaveCallback(Leu/ydp/qtiPageEditor/client/appcallback/SaveCallbackJSO;)(callback);	
 				}
 				
 				$wnd.qti_page_editor.setTinyMCECellWidth = function(width){
@@ -151,9 +151,9 @@ public class QtiPageEditor implements EntryPoint {
 	/**
 	 * Sets callback to portal application for save page event
 	 * @param callback callback to portal for save event
-	 * @see eu.ydp.qtiPageEditor.client.appcallback.SaveCallback
+	 * @see eu.ydp.qtiPageEditor.client.appcallback.SaveCallbackJSO
 	 */
-	private void setJsSaveCallback(SaveCallback callback){
+	private void setJsSaveCallback(SaveCallbackJSO callback){
 		ApplicationFacade facade = ApplicationFacade.getInstance(ApplicationFacade.KEY);
 		if(facade != null){
 			facade.sendNotification(Notifications.SET_JS_SAVE_CALLBACK, callback);
