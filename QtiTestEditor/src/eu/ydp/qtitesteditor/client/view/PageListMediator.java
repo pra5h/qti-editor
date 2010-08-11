@@ -7,9 +7,11 @@ import org.puremvc.java.multicore.patterns.mediator.Mediator;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import eu.ydp.qtiPageEditor.client.constants.Notifications;
+import eu.ydp.qtiPageEditor.client.events.TinyMceResizeEvent;
 import eu.ydp.qtiPageEditor.client.model.QTIPageModelProxy;
 import eu.ydp.qtiPageEditor.client.view.PageEditorViewMediator;
 import eu.ydp.qtiPageEditor.client.view.component.PageEditorView;
+import eu.ydp.qtitesteditor.client.view.component.PageListBarView;
 import eu.ydp.qtitesteditor.client.view.component.PageListView;
 
 public class PageListMediator extends Mediator implements IMediator, ChangeHandler {
@@ -66,7 +68,10 @@ public class PageListMediator extends Mediator implements IMediator, ChangeHandl
 		else if(n == Notifications.MOVE_PAGE_UP_LIST)
 			moveUpPage((Integer)notification.getBody());
 		else if(n == Notifications.MOVE_PAGE_DOWN_LIST)
-			moveDownPage((Integer)notification.getBody());			
+			moveDownPage((Integer)notification.getBody());
+		else if(n == Notifications.TINY_RESIZE)
+			onTinyResize((TinyMceResizeEvent)notification.getBody());
+				
 		
 	}
 	
@@ -76,7 +81,8 @@ public class PageListMediator extends Mediator implements IMediator, ChangeHandl
 				Notifications.ADD_PAGE_TO_LIST,
 				Notifications.REMOVE_PAGE_FROM_LIST,
 				Notifications.MOVE_PAGE_UP_LIST,
-				Notifications.MOVE_PAGE_DOWN_LIST};				 
+				Notifications.MOVE_PAGE_DOWN_LIST,
+				Notifications.TINY_RESIZE};				 
 	}
 	
 	
@@ -136,6 +142,13 @@ public class PageListMediator extends Mediator implements IMediator, ChangeHandl
 			view.setSelectedIndex(0);
 		
 		sendNotification(Notifications.SET_MODEL_SELECTED_INDEX,view.getSelectedIndex()); 
+		
+	}
+	
+	private void onTinyResize(TinyMceResizeEvent event){
+		PageListView view = (PageListView)getViewComponent();
+		PageListBarView plb = (PageListBarView)getFacade().retrieveMediator(PageListBarMediator.NAME).getViewComponent();		
+		view.setHeight((event.getTinyMceHeight() - plb.getOffsetHeight()) +"px" );
 		
 	}
 }

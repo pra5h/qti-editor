@@ -48,6 +48,5 @@ public class PageListBarView extends Composite {
 	
 	public PushButton getMoveUpButton(){
 		return _moveUpPageButton;
-	}
-
+	}	
 }
