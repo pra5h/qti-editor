@@ -1115,7 +1115,7 @@
 			var ed = this.editor;
 			ed.windowManager.confirm('advanced.newdocument', function(s) {
 				if (s) {
-					ed.selection.dom.doc.body.innerHTML = ed.selection.dom.doc.body.innerHTML.replace(/(<!-- <itemBody> -->)[\s\S]*(<!-- <\/itemBody> -->)/gi, '$1$2');
+					ed.selection.dom.doc.body.innerHTML = ed.selection.dom.doc.body.innerHTML.replace(/(<!-- <itemBody> -->)[\s\S]*(<!-- <\/itemBody> -->)/gi, '$1<p>&#160;</p>$2');
 					ed.selection.dom.doc.body.innerHTML = ed.selection.dom.doc.body.innerHTML.replace(/(<!-- <assessmentItem [^>]*> -->)[\s\S]*(<!-- <itemBody> -->)/gi, '$1$2');
 					ed.selection.dom.doc.body.innerHTML = ed.selection.dom.doc.body.innerHTML.replace(/(<!-- <\/itemBody> -->)[\s\S]*(<!-- <\/assessmentItem> -->)/gi, '$1$2');
 				}
