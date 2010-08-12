@@ -181,7 +181,7 @@ var choiceDialog = {
 		} else {
 			
 			var ed = tinymce.EditorManager.activeEditor;
-			var nd = ed.selection.getNode();
+			var nd = tinyMCE.selectedNode;
 			while(nd.id != 'inlineChoiceInteraction') {
 				nd = nd.parentNode;
 			}

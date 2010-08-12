@@ -73,7 +73,7 @@ var gapDialog = {
 				
 			} else {
 			
-				var gapTag = ed.selection.getNode();
+				var gapTag = tinyMCE.selectedNode;
 				gapTag.innerHTML = gap;
 				var fdb = '';
 				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].onok != undefined) {

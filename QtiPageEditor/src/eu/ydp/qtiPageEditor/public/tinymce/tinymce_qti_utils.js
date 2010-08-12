@@ -136,411 +136,478 @@ function actionOnQTI(e) {
 		
 	} // eof changesTracking
 
-	if ((e.type == 'click' && e.button == 0) || (e.type == 'keypress' && e.keyCode == '113')) {
+	if ((e.type == 'dblclick' && e.button == 0) || (e.type == 'keypress' && e.keyCode == '113')) {
 		
-		//QY Comments
-		if (ed.selection.getNode().nodeName == 'DIV' && ed.selection.getNode().getAttribute('class') == 'mceNonEditable qy_comment') {
-			
-			var comment_content = ed.selection.getNode().innerHTML;
-			var idref = ed.selection.getNode().getAttribute('id');
-			idref = idref.replace(/^ref_([0-9]+)/i, '$1');
-			var commented_text = ed.selection.getNode().nextSibling;
-			if(commented_text != undefined) {
-				if(commented_text.nodeName != 'SPAN' || commented_text.id != idref) {
-					for(i in commented_text.children) {
-						if(commented_text.children[i].nodeName == 'SPAN' && commented_text.children[i].id == idref) {
-							commented_text = commented_text.children[i];
-							break;
-						}
-					}
-				} 
-				commented_text = commented_text.innerHTML;
-				tinyMCE.execCommand('mceComment', false, {comment_content: comment_content, comment_id: idref, commented_text: commented_text});
-			} else {
-				tinyMCE.execCommand('mceComment', false, {comment_content: comment_content, comment_id: idref, commented_text: ''});
-			}
+		var selectedNode = e.target;
+		while(selectedNode.nodeName != 'BODY') {
+			if(selectedNode.attributes != undefined) {
 				
+				// QY Comments
+				if (selectedNode.nodeName == 'DIV' && selectedNode.getAttribute('class') == 'mceNonEditable qy_comment') {
+					runComment(selectedNode);
+					break;
+				}
+				
+				// MediaLib
+				if(selectedNode.nodeName == 'IMG' || (selectedNode.nodeName == 'FIELDSET' && selectedNode.id == 'runFileUploadLib')) {
+					runMediaLib(selectedNode);
+					break;
+				}
+				
+				// Gap
+				if (selectedNode.nodeName == 'SPAN' && selectedNode.id == 'gap') {
+					runGap(selectedNode);
+					break
+				}
+				
+				// Inline choice
+				if (selectedNode.id == 'inlineChoiceInteraction' || selectedNode.id == 'inlineChoiceAnswer' || selectedNode.parentNode.id == 'inlineChoiceAnswer') {
+					runInlineChoice(selectedNode);
+					break;
+				}
+				
+				// Multiple choice
+				if ((selectedNode.nodeName == 'P' && selectedNode.id == 'choiceInteraction' && selectedNode.parentNode.id == 'choiceInteraction') || (selectedNode.nodeName == 'DIV' && selectedNode.id == 'choiceInteraction')) {
+					runMultipleChoice(selectedNode);
+					break;
+				}
+				
+				// Order
+				if (selectedNode.id == 'orderOption' || (selectedNode.id == 'choiceInteraction' && selectedNode.parentNode.id == 'orderInteraction')) {
+					runOrder(selectedNode);
+					break;
+				}
+				
+				// Match
+				if (selectedNode.id != undefined && (selectedNode.id == 'matchInteraction' || selectedNode.id.match(/canvas_/))) {
+					runMatch(selectedNode);
+					break;
+				}
+				
+			}
+			selectedNode = selectedNode.parentNode;
 		}
 		
-		//Imglib
-		if(ed.selection.getNode().nodeName == 'IMG' || (ed.selection.getNode().nodeName == 'FIELDSET' && ed.selection.getNode().id == 'runFileUploadLib')) {
-			if(ed.selection.getNode().nodeName == 'IMG') {
-				var node = ed.selection.getNode();
-			} else {
-				var node = ed.selection.getNode().getElementsByTagName('img')[0];
-			}
-			
-			if(node.getAttribute('id') == 'mceVideo') {
-				var src = node.previousSibling.getAttribute('src');
-				var title = node.previousSibling.getAttribute('title');
-				tinyMCE.execCommand('mceAddVideo', false, {src: src, title: title});
-			} else {
-				var src = node.attributes['src'].value;
-				if(node.attributes['title'] != undefined) {
-					var title = node.attributes['title'].value;
-				} else {
-					var title = '';
-				}
-				var data = {src: src, title: title};
-				//src = src.split('/');
-				//src = src[src.length - 1];
-				tinyMCE.execCommand('mceAppendImageToPage', false, data);
-			}
-		}
-		
-		//Gap
-		if (ed.selection.getNode().nodeName == 'SPAN' && ed.selection.getNode().id == 'gap') {
-		
-			var id = ed.selection.getNode().previousSibling.data;
-			rg = new RegExp('<textEntryInteraction responseIdentifier="([^"]*)"[^>]*>',"gi");
-			id = rg.exec(id);
-			if(id[1] && id[1] != undefined && id[1] != '') {
-				id = id[1];
-			} else {
-				id = '';
-			}
-			var body = ed.selection.dom.doc.body.innerHTML;
-			
-			rg = new RegExp('<feedbackInline[^>]*showHide="show"[^>]*>([^<]*)<\/feedbackInline>','gi');
-			var onok = rg.exec(ed.selection.getNode().previousSibling.data);
-			if(onok != undefined) {
-				var oo = onok[1];
-			} else {
-				var oo = '';
-			}
-			rg = new RegExp('<modalFeedback[^>]*outcomeIdentifier="' + id + '"[^>]*showHide="show"[^>]*sound="([^"]*)"[^>]*>','gi');
-			var onok_sound = rg.exec(body);
-			if(onok_sound != undefined) {
-				var oo_snd = onok_sound[1];
-			} else {
-				var oo_snd = '';
-			}
-			rg = new RegExp('<feedbackInline[^>]*showHide="hide"[^>]*>([^<]*)<\/feedbackInline>','gi');
-			var onwrong = rg.exec(ed.selection.getNode().previousSibling.data);
-			if(onwrong != undefined) {
-				var ow = onwrong[1];
-			} else {
-				var ow = '';
-			}
-			rg = new RegExp('<modalFeedback[^>]*outcomeIdentifier="' + id + '"[^>]*showHide="hide"[^>]*sound="([^"]*)"[^>]*>','gi');
-			var onwrong_sound = rg.exec(body);
-			if(onwrong_sound != undefined) {
-				var ow_snd = onwrong_sound[1];
-			} else {
-				var ow_snd = '';
-			}
-			
-			var gapdata = {value: ed.selection.getNode().innerHTML, id: id, onok: oo, onwrong: ow, onok_sound: oo_snd, onwrong_sound: ow_snd};
-			tinyMCE.execCommand('mceGap', false, gapdata);
-		}
-		
-		//Inline choice
-		if (ed.selection.getNode().id == 'inlineChoiceInteraction' || ed.selection.getNode().id == 'inlineChoiceAnswer' || ed.selection.getNode().parentNode.id == 'inlineChoiceAnswer') {
-			
-			var answers = new Array();
-			var points = new Array();
-			var ids = new Array();
-			var fixed = new Array();
-			var data = new Array();
-			var fdb = new Array();
-			
-			var inlineChoiceSpan = ed.selection.getNode();
-			while(inlineChoiceSpan.id != 'inlineChoiceInteraction') {
-				inlineChoiceSpan = inlineChoiceSpan.parentNode;
-			}
-			var choiceSectionHTML = inlineChoiceSpan.innerHTML;
-			if(inlineChoiceSpan.previousSibling != undefined) {
-				if(inlineChoiceSpan.previousSibling.nodeName == "P") {
-					var identifier = inlineChoiceSpan.previousSibling.innerHTML.match(/<inlineChoiceInteraction responseIdentifier="([^"]+)"[^>]*>/i);
-					var shuffle = inlineChoiceSpan.previousSibling.innerHTML.match(/<inlineChoiceInteraction.*?shuffle="([^"]*)"[^>]*>/i);
-				} else {
-					var identifier = inlineChoiceSpan.previousSibling.data.match(/<inlineChoiceInteraction responseIdentifier="([^"]+)"[^>]*>/i);
-					var shuffle = inlineChoiceSpan.previousSibling.data.match(/<inlineChoiceInteraction.*?shuffle="([^"]*)"[^>]*>/i);
-				}
-			} else {
-				var identifier = inlineChoiceSpan.parentNode.previousSibling.data.match(/<inlineChoiceInteraction responseIdentifier="([^"]+)"[^>]*>/i);
-				var shuffle = inlineChoiceSpan.parentNode.previousSibling.data.match(/<inlineChoiceInteraction.*?shuffle="([^"]*)"[^>]*>/i);
-			}
-			var answers_paragraph = choiceSectionHTML.match(/<!-- <inlineChoice identifier="[^"]*"[^>]*>[^<]*(?:<feedbackInline[^>]*>([^<]*)<\/feedbackInline>)?<\/inlineChoice> --><span id="inlineChoiceAnswer" style="[^"]*"[^>]*>([^<]*)(<span[^>]*>[^<]*<\/span>)?<\/span>/gi);
-			var values = new Array();
-			for (ans in answers_paragraph) {
-				values.push(answers_paragraph[ans].match(/<!-- <inlineChoice identifier="([^"]*)"\s*(?:fixed="([^"]*)")?[^>]*>[^<]*(?:<feedbackInline[^>]*>([^<]*)<\/feedbackInline>)?<\/inlineChoice> --><span id="inlineChoiceAnswer" style="[^"]*"[^>]*>([^<]*)(<span[^>]*>[^<]*<\/span>)?<\/span>/i));
-			}
-			var i=0;
-			while(values[i] != undefined) {
-				ids.push(values[i][1]);
-				answers.push(values[i][4]);
-				if(values[i][5] != undefined) {
-					points.push(1);
-				} else {
-					points.push(0);
-				}
-				if(values[i][2] == 'true') {
-					fixed.push('true');
-				} else {
-					fixed.push('false');
-				}
-				fdb[values[i][1]] = values[i][3];
-				i++;
-			}
-			
-			data.push('');
-			data.push(answers);
-			data.push(points);
-			data.push(ids);
-			data.push(identifier[1]);
-			data.push(shuffle[1]);
-			data.push(fixed);
-			data.push(fdb);
-			
-			var body = ed.selection.dom.doc.body.innerHTML;
-			
-			rg = new RegExp('<modalFeedback[^>]*senderIdentifier="' + identifier[1] + '"[^>]*identifier="([^"]*)"[^>]*sound="([^"]*)"[^>]*>','gi');
-			var fdArr = body.match(rg);
-			if(fdArr != undefined) {
-				var fd = new Array;
-				for (i in fdArr) {
-					rg = new RegExp('<modalFeedback[^>]*senderIdentifier="' + identifier[1] + '"[^>]*identifier="([^"]*)"[^>]*sound="([^"]*)"[^>]*>','i');
-					var arr = rg.exec(fdArr[i]);
-					fd[arr[1]] = arr[2]
-				}
-				data.push(fd);
-			}			
-			
-			tinyMCE.execCommand('mceInlineChoice', false, data);
-		}
-		
-		// Choice
-		if ((ed.selection.getNode().nodeName == 'P' && ed.selection.getNode().id == 'choiceInteraction' && ed.selection.getNode().parentNode.id == 'choiceInteraction') || (ed.selection.getNode().nodeName == 'DIV' && ed.selection.getNode().id == 'choiceInteraction')) {
-			
-			var answers = new Array();
-			var points = new Array();
-			var ids = new Array();
-			var fixed = new Array();
-			var fdb = new Array();
-			var data = new Array();
-			
-			var sectionDiv = ed.selection.getNode();
-			while(sectionDiv.nodeName != 'DIV') {
-				sectionDiv = sectionDiv.parentNode;
-			}
-			var choiceSectionHTML = sectionDiv.innerHTML;
-			var question = choiceSectionHTML.match(/<p id="choiceInteraction">([^<]*)<\/p>/i);
-			if(sectionDiv.previousSibling.nodeName == "P") {
-				var identifier = sectionDiv.previousSibling.innerHTML.match(/<choiceInteraction responseIdentifier="([^"]+)"[^>]*>/i);
-				var shuffle = sectionDiv.previousSibling.innerHTML.match(/<choiceInteraction.*?shuffle="([^"]*)"[^>]*>/i);
-				var maxChoices = sectionDiv.previousSibling.innerHTML.match(/<choiceInteraction.*?maxChoices="([^"]*)"[^>]*>/i);
-			} else {
-				var identifier = sectionDiv.previousSibling.data.match(/<choiceInteraction responseIdentifier="([^"]+)"[^>]*>/i);
-				var shuffle = sectionDiv.previousSibling.data.match(/<choiceInteraction.*?shuffle="([^"]*)"[^>]*>/i);
-				var maxChoices = sectionDiv.previousSibling.data.match(/<choiceInteraction.*?maxChoices="([^"]*)"[^>]*>/i);
-			}
-			var answers_paragraph = choiceSectionHTML.match(/<!-- <simpleChoice identifier="[^"]*"[^>]*>([^<]*|<img[^>]*>)(?:<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice> --><br[^>]*><input id="choiceInteraction" name="simpleChoice" (checked="checked" )?type="checkbox">(<img[^>]*>|[^<]*)/gi);
-			var values = new Array();
-			for (ans in answers_paragraph) {
-				values.push(answers_paragraph[ans].match(/<!-- <simpleChoice identifier="([^"]*)"\s*(?:fixed="([^"]*)")?[^>]*>(?:[^<]*|<img[^>]*>)(?:<feedbackInline[^>]*>([^<]*)<\/feedbackInline>)?<\/simpleChoice> --><br[^>]*><input id="choiceInteraction" name="simpleChoice" (checked="checked" )?type="checkbox">(<img[^>]*>|[^<]*)/i));
-			}
-			var i=0;
-			while(values[i] != undefined) {
-				ids.push(values[i][1]);
-				answers.push(values[i][5]);
-				if(values[i][4] == 'checked="checked" ') {
-					points.push('1');
-				} else {
-					points.push('0');
-				}
-				fixed.push(values[i][2]);
-				fdb[values[i][1]] = values[i][3];
-				i++;
-			}
-			data.push(question[1]);
-			data.push(answers);
-			data.push(points);
-			data.push(ids);
-			data.push(identifier[1]);
-			data.push(shuffle[1]);
-			data.push(fixed);
-			data.push(maxChoices[1]);
-			data.push(fdb);
-			
-			var body = ed.selection.dom.doc.body.innerHTML;
-			rg = new RegExp('<modalFeedback[^>]*senderIdentifier="' + identifier[1] + '"[^>]*identifier="([^"]*)"[^>]*sound="([^"]*)"[^>]*>','gi');
-			var fdArr = body.match(rg);
-			var fd = new Array;
-			if(fdArr != undefined) {
-				for (i in fdArr) {
-					rg = new RegExp('<modalFeedback[^>]*senderIdentifier="' + identifier[1] + '"[^>]*identifier="([^"]*)"[^>]*sound="([^"]*)"[^>]*>','i');
-					var arr = rg.exec(fdArr[i]);
-					fd[arr[1]] = arr[2]
-				}
-			}
-			data.push(fd);	
-			
-			tinyMCE.execCommand('mceChoice', false, data);
-		}
-		
-		// Order
-		if (ed.selection.getNode().id == 'orderOption' || (ed.selection.getNode().id == 'choiceInteraction' && ed.selection.getNode().parentNode.id == 'orderInteraction')) {
-			
-			var answers = new Array();
-			var points = new Array();
-			var ids = new Array();
-			var fixed = new Array();
-			var data = new Array();
-			
-			var sectionDiv = ed.selection.getNode();
-			while(sectionDiv.nodeName != 'DIV' || sectionDiv.id != 'orderInteraction') {
-				sectionDiv = sectionDiv.parentNode;
-			}
-			var orderSectionHTML = sectionDiv.innerHTML;
-			var question = orderSectionHTML.match(/<p id="choiceInteraction">([^<]*)<\/p>/i);
-			if(sectionDiv.previousSibling.nodeName == "P") {
-				var identifier = sectionDiv.previousSibling.innerHTML.match(/<orderInteraction responseIdentifier="([^"]+)"[^>]*>/i);
-				var shuffle = sectionDiv.previousSibling.innerHTML.match(/<orderInteraction.*?shuffle="([^"]*)"[^>]*>/i);
-			} else {
-				var identifier = sectionDiv.previousSibling.data.match(/<orderInteraction responseIdentifier="([^"]+)"[^>]*>/i);
-				var shuffle = sectionDiv.previousSibling.data.match(/<orderInteraction.*?shuffle="([^"]*)"[^>]*>/i);
-			}
-			var answers_paragraph = orderSectionHTML.match(/<!-- <simpleChoice identifier="[^"]*"[^>]*>([^<]*|<img[^>]*>)(?=<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice> -->(?:<\/p>)?<div id="orderOption" name="([0-9]+)"[^>]*>(<img[^>]*>|[^<]*)<\/div>/gi);
-			var values = new Array();
-			for (ans in answers_paragraph) {
-				//values.push();
-				values.push(answers_paragraph[ans].match(/<!-- <simpleChoice identifier="([^"]*)"\s*(?:fixed="([^"]*)")?[^>]*>(?:[^<]*|<img[^>]*>)<\/simpleChoice> -->(?:<\/p>)?<div id="orderOption" name="([0-9]+)"[^>]*>(<img[^>]*>|[^<]*)<\/div>/i));
-				//if(answers_paragraph[ans].match(/<feedbackInline[^>]*>[^<]*<\/feedbackInline>/i)) {
-				//	if(tinyMCE.feedback == undefined) {
-				//		tinyMCE.feedback = new Array;
-				//	}
-				//	var fd = answers_paragraph[ans].match(/<feedbackInline[^>]*identifier="([^"]*)"[^>]*>([^<]*)<\/feedbackInline>/i)
-				//	tinyMCE.feedback[fd[0]] = fd[1];
-				//}
-			}
-			var i=0;
-			while(values[i] != undefined) {
-				var point = values[i][3];
-				points.push(point);
-				point--;
-				ids[point] = values[i][1];
-				answers[point] = values[i][4];
-				fixed[point] = values[i][2];
-				i++;
-			}
-			data.push(question[1]);
-			data.push(answers);
-			data.push(points);
-			data.push(ids);
-			data.push(identifier[1]);
-			data.push(shuffle[1]);
-			data.push(fixed);
-			
-			tinyMCE.execCommand('mceOrder', false, data);
-		}
-		
-		// Match
-		if (ed.selection.getNode().id != undefined && (ed.selection.getNode().id == 'matchInteraction' || ed.selection.getNode().id.match(/canvas_/))) {
-			
-			var answers = new Array();
-			var points = new Array();
-			var ids = new Array();
-			var fixed = new Array();
-			var data = new Array();
-			var fdb = new Array();
-			
-			var sectionDiv = ed.selection.getNode();
-			while(sectionDiv.nodeName != 'DIV' || sectionDiv.id != 'matchInteraction') {
-				sectionDiv = sectionDiv.parentNode;
-			}
-			
-			var matchSectionHTML = sectionDiv.innerHTML;
-			var question = matchSectionHTML.match(/<p id="matchInteraction">([^<]*)<\/p>/i);
-			
-			var identifier = sectionDiv.previousSibling.data.match(/<matchInteraction responseIdentifier="([^"]+)"[^>]*>/i);
-			var shuffle = sectionDiv.previousSibling.data.match(/<matchInteraction.*?shuffle="([^"]*)"[^>]*>/i);
-			
-			//var leftSet = $('matchInteraction[responseIdentifier=\'' + identifier[1] + '\'] > simpleMatchSet:first').children();
-			//var rightSet = $('matchInteraction[responseIdentifier=\'' + identifier[1] + '\'] > simpleMatchSet:last').children();
-			
-			var sets = sectionDiv.children[1].children[0].children[0].children;
-			var leftSet = sets[0].children[0].children[0].children;
-			var rightSet = sets[2].children[0].children[0].children;
-			
-			var leftSetAnswers = new Array;
-			var leftSetIds = new Array;
-			var leftSetFixed = new Array;
-			var rightSetAnswers = new Array;
-			var rightSetIds = new Array;
-			var rightSetFixed = new Array;
-			var responsePairs = new Array;
-			
-			for (el in leftSet) {
-				if(leftSet[el].children != undefined) {
-					leftSetAnswers.push(leftSet[el].children[0].children[2].innerHTML);
-					leftSetIds.push(leftSet[el].children[0].children[0].innerHTML);
-					leftSetFixed.push(leftSet[el].children[0].children[1].innerHTML);
-				}
-			}
-			
-			for (el in rightSet) {
-				if(rightSet[el].children != undefined) {
-					rightSetAnswers.push(rightSet[el].children[0].children[2].innerHTML);
-					rightSetIds.push(rightSet[el].children[0].children[0].innerHTML);
-					rightSetFixed.push(rightSet[el].children[0].children[1].innerHTML);
-				}
-			}
-			
-			var tinybody = ed.selection.getNode();
-			while(tinybody.nodeName != 'BODY') {
-				tinybody = tinybody.parentNode;
-			}
-			
-			tinybody = tinybody.innerHTML;	
-			var rg = new RegExp('<!-- <responseDeclaration identifier="' + identifier[1] + '" [^>]*>[^<]*<correctResponse>[^<]*((?:<value>[^<]*<\/value>[^<]*)*)[^<]*<\/correctResponse>','gi');
-			var valuesStr = rg.exec(tinybody);
-			valuesArr = valuesStr[1].match(/<value>([^<]*)<\/value>/gi);
-			
-			for (i in valuesArr) {
-				responsePairs.push(valuesArr[i].match(/<value>([^<]*)<\/value>/i)[1]);
-			}
-			
-			var rg = new RegExp('<feedbackInline[^>]*identifier="([^"]*)"[^>]*>([^<]*)<\/feedbackInline>',"gi");
-			var fdbArr = matchSectionHTML.match(rg);
-			for(i in fdbArr) {
-				var val = rg.exec(fdbArr[i]);
-				var val2 = fdbArr[i].match(rg); // lol?
-				if(val != undefined) {
-					fdb[val[1]] = val[2];
-				}
-			}
-			
-			data.push(question[1]);
-			data.push(identifier[1]);
-			data.push(shuffle[1]);
-			data.push(leftSetAnswers);
-			data.push(leftSetIds);
-			data.push(rightSetAnswers);
-			data.push(rightSetIds);
-			data.push(leftSetFixed);
-			data.push(rightSetFixed);
-			data.push(responsePairs);
-			data.push(fdb);
-			
-			var body = ed.selection.dom.doc.body.innerHTML;
-			
-			rg = new RegExp('<modalFeedback[^>]*senderIdentifier="' + identifier[1] + '"[^>]*identifier="([^"]*)"[^>]*sound="([^"]*)"[^>]*>','gi');
-			var fdArr = body.match(rg);
-			if(fdArr != undefined) {
-				var fd = new Array;
-				for (i in fdArr) {
-					rg = new RegExp('<modalFeedback[^>]*senderIdentifier="' + identifier[1] + '"[^>]*identifier="([^"]*)"[^>]*sound="([^"]*)"[^>]*>','i');
-					var arr = rg.exec(fdArr[i]);
-					fd[arr[1]] = arr[2]
-				}
-				data.push(fd);
-			}			
-			
-			tinyMCE.execCommand('mceMatch', false, data);
-		}
 	}
 	return true;
+	
+}
+
+//QY Comments
+function runComment(selectedNode) {
+	
+	var ed = tinymce.EditorManager.activeEditor;
+	var comment_content = selectedNode.innerHTML;
+	var idref = selectedNode.getAttribute('id');
+	idref = idref.replace(/^ref_([0-9]+)/i, '$1');
+	var commented_text = selectedNode.nextSibling;
+	if(commented_text != undefined) {
+		if(commented_text.nodeName != 'SPAN' || commented_text.id != idref) {
+			for(i in commented_text.children) {
+				if(commented_text.children[i].nodeName == 'SPAN' && commented_text.children[i].id == idref) {
+					commented_text = commented_text.children[i];
+					break;
+				}
+			}
+		} 
+		commented_text = commented_text.innerHTML;
+		tinyMCE.execCommand('mceComment', false, {comment_content: comment_content, comment_id: idref, commented_text: commented_text});
+	} else {
+		tinyMCE.execCommand('mceComment', false, {comment_content: comment_content, comment_id: idref, commented_text: ''});
+	}
+		
+}
+
+//MediaLib
+function runMediaLib(selectedNode) {
+
+	var ed = tinymce.EditorManager.activeEditor;
+	if(selectedNode.nodeName == 'IMG') {
+		var node = selectedNode;
+	} else {
+		var node = selectedNode.getElementsByTagName('img')[0];
+	}
+	
+	if(node.getAttribute('id') == 'mceVideo') {
+		var src = node.previousSibling.getAttribute('src');
+		var title = node.previousSibling.getAttribute('title');
+		tinyMCE.execCommand('mceAddVideo', false, {src: src, title: title});
+	} else {
+		var src = node.attributes['src'].value;
+		if(node.attributes['title'] != undefined) {
+			var title = node.attributes['title'].value;
+		} else {
+			var title = '';
+		}
+		var data = {src: src, title: title};
+		//src = src.split('/');
+		//src = src[src.length - 1];
+		tinyMCE.execCommand('mceAppendImageToPage', false, data);
+	}
+
+}
+
+// Gap
+function runGap(selectedNode) {
+			
+	var ed = tinymce.EditorManager.activeEditor;
+	var qtiNode = selectedNode;
+	var qtiNodeInnerHTML = qtiNode.innerHTML;
+	
+	var id = qtiNode.previousSibling.data;
+	rg = new RegExp('<textEntryInteraction responseIdentifier="([^"]*)"[^>]*>',"gi");
+	id = rg.exec(id);
+	if(id[1] && id[1] != undefined && id[1] != '') {
+		id = id[1];
+	} else {
+		id = '';
+	}
+	var body = ed.selection.dom.doc.body.innerHTML;
+	
+	rg = new RegExp('<feedbackInline[^>]*showHide="show"[^>]*>([^<]*)<\/feedbackInline>','gi');
+	var onok = rg.exec(qtiNode.previousSibling.data);
+	if(onok != undefined) {
+		var oo = onok[1];
+	} else {
+		var oo = '';
+	}
+	rg = new RegExp('<modalFeedback[^>]*outcomeIdentifier="' + id + '"[^>]*showHide="show"[^>]*sound="([^"]*)"[^>]*>','gi');
+	var onok_sound = rg.exec(body);
+	if(onok_sound != undefined) {
+		var oo_snd = onok_sound[1];
+	} else {
+		var oo_snd = '';
+	}
+	rg = new RegExp('<feedbackInline[^>]*showHide="hide"[^>]*>([^<]*)<\/feedbackInline>','gi');
+	var onwrong = rg.exec(qtiNode.previousSibling.data);
+	if(onwrong != undefined) {
+		var ow = onwrong[1];
+	} else {
+		var ow = '';
+	}
+	rg = new RegExp('<modalFeedback[^>]*outcomeIdentifier="' + id + '"[^>]*showHide="hide"[^>]*sound="([^"]*)"[^>]*>','gi');
+	var onwrong_sound = rg.exec(body);
+	if(onwrong_sound != undefined) {
+		var ow_snd = onwrong_sound[1];
+	} else {
+		var ow_snd = '';
+	}
+	
+	var gapdata = {value: qtiNodeInnerHTML, id: id, onok: oo, onwrong: ow, onok_sound: oo_snd, onwrong_sound: ow_snd};
+	
+	tinyMCE.selectedNode = selectedNode;
+	tinyMCE.execCommand('mceGap', false, gapdata);
+	
+}
+
+// Inline choice
+function runInlineChoice(selectedNode) {
+			
+	var ed = tinymce.EditorManager.activeEditor;
+	var answers = new Array();
+	var points = new Array();
+	var ids = new Array();
+	var fixed = new Array();
+	var data = new Array();
+	var fdb = new Array();
+	
+	var inlineChoiceSpan = selectedNode;
+	while(inlineChoiceSpan.id != 'inlineChoiceInteraction') {
+		inlineChoiceSpan = inlineChoiceSpan.parentNode;
+	}
+	var choiceSectionHTML = inlineChoiceSpan.innerHTML;
+	if(inlineChoiceSpan.previousSibling != undefined) {
+		if(inlineChoiceSpan.previousSibling.nodeName == "P") {
+			var identifier = inlineChoiceSpan.previousSibling.innerHTML.match(/<inlineChoiceInteraction responseIdentifier="([^"]+)"[^>]*>/i);
+			var shuffle = inlineChoiceSpan.previousSibling.innerHTML.match(/<inlineChoiceInteraction.*?shuffle="([^"]*)"[^>]*>/i);
+		} else {
+			var identifier = inlineChoiceSpan.previousSibling.data.match(/<inlineChoiceInteraction responseIdentifier="([^"]+)"[^>]*>/i);
+			var shuffle = inlineChoiceSpan.previousSibling.data.match(/<inlineChoiceInteraction.*?shuffle="([^"]*)"[^>]*>/i);
+		}
+	} else {
+		var identifier = inlineChoiceSpan.parentNode.previousSibling.data.match(/<inlineChoiceInteraction responseIdentifier="([^"]+)"[^>]*>/i);
+		var shuffle = inlineChoiceSpan.parentNode.previousSibling.data.match(/<inlineChoiceInteraction.*?shuffle="([^"]*)"[^>]*>/i);
+	}
+	var answers_paragraph = choiceSectionHTML.match(/<!-- <inlineChoice identifier="[^"]*"[^>]*>[^<]*(?:<feedbackInline[^>]*>([^<]*)<\/feedbackInline>)?<\/inlineChoice> --><span id="inlineChoiceAnswer" style="[^"]*"[^>]*>([^<]*)(<span[^>]*>[^<]*<\/span>)?<\/span>/gi);
+	var values = new Array();
+	for (ans in answers_paragraph) {
+		values.push(answers_paragraph[ans].match(/<!-- <inlineChoice identifier="([^"]*)"\s*(?:fixed="([^"]*)")?[^>]*>[^<]*(?:<feedbackInline[^>]*>([^<]*)<\/feedbackInline>)?<\/inlineChoice> --><span id="inlineChoiceAnswer" style="[^"]*"[^>]*>([^<]*)(<span[^>]*>[^<]*<\/span>)?<\/span>/i));
+	}
+	var i=0;
+	while(values[i] != undefined) {
+		ids.push(values[i][1]);
+		answers.push(values[i][4]);
+		if(values[i][5] != undefined) {
+			points.push(1);
+		} else {
+			points.push(0);
+		}
+		if(values[i][2] == 'true') {
+			fixed.push('true');
+		} else {
+			fixed.push('false');
+		}
+		fdb[values[i][1]] = values[i][3];
+		i++;
+	}
+	
+	data.push('');
+	data.push(answers);
+	data.push(points);
+	data.push(ids);
+	data.push(identifier[1]);
+	data.push(shuffle[1]);
+	data.push(fixed);
+	data.push(fdb);
+	
+	var body = ed.selection.dom.doc.body.innerHTML;
+	
+	rg = new RegExp('<modalFeedback[^>]*senderIdentifier="' + identifier[1] + '"[^>]*identifier="([^"]*)"[^>]*sound="([^"]*)"[^>]*>','gi');
+	var fdArr = body.match(rg);
+	if(fdArr != undefined) {
+		var fd = new Array;
+		for (i in fdArr) {
+			rg = new RegExp('<modalFeedback[^>]*senderIdentifier="' + identifier[1] + '"[^>]*identifier="([^"]*)"[^>]*sound="([^"]*)"[^>]*>','i');
+			var arr = rg.exec(fdArr[i]);
+			fd[arr[1]] = arr[2]
+		}
+		data.push(fd);
+	}			
+	
+	tinyMCE.selectedNode = selectedNode;
+	tinyMCE.execCommand('mceInlineChoice', false, data);
+	
+}
+
+// Multiple choice
+function runMultipleChoice(selectedNode) {
+			
+	var ed = tinymce.EditorManager.activeEditor;
+	var answers = new Array();
+	var points = new Array();
+	var ids = new Array();
+	var fixed = new Array();
+	var fdb = new Array();
+	var data = new Array();
+	
+	var sectionDiv = selectedNode;
+	while(sectionDiv.nodeName != 'DIV') {
+		sectionDiv = sectionDiv.parentNode;
+	}
+	var choiceSectionHTML = sectionDiv.innerHTML;
+	var question = choiceSectionHTML.match(/<p id="choiceInteraction">([^<]*)<\/p>/i);
+	if(sectionDiv.previousSibling.nodeName == "P") {
+		var identifier = sectionDiv.previousSibling.innerHTML.match(/<choiceInteraction responseIdentifier="([^"]+)"[^>]*>/i);
+		var shuffle = sectionDiv.previousSibling.innerHTML.match(/<choiceInteraction.*?shuffle="([^"]*)"[^>]*>/i);
+		var maxChoices = sectionDiv.previousSibling.innerHTML.match(/<choiceInteraction.*?maxChoices="([^"]*)"[^>]*>/i);
+	} else {
+		var identifier = sectionDiv.previousSibling.data.match(/<choiceInteraction responseIdentifier="([^"]+)"[^>]*>/i);
+		var shuffle = sectionDiv.previousSibling.data.match(/<choiceInteraction.*?shuffle="([^"]*)"[^>]*>/i);
+		var maxChoices = sectionDiv.previousSibling.data.match(/<choiceInteraction.*?maxChoices="([^"]*)"[^>]*>/i);
+	}
+	var answers_paragraph = choiceSectionHTML.match(/<!-- <simpleChoice identifier="[^"]*"[^>]*>([^<]*|<img[^>]*>)(?:<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice> --><br[^>]*><input id="choiceInteraction" name="simpleChoice" (checked="checked" )?type="checkbox">(<img[^>]*>|[^<]*)/gi);
+	var values = new Array();
+	for (ans in answers_paragraph) {
+		values.push(answers_paragraph[ans].match(/<!-- <simpleChoice identifier="([^"]*)"\s*(?:fixed="([^"]*)")?[^>]*>(?:[^<]*|<img[^>]*>)(?:<feedbackInline[^>]*>([^<]*)<\/feedbackInline>)?<\/simpleChoice> --><br[^>]*><input id="choiceInteraction" name="simpleChoice" (checked="checked" )?type="checkbox">(<img[^>]*>|[^<]*)/i));
+	}
+	var i=0;
+	while(values[i] != undefined) {
+		ids.push(values[i][1]);
+		answers.push(values[i][5]);
+		if(values[i][4] == 'checked="checked" ') {
+			points.push('1');
+		} else {
+			points.push('0');
+		}
+		fixed.push(values[i][2]);
+		fdb[values[i][1]] = values[i][3];
+		i++;
+	}
+	data.push(question[1]);
+	data.push(answers);
+	data.push(points);
+	data.push(ids);
+	data.push(identifier[1]);
+	data.push(shuffle[1]);
+	data.push(fixed);
+	data.push(maxChoices[1]);
+	data.push(fdb);
+	
+	var body = ed.selection.dom.doc.body.innerHTML;
+	rg = new RegExp('<modalFeedback[^>]*senderIdentifier="' + identifier[1] + '"[^>]*identifier="([^"]*)"[^>]*sound="([^"]*)"[^>]*>','gi');
+	var fdArr = body.match(rg);
+	var fd = new Array;
+	if(fdArr != undefined) {
+		for (i in fdArr) {
+			rg = new RegExp('<modalFeedback[^>]*senderIdentifier="' + identifier[1] + '"[^>]*identifier="([^"]*)"[^>]*sound="([^"]*)"[^>]*>','i');
+			var arr = rg.exec(fdArr[i]);
+			fd[arr[1]] = arr[2]
+		}
+	}
+	data.push(fd);	
+	
+	tinyMCE.selectedNode = selectedNode;
+	tinyMCE.execCommand('mceChoice', false, data);
+	
+}
+
+// Order 
+function runOrder(selectedNode) {			
+	
+	var ed = tinymce.EditorManager.activeEditor;
+	var answers = new Array();
+	var points = new Array();
+	var ids = new Array();
+	var fixed = new Array();
+	var data = new Array();
+	
+	var sectionDiv = selectedNode;
+	while(sectionDiv.nodeName != 'DIV' || sectionDiv.id != 'orderInteraction') {
+		sectionDiv = sectionDiv.parentNode;
+	}
+	var orderSectionHTML = sectionDiv.innerHTML;
+	var question = orderSectionHTML.match(/<p id="choiceInteraction">([^<]*)<\/p>/i);
+	if(sectionDiv.previousSibling.nodeName == "P") {
+		var identifier = sectionDiv.previousSibling.innerHTML.match(/<orderInteraction responseIdentifier="([^"]+)"[^>]*>/i);
+		var shuffle = sectionDiv.previousSibling.innerHTML.match(/<orderInteraction.*?shuffle="([^"]*)"[^>]*>/i);
+	} else {
+		var identifier = sectionDiv.previousSibling.data.match(/<orderInteraction responseIdentifier="([^"]+)"[^>]*>/i);
+		var shuffle = sectionDiv.previousSibling.data.match(/<orderInteraction.*?shuffle="([^"]*)"[^>]*>/i);
+	}
+	var answers_paragraph = orderSectionHTML.match(/<!-- <simpleChoice identifier="[^"]*"[^>]*>([^<]*|<img[^>]*>)(?=<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice> -->(?:<\/p>)?<div id="orderOption" name="([0-9]+)"[^>]*>(<img[^>]*>|[^<]*)<\/div>/gi);
+	var values = new Array();
+	for (ans in answers_paragraph) {
+		values.push(answers_paragraph[ans].match(/<!-- <simpleChoice identifier="([^"]*)"\s*(?:fixed="([^"]*)")?[^>]*>(?:[^<]*|<img[^>]*>)<\/simpleChoice> -->(?:<\/p>)?<div id="orderOption" name="([0-9]+)"[^>]*>(<img[^>]*>|[^<]*)<\/div>/i));
+	}
+	var i=0;
+	while(values[i] != undefined) {
+		var point = values[i][3];
+		points.push(point);
+		point--;
+		ids[point] = values[i][1];
+		answers[point] = values[i][4];
+		fixed[point] = values[i][2];
+		i++;
+	}
+	
+	data.push(question[1]);
+	data.push(answers);
+	data.push(points);
+	data.push(ids);
+	data.push(identifier[1]);
+	data.push(shuffle[1]);
+	data.push(fixed);
+	
+	tinyMCE.selectedNode = selectedNode;
+	tinyMCE.execCommand('mceOrder', false, data);
+	
+}
+
+// Match
+function runMatch(selectedNode) {
+			
+	var ed = tinymce.EditorManager.activeEditor;
+	var answers = new Array();
+	var points = new Array();
+	var ids = new Array();
+	var fixed = new Array();
+	var data = new Array();
+	var fdb = new Array();
+	
+	var sectionDiv = selectedNode;
+	while(sectionDiv.nodeName != 'DIV' || sectionDiv.id != 'matchInteraction') {
+		sectionDiv = sectionDiv.parentNode;
+	}
+	
+	var matchSectionHTML = sectionDiv.innerHTML;
+	var question = matchSectionHTML.match(/<p id="matchInteraction">([^<]*)<\/p>/i);
+	
+	var identifier = sectionDiv.previousSibling.data.match(/<matchInteraction responseIdentifier="([^"]+)"[^>]*>/i);
+	var shuffle = sectionDiv.previousSibling.data.match(/<matchInteraction.*?shuffle="([^"]*)"[^>]*>/i);
+	
+	//var leftSet = $('matchInteraction[responseIdentifier=\'' + identifier[1] + '\'] > simpleMatchSet:first').children();
+	//var rightSet = $('matchInteraction[responseIdentifier=\'' + identifier[1] + '\'] > simpleMatchSet:last').children();
+	
+	var sets = sectionDiv.children[1].children[0].children[0].children;
+	var leftSet = sets[0].children[0].children[0].children;
+	var rightSet = sets[2].children[0].children[0].children;
+	
+	var leftSetAnswers = new Array;
+	var leftSetIds = new Array;
+	var leftSetFixed = new Array;
+	var rightSetAnswers = new Array;
+	var rightSetIds = new Array;
+	var rightSetFixed = new Array;
+	var responsePairs = new Array;
+	
+	for (el in leftSet) {
+		if(leftSet[el].children != undefined) {
+			leftSetAnswers.push(leftSet[el].children[0].children[2].innerHTML);
+			leftSetIds.push(leftSet[el].children[0].children[0].innerHTML);
+			leftSetFixed.push(leftSet[el].children[0].children[1].innerHTML);
+		}
+	}
+	
+	for (el in rightSet) {
+		if(rightSet[el].children != undefined) {
+			rightSetAnswers.push(rightSet[el].children[0].children[2].innerHTML);
+			rightSetIds.push(rightSet[el].children[0].children[0].innerHTML);
+			rightSetFixed.push(rightSet[el].children[0].children[1].innerHTML);
+		}
+	}
+	
+	var tinybody = ed.selection.getNode();
+	while(tinybody.nodeName != 'BODY') {
+		tinybody = tinybody.parentNode;
+	}
+	
+	tinybody = tinybody.innerHTML;	
+	var rg = new RegExp('<!-- <responseDeclaration identifier="' + identifier[1] + '" [^>]*>[^<]*<correctResponse>[^<]*((?:<value>[^<]*<\/value>[^<]*)*)[^<]*<\/correctResponse>','gi');
+	var valuesStr = rg.exec(tinybody);
+	valuesArr = valuesStr[1].match(/<value>([^<]*)<\/value>/gi);
+	
+	for (i in valuesArr) {
+		responsePairs.push(valuesArr[i].match(/<value>([^<]*)<\/value>/i)[1]);
+	}
+	
+	var rg = new RegExp('<feedbackInline[^>]*identifier="([^"]*)"[^>]*>([^<]*)<\/feedbackInline>',"gi");
+	var fdbArr = matchSectionHTML.match(rg);
+	for(i in fdbArr) {
+		var val = rg.exec(fdbArr[i]);
+		var val2 = fdbArr[i].match(rg); // lol?
+		if(val != undefined) {
+			fdb[val[1]] = val[2];
+		}
+	}
+	
+	data.push(question[1]);
+	data.push(identifier[1]);
+	data.push(shuffle[1]);
+	data.push(leftSetAnswers);
+	data.push(leftSetIds);
+	data.push(rightSetAnswers);
+	data.push(rightSetIds);
+	data.push(leftSetFixed);
+	data.push(rightSetFixed);
+	data.push(responsePairs);
+	data.push(fdb);
+	
+	var body = ed.selection.dom.doc.body.innerHTML;
+	
+	rg = new RegExp('<modalFeedback[^>]*senderIdentifier="' + identifier[1] + '"[^>]*identifier="([^"]*)"[^>]*sound="([^"]*)"[^>]*>','gi');
+	var fdArr = body.match(rg);
+	if(fdArr != undefined) {
+		var fd = new Array;
+		for (i in fdArr) {
+			rg = new RegExp('<modalFeedback[^>]*senderIdentifier="' + identifier[1] + '"[^>]*identifier="([^"]*)"[^>]*sound="([^"]*)"[^>]*>','i');
+			var arr = rg.exec(fdArr[i]);
+			fd[arr[1]] = arr[2]
+		}
+		data.push(fd);
+	}			
+	
+	tinyMCE.selectedNode = selectedNode;
+	tinyMCE.execCommand('mceMatch', false, data);
 	
 }
 
@@ -586,44 +653,3 @@ function cutQTI(content) {
 	return content;
 	
 }
-
-//function reduceNumberOfSpans() {
-//	
-//	var ed = tinyMCE.activeEditor;
-//	var body = ed.selection.dom.doc.body;
-//	
-//	var spans = body.getElementsByTagName('span');
-//	console.log(spans.length);
-//	if(spans.length > 0) {
-//		var i = 0;
-//		while(spans[i] == undefined) {
-//			i++;
-//		}
-//		if(spans[i].attributes != undefined) {
-//			if(spans[i].getAttribute('class') == 'changestracking_new' || spans[i].getAttribute('class') == 'changestracking_original') {
-//				
-//				if(spans[i].nextSibling != undefined && spans[i].nextSibling.nodeName == 'SPAN' && spans[i].nextSibling.getAttribute('class') == spans[i].getAttribute('class')) {
-//					connectSiblings(spans[i], spans[i].nextSibling);
-//				} 
-//				
-//			} 
-//		}	
-//		reduceNumberOfSpans();
-//	}
-//
-//}
-
-//function connectSiblings(sl, sr) {
-//	
-//	//console.log('pair: ');
-//	//console.log(sl.innerHTML);
-//	//console.log(sr.innerHTML);
-//	
-//	var ed = tinyMCE.activeEditor;
-//	ed.selection.select(sr);
-//	var common = '<span class="' + sr.getAttribute('class') + '" style="' + sr.getAttribute('style') + '" title="' + sr.getAttribute('title') + '">' + sl.innerHTML + sr.innerHTML + '</span>';
-//	tinyMCE.activeEditor.dom.remove(sr);
-//	tinyMCE.activeEditor.dom.remove(sl);
-//	tinyMCE.execCommand('mceInsertContent', false, common);
-//	
-//}

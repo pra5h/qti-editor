@@ -686,7 +686,7 @@ var matchDialog = {
 		} else {
 		
 			var ed = tinymce.EditorManager.activeEditor;
-			var nd = ed.selection.getNode();
+			var nd = tinyMCE.selectedNode;
 			var matchSection = '';
 			
 			while(nd.nodeName != 'DIV' || nd.id != 'matchInteraction') {

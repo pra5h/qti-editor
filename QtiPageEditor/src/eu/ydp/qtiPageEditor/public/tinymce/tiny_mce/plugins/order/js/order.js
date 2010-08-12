@@ -209,7 +209,7 @@ var orderDialog = {
 			
 		} else {
 			var ed = tinymce.EditorManager.activeEditor;
-			var nd = ed.selection.getNode();
+			var nd = tinyMCE.selectedNode;
 			while(nd.nodeName != 'DIV' || nd.id != 'orderInteraction') {
 				nd = nd.parentNode;
 			}

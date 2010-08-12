@@ -235,7 +235,9 @@ var choiceDialog = {
 			
 		} else {
 			var ed = tinymce.EditorManager.activeEditor;
-			var nd = ed.selection.getNode();
+			
+			var nd = tinyMCE.selectedNode;			
+			
 			while(nd.nodeName != 'DIV') {
 				nd = nd.parentNode;
 			}
