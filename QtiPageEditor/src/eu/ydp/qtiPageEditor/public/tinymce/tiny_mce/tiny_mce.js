@@ -1926,7 +1926,7 @@ tinymce.create('static tinymce.util.XHR', {
 			
 			// Remove illegal text before headins
 			var beforeHeadings = h.match(/(.*?)(?=<\?xml)/);
-			if(beforeHeadings && beforeHeadings[1] != '') {
+			if(beforeHeadings != undefined && beforeHeadings[1] != '') {
 				h = h.replace(/(.*?)(?=<\?xml)/,'');
 			}
 			
@@ -2139,8 +2139,11 @@ tinymce.create('static tinymce.util.XHR', {
 			
 			this.setCanvasParams();
 			
-			h = this.processQTI(h);
-			h = this.processQYComments(h);
+			// bug 35201
+			if(h.match(/^<table[^>]*>.*<\/table>$/i) == undefined) {
+				h = this.processQTI(h);
+				h = this.processQYComments(h);
+			}
 			
 			// Convert strong and em to b and i in FF since it can't handle them
 			if (tinymce.isGecko) {
