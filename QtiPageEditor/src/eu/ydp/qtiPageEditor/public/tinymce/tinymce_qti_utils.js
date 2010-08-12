@@ -138,11 +138,10 @@ function actionOnQTI(e) {
 
 	if ((e.type == 'dblclick' && e.button == 0) || (e.type == 'keypress' && e.keyCode == '113')) {
 		
-		var selectedNode = e.target;
-		
-		// for F2 access
-		if(selectedNode == undefined) {
-			selectedNode = ed.selection.getNode();
+		if(e.type == 'dblclick') {
+			var selectedNode = e.target;
+		} else {
+			var selectedNode = ed.selection.getNode();
 		}
 		
 		while(selectedNode.nodeName != 'BODY') {
