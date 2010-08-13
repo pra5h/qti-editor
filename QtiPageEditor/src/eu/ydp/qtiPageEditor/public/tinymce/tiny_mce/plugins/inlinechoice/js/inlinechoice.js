@@ -168,7 +168,8 @@ var choiceDialog = {
 			choiceSection += '</span><!-- end of inlineChoiceInteraction -->&nbsp;';
 			
 			var ed = tinymce.EditorManager.activeEditor;
-			ed.selection.moveToBookmark(ed.selection.getBookmark());
+			var bm = ed.selection.getBookmark();
+			ed.selection.moveToBookmark(bm);
 			tinyMCE.execCommand('mceInsertContent', false, choiceSection);
 			
 			body = ed.selection.getNode();
@@ -177,10 +178,15 @@ var choiceDialog = {
 			}
 			regexp = new RegExp('(<!-- <itemBody> -->)','gi');
 			body.innerHTML = body.innerHTML.replace(regexp, responseDeclaration + '$1');
+			
+			ed.selection.moveToBookmark(bm);
 		
 		} else {
 			
 			var ed = tinymce.EditorManager.activeEditor;
+			
+			var bm = ed.selection.getBookmark();
+			
 			var nd = tinyMCE.selectedNode;
 			while(nd.id != 'inlineChoiceInteraction') {
 				nd = nd.parentNode;
@@ -221,7 +227,9 @@ var choiceDialog = {
 			}
 			regexp = new RegExp('(<!-- <responseDeclaration identifier="' + identifier + '"[^>]*>[^<]*<correctResponse>)(?:[^<]*<value>[^<]*<\/value>[^<]*)*(<\/correctResponse>[^>]*<\/responseDeclaration> -->)','gi');
 			body.innerHTML = body.innerHTML.replace(regexp, '$1' + responseDeclaration + '$2');
-				
+			
+			ed.selection.moveToBookmark(bm);			
+			
 		}
 		
 		if(tinyMCE.feedback != undefined) {

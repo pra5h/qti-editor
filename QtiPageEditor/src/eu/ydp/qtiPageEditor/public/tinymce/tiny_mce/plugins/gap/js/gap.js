@@ -47,7 +47,9 @@ var gapDialog = {
 		var identifier = form.identifier.value;
 		if(gap != undefined && gap != '') {
 			var ed = tinymce.EditorManager.activeEditor;
-			ed.selection.moveToBookmark(ed.selection.getBookmark());
+			var bm = ed.selection.getBookmark();
+			ed.selection.moveToBookmark(bm);
+			
 			if(form.addnew != undefined && form.addnew.getAttribute('value') == '1') {
 				
 				var gapTag = '<!-- <textEntryInteraction responseIdentifier="' + identifier + '" expectedLength="' + gap.length + '">';
@@ -70,10 +72,13 @@ var gapDialog = {
 				}
 				regexp = new RegExp('(<!-- <itemBody> -->)','gi');
 				body.innerHTML = body.innerHTML.replace(regexp, responseDeclaration + '$1');
+				ed.selection.moveToBookmark(bm);
 				
 			} else {
 			
 				var gapTag = tinyMCE.selectedNode;
+				var bm = ed.selection.getBookmark();
+
 				gapTag.innerHTML = gap;
 				var fdb = '';
 				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].onok != undefined) {
@@ -92,7 +97,10 @@ var gapDialog = {
 				regexp = new RegExp('(<!-- <responseDeclaration identifier="' + identifier + '"[^>]*>[^<]*<correctResponse>)(?:[^<]*<value>[^<]*<\/value>[^<]*)*(<\/correctResponse>[^>]*<\/responseDeclaration> -->)','gi');
 				body.innerHTML = body.innerHTML.replace(regexp, '$1' + responseDeclaration + '$2');
 				
+				ed.selection.moveToBookmark(bm);
+				
 			}
+			
 		}
 		
 		if(tinyMCE.feedback != undefined) {

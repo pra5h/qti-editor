@@ -672,7 +672,8 @@ var matchDialog = {
 			responseDeclaration += '</mapping></responseDeclaration> -->';
 						
 			var ed = tinymce.EditorManager.activeEditor;
-			ed.selection.moveToBookmark(ed.selection.getBookmark());
+			var bm = ed.selection.getBookmark();
+			ed.selection.moveToBookmark(bm);
 			tinyMCE.execCommand('mceInsertContent', false, matchSection);
 			
 			body = ed.selection.getNode();
@@ -682,11 +683,14 @@ var matchDialog = {
 			regexp = new RegExp('(<!-- <itemBody> -->)','gi');
 			body.innerHTML = body.innerHTML.replace(regexp, responseDeclaration + '$1');
 			
+			ed.selection.moveToBookmark(bm);
+			
 		// edycja istniej¹cego match
 		} else {
 		
 			var ed = tinymce.EditorManager.activeEditor;
 			var nd = tinyMCE.selectedNode;
+			var bm = ed.selection.getBookmark();
 			var matchSection = '';
 			
 			while(nd.nodeName != 'DIV' || nd.id != 'matchInteraction') {
@@ -770,6 +774,8 @@ var matchDialog = {
 			}
 			regexp = new RegExp('(<!-- <responseDeclaration identifier="' + identifier + '"[^>]*>)[^<]*<correctResponse>[^<]*(?:[^<]*<value>[^<]*<\/value>[^<]*)*<\/correctResponse>[^<]*<mapping[^>]*>[^<]*(?:[^<]*<mapEntry[^>]*>[^<]*)*<\/mapping>[^<]*(<\/responseDeclaration> -->)','gi');
 			body.innerHTML = body.innerHTML.replace(regexp, '$1' + responseDeclaration + '$2');
+			
+			ed.selection.moveToBookmark(bm);
 			
 		}
 		

@@ -197,7 +197,8 @@ var orderDialog = {
 			orderSection += '<p>&nbsp;</p>';
 			
 			var ed = tinymce.EditorManager.activeEditor;
-			ed.selection.moveToBookmark(ed.selection.getBookmark());
+			var bm = ed.selection.getBookmark();
+			ed.selection.moveToBookmark(bm);
 			tinyMCE.execCommand('mceInsertContent', false, orderSection);
 			
 			body = ed.selection.getNode();
@@ -207,9 +208,14 @@ var orderDialog = {
 			regexp = new RegExp('(<!-- <itemBody> -->)','gi');
 			body.innerHTML = body.innerHTML.replace(regexp, responseDeclaration + '$1');
 			
+			ed.selection.moveToBookmark(bm);
+			
 		} else {
+			
 			var ed = tinymce.EditorManager.activeEditor;
 			var nd = tinyMCE.selectedNode;
+			var bm = ed.selection.getBookmark();
+			
 			while(nd.nodeName != 'DIV' || nd.id != 'orderInteraction') {
 				nd = nd.parentNode;
 			}
@@ -265,6 +271,8 @@ var orderDialog = {
 			}
 			regexp = new RegExp('(<!-- <responseDeclaration identifier="' + identifier + '"[^>]*>[^<]*<correctResponse>)(?:[^<]*<value>[^<]*<\/value>[^<]*)*(<\/correctResponse>[^>]*<\/responseDeclaration> -->)','gi');
 			body.innerHTML = body.innerHTML.replace(regexp, '$1' + responseDeclaration + '$2');
+			
+			ed.selection.moveToBookmark(bm);
 			
 		}
 		
