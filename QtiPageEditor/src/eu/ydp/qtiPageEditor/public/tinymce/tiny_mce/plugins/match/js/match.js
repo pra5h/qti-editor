@@ -18,9 +18,7 @@ var matchDialog = {
 		var f = document.forms[0]; 
 		var data = tinyMCEPopup.getWindowArg("matchdata");
 		matchDialog.data = data;
-		if(data != undefined) {
-			matchDialog.identifier = data[1];
-		}
+		
 		var maxElementCount = 2;
 		
 		// exercise
@@ -31,12 +29,14 @@ var matchDialog = {
 		// match identidfier
 		if(data != undefined && data[1] != undefined) {
 			f.identifier.value = data[1];
+			matchDialog.identifier = data[1];
 		} else {
 			var randid = Math.random();
 			randid = String(randid);
 			var rg = new RegExp('0.([0-9]*)',"gi");
 			exec = rg.exec(randid);
 			f.identifier.value = 'id_' + exec[1];
+			matchDialog.identifier = 'id_' + exec[1];
 		}
 		
 		// shuffle

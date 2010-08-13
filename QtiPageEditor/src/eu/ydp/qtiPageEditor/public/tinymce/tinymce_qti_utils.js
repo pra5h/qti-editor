@@ -144,6 +144,10 @@ function actionOnQTI(e) {
 			var selectedNode = ed.selection.getNode();
 		}
 		
+		if(selectedNode.nodeName == 'HTML') {
+			return false;
+		}
+		
 		while(selectedNode.nodeName != 'BODY') {
 			if(selectedNode.attributes != undefined) {
 				

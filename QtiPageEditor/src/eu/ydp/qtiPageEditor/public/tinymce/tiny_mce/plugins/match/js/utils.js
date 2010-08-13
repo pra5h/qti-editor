@@ -81,7 +81,7 @@ function remove_answer_row(row) {
 	div.parentNode.removeChild(div);
 	
 	// remove feedbacks
-	if(tinyMCE.feedback[matchDialog.identifier] != undefined) {
+	if(tinyMCE.feedback != undefined && tinyMCE.feedback[matchDialog.identifier] != undefined) {
 		var tempArr = new Array;
 		for(idx in tinyMCE.feedback[matchDialog.identifier].text) {
 			elements = idx.split(' ');
