@@ -204,7 +204,7 @@ function insertTable() {
 		html += "</tr>";
 	}
 
-	html += "</table>";
+	html += "</table><br>";
 
 	inst.execCommand('mceBeginUndoLevel');
 
