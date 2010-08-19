@@ -11028,25 +11028,6 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 					t.mceJustify(cmd, cmd.substring(7).toLowerCase());
 					return true;
 				
-				/*case 'InsertGap':
-					ed.selection.moveToBookmark(ed.selection.getBookmark());
-					var gapContent = ed.selection.getContent();
-					if (gapContent == '' || gapContent.indexOf('<') != -1) {
-						gapContent = prompt('Gap correct value:');
-					}
-					if(gapContent && gapContent != '') {
-						var gapOutput = '<input id=\"gap\" class=\"mceNonEditable\" style=\"border: 1px solid blue; color: blue;\" type=\"button\" value=\"' + gapContent + '\" />';
-						tinyMCE.execCommand('mceInsertContent', false, gapOutput );
-					}
-					return true;
-				case 'RemoveGap':
-					var selectedNode = ed.selection.getNode();
-					if(selectedNode.nodeName == 'INPUT' && selectedNode.id == 'gap') {
-						var gapContent = selectedNode.value;
-						tinyMCE.execCommand('mceInsertContent', false, gapContent);
-					}
-					return true;
-				*/
 				default:
 					f = this[cmd];
 
@@ -11061,7 +11042,7 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 
 		Indent : function() {
 			var ed = this.editor, d = ed.dom, s = ed.selection, e, iv, iu;
-
+			
 			// Setup indent level
 			iv = ed.settings.indentation;
 			iu = /[a-z%]+$/i.exec(iv);

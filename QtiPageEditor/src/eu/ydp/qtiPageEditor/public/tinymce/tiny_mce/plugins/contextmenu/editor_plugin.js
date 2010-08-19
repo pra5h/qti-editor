@@ -99,70 +99,66 @@
 			am.add({title : 'contextmenu.center', icon : 'justifycenter', cmd : 'JustifyCenter'});
 			am.add({title : 'contextmenu.right', icon : 'justifyright', cmd : 'JustifyRight'});
 			am.add({title : 'contextmenu.full', icon : 'justifyfull', cmd : 'JustifyFull'});
+						
+			m.addSeparator();
 			
-			if(tinymce.plugins.gapPlugin != undefined && tinymce.plugins.choicePlugin != undefined  && tinymce.plugins.inlineChoicePlugin != undefined) {
+			qtimenu = m.addMenu({title : 'QTI Support'});
 			
-				m.addSeparator();
-				
-				qtimenu = m.addMenu({title : 'QTI Support'});
-				
-				if((el.nodeName == 'SPAN' && el.id == 'gap') || el.id == 'choiceInteraction' || el.id == 'orderInteraction' || el.id == 'matchInteraction' || (el.id == 'inlineChoiceInteraction') || (el.id == 'inlineChoiceAnswer')) {
-					qtimenu.add({title : 'Insert gap', icon : 'insertgap', cmd : 'mceGap'}).setDisabled(true);
-				} else {
-					qtimenu.add({title : 'Insert gap', icon : 'insertgap', cmd : 'mceGap'});
-				}
-				if(el.nodeName == 'SPAN' && el.id == 'gap') {
-					qtimenu.add({title : 'Remove gap', icon : 'removegap', cmd : 'mceGapRemove'});	
-				} else {
-					qtimenu.add({title : 'Remove gap', icon : 'removegap', cmd : 'mceGapRemove'}).setDisabled(true);	
-				}
-				
-				if(el.id == 'choiceInteraction' || el.id == 'orderInteraction' || el.id == 'matchInteraction' || (el.nodeName == 'SPAN' && el.id == 'gap') || (el.id == 'inlineChoiceInteraction') || (el.id == 'inlineChoiceAnswer')) {
-					qtimenu.add({title : 'Insert inline choice element', icon : 'insertinlinechoice', cmd : 'mceInlineChoice'}).setDisabled(true);
-				} else {
-					qtimenu.add({title : 'Insert inline choice element', icon : 'insertinlinechoice', cmd : 'mceInlineChoice'});
-				}
-				if(el.id == 'inlineChoiceInteraction' || el.id == 'inlineChoiceAnswer') {
-					qtimenu.add({title : 'Remove inline choice element', icon : 'removeinlinechoice', cmd : 'mceInlineChoiceRemove'});
-				} else {
-					qtimenu.add({title : 'Remove inline choice element', icon : 'removeinlinechoice', cmd : 'mceInlineChoiceRemove'}).setDisabled(true);	
-				}
-				
-				if(el.id == 'choiceInteraction' || el.id == 'orderInteraction' || el.id == 'matchInteraction' || (el.nodeName == 'SPAN' && el.id == 'gap') || (el.id == 'inlineChoiceInteraction') || (el.id == 'inlineChoiceAnswer')) {
-					qtimenu.add({title : 'Insert choice section', icon : 'insertchoicesection', cmd : 'mceChoice'}).setDisabled(true);
-				} else {
-					qtimenu.add({title : 'Insert choice section', icon : 'insertchoicesection', cmd : 'mceChoice'});
-				}
-				if(el.id == 'choiceInteraction') {
-					qtimenu.add({title : 'Remove choice section', icon : 'removechoicesection', cmd : 'mceChoiceRemove'});
-				} else {
-					qtimenu.add({title : 'Remove choice section', icon : 'removechoicesection', cmd : 'mceChoiceRemove'}).setDisabled(true);	
-				}
-				
-				if(el.id == 'choiceInteraction' || el.id == 'orderInteraction' || el.id == 'matchInteraction'|| (el.nodeName == 'SPAN' && el.id == 'gap') || (el.id == 'inlineChoiceInteraction') || (el.id == 'inlineChoiceAnswer')) {
-					qtimenu.add({title : 'Insert order section', icon : 'insertordersection', cmd : 'mceOrder'}).setDisabled(true);
-				} else {
-					qtimenu.add({title : 'Insert order section', icon : 'insertordersection', cmd : 'mceOrder'});
-				}
-				if(el.id == 'orderInteraction') {
-					qtimenu.add({title : 'Remove order section', icon : 'removeordersection', cmd : 'mceOrderRemove'});
-				} else {
-					qtimenu.add({title : 'Remove order section', icon : 'removeordersection', cmd : 'mceOrderRemove'}).setDisabled(true);	
-				}
-				
-				if(el.id == 'choiceInteraction' || el.id == 'orderInteraction' || el.id == 'matchInteraction' || (el.nodeName == 'SPAN' && el.id == 'gap') || (el.id == 'inlineChoiceInteraction') || (el.id == 'inlineChoiceAnswer')) {
-					qtimenu.add({title : 'Insert match section', icon : 'insertmatchsection', cmd : 'mceMatch'}).setDisabled(true);
-				} else {
-					qtimenu.add({title : 'Insert match section', icon : 'insertmatchsection', cmd : 'mceMatch'});
-				}
-				if(el.id == 'matchInteraction') {
-					qtimenu.add({title : 'Remove match section', icon : 'removematchsection', cmd : 'mceMatchRemove'});
-				} else {
-					qtimenu.add({title : 'Remove match section', icon : 'removematchsection', cmd : 'mceMatchRemove'}).setDisabled(true);	
-				}
-			
+			if((el.nodeName == 'SPAN' && el.id == 'gap') || el.id == 'choiceInteraction' || el.id == 'orderInteraction' || el.id == 'matchInteraction' || (el.id == 'inlineChoiceInteraction') || (el.id == 'inlineChoiceAnswer')) {
+				qtimenu.add({title : 'Insert gap', icon : 'insertgap', cmd : 'mceGap'}).setDisabled(true);
+			} else {
+				qtimenu.add({title : 'Insert gap', icon : 'insertgap', cmd : 'mceGap'});
+			}
+			if(el.nodeName == 'SPAN' && el.id == 'gap') {
+				qtimenu.add({title : 'Remove gap', icon : 'removegap', cmd : 'mceGapRemove'});	
+			} else {
+				qtimenu.add({title : 'Remove gap', icon : 'removegap', cmd : 'mceGapRemove'}).setDisabled(true);	
 			}
 			
+			if(el.id == 'choiceInteraction' || el.id == 'orderInteraction' || el.id == 'matchInteraction' || (el.nodeName == 'SPAN' && el.id == 'gap') || (el.id == 'inlineChoiceInteraction') || (el.id == 'inlineChoiceAnswer')) {
+				qtimenu.add({title : 'Insert inline choice element', icon : 'insertinlinechoice', cmd : 'mceInlineChoice'}).setDisabled(true);
+			} else {
+				qtimenu.add({title : 'Insert inline choice element', icon : 'insertinlinechoice', cmd : 'mceInlineChoice'});
+			}
+			if(el.id == 'inlineChoiceInteraction' || el.id == 'inlineChoiceAnswer') {
+				qtimenu.add({title : 'Remove inline choice element', icon : 'removeinlinechoice', cmd : 'mceInlineChoiceRemove'});
+			} else {
+				qtimenu.add({title : 'Remove inline choice element', icon : 'removeinlinechoice', cmd : 'mceInlineChoiceRemove'}).setDisabled(true);	
+			}
+			
+			if(el.id == 'choiceInteraction' || el.id == 'orderInteraction' || el.id == 'matchInteraction' || (el.nodeName == 'SPAN' && el.id == 'gap') || (el.id == 'inlineChoiceInteraction') || (el.id == 'inlineChoiceAnswer')) {
+				qtimenu.add({title : 'Insert choice section', icon : 'insertchoicesection', cmd : 'mceChoice'}).setDisabled(true);
+			} else {
+				qtimenu.add({title : 'Insert choice section', icon : 'insertchoicesection', cmd : 'mceChoice'});
+			}
+			if(el.id == 'choiceInteraction') {
+				qtimenu.add({title : 'Remove choice section', icon : 'removechoicesection', cmd : 'mceChoiceRemove'});
+			} else {
+				qtimenu.add({title : 'Remove choice section', icon : 'removechoicesection', cmd : 'mceChoiceRemove'}).setDisabled(true);	
+			}
+			
+			if(el.id == 'choiceInteraction' || el.id == 'orderInteraction' || el.id == 'matchInteraction'|| (el.nodeName == 'SPAN' && el.id == 'gap') || (el.id == 'inlineChoiceInteraction') || (el.id == 'inlineChoiceAnswer')) {
+				qtimenu.add({title : 'Insert order section', icon : 'insertordersection', cmd : 'mceOrder'}).setDisabled(true);
+			} else {
+				qtimenu.add({title : 'Insert order section', icon : 'insertordersection', cmd : 'mceOrder'});
+			}
+			if(el.id == 'orderInteraction') {
+				qtimenu.add({title : 'Remove order section', icon : 'removeordersection', cmd : 'mceOrderRemove'});
+			} else {
+				qtimenu.add({title : 'Remove order section', icon : 'removeordersection', cmd : 'mceOrderRemove'}).setDisabled(true);	
+			}
+			
+			if(el.id == 'choiceInteraction' || el.id == 'orderInteraction' || el.id == 'matchInteraction' || (el.nodeName == 'SPAN' && el.id == 'gap') || (el.id == 'inlineChoiceInteraction') || (el.id == 'inlineChoiceAnswer')) {
+				qtimenu.add({title : 'Insert match section', icon : 'insertmatchsection', cmd : 'mceMatch'}).setDisabled(true);
+			} else {
+				qtimenu.add({title : 'Insert match section', icon : 'insertmatchsection', cmd : 'mceMatch'});
+			}
+			if(el.id == 'matchInteraction') {
+				qtimenu.add({title : 'Remove match section', icon : 'removematchsection', cmd : 'mceMatchRemove'});
+			} else {
+				qtimenu.add({title : 'Remove match section', icon : 'removematchsection', cmd : 'mceMatchRemove'}).setDisabled(true);	
+			}
+		
 			if(tinymce.plugins.applinkPlugin != undefined) {
 				
 				m.addSeparator();
@@ -190,6 +186,18 @@
 					m.add({title : 'Remove comment', icon : 'removecomment', cmd : 'mceCommentRemove'}).setDisabled(true);	
 				}
 				
+			}
+			
+			m.addSeparator();
+				
+			if((el.nodeName == 'SPAN' && el.id == 'gap') || el.id == 'choiceInteraction' || el.id == 'orderInteraction' || el.id == 'matchInteraction' || (el.id == 'inlineChoiceInteraction') || (el.id == 'inlineChoiceAnswer')) {
+				var els = el;
+				if (el.id == 'inlineChoiceAnswer') {
+					els = el.parentNode;
+				}
+				m.add({title : 'Copy QTI activity', icon : 'copyqtibutton', cmd : 'mceCopyQTI', ui: els});
+			} else if (tinyMCE.clipboard != undefined && ed.selection.getContent() == '') {
+				m.add({title : 'Paste QTI activity', icon : 'pasteqtibutton', cmd : 'mcePasteQTI'});
 			}
 			
 			return m;
