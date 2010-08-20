@@ -102,85 +102,146 @@
 						
 			m.addSeparator();
 			
+			///////////////////
+			
+			var selectedNode = el;
+			var node = '';
+			
+			if(selectedNode.nodeName != 'HTML') {
+			
+				while(selectedNode.nodeName != 'BODY') {
+					if(selectedNode.attributes != undefined) {
+						
+						// QY Comments
+						if (selectedNode.nodeName == 'DIV' && selectedNode.getAttribute('class') == 'mceNonEditable qy_comment') {
+							node = 'comment';
+							break;
+						}
+						
+						// MediaLib
+						if(selectedNode.nodeName == 'IMG' || (selectedNode.nodeName == 'FIELDSET' && selectedNode.id == 'runFileUploadLib')) {
+							node = 'media';
+							break;
+						}
+						
+						// Gap
+						if (selectedNode.nodeName == 'SPAN' && selectedNode.id == 'gap') {
+							node = 'gap';
+							break
+						}
+						
+						// Inline choice
+						if (selectedNode.id == 'inlineChoiceInteraction' || selectedNode.id == 'inlineChoiceAnswer' || selectedNode.parentNode.id == 'inlineChoiceAnswer') {
+							node = 'inlinechoice';
+							break;
+						}
+						
+						// Multiple choice
+						if ((selectedNode.nodeName == 'P' && selectedNode.id == 'choiceInteraction' && selectedNode.parentNode.id == 'choiceInteraction') || (selectedNode.nodeName == 'DIV' && selectedNode.id == 'choiceInteraction')) {
+							node = 'multiplechoice';
+							break;
+						}
+						
+						// Order
+						if (selectedNode.id == 'orderOption' || (selectedNode.id == 'choiceInteraction' && selectedNode.parentNode.id == 'orderInteraction')) {
+							node = 'order';
+							break;
+						}
+						
+						// Match
+						if (selectedNode.id != undefined && (selectedNode.id == 'matchInteraction' || selectedNode.id.match(/canvas_/))) {
+							node = 'match';
+							break;
+						}
+						
+					}
+					selectedNode = selectedNode.parentNode;
+				}
+			
+			}
+			
+			/////////
+			
 			qtimenu = m.addMenu({title : 'QTI Support'});
 			
-			if((el.nodeName == 'SPAN' && el.id == 'gap') || el.id == 'choiceInteraction' || el.id == 'orderInteraction' || el.id == 'matchInteraction' || (el.id == 'inlineChoiceInteraction') || (el.id == 'inlineChoiceAnswer')) {
+			if(node != '') {
 				qtimenu.add({title : 'Insert gap', icon : 'insertgap', cmd : 'mceGap'}).setDisabled(true);
 			} else {
 				qtimenu.add({title : 'Insert gap', icon : 'insertgap', cmd : 'mceGap'});
 			}
-			if(el.nodeName == 'SPAN' && el.id == 'gap') {
+			
+			if(node == 'gap') {
 				qtimenu.add({title : 'Remove gap', icon : 'removegap', cmd : 'mceGapRemove'});	
 			} else {
 				qtimenu.add({title : 'Remove gap', icon : 'removegap', cmd : 'mceGapRemove'}).setDisabled(true);	
 			}
 			
-			if(el.id == 'choiceInteraction' || el.id == 'orderInteraction' || el.id == 'matchInteraction' || (el.nodeName == 'SPAN' && el.id == 'gap') || (el.id == 'inlineChoiceInteraction') || (el.id == 'inlineChoiceAnswer')) {
+			if(node != '') {
 				qtimenu.add({title : 'Insert inline choice element', icon : 'insertinlinechoice', cmd : 'mceInlineChoice'}).setDisabled(true);
 			} else {
 				qtimenu.add({title : 'Insert inline choice element', icon : 'insertinlinechoice', cmd : 'mceInlineChoice'});
 			}
-			if(el.id == 'inlineChoiceInteraction' || el.id == 'inlineChoiceAnswer') {
+			if(node == 'inlinechoice') {
 				qtimenu.add({title : 'Remove inline choice element', icon : 'removeinlinechoice', cmd : 'mceInlineChoiceRemove'});
 			} else {
 				qtimenu.add({title : 'Remove inline choice element', icon : 'removeinlinechoice', cmd : 'mceInlineChoiceRemove'}).setDisabled(true);	
 			}
 			
-			if(el.id == 'choiceInteraction' || el.id == 'orderInteraction' || el.id == 'matchInteraction' || (el.nodeName == 'SPAN' && el.id == 'gap') || (el.id == 'inlineChoiceInteraction') || (el.id == 'inlineChoiceAnswer')) {
+			if(node != '') {
 				qtimenu.add({title : 'Insert choice section', icon : 'insertchoicesection', cmd : 'mceChoice'}).setDisabled(true);
 			} else {
 				qtimenu.add({title : 'Insert choice section', icon : 'insertchoicesection', cmd : 'mceChoice'});
 			}
-			if(el.id == 'choiceInteraction') {
+			if(node == 'multiplechoice') {
 				qtimenu.add({title : 'Remove choice section', icon : 'removechoicesection', cmd : 'mceChoiceRemove'});
 			} else {
 				qtimenu.add({title : 'Remove choice section', icon : 'removechoicesection', cmd : 'mceChoiceRemove'}).setDisabled(true);	
 			}
 			
-			if(el.id == 'choiceInteraction' || el.id == 'orderInteraction' || el.id == 'matchInteraction'|| (el.nodeName == 'SPAN' && el.id == 'gap') || (el.id == 'inlineChoiceInteraction') || (el.id == 'inlineChoiceAnswer')) {
+			if(node != '') {
 				qtimenu.add({title : 'Insert order section', icon : 'insertordersection', cmd : 'mceOrder'}).setDisabled(true);
 			} else {
 				qtimenu.add({title : 'Insert order section', icon : 'insertordersection', cmd : 'mceOrder'});
 			}
-			if(el.id == 'orderInteraction') {
+			if(node == 'order') {
 				qtimenu.add({title : 'Remove order section', icon : 'removeordersection', cmd : 'mceOrderRemove'});
 			} else {
 				qtimenu.add({title : 'Remove order section', icon : 'removeordersection', cmd : 'mceOrderRemove'}).setDisabled(true);	
 			}
 			
-			if(el.id == 'choiceInteraction' || el.id == 'orderInteraction' || el.id == 'matchInteraction' || (el.nodeName == 'SPAN' && el.id == 'gap') || (el.id == 'inlineChoiceInteraction') || (el.id == 'inlineChoiceAnswer')) {
+			if(node != '') {
 				qtimenu.add({title : 'Insert match section', icon : 'insertmatchsection', cmd : 'mceMatch'}).setDisabled(true);
 			} else {
 				qtimenu.add({title : 'Insert match section', icon : 'insertmatchsection', cmd : 'mceMatch'});
 			}
-			if(el.id == 'matchInteraction') {
+			if(node == 'match') {
 				qtimenu.add({title : 'Remove match section', icon : 'removematchsection', cmd : 'mceMatchRemove'});
 			} else {
 				qtimenu.add({title : 'Remove match section', icon : 'removematchsection', cmd : 'mceMatchRemove'}).setDisabled(true);	
 			}
 		
-			if(tinymce.plugins.applinkPlugin != undefined) {
-				
-				m.addSeparator();
-				
-				m.add({title : 'Insert / modify applink', icon : 'insertapplink', cmd : 'mceApplink'});
-				if(el.nodeName == 'APPLINK') {
-					m.add({title : 'Remove applink', icon : 'removeapplink', cmd : 'mceApplinkRemove'});	
-				} else {
-					m.add({title : 'Remove applink', icon : 'removeapplink', cmd : 'mceApplinkRemove'}).setDisabled(true);	
-				}
-				
-			}
+			//if(tinymce.plugins.applinkPlugin != undefined) {
+			//	
+			//	m.addSeparator();
+			//	
+			//	m.add({title : 'Insert / modify applink', icon : 'insertapplink', cmd : 'mceApplink'});
+			//	if(el.nodeName == 'APPLINK') {
+			//		m.add({title : 'Remove applink', icon : 'removeapplink', cmd : 'mceApplinkRemove'});	
+			//	} else {
+			//		m.add({title : 'Remove applink', icon : 'removeapplink', cmd : 'mceApplinkRemove'}).setDisabled(true);	
+			//	}
+			//	
+			//}
 			
 			if(tinymce.plugins.commentPlugin != undefined) {
 				
 				m.addSeparator();
 				
-				if(el.getAttribute('class') == 'mceNonEditable qy_comment') {
+				if(node == 'comment') {
 					m.add({title : 'Insert / modify comment', icon : 'insertcomment', cmd : 'mceComment'}).setDisabled(true);
 					m.add({title : 'Remove comment', icon : 'removecomment', cmd : 'mceCommentRemove'});	
 				} else {
-					if(el.getAttribute('class') != 'qy_comment') {
+					if(selectedNode.getAttribute('class') != 'qy_comment') {
 						m.add({title : 'Insert / modify comment', icon : 'insertcomment', cmd : 'mceComment'});
 					}
 					m.add({title : 'Remove comment', icon : 'removecomment', cmd : 'mceCommentRemove'}).setDisabled(true);	
@@ -190,12 +251,8 @@
 			
 			m.addSeparator();
 				
-			if((el.nodeName == 'SPAN' && el.id == 'gap') || el.id == 'choiceInteraction' || el.id == 'orderInteraction' || el.id == 'matchInteraction' || (el.id == 'inlineChoiceInteraction') || (el.id == 'inlineChoiceAnswer')) {
-				var els = el;
-				if (el.id == 'inlineChoiceAnswer') {
-					els = el.parentNode;
-				}
-				m.add({title : 'Copy QTI activity', icon : 'copyqtibutton', cmd : 'mceCopyQTI', ui: els});
+			if(node == 'gap' || node == 'inlinechoice' || node == 'multiplechoice' || node == 'order' || node == 'match') {
+				m.add({title : 'Copy QTI activity', icon : 'copyqtibutton', cmd : 'mceCopyQTI', ui: selectedNode});
 			} else if (tinyMCE.clipboard != undefined && ed.selection.getContent() == '') {
 				m.add({title : 'Paste QTI activity', icon : 'pasteqtibutton', cmd : 'mcePasteQTI'});
 			}
