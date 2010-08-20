@@ -18,6 +18,7 @@
 				} else if (selectedNode.id == 'orderOption' || (selectedNode.id == 'choiceInteraction' && selectedNode.parentNode.id == 'orderInteraction')) {
 					tinyMCE.clipboard = {type: 'order', comment: selectedNode.previousSibling.data, content: selectedNode.innerHTML};
 				} else if (selectedNode.id != undefined && (selectedNode.id == 'matchInteraction' || selectedNode.id.match(/canvas_/))) {
+					console.log(selectedNode);
 					tinyMCE.clipboard = {type: 'match', comment: selectedNode.previousSibling.data, content: selectedNode.innerHTML};
 				}
 				
@@ -25,56 +26,48 @@
 			
 			ed.addCommand('mcePasteQTI', function(ui, data) {
 				
-				console.log('mcePasteQTI');
-				console.log('type:');
-				console.log(tinyMCE.clipboard.type);
-				console.log('comment:');
-				console.log(tinyMCE.clipboard.comment);
-				console.log('content:');
-				console.log(tinyMCE.clipboard.content);
-				
 				var activity = '';
 				
 				if(tinyMCE.clipboard.type == 'gap') {
 					
 					var comment = tinyMCE.clipboard.comment;
-					comment = comment.replace(/responseIdentifier="([^"]*)"/, 'responseIdentifier="' + this.newRandId() + '"');
+					comment = comment.replace(/responseIdentifier="([^"]*)"/, 'responseIdentifier="' + newRandId() + '"');
 					activity += '<!--' + comment + '-->';
 					activity += '<span id="gap" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">' + tinyMCE.clipboard.content + '</span>&nbsp;';
 					
 				} else if(tinyMCE.clipboard.type == 'inlinechoice') {
 					
 					var comment = tinyMCE.clipboard.comment;
-					comment = comment.replace(/responseIdentifier="([^"]*)"/, 'responseIdentifier="' + this.newRandId() + '"');
+					comment = comment.replace(/responseIdentifier="([^"]*)"/, 'responseIdentifier="' + newRandId() + '"');
 					var content = tinyMCE.clipboard.content;
-					content = content.replace(/identifier="([^"]*)"/g, 'identifier="' + this.newRandId() + '"');
+					content = content.replace(/identifier="([^"]*)"/g, 'identifier="' + newRandId() + '"');
 					activity += '<!--' + comment + '-->';
 					activity += '<span id="inlineChoiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">' + content + '</span><!-- end of inlineChoiceInteraction -->&nbsp;';
 					
 				} else if(tinyMCE.clipboard.type == 'multiplechoice') {
 					
 					var comment = tinyMCE.clipboard.comment;
-					comment = comment.replace(/responseIdentifier="([^"]*)"/, 'responseIdentifier="' + this.newRandId() + '"');
+					comment = comment.replace(/responseIdentifier="([^"]*)"/, 'responseIdentifier="' + newRandId() + '"');
 					var content = tinyMCE.clipboard.content;
-					content = content.replace(/identifier="([^"]*)"/g, 'identifier="' + this.newRandId() + '"');
+					content = content.replace(/identifier="([^"]*)"/g, 'identifier="' + newRandId() + '"');
 					activity += '<p>&nbsp;</p><!--' + comment + '-->';
 					activity += '<div id="choiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">' + content + '</div><!-- end of choiceInteraction --><p>&nbsp;</p>';
 					
 				} else if(tinyMCE.clipboard.type == 'order') {
 					
 					var comment = tinyMCE.clipboard.comment;
-					comment = comment.replace(/responseIdentifier="([^"]*)"/, 'responseIdentifier="' + this.newRandId() + '"');
+					comment = comment.replace(/responseIdentifier="([^"]*)"/, 'responseIdentifier="' + newRandId() + '"');
 					var content = tinyMCE.clipboard.content;
-					content = content.replace(/identifier="([^"]*)"/g, 'identifier="' + this.newRandId() + '"');
+					content = content.replace(/identifier="([^"]*)"/g, 'identifier="' + newRandId() + '"');
 					activity += '<p>&nbsp;</p><!--' + comment + '-->';
 					activity += '<div id="orderInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">' + content + '</div><!-- end of orderInteraction --><p>&nbsp;</p>';
 					
 				} else if(tinyMCE.clipboard.type == 'match') {
 					
 					var comment = tinyMCE.clipboard.comment;
-					comment = comment.replace(/responseIdentifier="([^"]*)"/, 'responseIdentifier="' + this.newRandId() + '"');
+					comment = comment.replace(/responseIdentifier="([^"]*)"/, 'responseIdentifier="' + newRandId() + '"');
 					var content = tinyMCE.clipboard.content;
-					content = content.replace(/identifier="([^"]*)"/g, 'identifier="' + this.newRandId() + '"');
+					content = content.replace(/identifier="([^"]*)"/g, 'identifier="' + newRandId() + '"');
 					activity += '<p>&nbsp;</p><!--' + comment + '-->';
 					activity += '<div id="matchInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">' + content + '</div><!-- end of matchInteraction --><p>&nbsp;</p>';
 					
@@ -85,16 +78,6 @@
 				
 			});
 		
-		},
-		
-		newRandId : function() {
-			
-			var randid = Math.random();
-			randid = String(randid);
-			var rg = new RegExp('0.([0-9]*)',"gi");
-			exec = rg.exec(randid);
-			return 'id_' + exec[1];
-					
 		},
 		
 		getInfo : function() {
@@ -110,3 +93,13 @@
 	
 	tinymce.PluginManager.add('copyqti', tinymce.plugins.copyQTI);
 })();
+
+function newRandId() {
+			
+	var randid = Math.random();
+	randid = String(randid);
+	var rg = new RegExp('0.([0-9]*)',"gi");
+	exec = rg.exec(randid);
+	return 'id_' + exec[1];
+					
+}

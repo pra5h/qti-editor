@@ -125,31 +125,31 @@
 						}
 						
 						// Gap
-						if (selectedNode.nodeName == 'SPAN' && selectedNode.id == 'gap') {
+						if (selectedNode.id != undefined  && selectedNode.nodeName == 'SPAN' && selectedNode.id == 'gap') {
 							node = 'gap';
 							break
 						}
 						
 						// Inline choice
-						if (selectedNode.id == 'inlineChoiceInteraction' || selectedNode.id == 'inlineChoiceAnswer' || selectedNode.parentNode.id == 'inlineChoiceAnswer') {
+						if (selectedNode.id != undefined  && selectedNode.id == 'inlineChoiceInteraction' && selectedNode.nodeName == 'SPAN') {
 							node = 'inlinechoice';
 							break;
 						}
 						
 						// Multiple choice
-						if ((selectedNode.nodeName == 'P' && selectedNode.id == 'choiceInteraction' && selectedNode.parentNode.id == 'choiceInteraction') || (selectedNode.nodeName == 'DIV' && selectedNode.id == 'choiceInteraction')) {
+						if (selectedNode.id != undefined  && selectedNode.id == 'choiceInteraction' && selectedNode.nodeName == 'DIV') {
 							node = 'multiplechoice';
 							break;
 						}
 						
 						// Order
-						if (selectedNode.id == 'orderOption' || (selectedNode.id == 'choiceInteraction' && selectedNode.parentNode.id == 'orderInteraction')) {
+						if (selectedNode.id != undefined  && selectedNode.id == 'orderInteraction' && selectedNode.nodeName == 'DIV') {
 							node = 'order';
 							break;
 						}
 						
 						// Match
-						if (selectedNode.id != undefined && (selectedNode.id == 'matchInteraction' || selectedNode.id.match(/canvas_/))) {
+						if (selectedNode.id != undefined && selectedNode.id == 'matchInteraction' && selectedNode.nodeName == 'DIV') {
 							node = 'match';
 							break;
 						}
