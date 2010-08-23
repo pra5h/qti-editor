@@ -20,6 +20,8 @@ public class QTIPageModelProxy extends QtiProxyBase {
 	private int _selectedIndex;
 
 	private SaveCallback _jsSaveCallback;
+	
+	private PagesLoadMonitor _pagesLoadMonitor;
 
 	public QTIPageModelProxy() {
 		super(NAME, new ModelPageList());
@@ -32,6 +34,7 @@ public class QTIPageModelProxy extends QtiProxyBase {
 
 	public void load(String[] hrefs) {
 		if (hrefs.length > 0) {
+			_pagesLoadMonitor = new PagesLoadMonitor(hrefs.length);
 			loadPages(hrefs);
 		}
 
@@ -42,14 +45,26 @@ public class QTIPageModelProxy extends QtiProxyBase {
 		final ModelPageList pages = getDataVO();
 		String path = _testPath.substring(0, _testPath.lastIndexOf("/") + 1);
 		String pagePath = path + hrefs[pages.getPageCount()];
-		IResource resource = _storage.getResource(pagePath);
+		IResource resource = _storage.getResource(pagePath);		
+		
 		resource.load(new IResourceTextCallback() {
 
 			@Override
 			public void onRequestError(IResource resource, String command,
-					IApiError error) {
+					IApiError error) {		
+				
+				
+				String[] basePathElems = resource.getPath().split("/");
+				int len = basePathElems.length;
+				String relPath = basePathElems[len-2] +"/"+ basePathElems[len-1];
+				addPage(relPath);				
 				sendNotification(Notifications.LOAD_PAGE_ERROR, error);
-
+				
+				_pagesLoadMonitor.onPageRequest();
+				if(_pagesLoadMonitor.getComplete() == true)
+					pagesLoaded();
+				else
+					loadPages(hrefs);
 			}
 
 			@Override
@@ -61,22 +76,27 @@ public class QTIPageModelProxy extends QtiProxyBase {
 				page.setPath(resource.getPath());
 
 				pages.addPage(page);
-
-				if (pages.getPageCount() < hrefs.length) {
+				
+				_pagesLoadMonitor.onPageRequest();	
+				
+				if (_pagesLoadMonitor.getComplete() == false) {
 					loadPages(hrefs);
 				} else {
-					String[] titles = new String[pages.getPageCount()];
-					int i;
-					for (i = 0; i < pages.getPageCount(); i++)
-						titles[i] = pages.getPage(i).getTitle();
-
-					_selectedIndex = 0;
-					sendNotification(Notifications.PAGES_LOADED, titles);
+					pagesLoaded();
 				}
-
 			}
-
 		});
+	}
+	
+	private void pagesLoaded(){
+		ModelPageList pages = getDataVO();
+		String[] titles = new String[pages.getPageCount()];
+		int i;
+		for (i = 0; i < pages.getPageCount(); i++)
+			titles[i] = pages.getPage(i).getTitle();
+
+		_selectedIndex = 0;
+		sendNotification(Notifications.PAGES_LOADED, titles);
 	}
 
 	public void reload(int ix) {
