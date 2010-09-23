@@ -1,6 +1,7 @@
 package eu.ydp.qtiPageEditor.client.view.component.preview;
 
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -69,6 +70,11 @@ public class PreviewView extends DialogBox {
         		o.showSummary = false;
         		o.showToC = false;
         		_player.setFlowOptions(o);       		
+        		Log.debug("assessment " + _assessment.getDocument().toString());
+        		Log.debug("assessment url " + _assessment.getBaseURL());
+        		Log.debug("item " + _items[0].getDocument().toString());
+        		Log.debug("item url " + _items[0].getBaseURL());
+        		
         		_player.load(_assessment, _items);
             }
         });
