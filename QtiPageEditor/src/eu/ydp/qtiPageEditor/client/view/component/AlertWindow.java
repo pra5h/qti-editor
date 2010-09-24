@@ -13,9 +13,11 @@ public class AlertWindow extends DialogBox implements ClickHandler {
 	private VerticalPanel _content;
 	private HTML _text;
 	private Button _closeButton;
+	private Boolean _html;
 	
 	public AlertWindow(){		
 		super(false, true);
+		_html = true;
 		_closeButton = new Button("Close");
 		_text = new HTML();		
 		
@@ -35,22 +37,30 @@ public class AlertWindow extends DialogBox implements ClickHandler {
 	public void showErrorMessage(String type, String details, int code){
 		
 		StringBuilder sb = new StringBuilder();
-		
+		String sep = _html == true ? "<br/>" : "\n";
 		sb.append(type);
 		
 		if(details != "" ){
-			sb.append("<br/>");
+			sb.append(sep);
 			sb.append(details);
 		}
 		
 		if(code > -1){
-			sb.append("<br/>");		
+			sb.append(sep);		
 			sb.append("Error code: ");
 			sb.append(code);
 		}		
 		setText("Error");
-		_text.setHTML(sb.toString());
 		
+		if(_html == true)
+			_text.setHTML(sb.toString());
+		else
+			_text.setText(sb.toString());
+		
+	}
+	
+	public void setHtml(Boolean bool){
+		_html = bool;
 	}
 	
 	public void showErrorMessage(String type, String details){
@@ -64,6 +74,11 @@ public class AlertWindow extends DialogBox implements ClickHandler {
 	
 	public void onClick(ClickEvent event){
 		this.hide();
+	}
+	
+	public void showPopup(){
+		center();
+		show();
 	}
 	
 

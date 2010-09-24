@@ -54,8 +54,15 @@ public class MainScreenMediator extends Mediator implements IMediator {
 			IApiError error = (IApiError)notification.getBody();
 			AlertWindow pop = new AlertWindow();
 			pop.showErrorMessage(error.getType(), error.getDetails(), error.getErrorCode());
-			pop.center();
-			pop.show();
+			pop.showPopup();
+			
+		}
+		else if(n == Notifications.PAGE_XML_MALFORMED){
+			
+			String msg = (String)notification.getBody();
+			AlertWindow pop = new AlertWindow();
+			pop.showErrorMessage("Page data is malformed and content will be lost.", msg );
+			pop.showPopup();
 			
 		}
 				
@@ -66,7 +73,8 @@ public class MainScreenMediator extends Mediator implements IMediator {
 		
 		 return new String[]{Notifications.PAGES_LOADED, 
 				 Notifications.LOAD_PAGE_ERROR,
-				 Notifications.SAVE_PAGE_ERROR};
+				 Notifications.SAVE_PAGE_ERROR,
+				 Notifications.PAGE_XML_MALFORMED};
 	}
 
 }

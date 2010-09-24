@@ -52,6 +52,8 @@ public class Notifications {
 	
 	public static final String TINY_RESIZE = "tinyResize";
 	
+	public static final String PAGE_XML_MALFORMED = "pageMalformed";
+	
 	
 
 }

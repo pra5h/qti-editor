@@ -72,12 +72,20 @@ public class MainViewMediator extends Mediator implements IMediator {
 		alert.center();
 	}
 	
+	private void onXMLMalformed(String msg){		
+		AlertWindow pop = new AlertWindow();
+		pop.setHtml(false);
+		pop.showErrorMessage("Page data is malformed and content will be lost.", msg );		
+		pop.showPopup();
+	}
+	
 	@Override
 	public String[] listNotificationInterests() {
 		return new String[]{Notifications.LOAD_TEST_ERROR, 
 				Notifications.LOAD_PAGE_ERROR, 
 				Notifications.SAVE_TEST_ERROR,
-				Notifications.SAVE_PAGE_ERROR};
+				Notifications.SAVE_PAGE_ERROR,
+				Notifications.PAGE_XML_MALFORMED};
 	}
 	
 	@Override
@@ -89,6 +97,8 @@ public class MainViewMediator extends Mediator implements IMediator {
 				n == Notifications.SAVE_PAGE_ERROR ||
 				n == Notifications.SAVE_TEST_ERROR)
 			showErrorPopup((IApiError)notification.getBody());
+		else if(n == Notifications.PAGE_XML_MALFORMED)
+			onXMLMalformed((String)notification.getBody());
 
 	}
 }

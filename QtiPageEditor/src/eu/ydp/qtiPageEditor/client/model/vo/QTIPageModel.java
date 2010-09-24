@@ -4,6 +4,7 @@ import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.XMLParser;
+import com.google.gwt.xml.client.impl.DOMParseException;
 
 public class QTIPageModel {
 	
@@ -68,9 +69,17 @@ public class QTIPageModel {
 		return _basePath;
 	}
 	
-	public void setContent(String s)
+	public void setContent(String s) throws DOMParseException
 	{
-		_content = s;			
+		try{
+			XMLParser.parse(s);
+			_content = s;
+		}
+		catch(DOMParseException e){
+			throw e;
+		}
+		
+					
 	}
 	
 	public String getContent()

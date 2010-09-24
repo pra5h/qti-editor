@@ -90,7 +90,7 @@ public class QtiPageEditor implements EntryPoint {
 		Boolean isHostedMode = GWT.getPermutationStrongName().equals( GWT.HOSTED_MODE_PERMUTATION_STRONG_NAME);
 		IStorage storage = isHostedMode? RPCStorage.getInstance() : Storage.getInstance();
 		// hardcoded path to edited resources - put files in war folder to run app in hosted mode 
-		String resourcesPath = "/resources/64/script_00001/page_14.utp";
+		String resourcesPath = "/resources/64/script_00001/page_1.xml";
 		String pageURL = isHostedMode? resourcesPath : conf.getPageURL();
 
 		_env = new EditorEnvirnoment(pageURL,"media", storage, sr);		

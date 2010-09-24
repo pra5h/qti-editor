@@ -2,6 +2,7 @@ package eu.ydp.qtiPageEditor.client.model;
 
 
 import com.google.gwt.user.client.Command;
+import com.google.gwt.xml.client.impl.DOMParseException;
 
 import eu.ydp.qtiPageEditor.client.appcallback.SaveCallback;
 import eu.ydp.qtiPageEditor.client.constants.Notifications;
@@ -72,9 +73,14 @@ public class QTIPageModelProxy extends QtiProxyBase {
 					String content) {
 
 				QTIPageModel page = new QTIPageModel();
-				page.setContent(content);
-				page.setPath(resource.getPath());
-
+				try{
+					page.setContent(content);					
+				}
+				catch (DOMParseException e){
+					sendNotification(Notifications.PAGE_XML_MALFORMED, e.getMessage());
+				}
+					
+				page.setPath(resource.getPath());	
 				pages.addPage(page);
 				
 				_pagesLoadMonitor.onPageRequest();	
@@ -115,7 +121,13 @@ public class QTIPageModelProxy extends QtiProxyBase {
 			@Override
 			public void onRequestComplete(IResource resource, String command,
 					String content) {
-				page.setContent(content);
+				
+				try{
+					page.setContent(content);
+				}
+				catch (DOMParseException e){
+					sendNotification(Notifications.PAGE_XML_MALFORMED, e.getMessage());
+				}				
 
 				String[] titles = new String[pages.getPageCount()];
 				int i;
@@ -195,7 +207,12 @@ public class QTIPageModelProxy extends QtiProxyBase {
 	}
 	
 	public void updatePageState(int ix, String content) {
-		getDataVO().getPage(ix).setContent(content);
+		try{
+			getDataVO().getPage(ix).setContent(content);
+		}
+		catch (DOMParseException e){
+			sendNotification(Notifications.PAGE_XML_MALFORMED, e.getMessage());
+		}
 	}
 
 	public String getPageContent(int ix) {
