@@ -14,18 +14,25 @@
 				var browseCallback = {
 				
 					onBrowseComplete : function(filePath, title) {
-						srcArr = filePath.split('/');
+						
 						if(data != undefined && data.src != undefined && data.src != '') {
 								node.parentNode.removeChild(node);
 						}
-						var videotag = '<fieldset id="runFileUploadLib" class="mceNonEditable" style="font-size: 10px; font-color: #b0b0b0; color: #b0b0b0; border: 1px solid #d0d0d0;"><embed type="" src="' + String(srcArr[srcArr.length-2] + '/' + srcArr[srcArr.length-1]) + '" title="' + title + '"/><img id="mceVideo" src="/work/tools/qtitesteditor/tinymce/tiny_mce/plugins/addvideo/img/movie.png" /><br>' + title + '</fieldset>';
+						
+						var fromPath = tinyMCE.gwtProxy.getPageBasePath();
+						fromPath = fromPath.split('/');
+						fromPath.pop();
+						fromPath = fromPath.join('/');
+						filePath = getRelativeFromAbsoute(fromPath, filePath);
+						
+						var videotag = '<fieldset id="runFileUploadLib" class="mceNonEditable" style="font-size: 10px; font-color: #b0b0b0; color: #b0b0b0; border: 1px solid #d0d0d0;"><embed type="" src="' + fromPath + '/' + filePath + '" title="' + title + '"/><img id="mceVideo" src="/work/tools/qtitesteditor/tinymce/tiny_mce/plugins/addvideo/img/movie.png" /><br>' + title + '</fieldset>';
 						ed.selection.moveToBookmark(ed.selection.getBookmark());
 						tinyMCE.execCommand('mceInsertContent', false, videotag);
 						return true;
 					},
 					
 					onBrowseError : function(error) {
-						alert(error);
+						tinyMCE.activeEditor.windowManager.alert(error);
 						return false;
 					}
 					
@@ -66,3 +73,31 @@
 
 	tinymce.PluginManager.add('addvideo', tinymce.plugins.addVideoPlugin);
 })();
+
+function getRelativeFromAbsoute(absoluteFrom, absoluteTo) {
+	
+	var absoluteFromDir = absoluteFrom;
+	var absoluteFromDirArr = absoluteFromDir.split("/");
+	var prefix = "";
+	var path;
+
+	while (absoluteFromDirArr.length) {
+		absoluteFrom = absoluteFromDirArr.join('/');
+		if (absoluteTo.indexOf(absoluteFrom) == - 1) {
+			if (absoluteFromDirArr.pop() != "") {
+				prefix+= "../";
+			}
+		} else {
+			break;
+		}
+	}
+	
+	if (prefix == "") {
+		path = prefix + absoluteTo.substring(absoluteFrom.length, absoluteTo.length);
+	} else {
+		path = prefix + absoluteTo.substring(absoluteFrom.length + 1, absoluteTo.length);
+	}
+	
+	return path;
+	
+}

@@ -1,13 +1,14 @@
 var AMTcgiloc = "http://www.imathas.com/cgi-bin/mimetex.cgi";
 
 tinyMCE.init({  
+	convert_urls: false,
 	theme : "advanced",  
 	mode: "textareas",  
 	elements : "content",  
 	skin : "o2k7",
 	plugins : "safari,spellchecker,pagebreak,style,layer,table,save,advhr,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,"
 		+"searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,imagemanager,"
-		+"filemanager,noneditable,asciimath,asciimathcharmap,asciisvg,choice,gap,inlinechoice,order,match,fileuploadlib,comment,trackchanges,addvideo,copyqti",
+		+"filemanager,noneditable,asciimath,asciimathcharmap,asciisvg,choice,gap,inlinechoice,order,match,fileuploadlib,comment,trackchanges,addvideo,copyqti,selection",
 	
 	theme_advanced_toolbar_location : "top",
 	theme_advanced_toolbar_align : "left",
@@ -18,7 +19,7 @@ tinyMCE.init({
 	theme_advanced_buttons3 : "insertgap,insertinlinechoice,insertchoicesection,insertordersection,insertmatchsection,|,fileuploadlib_image,addvideo,|,insertcomment,|,enablechangestracking,disablechangestracking,|,tablecontrols,|,anchor,|,help",
 	
 	extended_valid_elements : "canvas[id|style|width|height],gap[identifier],choiceInteraction[shuffle|maxChoices|responseIdentifier],"
-		+"orderInteracion[shuffle|responseIdentifier],matchInteraction[shuffle|maxAssociations|responseIdentifier],prompt,"
+		+"orderInteracion[shuffle|responseIdentifier],selectionInteracion[shuffle|responseIdentifier],item[identifier],matchInteraction[shuffle|maxAssociations|responseIdentifier],prompt,"
 		+"simpleChoice[identifier|fixed],simpleAssociableChoice[identifier|fixed|matchMax],inlineChoiceInteraction,inlineChoice[score],"
 		+"assessmentItem[xmlns|identifier|title|adaptive|timeDependent],responseDeclaration[identifier|cardinality|baseType],"
 		+"correctResponse,value,itemBody,applink[lid|title],mapping[defaultValue],mapEntry[mapKey|mappedValue],"

@@ -2009,6 +2009,21 @@ tinymce.create('static tinymce.util.XHR', {
 			}
 			h = h.replace(/<\/choiceInteraction>/gi, '</div><!-- end of choiceInteraction -->');
 			
+			//Selection support
+			//h = h.replace(/(<selectionInteraction[^>]*>)(?! -->)/gi, '<!-- $1 --><div id="selectionInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">');
+			//h = h.replace(/<prompt>([^<]*)<\/prompt>(?=\s*<simpleChoice)/gi, '<p id="choiceInteraction">$1</p>');
+			//for(var i in answers) {
+			//	if(answers[i][1] != 'ordered') {
+			//		for(var j in answers[i][0]) {
+			//			var simpleChoice = new RegExp('(<simpleChoice identifier="' + answers[i][0][j] + '"[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice>)(?! -->)', "gi");
+			//			h = h.replace(simpleChoice, '<!-- $1 --><br /><input id="choiceInteraction" name="simpleChoice" type="checkbox" checked="checked" />$2');
+			//		}
+			//		var sc = new RegExp('(<simpleChoice[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice>)(?! -->)', 'gi');
+			//		h = h.replace(sc, '<!-- $1 --><br /><input id="choiceInteraction" name="simpleChoice" type="checkbox" />$2');
+			//	}
+			//}
+			//h = h.replace(/<\/choiceInteraction>/gi, '</div><!-- end of choiceInteraction -->');
+			
 			//Inline choices support
 			h = h.replace(/(<inlineChoiceInteraction responseIdentifier="[^"]+" shuffle="[^"]+"[^>]*>)(?! -->)/gi, '<!-- $1 --><span id="inlineChoiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">');
 			for(var i in answers) {
@@ -2116,7 +2131,7 @@ tinymce.create('static tinymce.util.XHR', {
 					basePagePath.pop();
 					basePagePath = basePagePath.join('/');
 					basePagePath += '/';
-					h = h.replace(/src="(media\/[^\/"]*)"/gi, 'src="' + basePagePath + '$1"');
+					h = h.replace(/src="([^"]*media[^"]*)"/gi, 'src="' + basePagePath + '$1"');
 					
 				} 
 				
@@ -6572,7 +6587,17 @@ window.tinymce.dom.Sizzle = Sizzle;
 			
 			//h = h.replace(/(<embed[^>]*>(?:<\/embed>)?)<img[^>]*id="mceVideo"[^>]*>/gi, '$1');
 			
-			h = h.replace(/src="[^"]+(media\/[^\/"]*)"/gi, 'src="$1"');
+			basePagePath = tinyMCE.gwtProxy.getPageBasePath();
+			if(basePagePath != undefined && basePagePath != '') {
+				
+				basePagePath = basePagePath.split('/');
+				basePagePath.pop();
+				basePagePath = basePagePath.join('/');
+				basePagePath += '/';
+				var rg = new RegExp('src="(' + basePagePath + ')*([^"]*)"', 'gi');
+				h = h.replace(rg, 'src="$2"');
+				
+			} 
 			
 			if (o.format == 'html') {
 				// Protect some elements
