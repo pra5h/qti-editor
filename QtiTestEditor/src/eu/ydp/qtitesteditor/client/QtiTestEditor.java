@@ -64,10 +64,11 @@ public class QtiTestEditor implements EntryPoint {
 		Boolean isHostedMode = GWT.getPermutationStrongName().equals( GWT.HOSTED_MODE_PERMUTATION_STRONG_NAME);
 		IStorage storage = isHostedMode? RPCStorage.getInstance() : Storage.getInstance();
 		// hardcoded path to edited resources - put files in war folder to run app in hosted mode 
-		String resourcesPath = "/resources/66/script_00001.utt";
+		String resourcesPath = "/test/toc.xml";
 		String pageURL = isHostedMode? resourcesPath : conf.getPageURL();
-
-		IEditorEnvirnoment env = new EditorEnvirnoment(pageURL, "script_00001/media/", storage, reg);		
+		String mediaPath = conf.getMediaPath() != null ? conf.getMediaPath() : 	"script_00001/media/";		
+		
+		IEditorEnvirnoment env = new EditorEnvirnoment(pageURL, mediaPath, storage, reg);		
 		
 		SessionSustainer sessionSustainer = new SessionSustainer(env.getBasePath(), env.getStorage());
 		

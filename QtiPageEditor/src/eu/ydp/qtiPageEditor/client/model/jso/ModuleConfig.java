@@ -27,4 +27,8 @@ public class ModuleConfig extends JavaScriptObject {
 			
 		return p;	
 	}-*/;
+	
+	public final native String getMediaPath()/*-{
+		return this.mediaPath
+	}-*/;
 }
