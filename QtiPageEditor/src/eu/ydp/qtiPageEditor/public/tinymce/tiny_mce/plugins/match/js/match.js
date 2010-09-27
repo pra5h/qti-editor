@@ -794,6 +794,15 @@ var matchDialog = {
 		
 		tinyMCE.activeEditor.dom.drawInCanvas();
 		
+		// Remove illegal text before headins
+		var beforeHeadings = ed.selection.dom.doc.body.innerHTML.match(/(.*?)(?=<!-- \?xml)/);
+		if(beforeHeadings != undefined && beforeHeadings[1] != '') {
+			ed.selection.dom.doc.body.innerHTML = ed.selection.dom.doc.body.innerHTML.replace(/(.*?)(?=<!-- \?xml)/,'');
+		}
+		if(beforeHeadings && beforeHeadings[1] != '') {
+			ed.selection.dom.doc.body.innerHTML = ed.selection.dom.doc.body.innerHTML.replace(/<itemBody> -->/,'<itemBody> -->' + beforeHeadings[1]);
+		}
+		
 		if(tinyMCE.feedback != undefined) {
 			
 			var rg = new RegExp('<!-- <modalFeedback[^>]*senderIdentifier="' + identifier + '"[^>]*>[^<]*</modalFeedback> -->','gi');

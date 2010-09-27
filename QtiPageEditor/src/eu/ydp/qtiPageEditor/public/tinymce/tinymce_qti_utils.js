@@ -14,8 +14,8 @@ function actionOnQTI(e) {
 			if(ed.selection.dom.doc.body.getElementsByTagName('p')[0] != undefined && tinyMCE.originalBookmark == undefined) {
 				ed.selection.select(ed.selection.dom.doc.body.getElementsByTagName('p')[0]);
 				//ed.selection.moveToBookmark(ed.selection.getBookmark());
-			}
-		}
+			} 
+		} 
 	} 
 	
 	if(tinyMCE.changesTracking != undefined) {

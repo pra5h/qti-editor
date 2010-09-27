@@ -6579,6 +6579,15 @@ window.tinymce.dom.Sizzle = Sizzle;
 			
 			s.entity_encoding = 'numeric';
 			
+			// Remove illegal text before headins
+			var beforeHeadings = h.match(/(.*?)(?=<!-- \?xml)/);
+			if(beforeHeadings != undefined && beforeHeadings[1] != '') {
+				h = h.replace(/(.*?)(?=<!-- \?xml)/,'');
+			}
+			if(beforeHeadings && beforeHeadings[1] != '') {
+				h = h.replace(/<itemBody> -->/,'<itemBody> -->' + beforeHeadings[1]);
+			}
+			
 			h = this.parseToQTI(h);
 			h = this.parseCommentsToQY(h);
 			
