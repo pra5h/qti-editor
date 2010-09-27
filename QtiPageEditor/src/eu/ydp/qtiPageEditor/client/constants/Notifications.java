@@ -54,6 +54,8 @@ public class Notifications {
 	
 	public static final String PAGE_XML_MALFORMED = "pageMalformed";
 	
+	public static final String REMOVE_PAGE_ERROR = "removePageError";
+	
 	
 
 }

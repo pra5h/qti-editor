@@ -69,7 +69,7 @@ public class MainViewMediator extends Mediator implements IMediator {
 	private void showErrorPopup(IApiError error){
 		AlertWindow alert = new AlertWindow();
 		alert.showErrorMessage(error.getType(), error.getDetails(), error.getErrorCode());
-		alert.center();
+		alert.showPopup();
 	}
 	
 	private void onXMLMalformed(String msg){		
@@ -85,6 +85,7 @@ public class MainViewMediator extends Mediator implements IMediator {
 				Notifications.LOAD_PAGE_ERROR, 
 				Notifications.SAVE_TEST_ERROR,
 				Notifications.SAVE_PAGE_ERROR,
+				Notifications.REMOVE_PAGE_ERROR,
 				Notifications.PAGE_XML_MALFORMED};
 	}
 	
@@ -95,7 +96,8 @@ public class MainViewMediator extends Mediator implements IMediator {
 		if(n == Notifications.LOAD_TEST_ERROR ||
 				n == Notifications.LOAD_PAGE_ERROR ||
 				n == Notifications.SAVE_PAGE_ERROR ||
-				n == Notifications.SAVE_TEST_ERROR)
+				n == Notifications.SAVE_TEST_ERROR ||
+				n == Notifications.REMOVE_PAGE_ERROR)
 			showErrorPopup((IApiError)notification.getBody());
 		else if(n == Notifications.PAGE_XML_MALFORMED)
 			onXMLMalformed((String)notification.getBody());

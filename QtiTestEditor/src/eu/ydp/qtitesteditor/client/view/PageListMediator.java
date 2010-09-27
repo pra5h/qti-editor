@@ -111,7 +111,7 @@ public class PageListMediator extends Mediator implements IMediator, ChangeHandl
 		PageListView view = (PageListView)getViewComponent();
 		view.removePage(ix);
 		if(view.getItemCount() > 0)		{			
-			view.setSelectedIndex(ix-1);			
+			view.setSelectedIndex(ix > 0 ? ix-1 : 0);			
 			sendNotification(Notifications.SHOW_PAGE, view.getSelectedIndex());
 		}
 		else{

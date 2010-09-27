@@ -182,7 +182,28 @@ public class QTIPageModelProxy extends QtiProxyBase {
 	}
 
 	public void removePage(int ix) {
-		getDataVO().removePage(ix);
+		ModelPageList pages = getDataVO();		
+		QTIPageModel page = pages.getPage(ix);
+		String path = page.getPath();
+		
+		pages.removePage(ix);
+		
+		IResource resource = _storage.getResource(path);
+		resource.remove(new IResourceCallback() {
+			
+			@Override
+			public void onRequestError(IResource resource, String command,
+					IApiError error) {
+				sendNotification(Notifications.REMOVE_PAGE_ERROR, error);
+				
+			}
+			
+			@Override
+			public void onRequestComplete(IResource resource, String command) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 	}
 
 	public void swapItems(int from, int to) {
