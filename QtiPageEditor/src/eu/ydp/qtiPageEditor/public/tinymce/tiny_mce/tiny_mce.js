@@ -1958,8 +1958,12 @@ tinymce.create('static tinymce.util.XHR', {
 			h = h.replace(/(<!-- )?(<responseDeclaration[^>]*>)/gi,function($0, $1){
 				return $1 ? $0 : '<!-- ' + $0;
 			});
-			
 			h = h.replace(/(<\/responseDeclaration>)(?! -->)/gi,"$1 -->");
+			
+			h = h.replace(/(<!-- )?(<styleDeclaration[^>]*>)/gi,function($0, $1){
+				return $1 ? $0 : '<!-- ' + $0;
+			});
+			h = h.replace(/(<\/styleDeclaration>)(?! -->)/gi,"$1 -->");
 			
 			h = h.replace(/(<itemBody>)(?! -->)/gi,'<!-- $1 -->');
 			// Paste illegal text that was before headins (if exists)
@@ -6519,6 +6523,9 @@ window.tinymce.dom.Sizzle = Sizzle;
 			
 			h = h.replace(/<!-- (<responseDeclaration[^>]*>)/gi,"$1");
 			h = h.replace(/(<\/responseDeclaration>) -->/gi,"$1");
+			
+			h = h.replace(/<!-- (<styleDeclaration[^>]*>)/gi,"$1");
+			h = h.replace(/(<\/styleDeclaration>) -->/gi,"$1");
 			
 			h = h.replace(/<!-- (<itemBody>) -->/gi,'$1');
 			h = h.replace(/<!-- (<\/itemBody>) -->/gi,'$1');
