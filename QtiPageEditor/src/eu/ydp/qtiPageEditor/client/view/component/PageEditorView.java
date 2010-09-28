@@ -77,6 +77,7 @@ public class PageEditorView extends Composite {
     public void setText(String text) {        
     	_textArea.setText(text);    	
     	setEditorContents(getID(), text);
+    	focusMCE(getID());
     }
 
     public String getText() {        
@@ -110,10 +111,11 @@ public class PageEditorView extends Composite {
             public void execute() {                
             	setWidth("100%");               
                 setTextAreaToTinyMCE(_id);               
-                initResizeListener();
-                focusMCE(_id);                
+                initResizeListener();                           
                 if(_tinyMceCreatedCallback != null)
                 	_tinyMceCreatedCallback.onTinyMceCreated();
+                
+                focusMCE(_id);     
             }
         });
     }
@@ -164,6 +166,8 @@ public class PageEditorView extends Composite {
      */
     protected native void focusMCE(String id) /*-{
         $wnd.tinyMCE.execCommand('mceFocus', true, id);
+        $wnd.tinyMCE.activeEditor.focus();
+        
     }-*/;
 
     /**
