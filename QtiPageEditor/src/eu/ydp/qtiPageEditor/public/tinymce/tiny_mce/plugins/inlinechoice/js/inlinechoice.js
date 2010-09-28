@@ -153,7 +153,7 @@ var choiceDialog = {
 				choiceSection += '>' + answers[i];
 				
 				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].text[ids[i]] != undefined) {
-					choiceSection += '<feedbackInline identifier="' + ids[i] + '" showHide="show">' + tinyMCE.feedback[identifier].text[ids[i]] + '</feedbackInline>'
+					choiceSection += '<feedbackInline outcomeIdentifier="' + ids[i] + '" identifier="' + answers[i] + '" showHide="show">' + tinyMCE.feedback[identifier].text[ids[i]] + '</feedbackInline>'
 				} 
 				
 				choiceSection += '</inlineChoice> -->';
@@ -206,8 +206,8 @@ var choiceDialog = {
 				choiceSection += '>' + answers[i];
 				
 				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].text[ids[i]] != undefined) {
-					choiceSection += '<feedbackInline identifier="' + ids[i] + '" showHide="show">' + tinyMCE.feedback[identifier].text[ids[i]] + '</feedbackInline>'
-				} 
+					choiceSection += '<feedbackInline outcomeIdentifier="' + ids[i] + '" identifier="' + answers[i] + '" showHide="show">' + tinyMCE.feedback[identifier].text[ids[i]] + '</feedbackInline>'
+				}
 				
 				choiceSection += '</inlineChoice> -->';
 				
