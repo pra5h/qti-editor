@@ -16,7 +16,7 @@ tinyMCE.init({
 	theme_advanced_resizing : true,  
 	theme_advanced_buttons1 : "save,newdocument,print,preview,|,formatselect,fontselect,fontsizeselect,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull",  
 	theme_advanced_buttons2 : "undo,redo,|,cut,copy,|,paste,pastetext,pasteword,|,search,replace,|,forecolor,backcolor,|,bullist,numlist,|,outdent,indent,|,link,unlink,|,sub,sup,|,asciimath,asciimathcharmap,|,charmap",  
-	theme_advanced_buttons3 : "insertgap,insertinlinechoice,insertchoicesection,insertordersection,insertmatchsection,|,fileuploadlib_image,addvideo,|,insertcomment,|,enablechangestracking,disablechangestracking,|,tablecontrols,|,anchor,|,help,|,html",
+	theme_advanced_buttons3 : "insertgap,insertinlinechoice,insertchoicesection,insertordersection,insertmatchsection,|,fileuploadlib_image,addvideo,|,insertcomment,|,enablechangestracking,disablechangestracking,|,tablecontrols,|,anchor,|,code",
 	
 	extended_valid_elements : "canvas[id|style|width|height],gap[identifier],choiceInteraction[shuffle|maxChoices|responseIdentifier],"
 		+"orderInteracion[shuffle|responseIdentifier],selectionInteracion[shuffle|responseIdentifier],item[identifier],matchInteraction[shuffle|maxAssociations|responseIdentifier],prompt,"
@@ -84,8 +84,7 @@ tinyMCE.init({
                 s.readonly = false;
             }
         };
+
     }
-	
-	
 	
 }); 
