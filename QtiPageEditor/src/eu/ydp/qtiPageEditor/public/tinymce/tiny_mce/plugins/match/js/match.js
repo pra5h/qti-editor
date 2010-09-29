@@ -623,7 +623,19 @@ var matchDialog = {
 					for(j in tinyMCE.feedback[identifier].text) {
 						jArr = j.split(' ');
 						if(jArr[0] == ids_left[i]) {
-							matchSection += '<feedbackInline senderIdentifier="^' + identifier + '$" outcomeIdentifier="' + identifier + '" identifier="' + j + '" showHide="show">' + tinyMCE.feedback[identifier].text[j] + '</feedbackInline>';
+							matchSection += '<feedbackInline ';
+							var found = false;
+							for(i in pairs) {
+								if(j == pairs[i]) {
+									found = true;
+								}
+							}
+							if(found == true) {
+								matchSection += 'mark="CORRECT"';
+							} else {
+								matchSection += 'mark="WRONG"';
+							}
+							matchSection += ' senderIdentifier="^' + identifier + '$" outcomeIdentifier="' + identifier + '" identifier="' + j + '" showHide="show">' + tinyMCE.feedback[identifier].text[j] + '</feedbackInline>';
 						}
 					}
 				} 
@@ -722,7 +734,19 @@ var matchDialog = {
 					for(j in tinyMCE.feedback[identifier].text) {
 						jArr = j.split(' ');
 						if(jArr[0] == ids_left[i]) {
-							matchSection += '<feedbackInline senderIdentifier="^' + identifier + '$" outcomeIdentifier="' + identifier + '" identifier="' + j + '" showHide="show">' + tinyMCE.feedback[identifier].text[j] + '</feedbackInline>';
+							matchSection += '<feedbackInline ';
+							var found = false;
+							for(i in pairs) {
+								if(j == pairs[i]) {
+									found = true;
+								}
+							}
+							if(found == true) {
+								matchSection += 'mark="CORRECT"';
+							} else {
+								matchSection += 'mark="WRONG"';
+							}
+							matchSection += ' senderIdentifier="^' + identifier + '$" outcomeIdentifier="' + identifier + '" identifier="' + j + '" showHide="show">' + tinyMCE.feedback[identifier].text[j] + '</feedbackInline>';
 						}
 					}
 				} 
