@@ -623,7 +623,7 @@ var matchDialog = {
 					for(j in tinyMCE.feedback[identifier].text) {
 						jArr = j.split(' ');
 						if(jArr[0] == ids_left[i]) {
-							matchSection += '<feedbackInline outcomeIdentifier="' + identifier + '" identifier="' + j + '" showHide="show">' + tinyMCE.feedback[identifier].text[j] + '</feedbackInline>';
+							matchSection += '<feedbackInline senderIdentifier="^' + identifier + '$" outcomeIdentifier="' + identifier + '" identifier="' + j + '" showHide="show">' + tinyMCE.feedback[identifier].text[j] + '</feedbackInline>';
 						}
 					}
 				} 
@@ -722,7 +722,7 @@ var matchDialog = {
 					for(j in tinyMCE.feedback[identifier].text) {
 						jArr = j.split(' ');
 						if(jArr[0] == ids_left[i]) {
-							matchSection += '<feedbackInline outcomeIdentifier="' + identifier + '" identifier="' + j + '" showHide="show">' + tinyMCE.feedback[identifier].text[j] + '</feedbackInline>';
+							matchSection += '<feedbackInline senderIdentifier="^' + identifier + '$" outcomeIdentifier="' + identifier + '" identifier="' + j + '" showHide="show">' + tinyMCE.feedback[identifier].text[j] + '</feedbackInline>';
 						}
 					}
 				} 

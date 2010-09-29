@@ -23,7 +23,7 @@ tinyMCE.init({
 		+"simpleChoice[identifier|fixed],simpleAssociableChoice[identifier|fixed|matchMax],inlineChoiceInteraction,inlineChoice[score],"
 		+"assessmentItem[xmlns|identifier|title|adaptive|timeDependent],responseDeclaration[identifier|cardinality|baseType],"
 		+"correctResponse,value,itemBody,applink[lid|title],mapping[defaultValue],mapEntry[mapKey|mappedValue],"
-		+"qy:comment[idref],feedbackInline[identifier|showHide],modalFeedback[outcomeIdentifier|identifier|showHide|sound|senderIdentifier|style],"
+		+"qy:comment[idref],feedbackInline[identifier|showHide|outcomeIdentifier|senderIdentifier|faceEffect|mark],modalFeedback[outcomeIdentifier|identifier|showHide|sound|senderIdentifier|style],"
 		+"math[title|xmlns],mstyle[mathsize|mathcolor|fontfamily|displaystyle],mfrac,mrow,mi,mo,mn,msup,mroot,munder,"
 		+"mtable,mtr,mtd,mspace,changesTracking[state],styleDeclaration,link[href|userAgent]",
 	
