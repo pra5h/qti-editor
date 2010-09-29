@@ -414,10 +414,10 @@ function runMultipleChoice(selectedNode) {
 		var shuffle = sectionDiv.previousSibling.data.match(/<choiceInteraction.*?shuffle="([^"]*)"[^>]*>/i);
 		var maxChoices = sectionDiv.previousSibling.data.match(/<choiceInteraction.*?maxChoices="([^"]*)"[^>]*>/i);
 	}
-	var answers_paragraph = choiceSectionHTML.match(/<!-- <simpleChoice identifier="[^"]*"[^>]*>([^<]*|<img[^>]*>)(?:<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice> --><br[^>]*><input id="choiceInteraction" name="simpleChoice" (checked="checked" )?type="checkbox">(<img[^>]*>|[^<]*)/gi);
+	var answers_paragraph = choiceSectionHTML.match(/<!-- <simpleChoice identifier="[^"]*"[^>]*>([^<]*|<img[^>]*>)<\/simpleChoice>[^<]*(?:<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?[^<]* --><br[^>]*><input id="choiceInteraction" name="simpleChoice" (checked="checked" )?type="checkbox">(<img[^>]*>|[^<]*)/gi);
 	var values = new Array();
 	for (ans in answers_paragraph) {
-		values.push(answers_paragraph[ans].match(/<!-- <simpleChoice identifier="([^"]*)"\s*(?:fixed="([^"]*)")?[^>]*>(?:[^<]*|<img[^>]*>)(?:<feedbackInline[^>]*>([^<]*)<\/feedbackInline>)?<\/simpleChoice> --><br[^>]*><input id="choiceInteraction" name="simpleChoice" (checked="checked" )?type="checkbox">(<img[^>]*>|[^<]*)/i));
+		values.push(answers_paragraph[ans].match(/<!-- <simpleChoice identifier="([^"]*)"\s*(?:fixed="([^"]*)")?[^>]*>(?:[^<]*|<img[^>]*>)<\/simpleChoice>[^<]*(?:<feedbackInline[^>]*>([^<]*)<\/feedbackInline>)?[^<]* --><br[^>]*><input id="choiceInteraction" name="simpleChoice" (checked="checked" )?type="checkbox">(<img[^>]*>|[^<]*)/i));
 	}
 	var i=0;
 	while(values[i] != undefined) {
@@ -469,6 +469,7 @@ function runOrder(selectedNode) {
 	var ids = new Array();
 	var fixed = new Array();
 	var data = new Array();
+	var fdb = '';
 	
 	var sectionDiv = selectedNode;
 	while(sectionDiv.nodeName != 'DIV' || sectionDiv.id != 'orderInteraction') {
@@ -486,16 +487,19 @@ function runOrder(selectedNode) {
 	var answers_paragraph = orderSectionHTML.match(/<!-- <simpleChoice identifier="[^"]*"[^>]*>([^<]*|<img[^>]*>)(?=<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice> -->(?:<\/p>)?<div id="orderOption" name="([0-9]+)"[^>]*>(<img[^>]*>|[^<]*)<\/div>/gi);
 	var values = new Array();
 	for (ans in answers_paragraph) {
-		values.push(answers_paragraph[ans].match(/<!-- <simpleChoice identifier="([^"]*)"\s*(?:fixed="([^"]*)")?[^>]*>(?:[^<]*|<img[^>]*>)<\/simpleChoice> -->(?:<\/p>)?<div id="orderOption" name="([0-9]+)"[^>]*>(<img[^>]*>|[^<]*)<\/div>/i));
+		values.push(answers_paragraph[ans].match(/<!-- <simpleChoice identifier="([^"]*)"\s*(?:fixed="([^"]*)")?[^>]*>(?:[^<]*|<img[^>]*>)(?:<feedbackInline[^>]*>([^<]*)<\/feedbackInline>)?<\/simpleChoice> -->(?:<\/p>)?<div id="orderOption" name="([0-9]+)"[^>]*>(<img[^>]*>|[^<]*)<\/div>/i));
 	}
 	var i=0;
 	while(values[i] != undefined) {
-		var point = values[i][3];
+		var point = values[i][4];
 		points.push(point);
 		point--;
 		ids[point] = values[i][1];
-		answers[point] = values[i][4];
+		answers[point] = values[i][5];
 		fixed[point] = values[i][2];
+		if(values[i][3] != undefined) {
+			fdb = values[i][3];
+		}
 		i++;
 	}
 	
@@ -506,6 +510,7 @@ function runOrder(selectedNode) {
 	data.push(identifier[1]);
 	data.push(shuffle[1]);
 	data.push(fixed);
+	data.push(fdb);
 	
 	tinyMCE.selectedNode = selectedNode;
 	tinyMCE.execCommand('mceOrder', false, data);

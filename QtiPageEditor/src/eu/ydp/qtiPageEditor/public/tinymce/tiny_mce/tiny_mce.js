@@ -1989,7 +1989,7 @@ tinymce.create('static tinymce.util.XHR', {
 					for(var j in answers[i][0]) {
 						var idj = parseInt(j);
 						idj++;
-						var simpleChoice = new RegExp('(<simpleChoice identifier="' + answers[i][0][j] + '"[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)<\/simpleChoice>)(?! -->)', "gi");
+						var simpleChoice = new RegExp('(<simpleChoice identifier="' + answers[i][0][j] + '"[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)<\/simpleChoice>(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?[^<]*)(?! -->)', "gi");
 						h = h.replace(simpleChoice, '<!-- $1 --><div id="orderOption" name="' + idj + '" style="border: 1px solid green; margin: 2px;">$2</div>');
 					}
 					//var sc = new RegExp('(<simpleChoice[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)<\/simpleChoice>)(?! -->)','gi');
@@ -6553,7 +6553,7 @@ window.tinymce.dom.Sizzle = Sizzle;
 			//Order support
 			h = h.replace(/(?:<p>)?<!-- (<orderInteraction[^>]*>) -->(?:<\/p>)?<div id="orderInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">/gi, '$1');
 			h = h.replace(/<p id="choiceInteraction">([^<]*)<\/p>/gi, '<prompt>$1</prompt>');
-			h = h.replace(/<!-- (<simpleChoice[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)<\/simpleChoice>) -->(?:<\/p>)?<div id="orderOption" [^>]*>(<img[^>]*>|[^<]*)<\/div>/gi,'$1');
+			h = h.replace(/<!-- (<simpleChoice[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)<\/simpleChoice>[^<]*(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*) -->(?:<\/p>)?<div id="orderOption" [^>]*>(<img[^>]*>|[^<]*)<\/div>/gi,'$1');
 			h = h.replace(/ mce_src="[^"]*"/gi,'');
 			h = h.replace(/<\/div><!-- end of orderInteraction -->/gi,'</orderInteraction>');
 			

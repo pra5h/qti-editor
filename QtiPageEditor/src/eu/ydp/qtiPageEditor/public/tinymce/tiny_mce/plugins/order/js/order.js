@@ -10,14 +10,22 @@ var orderDialog = {
 		if(data != undefined && data[0] != undefined) {
 			f.question.value = data[0];
 		}
+		if(tinyMCE.feedback == undefined) {
+			tinyMCE.feedback = new Array;
+		}
 		if(data != undefined && data[4] != undefined) {
 			f.identifier.value = data[4];
+			if(data != undefined && data[7] != undefined) {
+				tinyMCE.feedback[data[4]] = data[7];
+				f.feedback.value = data[7];
+			}
 		} else {
 			var randid = Math.random();
 			randid = String(randid);
 			var rg = new RegExp('0.([0-9]*)',"gi");
 			exec = rg.exec(randid);
 			f.identifier.value = 'id_' + exec[1];
+			tinyMCE.feedback[f.identifier.value] = '';
 		}
 		if(data != undefined && data[5] != undefined) {
 			if(data[5] == 'true') {
@@ -98,7 +106,7 @@ var orderDialog = {
 		var adding = 0;
 		var skip_point = 0;
 		var ordering = 1;
-	
+		
 		while(elements[i] != undefined) {
 			var element = elements[i];
 			if(element.getAttribute('name') == 'question') {
@@ -112,6 +120,9 @@ var orderDialog = {
 			}
 			if(element.getAttribute('name') == 'images') {
 				images = element.checked;
+			}
+			if(element.getAttribute('name') == 'feedback') {
+				tinyMCE.feedback[identifier] = element.value;
 			}
 			if(element.getAttribute('name') == 'answers[]') {
 				if(element.value != '') {
@@ -159,9 +170,12 @@ var orderDialog = {
 			orderSection += '<p id="choiceInteraction">' + question + '</p>';
 			responseDeclaration = '<!-- <responseDeclaration identifier="' + identifier + '" cardinality="ordered" baseType="identifier"><correctResponse>';
 			var responseOrder = new Array;
+			var feedbackCostam = '(';
 			for(i in answers) {
 				responseOrder[points[i]] = ids[i];
+				feedbackCostam += ids[i] + ';';
 			}
+			feedbackCostam +=')';
 			var i = answers.length;
 			if (i > 0) {
 				while (--i) {
@@ -185,7 +199,12 @@ var orderDialog = {
 				if(fixed[i] == 1) {
 					orderSection += ' fixed="true" ';
 				}
-				orderSection += '>' + answers[i] + '</simpleChoice> --><div id="orderOption" name="' + points[i] + '"  style="border: 1px solid green; margin: 2px;"';
+				orderSection += '>' + answers[i] + '</simpleChoice>';
+				if(i == (answers.length - 1) && tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined) {
+					orderSection += '<feedbackInline fadeEffect="300" senderIdentifier="^' + identifier + '$" outcomeIdentifier="' + identifier + '" identifier="' + feedbackCostam + '" mark="CORRECT" showHide="show">' + tinyMCE.feedback[identifier] + '</feedbackInline>'
+					tinyMCE.feedback = new Array;
+				} 
+				orderSection += ' --><div id="orderOption" name="' + points[i] + '"  style="border: 1px solid green; margin: 2px;"';
 				orderSection += '>' + answers[i] + '</div>';
 			}
 			for(i in responseOrder) {
@@ -229,9 +248,12 @@ var orderDialog = {
 			orderSection = '<p id="choiceInteraction">' + question + '</p>';
 			var responseOrder = new Array;
 			
+			var feedbackCostam = '(';
 			for(i in answers) {
 				responseOrder[points[i]] = ids[i];
+				feedbackCostam += ids[i] + ';';
 			}
+			feedbackCostam +=')';
 			
 			var i = answers.length;
 			if (i > 0) {
@@ -257,9 +279,18 @@ var orderDialog = {
 				if(fixed[i] == 1) {
 					orderSection += ' fixed="true" ';
 				}
-				orderSection += '>' + answers[i] + '</simpleChoice> --><div id="orderOption" name="' + points[i] + '" style="border: 1px solid green; margin: 2px;"'; 
+				orderSection += '>' + answers[i] + '</simpleChoice>';
+				if(i == (answers.length - 1) && tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined) {
+					orderSection += '<feedbackInline fadeEffect="300" senderIdentifier="^' + identifier + '$" outcomeIdentifier="' + identifier + '" identifier="' + feedbackCostam + '" mark="CORRECT" showHide="show">' + tinyMCE.feedback[identifier] + '</feedbackInline>'
+					tinyMCE.feedback = new Array;
+				} 
+				orderSection += ' --><div id="orderOption" name="' + points[i] + '" style="border: 1px solid green; margin: 2px;"'; 
 				orderSection += '>' + answers[i] + '</div>';
 			}
+			if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined) {
+				orderSection += '<feedbackInline fadeEffect="300" senderIdentifier="^' + identifier + '$" outcomeIdentifier="' + identifier + '" identifier="' + feedbackCostam + '" mark="CORRECT" showHide="show">' + tinyMCE.feedback[identifier] + '</feedbackInline>'
+				tinyMCE.feedback = new Array;
+			} 
 			for(i in responseOrder) {
 				responseDeclaration += '<value>' + responseOrder[i] + '</value>';
 			}
@@ -284,7 +315,7 @@ var orderDialog = {
 		if(beforeHeadings && beforeHeadings[1] != '') {
 			ed.selection.dom.doc.body.innerHTML = ed.selection.dom.doc.body.innerHTML.replace(/<itemBody> -->/,'<itemBody> -->' + beforeHeadings[1]);
 		}
-		
+	
 		tinyMCEPopup.close();
 		return true;
 		
