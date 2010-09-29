@@ -71,6 +71,8 @@ public class PageListMediator extends Mediator implements IMediator, ChangeHandl
 			moveDownPage((Integer)notification.getBody());
 		else if(n == Notifications.TINY_RESIZE)
 			onTinyResize((TinyMceResizeEvent)notification.getBody());
+		else if(n == Notifications.TINY_CREATED)
+			onTinyCreated();
 				
 		
 	}
@@ -82,7 +84,8 @@ public class PageListMediator extends Mediator implements IMediator, ChangeHandl
 				Notifications.REMOVE_PAGE_FROM_LIST,
 				Notifications.MOVE_PAGE_UP_LIST,
 				Notifications.MOVE_PAGE_DOWN_LIST,
-				Notifications.TINY_RESIZE};				 
+				Notifications.TINY_RESIZE,
+				Notifications.TINY_CREATED};				 
 	}
 	
 	
@@ -150,5 +153,10 @@ public class PageListMediator extends Mediator implements IMediator, ChangeHandl
 		PageListBarView plb = (PageListBarView)getFacade().retrieveMediator(PageListBarMediator.NAME).getViewComponent();		
 		view.setHeight((event.getTinyMceHeight() - plb.getOffsetHeight()) +"px" );
 		
+	}
+	
+	private void onTinyCreated(){
+		PageListView view = (PageListView)getViewComponent();
+		view.setFocus(true);
 	}
 }

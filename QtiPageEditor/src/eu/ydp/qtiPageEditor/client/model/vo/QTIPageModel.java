@@ -40,12 +40,10 @@ public class QTIPageModel {
 		Element div = doc.createElement("div");
 		div.setAttribute("class", "exercise");
 		body.appendChild(div);
+				
+		div.appendChild(paragraph.cloneNode(true));
 		
-		Element paragraphDiv = doc.createElement("p");
-		Node textDiv = doc.createTextNode(" ");		
-		paragraphDiv.appendChild(textDiv);
-		
-		div.appendChild(paragraphDiv);
+		body.appendChild(paragraph.cloneNode(true));
 		
 		_content = doc.toString();
 		/*

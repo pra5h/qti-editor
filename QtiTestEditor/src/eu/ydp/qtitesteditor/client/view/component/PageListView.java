@@ -8,7 +8,7 @@ public class PageListView extends Composite {
 	
 	public PageListView(){		
 		_listBox = new ListBox(true);
-		_listBox.setSize("100%", "100%");			
+		_listBox.setSize("100%", "100%");		
 		initWidget(_listBox);		
 	}	
 	
@@ -85,6 +85,10 @@ public class PageListView extends Composite {
 		
 		_listBox.setItemText(n0, item0);
 		_listBox.setItemText(n1, item1);
+	}
+	
+	public void setFocus(Boolean bool){
+		_listBox.setFocus(bool);
 	}
 	
 	

@@ -13,9 +13,11 @@ import com.google.gwt.user.client.ui.TextArea;
 
 import eu.ydp.qtiPageEditor.client.appcallback.TinyMceCreatedCallback;
 import eu.ydp.qtiPageEditor.client.env.IEditorEnvirnoment;
+import eu.ydp.qtiPageEditor.client.events.TinyMceCreatedEvent;
 import eu.ydp.qtiPageEditor.client.events.TinyMcePreviewEvent;
 import eu.ydp.qtiPageEditor.client.events.TinyMceResizeEvent;
 import eu.ydp.qtiPageEditor.client.events.TinyMceSaveEvent;
+import eu.ydp.qtiPageEditor.client.events.handler.TinyMceCreatedHandler;
 import eu.ydp.qtiPageEditor.client.events.handler.TinyMcePreviewHandler;
 import eu.ydp.qtiPageEditor.client.events.handler.TinyMceResizeHandler;
 import eu.ydp.qtiPageEditor.client.events.handler.TinyMceSaveEventHandler;
@@ -115,7 +117,10 @@ public class PageEditorView extends Composite {
                 if(_tinyMceCreatedCallback != null)
                 	_tinyMceCreatedCallback.onTinyMceCreated();
                 
-                focusMCE(_id);     
+                focusMCE(_id);  
+                
+                TinyMceCreatedEvent event = new TinyMceCreatedEvent();
+            	_handlerManager.fireEvent(event);
             }
         });
     }
@@ -154,7 +159,7 @@ public class PageEditorView extends Composite {
     }-*/;  
     
     public void clearEditorContent() {
-    	setText("<p> </p>");    	
+    	setText("<p> </p><div class=\"exercise\"><p> </p></div><p> </p>");  	
     }
     
    
@@ -275,6 +280,10 @@ public class PageEditorView extends Composite {
     
     public void addTinyMceResizeHandler(TinyMceResizeHandler handler){
     	_handlerManager.addHandler(TinyMceResizeEvent.TYPE, handler);
+    }
+    
+    public void addTinyMceCreatedHandler(TinyMceCreatedHandler handler){
+    	_handlerManager.addHandler(TinyMceCreatedEvent.TYPE, handler);
     }
     
     protected void onShowPreview(){    	
