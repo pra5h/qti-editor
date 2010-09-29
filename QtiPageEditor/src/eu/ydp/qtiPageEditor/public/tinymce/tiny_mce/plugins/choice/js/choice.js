@@ -206,7 +206,7 @@ var choiceDialog = {
 				}
 				choiceSection += '>' + answers[i];
 				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].text[ids[i]] != undefined) {
-					choiceSection += '<feedbackInline outcomeIdentifier="' + ids[i] + '" identifier="' + answers[i] + '" showHide="show">' + tinyMCE.feedback[identifier].text[ids[i]] + '</feedbackInline>'
+					choiceSection += '<feedbackInline fadeEffect="300" outcomeIdentifier="' + ids[i] + '" identifier="' + answers[i] + '" showHide="show">' + tinyMCE.feedback[identifier].text[ids[i]] + '</feedbackInline>'
 				} 
 				choiceSection += '</simpleChoice> --><br /><input id="choiceInteraction" name="simpleChoice" type="checkbox" ';
 				if(points[i] > 0) {
@@ -260,7 +260,7 @@ var choiceDialog = {
 				}
 				choiceSection += '>' + answers[i];
 				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].text[ids[i]] != undefined) {
-					choiceSection += '<feedbackInline outcomeIdentifier="' + ids[i] + '" identifier="' + answers[i] + '" showHide="show">' + tinyMCE.feedback[identifier].text[ids[i]] + '</feedbackInline>'
+					choiceSection += '<feedbackInline fadeEffect="300"  outcomeIdentifier="' + ids[i] + '" identifier="' + answers[i] + '" showHide="show">' + tinyMCE.feedback[identifier].text[ids[i]] + '</feedbackInline>'
 				} 
 				choiceSection += '</simpleChoice> --><br /><input id="choiceInteraction" name="simpleChoice" type="checkbox" ';
 				if(points[i] > 0) {
