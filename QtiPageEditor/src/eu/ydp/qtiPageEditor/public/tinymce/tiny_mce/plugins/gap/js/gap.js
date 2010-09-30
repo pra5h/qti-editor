@@ -55,16 +55,12 @@ var gapDialog = {
 				var gapTag = '<!-- <textEntryInteraction responseIdentifier="' + identifier + '" expectedLength="' + gap.length + '">';
 				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].onok != undefined) {
 					gapTag += '<feedbackInline ';
-					if(tinyMCE.feedback[identifier].mark != undefined && tinyMCE.feedback[identifier].mark != '') {
-						gapTag += 'mark="' + tinyMCE.feedback[identifier].mark + '"';
-					}
+					gapTag += 'mark="CORRECT"';
 					gapTag += ' fadeEffect="300" senderIdentifier="^' + identifier + '$" outcomeIdentifier="' + identifier + '" identifier="' + gap + '" showHide="show">' + tinyMCE.feedback[identifier].onok + '</feedbackInline>'
 				} 
 				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].onwrong != undefined) {
 					gapTag += '<feedbackInline ';
-					if(tinyMCE.feedback[identifier].mark != undefined && tinyMCE.feedback[identifier].mark != '') {
-						gapTag += 'mark="' + tinyMCE.feedback[identifier].mark + '"';
-					}
+					gapTag += 'mark="WRONG"';
 					gapTag += ' fadeEffect="300" senderIdentifier="^' + identifier + '$" outcomeIdentifier="' + identifier + '" identifier="' + gap + '" showHide="hide">' + tinyMCE.feedback[identifier].onwrong + '</feedbackInline>'
 				} 
 				gapTag += '</textEntryInteraction> --><span id="gap" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">' + gap + '</span>&nbsp;';
@@ -91,16 +87,12 @@ var gapDialog = {
 				var fdb = '';
 				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].onok != undefined) {
 					fdb += '<feedbackInline ';
-					if(tinyMCE.feedback[identifier].mark != undefined && tinyMCE.feedback[identifier].mark != '') {
-						fdb += 'mark="' + tinyMCE.feedback[identifier].mark + '"';
-					}
+					gapTag += 'mark="CORRECT"';
 					fdb += ' fadeEffect="300" senderIdentifier="^' + identifier + '$" outcomeIdentifier="' + identifier + '" identifier="' + gap + '" showHide="show">' + tinyMCE.feedback[identifier].onok + '</feedbackInline>'
 				} 
 				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].onwrong != undefined) {
 					fdb += '<feedbackInline ';
-					if(tinyMCE.feedback[identifier].mark != undefined && tinyMCE.feedback[identifier].mark != '') {
-						fdb += 'mark="' + tinyMCE.feedback[identifier].mark + '"';
-					}
+					gapTag += 'mark="WRONG"';
 					fdb += ' fadeEffect="300" senderIdentifier="^' + identifier + '$" outcomeIdentifier="' + identifier + '" identifier="' + gap + '" showHide="hide">' + tinyMCE.feedback[identifier].onwrong + '</feedbackInline>'
 				}
 				gapTag.previousSibling.data = gapTag.previousSibling.data.replace(/ <textEntryInteraction responseIdentifier="([^"]*)" expectedLength="([^"]*)">[^<]*(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/textEntryInteraction> /gi, ' <textEntryInteraction responseIdentifier="$1" expectedLength="' + gap.length + '">' + fdb + '</textEntryInteraction> ');
