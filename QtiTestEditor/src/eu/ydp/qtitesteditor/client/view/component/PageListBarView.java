@@ -15,6 +15,7 @@ public class PageListBarView extends Composite {
 	private PushButton _removePageButton;
 	private PushButton _moveDownPageButton;
 	private PushButton _moveUpPageButton;
+	private PushButton _editTitleButton;
 	
 	public PageListBarView(){
 		
@@ -23,12 +24,15 @@ public class PageListBarView extends Composite {
 		_addPageButton = new PushButton(new Image(AssetsTestEditor.INSTANCE.addPage()));
 		_removePageButton = new PushButton(new Image(AssetsTestEditor.INSTANCE.deletePage()));
 		_moveUpPageButton = new PushButton(new Image(AssetsTestEditor.INSTANCE.upArrow()));
-		_moveDownPageButton = new PushButton(new Image(AssetsTestEditor.INSTANCE.downArrow()));		
+		_moveDownPageButton = new PushButton(new Image(AssetsTestEditor.INSTANCE.downArrow()));	
+		_editTitleButton = new PushButton(new Image(AssetsTestEditor.INSTANCE.editTitle()));
+		
 				
 		_panel.add(_addPageButton);
 		_panel.add(_removePageButton);
 		_panel.add(_moveUpPageButton);
 		_panel.add(_moveDownPageButton);
+		_panel.add(_editTitleButton);
 		
 		initWidget(_panel);
 		
@@ -49,4 +53,8 @@ public class PageListBarView extends Composite {
 	public PushButton getMoveUpButton(){
 		return _moveUpPageButton;
 	}	
+	
+	public PushButton getTitleButton(){
+		return _editTitleButton;
+	}
 }

@@ -31,7 +31,8 @@ public class PageListBarMediator extends Mediator implements ClickHandler {
 		 view.getAddPageButton().addClickHandler(this);
 		 view.getRemovePageButton().addClickHandler(this);
 		 view.getMoveUpButton().addClickHandler(this);
-		 view.getMoveDownButton().addClickHandler(this);		 
+		 view.getMoveDownButton().addClickHandler(this);
+		 view.getTitleButton().addClickHandler(this);
 	 }
 	 
 	 public void onClick(ClickEvent event) {
@@ -46,6 +47,8 @@ public class PageListBarMediator extends Mediator implements ClickHandler {
 			 sendNotification(Notifications.MOVE_PAGE_MODEL,1);
 		 else if(b.equals(view.getMoveDownButton()))
 			 sendNotification(Notifications.MOVE_PAGE_MODEL,0);
+		 else if(b.equals(view.getTitleButton()))
+			 onShowTitleDialog();
 		 
 	 }
 	 
@@ -83,6 +86,13 @@ public class PageListBarMediator extends Mediator implements ClickHandler {
 		 
 		 sendNotification(Notifications.ADD_NEW_PAGE_TO_MODEL);
 		
+	 }
+	 
+	 private void onShowTitleDialog(){
+		 PageListMediator plm = (PageListMediator)getFacade().retrieveMediator(PageListMediator.NAME);
+		 int selectedPageIndex = plm.getSelectedIndex();
+		 if(selectedPageIndex > -1)
+			 sendNotification(Notifications.SHOW_TITLE_DIALOG, selectedPageIndex);
 	 }
 	 
 	 

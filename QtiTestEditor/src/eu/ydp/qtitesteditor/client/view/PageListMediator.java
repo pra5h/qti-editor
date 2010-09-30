@@ -73,6 +73,8 @@ public class PageListMediator extends Mediator implements IMediator, ChangeHandl
 			onTinyResize((TinyMceResizeEvent)notification.getBody());
 		else if(n == Notifications.TINY_CREATED)
 			onTinyCreated();
+		else if(n == Notifications.CHANGE_PAGE_TITLE)
+			onChangePageTitle((String)notification.getBody());
 				
 		
 	}
@@ -85,7 +87,8 @@ public class PageListMediator extends Mediator implements IMediator, ChangeHandl
 				Notifications.MOVE_PAGE_UP_LIST,
 				Notifications.MOVE_PAGE_DOWN_LIST,
 				Notifications.TINY_RESIZE,
-				Notifications.TINY_CREATED};				 
+				Notifications.TINY_CREATED,
+				Notifications.CHANGE_PAGE_TITLE};				 
 	}
 	
 	
@@ -158,5 +161,12 @@ public class PageListMediator extends Mediator implements IMediator, ChangeHandl
 	private void onTinyCreated(){
 		PageListView view = (PageListView)getViewComponent();
 		view.setFocus(true);
+	}
+	
+	private void onChangePageTitle(String title){
+		PageListView view = (PageListView)getViewComponent();
+		int selectedIndex = view.getSelectedIndex();
+		
+		view.changeItemLabel(selectedIndex, title);
 	}
 }

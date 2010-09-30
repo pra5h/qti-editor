@@ -19,5 +19,9 @@ public interface AssetsTestEditor extends ClientBundle {
 
 	@Source("eu/ydp/qtitesteditor/assets/upArrow.png")
 	ImageResource upArrow();
+	
+	@Source("eu/ydp/qtitesteditor/assets/editTitle.png")
+	ImageResource editTitle();
+
 
 }

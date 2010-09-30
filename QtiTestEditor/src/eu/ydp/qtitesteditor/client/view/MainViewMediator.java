@@ -42,6 +42,7 @@ public class MainViewMediator extends Mediator implements IMediator {
 		getFacade().registerMediator(new PageListMediator());
 		getFacade().registerMediator(new PageEditorViewMediator(_startupData));
 		getFacade().registerMediator(new PreviewMediator());
+		getFacade().registerMediator(new PageTitleMediator());
 		
 		addView( retrieveView(PageEditorViewMediator.NAME));
 		addView( retrieveView(PageListBarMediator.NAME));

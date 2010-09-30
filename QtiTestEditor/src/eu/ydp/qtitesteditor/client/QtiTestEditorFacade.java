@@ -8,6 +8,7 @@ import eu.ydp.qtiPageEditor.client.controller.SavePageCommand;
 import eu.ydp.qtiPageEditor.client.controller.UpdatePageCommand;
 import eu.ydp.qtiPageEditor.client.controller.startupdata.StartupData;
 import eu.ydp.qtitesteditor.client.controller.AddNewPageCommand;
+import eu.ydp.qtitesteditor.client.controller.ChangePageTitleCommand;
 import eu.ydp.qtitesteditor.client.controller.ConfigureProxyCommand;
 import eu.ydp.qtitesteditor.client.controller.LoadTestCommand;
 import eu.ydp.qtitesteditor.client.controller.MovePageCommand;
@@ -48,6 +49,7 @@ public class QtiTestEditorFacade extends Facade {
 		registerCommand(Notifications.MOVE_PAGE_MODEL, new MovePageCommand());
 		registerCommand(Notifications.UPDATE_PAGE_STATE, new UpdatePageCommand());
 		registerCommand(Notifications.SET_MODEL_SELECTED_INDEX, new SetSelectedIndexCommand());
+		registerCommand(Notifications.CHANGE_PAGE_TITLE, new ChangePageTitleCommand());
 		
 	}
 	

@@ -91,6 +91,10 @@ public class PageListView extends Composite {
 		_listBox.setFocus(bool);
 	}
 	
+	public void changeItemLabel(int index,String label){
+		_listBox.setItemText(index, label);
+	}
+	
 	
 	
 	
