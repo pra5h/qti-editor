@@ -3,6 +3,9 @@ package eu.ydp.qtiPageEditor.client.view;
 import org.puremvc.java.multicore.interfaces.INotification;
 import org.puremvc.java.multicore.patterns.mediator.Mediator;
 
+import com.google.gwt.xml.client.Document;
+import com.google.gwt.xml.client.XMLParser;
+
 import eu.ydp.qtiPageEditor.client.constants.Notifications;
 import eu.ydp.qtiPageEditor.client.controller.startupdata.StartupData;
 import eu.ydp.qtiPageEditor.client.events.TinyMceCreatedEvent;
@@ -65,13 +68,26 @@ public class PageEditorViewMediator extends Mediator implements TinyMceSaveEvent
 		((PageEditorView)getViewComponent()).clearEditorContent();
 	}
 	
+	private void changePageTitle(String title){
+		PageEditorView view = (PageEditorView)getViewComponent();
+		String text = view.getText();
+		Document doc;
+		
+		doc = XMLParser.parse(view.getText());
+		doc.getDocumentElement().setAttribute("title", title );
+		
+		view.setText(doc.toString());
+		
+	}
+	
 	@Override
 	public String[] listNotificationInterests() {
 		return new String[]{Notifications.SHOW_PAGE, 
 				Notifications.SET_TINY_CELL_SIZE,
 				Notifications.CONFIGURE_PAGE_EDITOR_VIEW,
 				Notifications.BLOCK_EDITOR,
-				Notifications.CLEAR_EDITOR};				 
+				Notifications.CLEAR_EDITOR,
+				Notifications.CHANGE_PAGE_TITLE};				 
 	}
 	
 	@Override
@@ -87,6 +103,8 @@ public class PageEditorViewMediator extends Mediator implements TinyMceSaveEvent
 			blockEditor((Boolean)notification.getBody());
 		else if(n == Notifications.CLEAR_EDITOR)
 			clearEditorContent();
+		else if(n == Notifications.CHANGE_PAGE_TITLE)
+			changePageTitle((String)notification.getBody());
 			
 	}
 	

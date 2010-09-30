@@ -58,6 +58,10 @@ public class Notifications {
 	
 	public static final String REMOVE_PAGE_ERROR = "removePageError";
 	
+	public static final String SHOW_TITLE_DIALOG = "showTitleDialog";
+	
+	public static final String CHANGE_PAGE_TITLE = "changePageTitle";
+	
 	
 
 }

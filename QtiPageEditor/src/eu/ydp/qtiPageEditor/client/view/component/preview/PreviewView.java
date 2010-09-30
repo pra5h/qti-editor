@@ -1,7 +1,6 @@
 package eu.ydp.qtiPageEditor.client.view.component.preview;
 
 
-import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
