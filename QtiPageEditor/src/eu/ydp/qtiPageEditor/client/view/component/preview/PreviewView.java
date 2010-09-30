@@ -69,11 +69,7 @@ public class PreviewView extends DialogBox {
         		o.itemsDisplayMode = PageItemsDisplayMode.ONE;
         		o.showSummary = false;
         		o.showToC = false;
-        		_player.setFlowOptions(o);       		
-        		Log.debug("assessment " + _assessment.getDocument().toString());
-        		Log.debug("assessment url " + _assessment.getBaseURL());
-        		Log.debug("item " + _items[0].getDocument().toString());
-        		Log.debug("item url " + _items[0].getBaseURL());
+        		_player.setFlowOptions(o);        		
         		
         		_player.load(_assessment, _items);
             }

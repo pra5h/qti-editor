@@ -138,17 +138,18 @@ public class QtiTestModel {
 	
 	public Document getAssessmentForPage(int ix){
 		Document assessment = XMLParser.parse(_content.toString());
-		
+		Node section = assessment.getElementsByTagName("assessmentSection").item(0);		
 		NodeList nodesRefs = assessment.getElementsByTagName("assessmentItemRef");
-		Node myNode = nodesRefs.item(ix);
 		
-		Node parent = myNode.getParentNode();		
+		Node myNode = nodesRefs.item(ix).cloneNode(true);
 		
-		while(nodesRefs.getLength() > 0){
-			parent.removeChild(nodesRefs.item(0));
+		//Node parent = myNode.getParentNode();		
+		
+		while(section.getChildNodes().getLength() > 0){			
+			section.removeChild(section.getChildNodes().item(0));
 		}
 		
-		parent.appendChild(myNode);
+		section.appendChild(myNode);
 		
 		return assessment;
 		
