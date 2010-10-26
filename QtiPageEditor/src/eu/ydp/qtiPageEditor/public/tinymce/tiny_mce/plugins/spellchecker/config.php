@@ -18,10 +18,10 @@
 
 	// PSpellShell settings
 	$config['PSpellShell.mode'] = PSPELL_FAST;
-	$config['PSpellShell.aspell'] = '/usr/bin/aspell';
-	$config['PSpellShell.tmp'] = '/tmp';
+	//$config['PSpellShell.aspell'] = '/usr/bin/aspell';
+	//$config['PSpellShell.tmp'] = '/tmp';
 
 	// Windows PSpellShell settings
-	//$config['PSpellShell.aspell'] = '"c:\Program Files\Aspell\bin\aspell.exe"';
-	//$config['PSpellShell.tmp'] = 'c:/temp';
+	$config['PSpellShell.aspell'] = '"c:\Program Files\Aspell\bin\aspell.exe"';
+	$config['PSpellShell.tmp'] = 'c:\temp';
 ?>

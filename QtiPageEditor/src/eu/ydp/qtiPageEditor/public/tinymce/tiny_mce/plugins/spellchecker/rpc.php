@@ -4,10 +4,13 @@
  *
  * @package MCManager.includes
  * @author Moxiecode
- * @copyright Copyright © 2004-2007, Moxiecode Systems AB, All rights reserved.
+ * @copyright Copyright ï¿½ 2004-2007, Moxiecode Systems AB, All rights reserved.
  */
 
 require_once("./includes/general.php");
+
+//UNCOMMENT THIS TO CHECK IF PSPELL IS INSTALLED AND WORKS CORRECTLY
+//include_once("./spelltest.php");
 
 // Set RPC response headers
 header('Content-Type: text/plain');
