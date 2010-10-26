@@ -203,7 +203,7 @@ var orderDialog = {
 				}
 				orderSection += '>' + answers[i] + '</simpleChoice>';
 				if(i == (answers.length - 1) && tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined) {
-					orderSection += '<feedbackInline fadeEffect="300" senderIdentifier="^' + identifier + '$" outcomeIdentifier="' + identifier + '" identifier="' + feedbackCostam + '" mark="CORRECT" showHide="show">' + tinyMCE.feedback[identifier] + '</feedbackInline>'
+					orderSection += '<feedbackInline fadeEffect="300" senderIdentifier="^' + identifier + '$" outcomeIdentifier="' + identifier + '" identifier="' + feedbackCostam + '" mark="CORRECT" showHide="show">' + tinyMCE.feedback[identifier] + '</feedbackInline>';
 					tinyMCE.feedback = new Array;
 				} 
 				orderSection += ' --><div id="orderOption" name="' + points[i] + '"  style="border: 1px solid green; margin: 2px;"';
