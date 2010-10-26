@@ -169,13 +169,15 @@ var orderDialog = {
 			var orderSection = '<p>&nbsp;</p><!-- <orderInteraction responseIdentifier="' + identifier + '" shuffle="' + String(shuffle) + '"> --><div id="orderInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">';
 			orderSection += '<p id="choiceInteraction">' + question + '</p>';
 			responseDeclaration = '<!-- <responseDeclaration identifier="' + identifier + '" cardinality="ordered" baseType="identifier"><correctResponse>';
+			
 			var responseOrder = new Array;
-			var feedbackCostam = '(';
+			var feedbackCostam = new Array;
 			for(i in answers) {
 				responseOrder[points[i]] = ids[i];
-				feedbackCostam += ids[i] + ';';
+				feedbackCostam.push(ids[i]);
 			}
-			feedbackCostam +=')';
+			feedbackCostam = '(' + feedbackCostam.join(';') + ')';
+			
 			var i = answers.length;
 			if (i > 0) {
 				while (--i) {
@@ -246,14 +248,14 @@ var orderDialog = {
 				nd.previousSibling.data = nd.previousSibling.data.replace(regexp, ' <orderInteraction responseIdentifier="' + identifier + '" shuffle="' + String(shuffle) + '"$1> ');
 			}
 			orderSection = '<p id="choiceInteraction">' + question + '</p>';
-			var responseOrder = new Array;
 			
-			var feedbackCostam = '(';
+			var responseOrder = new Array;
+			var feedbackCostam = new Array;
 			for(i in answers) {
 				responseOrder[points[i]] = ids[i];
-				feedbackCostam += ids[i] + ';';
+				feedbackCostam.push(ids[i]);
 			}
-			feedbackCostam +=')';
+			feedbackCostam = '(' + feedbackCostam.join(';') + ')';
 			
 			var i = answers.length;
 			if (i > 0) {
