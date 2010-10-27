@@ -48,7 +48,8 @@
 			
 			ed.addCommand('mceGapRemove', function(ui, data) {
 				
-				var selectedNode = ed.selection.getNode();
+				var selectedNode = tinyMCE.selectedNode;
+				
 				if(selectedNode.nodeName == 'SPAN' && selectedNode.id == 'gap') {
 					var gapComment = selectedNode.previousSibling;
 					var gapId = /<textEntryInteraction[^>]*responseIdentifier="([^"]*)"[^>]*>/i.exec(gapComment.data);

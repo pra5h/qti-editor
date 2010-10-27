@@ -39,7 +39,7 @@
 			
 			ed.addCommand('mceInlineChoiceRemove', function(ui, data) {
 				
-				var node = ed.selection.getNode();
+				var node = tinyMCE.selectedNode;
 				while(node.id != 'inlineChoiceInteraction') {
 					node = node.parentNode;
 				}
