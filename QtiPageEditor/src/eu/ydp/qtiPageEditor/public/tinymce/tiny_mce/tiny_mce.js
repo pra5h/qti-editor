@@ -6546,7 +6546,11 @@ window.tinymce.dom.Sizzle = Sizzle;
 			h = h.replace(/<\/div><!-- end of choiceInteraction -->/gi,'</choiceInteraction>');
 			
 			//Inline choices support
-			h = h.replace(/(?:<p>)?<!-- (<inlineChoiceInteraction[^>]*>) -->(?:<\/?p>)?<span id="inlineChoiceInteraction" class="mceNonEditable" style="[^"]*">/gi, '$1');
+			
+			//h = h.replace(/(?:<p>)?<!-- (<inlineChoiceInteraction[^>]*>) -->(?:<\/?p>)?<span id="inlineChoiceInteraction" class="mceNonEditable" style="[^"]*">/gi, '$1');
+			//Previous line replaced with following (bug 37575):
+			h = h.replace(/<!-- (<inlineChoiceInteraction[^>]*>) -->(?:<\/?p>)?<span id="inlineChoiceInteraction" class="mceNonEditable" style="[^"]*">/gi, '$1');
+			
 			h = h.replace(/<!-- (<inlineChoice[^>]*>[^<]*(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/inlineChoice>) --><span id="inlineChoiceAnswer" style="[^"]*">[^<]*(?:<span[^>]*>[^<]*<\/span>)?<\/span>/gi,'$1');
 			h = h.replace(/<\/span>[^<]*(?:<\/p>)?[^<]*<!-- end of inlineChoiceInteraction -->/gi,'</inlineChoiceInteraction>');
 			
