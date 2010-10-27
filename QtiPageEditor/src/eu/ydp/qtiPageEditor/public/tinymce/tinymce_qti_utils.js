@@ -486,10 +486,9 @@ function runOrder(selectedNode) {
 	}
 	
 	var answers_paragraph = orderSectionHTML.match(/<!-- <simpleChoice identifier="[^"]*"[^>]*>([^<]*|<img[^>]*>)(?=<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice>[^-]*-->(?:<\/p>)?<div id="orderOption" name="([0-9]+)"[^>]*>(<img[^>]*>|[^<]*)<\/div>/gi);
-	
 	var values = new Array();
 	for (ans in answers_paragraph) {
-		values.push(answers_paragraph[ans].match(/<!-- <simpleChoice identifier="([^"]*)"\s*(?:fixed="([^"]*)")?[^>]*>(?:[^<]*|<img[^>]*>)(?:<feedbackInline[^>]*>([^<]*)<\/feedbackInline>)?<\/simpleChoice>[^-]*-->(?:<\/p>)?<div id="orderOption" name="([0-9]+)"[^>]*>(<img[^>]*>|[^<]*)<\/div>/i));
+		values.push(answers_paragraph[ans].match(/<!-- <simpleChoice identifier="([^"]*)"\s*(?:fixed="([^"]*)")?[^>]*>(?:[^<]*|<img[^>]*>)[^<]*(?:<feedbackInline[^>]*>([^<]*)<\/feedbackInline>)?<\/simpleChoice>[^-]*-->(?:<\/p>)?<div id="orderOption" name="([0-9]+)"[^>]*>(<img[^>]*>|[^<]*)<\/div>/i));
 	}
 	var i=0;
 	while(values[i] != undefined) {
@@ -499,10 +498,12 @@ function runOrder(selectedNode) {
 		ids[point] = values[i][1];
 		answers[point] = values[i][5];
 		fixed[point] = values[i][2];
-		if(values[i][3] != undefined) {
-			fdb = values[i][3];
-		}
 		i++;
+	}
+	
+	var fd = orderSectionHTML.match(/<feedbackInline[^>]*>([^<]*)<\/feedbackInline>/i);
+	if(fd != undefined) {
+		fdb = fd[1];
 	}
 	
 	data.push(question[1]);
