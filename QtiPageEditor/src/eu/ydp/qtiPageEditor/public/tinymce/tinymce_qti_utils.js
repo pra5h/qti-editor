@@ -545,9 +545,15 @@ function runMatch(selectedNode) {
 	//var leftSet = $('matchInteraction[responseIdentifier=\'' + identifier[1] + '\'] > simpleMatchSet:first').children();
 	//var rightSet = $('matchInteraction[responseIdentifier=\'' + identifier[1] + '\'] > simpleMatchSet:last').children();
 	
-	var sets = sectionDiv.children[1].children[0].children[0].children;
-	var leftSet = sets[0].children[0].children[0].children;
-	var rightSet = sets[2].children[0].children[0].children;
+	if(sectionDiv.children != undefined) {
+		var sets = sectionDiv.children[1].children[0].children[0].children;
+		var leftSet = sets[0].children[0].children[0].children;
+		var rightSet = sets[2].children[0].children[0].children;
+	} else {
+		var sets = sectionDiv.childNodes[2].childNodes[0].rows[0].cells;
+		var leftSet = sets[0].childNodes[0].childNodes[0].childNodes;
+		var rightSet = sets[2].childNodes[0].childNodes[0].childNodes;
+	}
 	
 	var leftSetAnswers = new Array;
 	var leftSetIds = new Array;
@@ -557,20 +563,42 @@ function runMatch(selectedNode) {
 	var rightSetFixed = new Array;
 	var responsePairs = new Array;
 	
-	for (el in leftSet) {
-		if(leftSet[el].children != undefined) {
-			leftSetAnswers.push(leftSet[el].children[0].children[2].innerHTML);
-			leftSetIds.push(leftSet[el].children[0].children[0].innerHTML);
-			leftSetFixed.push(leftSet[el].children[0].children[1].innerHTML);
-		}
-	}
+	if(sectionDiv.children != undefined) {
 	
-	for (el in rightSet) {
-		if(rightSet[el].children != undefined) {
-			rightSetAnswers.push(rightSet[el].children[0].children[2].innerHTML);
-			rightSetIds.push(rightSet[el].children[0].children[0].innerHTML);
-			rightSetFixed.push(rightSet[el].children[0].children[1].innerHTML);
+		for (el in leftSet) {
+			if(leftSet[el].children != undefined) {
+				leftSetAnswers.push(leftSet[el].children[0].children[2].innerHTML);
+				leftSetIds.push(leftSet[el].children[0].children[0].innerHTML);
+				leftSetFixed.push(leftSet[el].children[0].children[1].innerHTML);
+			}
 		}
+		
+		for (el in rightSet) {
+			if(rightSet[el].children != undefined) {
+				rightSetAnswers.push(rightSet[el].children[0].children[2].innerHTML);
+				rightSetIds.push(rightSet[el].children[0].children[0].innerHTML);
+				rightSetFixed.push(rightSet[el].children[0].children[1].innerHTML);
+			}
+		}
+		
+	} else {
+	
+		for (el in leftSet) {
+			if(leftSet[el].nodeName != undefined && leftSet[el].nodeName == 'TR' && leftSet[el].childNodes != undefined) {
+				leftSetAnswers.push(leftSet[el].childNodes[0].childNodes[2].innerHTML);
+				leftSetIds.push(leftSet[el].childNodes[0].childNodes[0].innerHTML);
+				leftSetFixed.push(leftSet[el].childNodes[0].childNodes[1].innerHTML);
+			}
+		}
+		
+		for (el in rightSet) {
+			if(rightSet[el].nodeName != undefined && rightSet[el].nodeName == 'TR' && rightSet[el].childNodes != undefined) {
+				rightSetAnswers.push(rightSet[el].childNodes[0].childNodes[2].innerHTML);
+				rightSetIds.push(rightSet[el].childNodes[0].childNodes[0].innerHTML);
+				rightSetFixed.push(rightSet[el].childNodes[0].childNodes[1].innerHTML);
+			}
+		}
+	
 	}
 	
 	var tinybody = ed.selection.getNode();
