@@ -36,7 +36,9 @@
 			// This function executes the process handlers and inserts the contents
 			function process(o) {
 				var dom = ed.dom;
-
+				
+				o.content = o.content.replace(new RegExp("\\n", "g"), ' ');
+				
 				// Execute pre process handlers
 				t.onPreProcess.dispatch(t, o);
 
@@ -48,7 +50,7 @@
 
 				// Serialize content
 				o.content = ed.serializer.serialize(o.node, {getInner : 1});
-
+				
 				//  Insert cleaned content. We need to handle insertion of contents containing block elements separately
 				if (/<(p|h[1-6]|ul|ol)/.test(o.content))
 					t._insertBlockContent(ed, dom, o.content);
