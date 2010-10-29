@@ -212,7 +212,7 @@ var choiceDialog = {
 					} else {
 						choiceSection += 'mark="WRONG"'
 					}
-					choiceSection += ' fadeEffect="300" outcomeIdentifier="' + ids[i] + '-LASTCHANGE" identifier=".*' + ids[i] + '.*" showHide="show">' + tinyMCE.feedback[identifier].text[ids[i]] + '</feedbackInline>'
+					choiceSection += ' fadeEffect="300" outcomeIdentifier="' + identifier + '-LASTCHANGE" identifier=".*' + ids[i] + '.*" showHide="show">' + tinyMCE.feedback[identifier].text[ids[i]] + '</feedbackInline>'
 				} 
 				choiceSection += '</simpleChoice> --><br /><input id="choiceInteraction" name="simpleChoice" type="checkbox" ';
 				if(points[i] > 0) {
@@ -272,7 +272,7 @@ var choiceDialog = {
 					} else {
 						choiceSection += 'mark="WRONG"'
 					}
-					choiceSection += ' fadeEffect="300"  outcomeIdentifier="' + ids[i] + '-LASTCHANGE" identifier=".*' + ids[i] + '.*" showHide="show">' + tinyMCE.feedback[identifier].text[ids[i]] + '</feedbackInline>'
+					choiceSection += ' fadeEffect="300"  outcomeIdentifier="' + identifier + '-LASTCHANGE" identifier=".*' + ids[i] + '.*" showHide="show">' + tinyMCE.feedback[identifier].text[ids[i]] + '</feedbackInline>'
 				} 
 				choiceSection += '</simpleChoice> --><br /><input id="choiceInteraction" name="simpleChoice" type="checkbox" ';
 				if(points[i] > 0) {
