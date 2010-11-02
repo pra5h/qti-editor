@@ -28,5 +28,6 @@ tinyMCE.addI18n('en.feedback_dlg',{
 	feedback_addtext_label:"Set feedback content for the highlighted connection",
 	feedback_text:"Feedback text",
 	feedback_set_text_button:"Save feedback",
+	feedback_remove_button:"Remove feedback",
 	close:"Close"
 });

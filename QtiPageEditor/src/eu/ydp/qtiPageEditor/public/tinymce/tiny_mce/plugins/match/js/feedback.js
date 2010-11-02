@@ -86,13 +86,13 @@ var feedbackDialog = {
 			var pairs = tinyMCE.feedback[data[1]].text;
 			var leftElements = data[4];
 			var rightElements = data[6];
-			
 			for(p in pairs) {
-				pair = p.split(' ');
+				p1 = p.replace('+','');
+				pair = p1.split(' ');
 				$('#middle_container').append('<input id="' + p + '" type="hidden" name="pair[]" value="' + p + '">');
 				indexOfLeft = leftElements.indexOf(pair[0]);
 				indexOfRight = rightElements.indexOf(pair[1]);
-				this.drawConnectionLine(indexOfLeft, indexOfRight, p);
+				this.drawConnectionLine(indexOfLeft, indexOfRight);
 				
 			}
 			
@@ -155,7 +155,7 @@ var feedbackDialog = {
 		
 	},
 	
-	drawConnectionLine : function(indexOfLeft,indexOfRight, identifier) {
+	drawConnectionLine : function(indexOfLeft,indexOfRight) {
 		
 		y0 = feedbackDialog.leftCoordinates[indexOfLeft].middle;
 		y1 = feedbackDialog.rightCoordinates[indexOfRight].middle;
@@ -192,7 +192,7 @@ var feedbackDialog = {
 				rightIndexes.push(rightElements[ind].getAttribute('id'));
 			});
 			
-			feedbackDialog.drawConnectionLine(leftIndexes.indexOf(elements[0]), rightIndexes.indexOf(elements[1]), pair);
+			feedbackDialog.drawConnectionLine(leftIndexes.indexOf(elements[0]), rightIndexes.indexOf(elements[1]));
 			
 		});
 		
@@ -299,6 +299,7 @@ var feedbackDialog = {
 					$('#feedback_text').removeAttr('disabled');
 					$('#feedback_text').focus();
 					$('#add_text_feedback').removeAttr('disabled');
+					$('#remove_text_feedback').removeAttr('disabled');
 					//////////
 					return;
 				} else {
@@ -306,6 +307,7 @@ var feedbackDialog = {
 					$('#feedback_text').attr('disabled','disabled');
 					$('#feedback_text').attr('value', '');
 					$('#add_text_feedback').attr('disabled','disabled');
+					$('#remove_text_feedback').attr('disabled','disabled');
 					ctx_temp.clearRect(0,0,200,feedbackDialog.canvasHeight);
 				}
 				
@@ -381,7 +383,8 @@ var feedbackDialog = {
 			$('#feedback_text').removeAttr('disabled');
 			$('#feedback_text').focus();
 			$('#add_text_feedback').removeAttr('disabled');
-			feedbackDialog.drawConnectionLine(posY1,posY2,identifier);
+			$('#remove_text_feedback').removeAttr('disabled');
+			feedbackDialog.drawConnectionLine(posY1,posY2);
 			
 		} else {
 			console.log('TODO: action on existing feedback');
@@ -415,7 +418,35 @@ var feedbackDialog = {
 		$('#feedback_text').attr('disabled','disabled');
 		$('#feedback_text').attr('value', '');
 		$('#add_text_feedback').attr('disabled','disabled');
+		$('#remove_text_feedback').attr('disabled','disabled');
 		ctx_temp.clearRect(0,0,200,feedbackDialog.canvasHeight);
+		
+	},
+	
+	removeFeedback : function() {
+		
+		var pair = $('#feedback_pair').attr('value');
+		var text = $('#feedback_text').attr('value');
+		var sound = $('#fdb_sound').attr('value');
+		if(tinyMCE.feedback[feedbackDialog.matchIdentifier].text != undefined && tinyMCE.feedback[feedbackDialog.matchIdentifier].text[pair] != undefined) {
+			delete(tinyMCE.feedback[feedbackDialog.matchIdentifier].text[pair]);
+		}
+		if(tinyMCE.feedback[feedbackDialog.matchIdentifier].sound != undefined && tinyMCE.feedback[feedbackDialog.matchIdentifier].sound[pair] != undefined) {
+			delete(tinyMCE.feedback[feedbackDialog.matchIdentifier].sound[pair]);
+		}
+		$('#feedback_text').attr('style','width: 100%; background-color: #f0f0f0;');
+		$('#feedback_text').attr('disabled','disabled');
+		$('#feedback_text').attr('value', '');
+		$('#add_text_feedback').attr('disabled','disabled');
+		$('#remove_text_feedback').attr('disabled','disabled');
+		ctx_temp.clearRect(0,0,200,feedbackDialog.canvasHeight);
+		
+		$('#middle_container').children().each(function ff(ind) {
+			if($('#middle_container').children().get(ind).getAttribute('value') == pair) {
+				delete($('#middle_container').children().get(ind));
+			}
+		});
+		feedbackDialog.remakeConnectionLines();
 		
 	}
 

@@ -625,8 +625,8 @@ var matchDialog = {
 						if(jArr[0] == ids_left[i]) {
 							matchSection += '<feedbackInline ';
 							var found = false;
-							for(i in pairs) {
-								if(j == pairs[i]) {
+							for(x in pairs) {
+								if(j == pairs[x]) {
 									found = true;
 								}
 							}
@@ -635,7 +635,7 @@ var matchDialog = {
 							} else {
 								matchSection += 'mark="WRONG"';
 							}
-							matchSection += ' senderIdentifier="^' + identifier + '$" outcomeIdentifier="' + identifier + '" identifier="' + j + '" showHide="show">' + tinyMCE.feedback[identifier].text[j] + '</feedbackInline>';
+							matchSection += ' senderIdentifier="^' + identifier + '$" outcomeIdentifier="' + identifier + '-LASTCHANGE" identifier="+' + j + '" showHide="show">' + tinyMCE.feedback[identifier].text[j] + '</feedbackInline>';
 						}
 					}
 				} 
@@ -686,6 +686,9 @@ var matchDialog = {
 			var ed = tinymce.EditorManager.activeEditor;
 			var bm = ed.selection.getBookmark();
 			ed.selection.moveToBookmark(bm);
+			
+			console.log(matchSection);
+			
 			tinyMCE.execCommand('mceInsertContent', false, matchSection);
 			
 			body = ed.selection.getNode();
@@ -699,7 +702,7 @@ var matchDialog = {
 			
 		// edycja istniej¹cego match
 		} else {
-		
+			
 			var ed = tinymce.EditorManager.activeEditor;
 			var nd = tinyMCE.selectedNode;
 			var bm = ed.selection.getBookmark();
@@ -736,8 +739,8 @@ var matchDialog = {
 						if(jArr[0] == ids_left[i]) {
 							matchSection += '<feedbackInline ';
 							var found = false;
-							for(i in pairs) {
-								if(j == pairs[i]) {
+							for(x in pairs) {
+								if(j == pairs[x]) {
 									found = true;
 								}
 							}
@@ -746,7 +749,7 @@ var matchDialog = {
 							} else {
 								matchSection += 'mark="WRONG"';
 							}
-							matchSection += ' senderIdentifier="^' + identifier + '$" outcomeIdentifier="' + identifier + '" identifier="' + j + '" showHide="show">' + tinyMCE.feedback[identifier].text[j] + '</feedbackInline>';
+							matchSection += ' senderIdentifier="^' + identifier + '$" outcomeIdentifier="' + identifier + '-LASTCHANGE" identifier="+' + j + '" showHide="show">' + tinyMCE.feedback[identifier].text[j] + '</feedbackInline>';
 						}
 					}
 				} 
