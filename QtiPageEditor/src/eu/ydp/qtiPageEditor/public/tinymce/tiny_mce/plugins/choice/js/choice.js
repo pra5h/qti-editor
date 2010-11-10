@@ -268,11 +268,11 @@ var choiceDialog = {
 				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].text[ids[i]] != undefined) {
 					choiceSection += '<feedbackInline ';
 					if(points[i] > 0) {
-						choiceSection += 'mark="CORRECT"'
+						choiceSection += 'mark="CORRECT"';
 					} else {
-						choiceSection += 'mark="WRONG"'
+						choiceSection += 'mark="WRONG"';
 					}
-					choiceSection += ' fadeEffect="300"  outcomeIdentifier="' + identifier + '-LASTCHANGE" identifier=".*' + ids[i] + '.*" showHide="show">' + tinyMCE.feedback[identifier].text[ids[i]] + '</feedbackInline>'
+					choiceSection += ' fadeEffect="300"  outcomeIdentifier="' + identifier + '-LASTCHANGE" identifier=".*' + ids[i] + '.*" showHide="show">' + tinyMCE.feedback[identifier].text[ids[i]] + '</feedbackInline>';
 				} 
 				choiceSection += '</simpleChoice> --><br /><input id="choiceInteraction" name="simpleChoice" type="checkbox" ';
 				if(points[i] > 0) {
