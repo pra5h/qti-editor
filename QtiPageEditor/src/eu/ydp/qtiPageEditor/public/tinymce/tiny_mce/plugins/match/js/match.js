@@ -687,8 +687,6 @@ var matchDialog = {
 			var bm = ed.selection.getBookmark();
 			ed.selection.moveToBookmark(bm);
 			
-			console.log(matchSection);
-			
 			tinyMCE.execCommand('mceInsertContent', false, matchSection);
 			
 			body = ed.selection.getNode();

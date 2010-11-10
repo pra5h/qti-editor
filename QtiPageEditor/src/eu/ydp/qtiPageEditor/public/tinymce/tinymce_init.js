@@ -8,7 +8,7 @@ tinyMCE.init({
 	skin : "o2k7",
 	plugins : "safari,spellchecker,pagebreak,style,layer,table,save,advhr,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,"
 		+"searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,imagemanager,"
-		+"filemanager,noneditable,asciimath,asciimathcharmap,asciisvg,choice,gap,inlinechoice,order,match,fileuploadlib,comment,trackchanges,addvideo,copyqti,selection",
+		+"filemanager,noneditable,asciimath,asciimathcharmap,asciisvg,choice,gap,inlinechoice,order,match,fileuploadlib,comment,trackchanges,addvideo,copyqti",
 	
 	theme_advanced_toolbar_location : "top",
 	theme_advanced_toolbar_align : "left",
