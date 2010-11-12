@@ -135,7 +135,7 @@
 	<target name="test" depends="compileTest" description="runs all JUnit tests">		
 			<mkdir dir="${test.report.dir}/raw"/>
 			<junit printsummary="yes" haltonfailure="yes" showoutput="yes" >			
-				<jvmarg value="-Dgwt.args=-runStyle HtmlUnit:IE7" />
+				<jvmarg value="-Dgwt.args=-runStyle HtmlUnit:FF3" />
 				<jvmarg value="-Xmx256M"/>
 				<jvmarg line="${XstartOnFirstThread}"/>
 				<classpath refid="project.test.class.path"/>		
