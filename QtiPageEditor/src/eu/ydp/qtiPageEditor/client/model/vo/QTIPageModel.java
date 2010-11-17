@@ -30,8 +30,12 @@ public class QTIPageModel {
 		Element body = doc.createElement("itemBody");		
 		item.appendChild(body);
 		
+		Element tag = doc.createElement("tag");
+		tag.setAttribute("name", "text");
+		body.appendChild(tag);
+		
 		Element paragraph = doc.createElement("p");
-		body.appendChild(paragraph);
+		tag.appendChild(paragraph);
 		
 		Node text = doc.createTextNode(" ");
 		
@@ -39,22 +43,28 @@ public class QTIPageModel {
 		
 		Element div = doc.createElement("div");
 		div.setAttribute("class", "exercise");
-		body.appendChild(div);
+		tag.appendChild(div);
 				
 		div.appendChild(paragraph.cloneNode(true));
 		
-		body.appendChild(paragraph.cloneNode(true));
+		tag.appendChild(paragraph.cloneNode(true));
 		
 		_content = doc.toString();
 		/*
+		<?xml version="1.0" encoding="UTF-8"?>
+		<assessmentItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqti_v2p1 imsqti_v2p1.xsd"
+		xmlns:qy="http://www.ydp.eu/qti/qti_ydp/" identifier="" adaptive="false"
+		timeDependent="false" title="page_3.xml">
+
 		<itemBody>
-		<p>&#160;</p>
-		<div class="exercise">
-		<p>&#160;</p>
-		</div>
-		<p>&#160;</p>
+		<tag name="text">
+		<p>&#160;</p><div class="exercise"><p>&#160;</p></div><p>&#160;</p>
+		</tag>
 		</itemBody>
+		</assessmentItem>
 		*/
+
 
 		
 	}

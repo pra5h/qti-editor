@@ -12,8 +12,11 @@
 	<classpathentry kind="lib" path="ivy-lib/gwt-log.jar"/>
 	<classpathentry kind="lib" path="libs/gwt-graphics-0.9.7.jar"/>
 	<classpathentry kind="lib" path="libs/gwt-voices-1.7.0.jar"/>
-	<classpathentry kind="lib" path="ivy-lib/aopalliance.jar"/>
 	<classpathentry kind="lib" path="ivy-lib/gin.jar"/>
 	<classpathentry kind="lib" path="ivy-lib/guice.jar"/>
+	<classpathentry kind="lib" path="ivy-lib/aopalliance.jar"/>
+	<classpathentry kind="lib" path="ivy-lib/smath-expression.jar"/>
+	<classpathentry kind="lib" path="ivy-lib/gwt-g2d-v007.jar"/>
+	<classpathentry kind="lib" path="ivy-lib/smath-renderer.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
