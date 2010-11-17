@@ -30,7 +30,7 @@ public class QTIPageModel {
 		Element body = doc.createElement("itemBody");		
 		item.appendChild(body);
 		
-		Element tag = doc.createElement("tag");
+		Element tag = doc.createElement("qy:tag");
 		tag.setAttribute("name", "text");
 		body.appendChild(tag);
 		
