@@ -1972,6 +1972,9 @@ tinymce.create('static tinymce.util.XHR', {
 			}
 			h = h.replace(/(<\/itemBody>)(?! -->)/gi,'<!-- $1 -->');
 			
+			h = h.replace(/(<qy:tag [^>]*>)(?! -->)/gi,'<!-- $1 -->');
+			h = h.replace(/(<\/qy:tag>)(?! -->)/gi,'<!-- $1 -->');
+			
 			// Gaps support
 			for(var i in answers) {
 				for(var j in answers[i][0]) {
@@ -6529,6 +6532,9 @@ window.tinymce.dom.Sizzle = Sizzle;
 			
 			h = h.replace(/<!-- (<itemBody>) -->/gi,'$1');
 			h = h.replace(/<!-- (<\/itemBody>) -->/gi,'$1');
+			
+			h = h.replace(/<!-- (<qy:tag [^>]*>) -->/gi,'$1');
+			h = h.replace(/<!-- (<\/qy:tag>) -->/gi,'$1');
 			
 			// Gaps support
 			if(tinyMCE.changesTracking == true) {

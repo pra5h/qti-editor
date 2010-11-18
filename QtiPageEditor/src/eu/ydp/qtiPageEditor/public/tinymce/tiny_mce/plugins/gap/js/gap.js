@@ -52,7 +52,7 @@ var gapDialog = {
 			
 			if(form.addnew != undefined && form.addnew.getAttribute('value') == '1') {
 				
-				var gapTag = '<!-- <textEntryInteraction responseIdentifier="' + identifier + '" expectedLength="' + gap.length + '">';
+				var gapTag = '<!-- </qy:tag> --><!-- <qy:tag name="exercise"> --><!-- <textEntryInteraction responseIdentifier="' + identifier + '" expectedLength="' + gap.length + '">';
 				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].onok != undefined) {
 					gapTag += '<feedbackInline ';
 					gapTag += 'mark="CORRECT"';
@@ -63,7 +63,7 @@ var gapDialog = {
 					gapTag += 'mark="WRONG"';
 					gapTag += ' fadeEffect="300" senderIdentifier="^' + identifier + '$" outcomeIdentifier="' + identifier + '" identifier="' + gap + '" showHide="hide">' + tinyMCE.feedback[identifier].onwrong + '</feedbackInline>'
 				} 
-				gapTag += '</textEntryInteraction> --><span id="gap" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">' + gap + '</span>&nbsp;';
+				gapTag += '</textEntryInteraction> --><span id="gap" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">' + gap + '</span><!-- </qy:tag> --><!-- <qy:tag name="text"> -->&nbsp;';
 				tinyMCE.execCommand('mceInsertContent', false, gapTag);
 				
 				responseDeclaration = '<!-- <responseDeclaration identifier="' + identifier + '" cardinality="single" baseType="string"><correctResponse>';

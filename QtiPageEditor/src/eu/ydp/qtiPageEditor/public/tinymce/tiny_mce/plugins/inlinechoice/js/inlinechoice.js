@@ -143,7 +143,7 @@ var choiceDialog = {
 		
 		if(adding == 1) {
 		
-			var choiceSection = '<!-- <inlineChoiceInteraction responseIdentifier="' + identifier + '" shuffle="' + String(shuffle) + '"> --><span id="inlineChoiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">';
+			var choiceSection = '<!-- </qy:tag> --><!-- <qy:tag name="exercise"> --><!-- <inlineChoiceInteraction responseIdentifier="' + identifier + '" shuffle="' + String(shuffle) + '"> --><span id="inlineChoiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">';
 			responseDeclaration = '<!-- <responseDeclaration identifier="' + identifier + '" cardinality="single" baseType="identifier"><correctResponse>';
 			for(i in answers) {
 				choiceSection += '<!-- <inlineChoice identifier="' + ids[i] + '"';
@@ -171,7 +171,7 @@ var choiceDialog = {
 				}
 			}
 			responseDeclaration += '</correctResponse></responseDeclaration> -->';
-			choiceSection += '</span><!-- end of inlineChoiceInteraction -->&nbsp;';
+			choiceSection += '</span><!-- end of inlineChoiceInteraction --><!-- </qy:tag> --><!-- <qy:tag name="text"> -->&nbsp;';
 			
 			var ed = tinymce.EditorManager.activeEditor;
 			var bm = ed.selection.getBookmark();

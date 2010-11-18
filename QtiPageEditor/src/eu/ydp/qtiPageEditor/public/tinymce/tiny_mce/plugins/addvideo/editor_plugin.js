@@ -25,7 +25,7 @@
 						fromPath = fromPath.join('/');
 						filePath = getRelativeFromAbsoute(fromPath, filePath);
 						
-						var videotag = '<fieldset id="runFileUploadLib" class="mceNonEditable" style="font-size: 10px; font-color: #b0b0b0; color: #b0b0b0; border: 1px solid #d0d0d0;"><embed type="" src="' + fromPath + '/' + filePath + '" title="' + title + '"/><img id="mceVideo" src="/work/tools/qtitesteditor/tinymce/tiny_mce/plugins/addvideo/img/movie.png" /><br>' + title + '</fieldset>';
+						var videotag = '<!-- </qy:tag> --><!-- <qy:tag name="media"> --><fieldset id="runFileUploadLib" class="mceNonEditable" style="font-size: 10px; font-color: #b0b0b0; color: #b0b0b0; border: 1px solid #d0d0d0;"><embed type="" src="' + fromPath + '/' + filePath + '" title="' + title + '"/><img id="mceVideo" src="/work/tools/qtitesteditor/tinymce/tiny_mce/plugins/addvideo/img/movie.png" /><br>' + title + '</fieldset><!-- </qy:tag> --><!-- <qy:tag name="text"> -->';
 						ed.selection.moveToBookmark(ed.selection.getBookmark());
 						tinyMCE.execCommand('mceInsertContent', false, videotag);
 						return true;

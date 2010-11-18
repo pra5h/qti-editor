@@ -166,7 +166,7 @@ var orderDialog = {
 		}
 		
 		if(adding == 1) {
-			var orderSection = '<p>&nbsp;</p><!-- <orderInteraction responseIdentifier="' + identifier + '" shuffle="' + String(shuffle) + '"> --><div id="orderInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">';
+			var orderSection = '<p>&nbsp;</p><!-- </qy:tag> --><!-- <qy:tag name="exercise"> --><!-- <orderInteraction responseIdentifier="' + identifier + '" shuffle="' + String(shuffle) + '"> --><div id="orderInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">';
 			orderSection += '<p id="choiceInteraction">' + question + '</p>';
 			responseDeclaration = '<!-- <responseDeclaration identifier="' + identifier + '" cardinality="ordered" baseType="identifier"><correctResponse>';
 			
@@ -213,7 +213,7 @@ var orderDialog = {
 				responseDeclaration += '<value>' + responseOrder[i] + '</value>';
 			}
 			responseDeclaration += '</correctResponse></responseDeclaration> -->';
-			orderSection += '</div><!-- end of orderInteraction -->';
+			orderSection += '</div><!-- end of orderInteraction --><!-- </qy:tag> --><!-- <qy:tag name="text"> -->';
 			
 			orderSection += '<p>&nbsp;</p>';
 			

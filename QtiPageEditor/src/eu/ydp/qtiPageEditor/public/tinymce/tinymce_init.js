@@ -25,7 +25,7 @@ tinyMCE.init({
 		+"correctResponse,value,itemBody,applink[lid|title],mapping[defaultValue],mapEntry[mapKey|mappedValue],"
 		+"qy:comment[idref],feedbackInline[identifier|showHide|outcomeIdentifier|senderIdentifier|fadeEffect|mark],modalFeedback[outcomeIdentifier|identifier|showHide|sound|senderIdentifier|style],"
 		+"math[title|xmlns],mstyle[mathsize|mathcolor|fontfamily|displaystyle],mfrac,mrow,mi,mo,mn,msup,mroot,munder,"
-		+"mtable,mtr,mtd,mspace,changesTracking[state],styleDeclaration,link[href|userAgent]",
+		+"mtable,mtr,mtd,mspace,changesTracking[state],styleDeclaration,link[href|userAgent],qy:tag[name]",
 	
 	handle_event_callback : "actionOnQTI",
 	convert_fonts_to_spans : true,
