@@ -52,7 +52,7 @@ var gapDialog = {
 			
 			if(form.addnew != undefined && form.addnew.getAttribute('value') == '1') {
 				
-				var gapTag = '<!-- </qy:tag> --><!-- <qy:tag name="exercise"> --><!-- <textEntryInteraction responseIdentifier="' + identifier + '" expectedLength="' + gap.length + '">';
+				var gapTag = '<!-- </qy:tag> --><!-- <qy:tag name="exercise"> --><!-- <textEntryInteraction responseIdentifier="' + identifier + '" expectedLength="100">';
 				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].onok != undefined) {
 					gapTag += '<feedbackInline ';
 					gapTag += 'mark="CORRECT"';
@@ -95,7 +95,7 @@ var gapDialog = {
 					fdb += 'mark="WRONG"';
 					fdb += ' fadeEffect="300" senderIdentifier="^' + identifier + '$" outcomeIdentifier="' + identifier + '" identifier="' + gap + '" showHide="hide">' + tinyMCE.feedback[identifier].onwrong + '</feedbackInline>'
 				}
-				gapTag.previousSibling.data = gapTag.previousSibling.data.replace(/ <textEntryInteraction responseIdentifier="([^"]*)" expectedLength="([^"]*)">[^<]*(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/textEntryInteraction> /gi, ' <textEntryInteraction responseIdentifier="$1" expectedLength="' + gap.length + '">' + fdb + '</textEntryInteraction> ');
+				gapTag.previousSibling.data = gapTag.previousSibling.data.replace(/ <textEntryInteraction responseIdentifier="([^"]*)" expectedLength="([^"]*)">[^<]*(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/textEntryInteraction> /gi, ' <textEntryInteraction responseIdentifier="$1" expectedLength="100">' + fdb + '</textEntryInteraction> ');
 				responseDeclaration = '<value>' + gap + '</value>';
 				
 				body = ed.selection.getNode();
