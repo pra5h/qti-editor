@@ -157,6 +157,12 @@ function actionOnQTI(e) {
 					break;
 				}
 				
+				// PlayPause
+				if (selectedNode.nodeName == 'IMG' && selectedNode.attributes != undefined && selectedNode.getAttribute('id') == 'mcePlayPause') {
+					runPlayPause(selectedNode);
+					break;
+				}
+				
 				// MediaLib
 				if(selectedNode.nodeName == 'IMG' || (selectedNode.nodeName == 'FIELDSET' && selectedNode.id == 'runFileUploadLib')) {
 					runMediaLib(selectedNode);
@@ -225,6 +231,15 @@ function runComment(selectedNode) {
 		tinyMCE.execCommand('mceComment', false, {comment_content: comment_content, comment_id: idref, commented_text: ''});
 	}
 		
+}
+
+//PlayPause
+function runPlayPause(selectedNode) {
+
+	var ed = tinymce.EditorManager.activeEditor;
+	var src = selectedNode.previousSibling.data;
+	//tinyMCE.execCommand('mcePlayPause', false, src: src);
+
 }
 
 //MediaLib
