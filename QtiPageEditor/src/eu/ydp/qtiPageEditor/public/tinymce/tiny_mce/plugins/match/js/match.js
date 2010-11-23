@@ -605,7 +605,7 @@ var matchDialog = {
 		// dodawanie nowego match
 		if(adding == 1) {
 			
-			var matchSection = '<p>&nbsp;</p><!-- </qy:tag> --><!-- <qy:tag name="exercise"> --><!-- <matchInteraction responseIdentifier="' + identifier + '" shuffle="' + String(shuffle) + '" maxAssociations="4"> --><div id="matchInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">';
+			var matchSection = '<p>&nbsp;</p><span class="qytag_end"><!-- </qy:tag> --></span><span class="qytag_start"><!-- <qy:tag name="exercise"> --></span><!-- <matchInteraction responseIdentifier="' + identifier + '" shuffle="' + String(shuffle) + '" maxAssociations="4"> --><div id="matchInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">';
 			matchSection += '<p id="matchInteraction">' + question + '</p><table width="100%" border=0 style="border: none;"><tbody><tr valign="top" style="border: none;">';
 			
 			// rozpoczêcie lewego matchset
@@ -669,7 +669,7 @@ var matchDialog = {
 			}
 			matchSection += '<!-- </simpleMatchSet> --></tbody></table></td>';
 			
-			matchSection += '</tr></tbody></table></div><!-- end of matchInteraction --><!-- </qy:tag> --><!-- <qy:tag name="text"> -->';
+			matchSection += '</tr></tbody></table></div><!-- end of matchInteraction --><span class="qytag_end"><!-- </qy:tag> --></span><span class="qytag_start"><!-- <qy:tag name="text"> --></span>';
 			matchSection += '<p>&nbsp;</p>';
 			
 			// tutaj osobno dodac sprawdzanie polaczen i tworzenie responseDeclaration

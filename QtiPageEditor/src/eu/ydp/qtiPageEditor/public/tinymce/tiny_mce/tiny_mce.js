@@ -1972,8 +1972,8 @@ tinymce.create('static tinymce.util.XHR', {
 			}
 			h = h.replace(/(<\/itemBody>)(?! -->)/gi,'<!-- $1 -->');
 			
-			h = h.replace(/(<qy:tag [^>]*>)(?! -->)/gi,'<!-- $1 -->');
-			h = h.replace(/(<\/qy:tag>)(?! -->)/gi,'<!-- $1 -->');
+			h = h.replace(/(<qy:tag [^>]*>)(?! -->)/gi,'<span class="qytag_start"><!-- $1 --></span>');
+			h = h.replace(/(<\/qy:tag>)(?! -->)/gi,'<span class="qytag_end"><!-- $1 --></span>');
 			
 			// Gaps support
 			for(var i in answers) {
@@ -6543,8 +6543,8 @@ window.tinymce.dom.Sizzle = Sizzle;
 			h = h.replace(/<!-- (<itemBody>) -->/gi,'$1');
 			h = h.replace(/<!-- (<\/itemBody>) -->/gi,'$1');
 			
-			h = h.replace(/<!-- (<qy:tag [^>]*>) -->/gi,'$1');
-			h = h.replace(/<!-- (<\/qy:tag>) -->/gi,'$1');
+			h = h.replace(/<span class="qytag_start"><!-- (<qy:tag [^>]*>) --><\/span>/gi,'$1');
+			h = h.replace(/<span class="qytag_end"><!-- (<\/qy:tag>) --><\/span>/gi,'$1');
 			
 			// Gaps support
 			if(tinyMCE.changesTracking == true) {
