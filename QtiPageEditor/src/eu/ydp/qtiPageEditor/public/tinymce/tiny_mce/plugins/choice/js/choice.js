@@ -196,7 +196,7 @@ var choiceDialog = {
 		}
 		
 		if(adding == 1) {
-			var choiceSection = '<p>&nbsp;</p><span class="qytag_end"><!-- </qy:tag> --></span><span class="qytag_start"><!-- <qy:tag name="exercise"> --></span><!-- <choiceInteraction responseIdentifier="' + identifier + '" shuffle="' + String(shuffle) + '" maxChoices="' + String(maxChoices) + '"> --><div id="choiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">';
+			var choiceSection = '<p>&nbsp;</p><!-- <choiceInteraction responseIdentifier="' + identifier + '" shuffle="' + String(shuffle) + '" maxChoices="' + String(maxChoices) + '"> --><div id="choiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">';
 			choiceSection += '<p id="choiceInteraction">' + question + '</p>';
 			responseDeclaration = '<!-- <responseDeclaration identifier="' + identifier + '" cardinality="single" baseType="identifier"><correctResponse>';
 			for(i in answers) {
@@ -224,7 +224,7 @@ var choiceDialog = {
 				}
 			}
 			responseDeclaration += '</correctResponse></responseDeclaration> -->';
-			choiceSection += '</div><!-- end of choiceInteraction --><span class="qytag_end"><!-- </qy:tag> --></span><span class="qytag_start"><!-- <qy:tag name="text"> --></span>';
+			choiceSection += '</div><!-- end of choiceInteraction -->';
 			
 			choiceSection += '<p>&nbsp;</p>';
 			

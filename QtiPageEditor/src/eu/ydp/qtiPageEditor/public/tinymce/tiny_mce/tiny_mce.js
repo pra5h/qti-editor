@@ -1972,8 +1972,8 @@ tinymce.create('static tinymce.util.XHR', {
 			}
 			h = h.replace(/(<\/itemBody>)(?! -->)/gi,'<!-- $1 -->');
 			
-			h = h.replace(/(<qy:tag [^>]*>)(?! -->)/gi,'<span class="qytag_start"><!-- $1 --></span>');
-			h = h.replace(/(<\/qy:tag>)(?! -->)/gi,'<span class="qytag_end"><!-- $1 --></span>');
+			h = h.replace(/<qy:tag[^>]*>/gi,'');
+			h = h.replace(/<\/qy:tag>/gi,'');
 			
 			// Gaps support
 			for(var i in answers) {
@@ -1995,8 +1995,8 @@ tinymce.create('static tinymce.util.XHR', {
 						var simpleChoice = new RegExp('(<simpleChoice identifier="' + answers[i][0][j] + '"[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)<\/simpleChoice>(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?[^<]*)(?! -->)', "gi");
 						h = h.replace(simpleChoice, '<!-- $1 --><div id="orderOption" name="' + idj + '" style="border: 1px solid green; margin: 2px;">$2</div>');
 					}
-					//var sc = new RegExp('(<simpleChoice[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)<\/simpleChoice>)(?! -->)','gi');
 					//h = h.replace(sc, '<!-- $1 --><br /><span id="simpleChoice" name="simpleChoice" style="border: 1px dotted blue;">$2</span>');
+					//var sc = new RegExp('(<simpleChoice[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)<\/simpleChoice>)(?! -->)','gi');
 				}
 			}
 			h = h.replace(/<\/orderInteraction>/gi, '</div><!-- end of orderInteraction -->');
@@ -6543,49 +6543,49 @@ window.tinymce.dom.Sizzle = Sizzle;
 			h = h.replace(/<!-- (<itemBody>) -->/gi,'$1');
 			h = h.replace(/<!-- (<\/itemBody>) -->/gi,'$1');
 			
-			h = h.replace(/<span class="qytag_start"><!-- (<qy:tag [^>]*>) --><\/span>/gi,'$1');
-			h = h.replace(/<span class="qytag_end"><!-- (<\/qy:tag>) --><\/span>/gi,'$1');
+			// workaround
+			//h = h.replace(/<!-- (<\/qy:tag>) -->/gi,'$1');
 			
 			// Gaps support
 			if(tinyMCE.changesTracking == true) {
-				h = h.replace(/<!-- (<textEntryInteraction[^>]*>[^<]*(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/textEntryInteraction>) --><span id="gap" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;"><span[^>]*>[^<]*<\/span>[^<]*<span[^>]*>([^<]*)<\/span><\/span>/gi, '$1');
+				h = h.replace(/<!-- (<textEntryInteraction[^>]*>[^<]*(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/textEntryInteraction>) --><span id="gap" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;"><span[^>]*>[^<]*<\/span>[^<]*<span[^>]*>([^<]*)<\/span><\/span>/gi, '<qy:tag name="exercise">$1</qy:tag>');
 			} else {
-				h = h.replace(/<!-- (<textEntryInteraction[^>]*>[^<]*(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/textEntryInteraction>) --><span id="gap" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">([^<]*)<\/span>/gi, '$1');
+				h = h.replace(/<!-- (<textEntryInteraction[^>]*>[^<]*(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/textEntryInteraction>) --><span id="gap" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">([^<]*)<\/span>/gi, '<qy:tag name="exercise">$1</qy:tag>');
 			}
 			
 			
 			//Choices support
-			h = h.replace(/(?:<p>)?<!-- (<choiceInteraction[^>]*>) -->(?:<\/p>)?<div id="choiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">/gi, '$1');
+			h = h.replace(/(?:<p>)?<!-- (<choiceInteraction[^>]*>) -->(?:<\/p>)?<div id="choiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">/gi, '<qy:tag name="exercise">$1');
 			h = h.replace(/<p id="choiceInteraction">([^<]*)<\/p>/gi, '<prompt>$1</prompt>');
 			h = h.replace(/<!-- (<simpleChoice[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice>) --><br \/><input id="choiceInteraction" [^>]*>(<img[^>]*>|[^<]*)/gi,'$1');
 			h = h.replace(/ mce_src="[^"]*"/gi,'');
-			h = h.replace(/<\/div><!-- end of choiceInteraction -->/gi,'</choiceInteraction>');
+			h = h.replace(/<\/div><!-- end of choiceInteraction -->/gi,'</choiceInteraction></qy:tag>');
 			
 			//Inline choices support
 			
 			//h = h.replace(/(?:<p>)?<!-- (<inlineChoiceInteraction[^>]*>) -->(?:<\/?p>)?<span id="inlineChoiceInteraction" class="mceNonEditable" style="[^"]*">/gi, '$1');
 			//Previous line replaced with following (bug 37575):
-			h = h.replace(/<!-- (<inlineChoiceInteraction[^>]*>) -->(?:<\/?p>)?<span id="inlineChoiceInteraction" class="mceNonEditable" style="[^"]*">/gi, '$1');
+			h = h.replace(/<!-- (<inlineChoiceInteraction[^>]*>) -->(?:<\/?p>)?<span id="inlineChoiceInteraction" class="mceNonEditable" style="[^"]*">/gi, '<qy:tag name="exercise">$1');
 			
 			h = h.replace(/<!-- (<inlineChoice[^>]*>[^<]*(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/inlineChoice>) --><span id="inlineChoiceAnswer" style="[^"]*">[^<]*(?:<span[^>]*>[^<]*<\/span>)?<\/span>/gi,'$1');
-			h = h.replace(/<\/span>[^<]*(?:<\/p>)?[^<]*<!-- end of inlineChoiceInteraction -->/gi,'</inlineChoiceInteraction>');
+			h = h.replace(/<\/span>[^<]*(?:<\/p>)?[^<]*<!-- end of inlineChoiceInteraction -->/gi,'</inlineChoiceInteraction></qy:tag>');
 			
 			//Order support
-			h = h.replace(/(?:<p>)?<!-- (<orderInteraction[^>]*>) -->(?:<\/p>)?<div id="orderInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">/gi, '$1');
+			h = h.replace(/(?:<p>)?<!-- (<orderInteraction[^>]*>) -->(?:<\/p>)?<div id="orderInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">/gi, '<qy:tag name="exercise">$1');
 			h = h.replace(/<p id="choiceInteraction">([^<]*)<\/p>/gi, '<prompt>$1</prompt>');
 			h = h.replace(/<!-- (<simpleChoice[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)<\/simpleChoice>[^<]*(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*) -->(?:<\/p>)?<div id="orderOption" [^>]*>(<img[^>]*>|[^<]*)<\/div>/gi,'$1');
 			h = h.replace(/ mce_src="[^"]*"/gi,'');
-			h = h.replace(/<\/div><!-- end of orderInteraction -->/gi,'</orderInteraction>');
+			h = h.replace(/<\/div><!-- end of orderInteraction -->/gi,'</orderInteraction></qy:tag>');
 			
 			//Match support
-			h = h.replace(/<!-- (<matchInteraction[^>]*>) --><div id="matchInteraction" class="mceNonEditable"[^>]*>/gi, '$1');
+			h = h.replace(/<!-- (<matchInteraction[^>]*>) --><div id="matchInteraction" class="mceNonEditable"[^>]*>/gi, '<qy:tag name="exercise">$1');
 			h = h.replace(/<p id="matchInteraction">([^<]*)<\/p><table[^>]*><tbody><tr[^>]*>/gi, '<prompt>$1</prompt>');
 			h = h.replace(/<td id="canvas_td"[^>]*><canvas[^>]*><\/canvas><\/td>/gi, '');
 			h = h.replace(/<!-- (<simpleMatchSet>) --><td[^>]*><table class="mceNonEditable"[^>]*><tbody>/gi, '$1');
 			h = h.replace(/(<tr id="canvas_tr"[^>]*><td[^>]*><canvas id="canvas"[^>]*><\/canvas><\/td><\/tr>)/gi,'');
 			h = h.replace(/<!-- (<simpleAssociableChoice[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)(?:<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/simpleAssociableChoice>) --><tr[^>]*><td[^>]*><span[^>]*>[^<]*<\/span><span[^>]*>[^<]*<\/span><span[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)<\/span><\/td><\/tr>/gi, '$1');
 			h = h.replace(/<!-- (<\/simpleMatchSet>) --><\/tbody><\/table><\/td>/gi, '$1');
-			h = h.replace(/<\/tr><\/tbody><\/table><\/div><!-- end of matchInteraction -->/gi, '</matchInteraction>');
+			h = h.replace(/<\/tr><\/tbody><\/table><\/div><!-- end of matchInteraction -->/gi, '</matchInteraction></qy:tag>');
 			
 			//Modal feedbacks
 			h = h.replace(/(<!-- (<modalFeedback [^>]*>[^<]*<\/modalFeedback>) -->)(?! -->)/gi, '$2');
@@ -6603,7 +6603,7 @@ window.tinymce.dom.Sizzle = Sizzle;
 		
 		parsePlayPauseToQTI: function(h) {
 			
-			h = h.replace(/<!-- (<audioPlayer[^>]*>) --><img id="mcePlayPause"[^>]*>/gi, '$1');
+			h = h.replace(/<!-- (<audioPlayer[^>]*>) --><img id="mcePlayPause"[^>]*>/gi, '</qy:tag><qy:tag name="media">$1</qy:tag><qy:tag name="text">');
 			return h;
 			
 		},
@@ -6625,6 +6625,9 @@ window.tinymce.dom.Sizzle = Sizzle;
 			h = this.parseToQTI(h);
 			h = this.parseCommentsToQY(h);
 			h = this.parsePlayPauseToQTI(h);
+			
+			h = h.replace(/(<p[^>a-z]*>)/gi, '<qy:tag name="text">$1');
+			h = h.replace(/(<\/p>)/gi, '$1</qy:tag>');
 			
 			h = h.replace(/(<span[^>]*class="changestracking_original"[^>]*style=")[^"]*("[^>]*>)/gi,'$1$2');
 			h = h.replace(/(<span[^>]*class="changestracking_new"[^>]*style=")[^"]*("[^>]*>)/gi,'$1display: none;$2');
@@ -6699,25 +6702,25 @@ window.tinymce.dom.Sizzle = Sizzle;
 						h = h.replace(/<(inlineChoiceInteraction|choiceInteraction|orderInteraction|matchInteraction)([^>]*)>\s*/gi, '\n\n<$1$2>');
 						
 						// begin tags with one newline before
-						h = h.replace(/<(assessmentItem|modalFeedback)([^>]*)>\s*/gi, '\n<$1$2>');
+						h = h.replace(/<(qy:tag|assessmentItem|modalFeedback)([^>]*)>\s*/gi, '\n<$1$2>');
 						
 						// begin tags with two newlines after
 						h = h.replace(/<(assessmentItem|itemBody)([^>]*)>\s*/gi, '<$1$2>\n\n');
 						
 						// begin tags with one newline after
-						h = h.replace(/<(simpleMatchSet|mapping|mapEntry|correctResponse|responseDeclaration|inlineChoiceInteraction|choiceInteraction|orderInteraction|matchInteraction)([^>]*)>\s*/gi, '<$1$2>\n');
+						h = h.replace(/<(qy:tag|simpleMatchSet|mapping|mapEntry|correctResponse|responseDeclaration|inlineChoiceInteraction|choiceInteraction|orderInteraction|matchInteraction)([^>]*)>\s*/gi, '<$1$2>\n');
 						
 						// end tags with two newlines after
 						h = h.replace(/<\/(responseDeclaration|inlineChoiceInteraction|choiceInteraction|orderInteraction|matchInteraction)>\s*/gi, '</$1>\n\n');
 						
 						// end tags with one newline after
-						h = h.replace(/<\/(simpleMatchSet|simpleAssociableChoice|mapping|assessmentItem|value|correctResponse|prompt|simpleChoice|inlineChoice)>\s*/gi, '</$1>\n');
+						h = h.replace(/<\/(qy:tag|simpleMatchSet|simpleAssociableChoice|mapping|assessmentItem|value|correctResponse|prompt|simpleChoice|inlineChoice)>\s*/gi, '</$1>\n');
 						
 						// end tags with two newlines before
 						h = h.replace(/<\/(itemBody)>\s*/gi, '\n\n</$1>');
 						
 						// end tags with one newline before
-						h = h.replace(/<\/(assessmentItem)>/gi, '\n</$1>');
+						h = h.replace(/<\/(qy:tag|assessmentItem)>/gi, '\n</$1>');
 						
 						// eof QTI newlines formatting
 						

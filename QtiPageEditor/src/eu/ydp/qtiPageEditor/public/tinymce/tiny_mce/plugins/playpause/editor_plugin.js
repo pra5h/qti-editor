@@ -25,7 +25,7 @@
 						fromPath = fromPath.join('/');
 						filePath = getRelativeFromAbsoute(fromPath, filePath);
 						
-						var playpausetag = '<!-- </qy:tag> --><!-- <qy:tag name="media"> --><!-- <audioPlayer src="' + fromPath + '/' + filePath + '" /> --><img id="mcePlayPause" src="/work/tools/qtitesteditor/tinymce/tiny_mce/plugins/playpause/img/playpause.png" /><!-- </qy:tag> --><!-- <qy:tag name="text"> -->';
+						var playpausetag = '<!-- <audioPlayer src="' + fromPath + '/' + filePath + '" /> --><img id="mcePlayPause" src="/work/tools/qtitesteditor/tinymce/tiny_mce/plugins/playpause/img/playpause.png" />';
 						ed.selection.moveToBookmark(ed.selection.getBookmark());
 						tinyMCE.execCommand('mceInsertContent', false, playpausetag);
 						return true;
