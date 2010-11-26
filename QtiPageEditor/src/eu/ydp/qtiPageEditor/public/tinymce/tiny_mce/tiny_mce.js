@@ -2010,10 +2010,10 @@ tinymce.create('static tinymce.util.XHR', {
 						var simpleChoice = new RegExp('(<simpleChoice identifier="' + answers[i][0][j] + '"[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice>)(?! -->)', "gi");
 						h = h.replace(simpleChoice, '<!-- $1 --><br /><input id="choiceInteraction" name="simpleChoice" type="checkbox" checked="checked" />$2');
 					}
-					var sc = new RegExp('(<simpleChoice[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice>)(?! -->)', 'gi');
-					h = h.replace(sc, '<!-- $1 --><br /><input id="choiceInteraction" name="simpleChoice" type="checkbox" />$2');
 				}
 			}
+			var sc = new RegExp('(<simpleChoice[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice>)(?! -->)', 'gi');
+			h = h.replace(sc, '<!-- $1 --><br /><input id="choiceInteraction" name="simpleChoice" type="checkbox" />$2');
 			h = h.replace(/<\/choiceInteraction>/gi, '</div><!-- end of choiceInteraction -->');
 			
 			//Selection support

@@ -469,7 +469,6 @@ function runMultipleChoice(selectedNode) {
 		}
 	}
 	data.push(fd);	
-	
 	tinyMCE.selectedNode = selectedNode;
 	tinyMCE.execCommand('mceChoice', false, data);
 	
