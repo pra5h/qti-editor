@@ -202,12 +202,12 @@ var orderDialog = {
 					orderSection += ' fixed="true" ';
 				}
 				orderSection += '>' + answers[i] + '</simpleChoice>';
-				if(i == (answers.length - 1) && tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined) {
-					orderSection += '<feedbackInline fadeEffect="300" senderIdentifier="^' + identifier + '$" outcomeIdentifier="' + identifier + '" identifier="' + feedbackCostam + '" mark="CORRECT" showHide="show">' + tinyMCE.feedback[identifier] + '</feedbackInline>';
-					tinyMCE.feedback = new Array;
-				} 
 				orderSection += ' --><div id="orderOption" name="' + points[i] + '"  style="border: 1px solid green; margin: 2px;"';
 				orderSection += '>' + answers[i] + '</div>';
+				if(i == (answers.length - 1) && tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined) {
+					orderSection += '<!-- <feedbackInline fadeEffect="300" senderIdentifier="^' + identifier + '$" outcomeIdentifier="' + identifier + '" identifier="' + feedbackCostam + '" mark="CORRECT" showHide="show">' + tinyMCE.feedback[identifier] + '</feedbackInline> -->';
+					tinyMCE.feedback = new Array;
+				} 
 			}
 			for(i in responseOrder) {
 				responseDeclaration += '<value>' + responseOrder[i] + '</value>';
@@ -220,6 +220,7 @@ var orderDialog = {
 			var ed = tinymce.EditorManager.activeEditor;
 			var bm = ed.selection.getBookmark();
 			ed.selection.moveToBookmark(bm);
+			
 			tinyMCE.execCommand('mceInsertContent', false, orderSection);
 			
 			body = ed.selection.getNode();
@@ -282,15 +283,15 @@ var orderDialog = {
 					orderSection += ' fixed="true" ';
 				}
 				orderSection += '>' + answers[i] + '</simpleChoice>';
-				if(i == (answers.length - 1) && tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined) {
-					orderSection += '<feedbackInline fadeEffect="300" senderIdentifier="^' + identifier + '$" outcomeIdentifier="' + identifier + '" identifier="' + feedbackCostam + '" mark="CORRECT" showHide="show">' + tinyMCE.feedback[identifier] + '</feedbackInline>'
-					tinyMCE.feedback = new Array;
-				} 
+				//if(i == (answers.length - 1) && tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined) {
+				//	orderSection += '<feedbackInline fadeEffect="300" senderIdentifier="^' + identifier + '$" outcomeIdentifier="' + identifier + '" identifier="' + feedbackCostam + '" mark="CORRECT" showHide="show">' + tinyMCE.feedback[identifier] + '</feedbackInline>'
+				//	tinyMCE.feedback = new Array;
+				//} 
 				orderSection += ' --><div id="orderOption" name="' + points[i] + '" style="border: 1px solid green; margin: 2px;"'; 
 				orderSection += '>' + answers[i] + '</div>';
 			}
 			if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined) {
-				orderSection += '<feedbackInline fadeEffect="300" senderIdentifier="^' + identifier + '$" outcomeIdentifier="' + identifier + '" identifier="' + feedbackCostam + '" mark="CORRECT" showHide="show">' + tinyMCE.feedback[identifier] + '</feedbackInline>'
+				orderSection += '<!-- <feedbackInline fadeEffect="300" senderIdentifier="^' + identifier + '$" outcomeIdentifier="' + identifier + '" identifier="' + feedbackCostam + '" mark="CORRECT" showHide="show">' + tinyMCE.feedback[identifier] + '</feedbackInline> -->';
 				tinyMCE.feedback = new Array;
 			} 
 			for(i in responseOrder) {
