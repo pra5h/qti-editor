@@ -6603,7 +6603,7 @@ window.tinymce.dom.Sizzle = Sizzle;
 		
 		parsePlayPauseToQTI: function(h) {
 			
-			h = h.replace(/<!-- (<audioPlayer[^>]*>) --><img id="mcePlayPause"[^>]*>/gi, '</qy:tag><qy:tag name="media">$1</qy:tag><qy:tag name="text">');
+			h = h.replace(/<!-- (<audioPlayer[^>]*>) --><img id="mcePlayPause"[^>]*>/gi, '</p><qy:tag name="media">$1</qy:tag><p>');
 			return h;
 			
 		},
