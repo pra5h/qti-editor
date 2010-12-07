@@ -19,8 +19,11 @@
 		<fieldset style="margin-bottom: 20px;" id="gap_content">
 			<legend>{#gap_dlg.answer_label}:</legend>
 			<input type="hidden" id="identifier" name="identifier"/>
-			<table width="100%"><tr><td><input type="text" id="gap" name="gap" style="width: 100%;"/></td>
-			<td width="20px" align="center"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr></table>
+			<table width="100%"><tr>
+				<td><input type="text" id="gap" name="gap" style="width: 100%;"/></td>
+				<td width="22px" align="center"><img src="img/feedback_new.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td>
+				<td width="22px" id="td_previous" align="center"><img src="img/previous.png" onclick="previous(document.getElementById('identifier'));" title="Previous version" alt="Previous version"/></td>
+			</tr></table>
 		</fieldset>
 
 	<div class="mceActionPanel">

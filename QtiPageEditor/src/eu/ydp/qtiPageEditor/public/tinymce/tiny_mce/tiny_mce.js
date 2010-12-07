@@ -6547,12 +6547,7 @@ window.tinymce.dom.Sizzle = Sizzle;
 			//h = h.replace(/<!-- (<\/qy:tag>) -->/gi,'$1');
 			
 			// Gaps support
-			if(tinyMCE.changesTracking == true) {
-				h = h.replace(/<!-- (<textEntryInteraction[^>]*>[^<]*(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/textEntryInteraction>) --><span id="gap" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;"><span[^>]*>[^<]*<\/span>[^<]*<span[^>]*>([^<]*)<\/span><\/span>/gi, '<qy:tag name="exercise">$1</qy:tag>');
-			} else {
-				h = h.replace(/<!-- (<textEntryInteraction[^>]*>[^<]*(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/textEntryInteraction>) --><span id="gap" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">([^<]*)<\/span>/gi, '<qy:tag name="exercise">$1</qy:tag>');
-			}
-			
+			h = h.replace(/<!-- (<textEntryInteraction[^>]*>[^<]*(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/textEntryInteraction>) --><span id="gap" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">([^<]*)<\/span>/gi, '<qy:tag name="exercise">$1</qy:tag>');
 			
 			//Choices support
 			h = h.replace(/(?:<p>)?<!-- (<choiceInteraction[^>]*>) -->(?:<\/p>)?<div id="choiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">/gi, '<qy:tag name="exercise">$1');

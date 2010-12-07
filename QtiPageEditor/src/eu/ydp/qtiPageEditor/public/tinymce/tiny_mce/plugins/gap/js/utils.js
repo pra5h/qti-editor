@@ -35,3 +35,12 @@ function validateExercise(form) {
 	return true;
 	
 }
+
+function previous(inputHiddenId) {
+
+	var identifier = inputHiddenId.value;
+	var archIdentifier = identifier.replace(/id_([0-9]*)/, 'arch_$1');
+	
+	tinyMCE.execCommand('mceShowPreviousVersion', false, {archIdentifier: archIdentifier});
+	
+}

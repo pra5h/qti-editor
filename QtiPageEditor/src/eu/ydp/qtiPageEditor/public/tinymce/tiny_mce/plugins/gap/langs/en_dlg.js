@@ -15,3 +15,11 @@ tinyMCE.addI18n('en.feedback_dlg',{
 	feedback_onok:"On OK",
 	feedback_onwrong:"On wrong"
 });
+
+tinyMCE.addI18n('en.previous_dlg',{
+	window_title:"Previous gap value",
+	modify:"Save",
+	previous_label:"Previous version",
+	correct:"Answer",
+	close:"Close"
+});

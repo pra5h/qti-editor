@@ -19,6 +19,11 @@ var gapDialog = {
 				exec = rg.exec(randid);
 				f.identifier.value = 'id_' + exec[1];
 			}
+			
+			if(tinyMCE.changesTracking == undefined || tinyMCE.changesTracking === false) {
+				var td_previous = document.getElementById('td_previous');
+				td_previous.parentNode.removeChild(td_previous);
+			}
 		
 		} else {
 			
@@ -36,6 +41,11 @@ var gapDialog = {
 			
 			var insertButton = document.getElementById('insert');
 			insertButton.setAttribute('value', 'Insert');
+			
+			if(tinyMCE.changesTracking == undefined || tinyMCE.changesTracking === false) {
+				var td_previous = document.getElementById('td_previous');
+				td_previous.parentNode.removeChild(td_previous);
+			}
 			
 		}
 		
@@ -80,11 +90,46 @@ var gapDialog = {
 				ed.selection.moveToBookmark(bm);
 				
 			} else {
-			
+				
+				var archStrResponseDeclaration = '';
+				var archStrActivity = '';
+				
 				var gapTag = tinyMCE.selectedNode;
 				var bm = ed.selection.getBookmark();
 
+				var body = ed.selection.getNode();
+				while(body.nodeName != 'BODY') {
+					body = body.parentNode;
+				}
+				
+				//console.log(body.innerHTML);
+				
+				if(tinyMCE.changesTracking != undefined && tinyMCE.changesTracking === true) {
+					
+					var identifierNumber = identifier.replace(/id_([0-9]*)/i, '$1');
+					var archIdentifier = 'arch_' + identifierNumber;
+					
+					var archTagContent = gapTag.previousSibling.data;
+					archTagContent = archTagContent.replace(/responseIdentifier="id_[0-9]*"/i, 'responseIdentifier="' + archIdentifier + '"');
+					archTagContent = archTagContent.replace(/^ (.*) $/i, '$1');
+					
+					var archRegExp = new RegExp('<responseDeclaration identifier="' + identifier + '"[^>]*>[^<]*<correctResponse>(?:[^<]*<value>[^<]*<\/value>[^<]*)*<\/correctResponse>[^>]*<\/responseDeclaration>','gi');
+					var archResponseDeclaration = body.innerHTML.match(archRegExp);
+					archResponseDeclaration = archResponseDeclaration[0].replace(identifier, archIdentifier);
+					
+					archStrResponseDeclaration = '<div class="qti_tracking" style="display: none;"><!-- ' + archResponseDeclaration + ' --></div>';
+					
+					archActivityElement = document.createElement('div');
+					archActivityElement.setAttribute('class', 'qti-tracking');
+					archActivityElement.setAttribute('style', 'display: none;');
+					archActivityElement.innerHTML = '<!-- ' + archTagContent + ' -->';
+					
+					gapTag.previousSibling.parentNode.insertBefore(archActivityElement, gapTag.previousSibling);
+					
+				}
+				
 				gapTag.innerHTML = gap;
+				
 				var fdb = '';
 				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].onok != undefined) {
 					fdb += '<feedbackInline ';
@@ -96,15 +141,11 @@ var gapDialog = {
 					fdb += 'mark="WRONG"';
 					fdb += ' fadeEffect="300" senderIdentifier="^' + identifier + '$" outcomeIdentifier="' + identifier + '" identifier="' + gap + '" showHide="hide">' + tinyMCE.feedback[identifier].onwrong + '</feedbackInline>'
 				}
-				gapTag.previousSibling.data = gapTag.previousSibling.data.replace(/ <textEntryInteraction responseIdentifier="([^"]*)" expectedLength="([^"]*)">[^<]*(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/textEntryInteraction> /gi, ' <textEntryInteraction responseIdentifier="$1" expectedLength="100">' + fdb + '</textEntryInteraction> ');
+				gapTag.previousSibling.data = gapTag.previousSibling.data.replace(/ <textEntryInteraction responseIdentifier="(id_[^"]*)" expectedLength="([^"]*)">[^<]*(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/textEntryInteraction> /gi, ' <textEntryInteraction responseIdentifier="$1" expectedLength="100">' + fdb + '</textEntryInteraction> ');
 				responseDeclaration = '<value>' + gap + '</value>';
 				
-				body = ed.selection.getNode();
-				while(body.nodeName != 'BODY') {
-					body = body.parentNode;
-				}
 				regexp = new RegExp('(<!-- <responseDeclaration identifier="' + identifier + '"[^>]*>[^<]*<correctResponse>)(?:[^<]*<value>[^<]*<\/value>[^<]*)*(<\/correctResponse>[^>]*<\/responseDeclaration> -->)','gi');
-				body.innerHTML = body.innerHTML.replace(regexp, '$1' + responseDeclaration + '$2');
+				body.innerHTML = body.innerHTML.replace(regexp, archStrResponseDeclaration + '$1' + responseDeclaration + '$2');
 				
 				ed.selection.moveToBookmark(bm);
 				

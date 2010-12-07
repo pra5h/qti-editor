@@ -100,6 +100,33 @@
 				
 			});
 			
+			ed.addCommand('mceShowPreviousVersion', function(ui,data) {
+
+				var rg = new RegExp('<!-- <responseDeclaration identifier="' + data.archIdentifier + '"[^>]*>[^<]*<correctResponse>[^<]*(?:<value>([^<]*)<\/value>)*[^<]*<\/correctResponse>[^<]*<\/responseDeclaration> -->','gi');
+				var archResponseDeclaration = rg.exec(ed.selection.dom.doc.body.innerHTML);
+
+				if(archResponseDeclaration) {
+
+					var archAnswer = archResponseDeclaration[1];
+
+					ed.windowManager.open({
+						file : url + '/previous.htm',
+						width : 400,
+						height : 130,
+						inline : 1
+					}, {
+						plugin_url : url, // Plugin absolute URL
+						data: {archIdentifier: data.archIdentifier, answer: archResponseDeclaration[1]}
+					});
+
+				} else {
+
+					ed.windowManager.alert('No previous version of this activity');
+
+				}
+
+			});
+			
 			ed.addButton('insertgap', {title : 'Insert gap activity', cmd : 'mceGap'});
 
 		},
