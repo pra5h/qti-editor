@@ -186,6 +186,12 @@ function actionOnQTI(e) {
 					runMultipleChoice(selectedNode);
 					break;
 				}
+
+				// Drag and Drop
+				if ((selectedNode.nodeName == 'P' && selectedNode.id == 'dragDropInteractionContents') || (selectedNode.nodeName == 'DIV' && selectedNode.id == 'dragDropInteraction')) {
+					runDraggable(selectedNode);
+					break;
+				}
 				
 				// Order
 				if (selectedNode.id == 'orderOption' || (selectedNode.id == 'choiceInteraction' && selectedNode.parentNode.id == 'orderInteraction')) {
@@ -472,6 +478,76 @@ function runMultipleChoice(selectedNode) {
 	tinyMCE.selectedNode = selectedNode;
 	tinyMCE.execCommand('mceChoice', false, data);
 	
+}
+
+// Drag and Drop
+function runDraggable(selectedNode) {
+
+	var ed = tinymce.EditorManager.activeEditor;
+	var slots = new Array();
+	var points = new Array();
+	var ids = new Array();
+	var fixed = new Array();
+	var fdb = new Array();
+	var data = {};
+
+	var sectionDiv = selectedNode;
+	while(sectionDiv.nodeName != 'DIV') {
+		sectionDiv = sectionDiv.parentNode;
+	}
+	var draggableSectionHTML = sectionDiv.innerHTML;
+	var contents = draggableSectionHTML.match(/<!-- <contents> --><p id="dragDropInteractionContents">(.*?)<\/p><!-- <\/contents> -->/i);
+	if(sectionDiv.previousSibling.nodeName == "P") {
+		var identifier = sectionDiv.previousSibling.innerHTML.match(/<dragDropInteraction responseIdentifier="([^"]+)"[^>]*>/i);
+		var shuffle = sectionDiv.previousSibling.innerHTML.match(/<dragDropInteraction.*?shuffle="([^"]*)"[^>]*>/i);
+	} else {
+		var identifier = sectionDiv.previousSibling.data.match(/<dragDropInteraction responseIdentifier="([^"]+)"[^>]*>/i);
+		var shuffle = sectionDiv.previousSibling.data.match(/<dragDropInteraction.*?shuffle="([^"]*)"[^>]*>/i);
+	}
+
+	var answers_paragraph = draggableSectionHTML.match(/<!-- <dragElement[^>]*>.*?<\/dragElement> --><span class="dragElement"[^>]*>(<img[^>]*>|[^<]*)<\/span>/gi);
+	
+	var values = new Array();
+	for (ans in answers_paragraph) {
+		values.push(answers_paragraph[ans].match(/<!-- <dragElement identifier="([^"]*)"\s*(?:fixed="([^"]*)")?[^>]*>([^<]*|<img[^>]*>)<\/dragElement> --><span class="dragElement"[^>]*>(<img[^>]*>|[^<]*)<\/span>/i));
+	}
+	var i=0;
+	while(values[i] != undefined) {
+		ids.push(values[i][1]);
+		slots.push(values[i][3]);
+//		if(values[i][4] == 'checked="checked" ') {
+//			points.push('1');
+//		} else {
+//			points.push('0');
+//		}
+		fixed.push(values[i][2]);
+		//fdb[values[i][1]] = values[i][3];
+		i++;
+	}
+	data.contents = contents[1];
+	data.slots = slots;
+	data.points = points;
+	data.ids = ids;
+	data.identifier = identifier[1];
+	data.shuffle = shuffle[1];
+	data.fixed = fixed;
+	data.fdb = fdb;
+
+	var body = ed.selection.dom.doc.body.innerHTML;
+	rg = new RegExp('<modalFeedback[^>]*senderIdentifier="' + identifier[1] + '"[^>]*identifier="([^"]*)"[^>]*sound="([^"]*)"[^>]*>','gi');
+	var fdArr = body.match(rg);
+	var fd = new Array;
+	if(fdArr != undefined) {
+		for (i in fdArr) {
+			rg = new RegExp('<modalFeedback[^>]*senderIdentifier="' + identifier[1] + '"[^>]*identifier="([^"]*)"[^>]*sound="([^"]*)"[^>]*>','i');
+			var arr = rg.exec(fdArr[i]);
+			fd[arr[1]] = arr[2]
+		}
+	}
+	data.fd = fd;
+	tinyMCE.selectedNode = selectedNode;
+	tinyMCE.execCommand('mceDraggable', false, data);
+
 }
 
 // Order 

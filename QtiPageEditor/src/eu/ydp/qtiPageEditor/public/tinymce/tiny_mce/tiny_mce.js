@@ -2015,7 +2015,25 @@ tinymce.create('static tinymce.util.XHR', {
 			var sc = new RegExp('(<simpleChoice[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice>)(?! -->)', 'gi');
 			h = h.replace(sc, '<!-- $1 --><br /><input id="choiceInteraction" name="simpleChoice" type="checkbox" />$2');
 			h = h.replace(/<\/choiceInteraction>/gi, '</div><!-- end of choiceInteraction -->');
-			
+
+			//DragDrop support
+			h = h.replace(/(<dragDropInteraction[^>]*>)(?! -->)/gi, '<!-- $1 --><div id="dragDropInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">');
+			h = h.replace(/<contents>(.*)<\/contents>(?! -->)/gi, '<!-- <contents> --><p id="dragDropInteractionContents">$1</p><!-- </contents> -->');
+			h = h.replace(/(<slot>(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/slot>)(?! -->)/gi, '<!-- $1 --><span id="mgap" style="border: 1px solid green;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>');
+//			for(var i in answers) {
+//				if(answers[i][1] != 'ordered') {
+//					for(var j in answers[i][0]) {
+//						var simpleChoice = new RegExp('(<simpleChoice identifier="' + answers[i][0][j] + '"[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice>)(?! -->)', "gi");
+//						h = h.replace(simpleChoice, '<!-- $1 --><br /><input id="choiceInteraction" name="simpleChoice" type="checkbox" checked="checked" />$2');
+//					}
+//				}
+//			}
+			h = h.replace(/(<sourcelist>)(?! -->)/gi, '<!-- $1 -->');
+			h = h.replace(/(<\/sourcelist>)(?! -->)/gi, '<!-- $1 -->');
+			var sc = new RegExp('(<dragElement[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)<\/dragElement>)(?! -->)', 'gi');
+			h = h.replace(sc, '<!-- $1 --><span class="dragElement" name="dragElement" style="border: 1px solid green; margin: 5px;">$2</span>');
+			h = h.replace(/<\/dragDropInteraction>/gi, '</div><!-- end of dragDropInteraction -->');
+
 			//Selection support
 			//h = h.replace(/(<selectionInteraction[^>]*>)(?! -->)/gi, '<!-- $1 --><div id="selectionInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">');
 			//h = h.replace(/<prompt>([^<]*)<\/prompt>(?=\s*<simpleChoice)/gi, '<p id="choiceInteraction">$1</p>');
@@ -6555,7 +6573,17 @@ window.tinymce.dom.Sizzle = Sizzle;
 			h = h.replace(/<!-- (<simpleChoice[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice>) --><br \/><input id="choiceInteraction" [^>]*>(<img[^>]*>|[^<]*)/gi,'$1');
 			h = h.replace(/ mce_src="[^"]*"/gi,'');
 			h = h.replace(/<\/div><!-- end of choiceInteraction -->/gi,'</choiceInteraction></qy:tag>');
-			
+
+			//DragDrop support
+			h = h.replace(/(?:<p>)?<!-- (<dragDropInteraction[^>]*>) -->(?:<\/p>)?<div id="dragDropInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">/gi, '<qy:tag name="exercise">$1');
+			h = h.replace(/<!-- <contents> --><p id="dragDropInteractionContents">(.*)<\/p><!-- <\/contents> -->/gi, '<contents>$1</contents>');
+			h = h.replace(/<!-- (<slot>(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/slot>) --><span id="mgap"[^>]*>[^<]*<\/span>/gi, '$1');
+			h = h.replace(/<!-- (<dragElement[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)<\/dragElement>) --><span class="dragElement"[^>]*>(<img[^>]*>|[^<]*)<\/span>/gi,'$1');
+			h = h.replace(/ mce_src="[^"]*"/gi,'');
+			h = h.replace(/<!-- (<sourcelist>) -->/gi, '$1');
+			h = h.replace(/<!-- (<\/sourcelist>) -->/gi, '$1');
+			h = h.replace(/<\/div><!-- end of dragDropInteraction -->/gi,'</dragDropInteraction></qy:tag>');
+
 			//Inline choices support
 			
 			//h = h.replace(/(?:<p>)?<!-- (<inlineChoiceInteraction[^>]*>) -->(?:<\/?p>)?<span id="inlineChoiceInteraction" class="mceNonEditable" style="[^"]*">/gi, '$1');

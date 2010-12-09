@@ -1,23 +1,23 @@
 var AMTcgiloc = "http://www.imathas.com/cgi-bin/mimetex.cgi";
 
-tinyMCE.init({  
+tinyMCE.init({
 	convert_urls: false,
-	theme : "advanced",  
-	mode: "textareas",  
-	elements : "content",  
+	theme : "advanced",
+	mode: "textareas",
+	elements : "content",
 	skin : "o2k7",
 	plugins : "safari,spellchecker,pagebreak,style,layer,table,save,advhr,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,"
 		+"searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,imagemanager,"
-		+"filemanager,noneditable,asciimath,asciimathcharmap,asciisvg,choice,gap,inlinechoice,order,match,fileuploadlib,comment,trackchanges,addvideo,copyqti,playpause",
-	
+		+"filemanager,noneditable,asciimath,asciimathcharmap,asciisvg,choice,gap,inlinechoice,order,match,fileuploadlib,comment,trackchanges,addvideo,copyqti,playpause,draggable",
+
 	theme_advanced_toolbar_location : "top",
 	theme_advanced_toolbar_align : "left",
 	theme_advanced_statusbar_location : "bottom",
-	theme_advanced_resizing : true,  
-	theme_advanced_buttons1 : "save,newdocument,print,preview,|,formatselect,fontselect,fontsizeselect,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull",  
-	theme_advanced_buttons2 : "undo,redo,|,cut,copy,|,paste,pastetext,pasteword,|,search,replace,|,forecolor,backcolor,|,bullist,numlist,|,outdent,indent,|,link,unlink,|,sub,sup,|,asciimath,asciimathcharmap,|,charmap,|,spellchecker",  
-	theme_advanced_buttons3 : "insertgap,insertinlinechoice,insertchoicesection,insertordersection,insertmatchsection,|,fileuploadlib_image,addvideo,playpause,|,insertcomment,|,enablechangestracking,disablechangestracking,|,tablecontrols,|,anchor,|,code,|,help",
-	
+	theme_advanced_resizing : true,
+	theme_advanced_buttons1 : "save,newdocument,print,preview,|,formatselect,fontselect,fontsizeselect,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull",
+	theme_advanced_buttons2 : "undo,redo,|,cut,copy,|,paste,pastetext,pasteword,|,search,replace,|,forecolor,backcolor,|,bullist,numlist,|,outdent,indent,|,link,unlink,|,sub,sup,|,asciimath,asciimathcharmap,|,charmap,|,spellchecker",
+	theme_advanced_buttons3 : "insertgap,insertinlinechoice,insertchoicesection,insertordersection,insertmatchsection,insertdraggablesection,|,fileuploadlib_image,addvideo,playpause,|,insertcomment,|,enablechangestracking,disablechangestracking,|,tablecontrols,|,anchor,|,code,|,help",
+
 	extended_valid_elements : "canvas[id|style|width|height],gap[identifier],choiceInteraction[shuffle|maxChoices|responseIdentifier],"
 		+"orderInteracion[shuffle|responseIdentifier],selectionInteracion[shuffle|responseIdentifier],item[identifier],matchInteraction[shuffle|maxAssociations|responseIdentifier],prompt,"
 		+"simpleChoice[identifier|fixed],simpleAssociableChoice[identifier|fixed|matchMax],inlineChoiceInteraction,inlineChoice[score],"
@@ -25,27 +25,27 @@ tinyMCE.init({
 		+"correctResponse,value,itemBody,applink[lid|title],mapping[defaultValue],mapEntry[mapKey|mappedValue],"
 		+"qy:comment[idref],feedbackInline[identifier|showHide|outcomeIdentifier|senderIdentifier|fadeEffect|mark],modalFeedback[outcomeIdentifier|identifier|showHide|sound|senderIdentifier|style],"
 		+"math[title|xmlns],mstyle[mathsize|mathcolor|fontfamily|displaystyle],mfrac,mrow,mi,mo,mn,msup,mroot,munder,"
-		+"mtable,mtr,mtd,mspace,changesTracking[state],styleDeclaration,link[href|userAgent],qy:tag[name],audioPlayer[src]",
-	
+		+"mtable,mtr,mtd,mspace,changesTracking[state],styleDeclaration,link[href|userAgent],qy:tag[name],audioPlayer[src],dragDropInteraction[responseIdentifier],contents,slot,sourcelist,dragElement[identifier]",
+
 	handle_event_callback : "actionOnQTI",
 	convert_fonts_to_spans : true,
 	removeformat_selector : 'b,strong,em,i,ins',
 	noneditable_leave_contenteditable : true,
 	remove_linebreaks : false,
-	apply_source_formatting : true, 
+	apply_source_formatting : true,
 	entity_encoding : "",
 	dialog_type : "modal",
-	height:"100%",  
-	width:"100%", 
+	height:"100%",
+	width:"100%",
 	object_resizing: false,
 	spellchecker_rpc_url : "/work/tools/qtitesteditor/tinymce/tiny_mce/plugins/spellchecker/rpc.php",
 	spellchecker_languages : "+English=en",
-	
+
 	paste_auto_cleanup_on_paste : true,
 	paste_preprocess : function(pl, o) {
 		o.content = cutQTI(o.content);
 	},
-	
+
 	setup : function(ed) {
         ed.makeReadOnly = function(ro) {
             var t = this, s = t.settings, DOM = tinymce.DOM, d = t.getDoc();
@@ -55,7 +55,7 @@ tinyMCE.init({
                     try {
                         d.designMode = 'Off';
                     } catch (ex) {
-                        
+
                     }
                 } else {
                     b = t.getBody();
@@ -73,7 +73,7 @@ tinyMCE.init({
                         d.designMode = 'Off';
                         d.designMode = 'On';
                     } catch (ex) {
-                        
+
                     }
                 } else {
                     b = t.getBody();
@@ -86,5 +86,5 @@ tinyMCE.init({
         };
 
     }
-	
-}); 
+
+});
