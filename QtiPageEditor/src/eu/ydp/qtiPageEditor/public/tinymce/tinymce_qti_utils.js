@@ -192,6 +192,12 @@ function actionOnQTI(e) {
 					runDraggable(selectedNode);
 					break;
 				}
+
+				// Selection
+				if (selectedNode.nodeName == 'DIV' && selectedNode.id == 'selectionInteraction') {
+					runSelection(selectedNode);
+					break;
+				}
 				
 				// Order
 				if (selectedNode.id == 'orderOption' || (selectedNode.id == 'choiceInteraction' && selectedNode.parentNode.id == 'orderInteraction')) {
@@ -547,6 +553,98 @@ function runDraggable(selectedNode) {
 	data.fd = fd;
 	tinyMCE.selectedNode = selectedNode;
 	tinyMCE.execCommand('mceDraggable', false, data);
+
+}
+
+// Selection
+function runSelection(selectedNode) {
+
+	var ed = tinymce.EditorManager.activeEditor;
+	var choices = new Array();
+	var answers = new Array();
+	var ids_ch = new Array();
+	var ids_ans = new Array();
+	var fixed_ch = new Array();
+	var fixed_ans = new Array();
+	var fdb = new Array();
+	var question = '';
+	var data = {};
+
+	var sectionDiv = selectedNode;
+	while(sectionDiv.nodeName != 'DIV') {
+		sectionDiv = sectionDiv.parentNode;
+	}
+	var selectionSectionHTML = sectionDiv.innerHTML;
+	if(sectionDiv.previousSibling.nodeName == "P") {
+		var identifier = sectionDiv.previousSibling.innerHTML.match(/<selectionInteraction responseIdentifier="([^"]+)"[^>]*>/i);
+		var shuffle = sectionDiv.previousSibling.innerHTML.match(/<selectionInteraction.*?shuffle="([^"]*)"[^>]*>/i);
+	} else {
+		var identifier = sectionDiv.previousSibling.data.match(/<selectionInteraction responseIdentifier="([^"]+)"[^>]*>/i);
+		var shuffle = sectionDiv.previousSibling.data.match(/<selectionInteraction.*?shuffle="([^"]*)"[^>]*>/i);
+	}
+
+	var question = selectionSectionHTML.match(/<p id="choiceInteraction">(.*?)<\/p>/i);
+
+	var choices_paragraph = selectionSectionHTML.match(/<!-- <simpleChoice identifier="[^"]*"[^>]*>([^<]*)(?:<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?[^<]*<\/simpleChoice>[^<]* --><br[^>]*><input id="choiceInteraction" name="simpleChoice" (checked="checked" )?type="checkbox">(<img[^>]*>|[^<]*)/gi);
+
+	console.log(selectionSectionHTML);
+
+	var answers_paragraph = selectionSectionHTML.match(/<!-- <item identifier="[^"]*"[^>]*>([^<]*)(?:<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?[^<]*<\/item>[^<]* --><li>([^<]*)<\/li>/gi);
+
+	var values_ch = new Array();
+	for (ans in choices_paragraph) {
+		values_ch.push(choices_paragraph[ans].match(/<!-- <simpleChoice identifier="([^"]*)"\s*(?:fixed="([^"]*)")?[^>]*>([^<]*)(?:<feedbackInline[^>]*>([^<]*)<\/feedbackInline>)?[^<]*<\/simpleChoice>[^<]* --><br[^>]*><input id="choiceInteraction" name="simpleChoice" (?:checked="checked" )?type="checkbox">([^<]*)/i));
+	}
+
+	var values_ans = new Array();
+	for (ans in answers_paragraph) {
+		values_ans.push(answers_paragraph[ans].match(/<!-- <item identifier="([^"]*)"\s*(?:fixed="([^"]*)")?[^>]*>([^<]*)<\/item> --><li>([^<]*)<\/li>/i));
+	}
+
+	var i=0;
+	while(values_ch[i] != undefined) {
+		ids_ch.push(values_ch[i][1]);
+		choices.push(values_ch[i][3]);
+		fixed_ch.push(values_ch[i][2]);
+		fdb[values_ch[i][1]] = values_ch[i][4];
+		i++;
+	}
+
+	var i=0;
+	while(values_ans[i] != undefined) {
+		ids_ans.push(values_ans[i][1]);
+		answers.push(values_ans[i][3]);
+		fixed_ans.push(values_ans[i][2]);
+		//fdb[values[i][1]] = values[i][3];
+		i++;
+	}
+
+
+	data.question = question[1];
+	data.choices = choices;
+	data.answers = answers;
+	data.ids_ch = ids_ch;
+	data.ids_ans = ids_ans;
+	data.identifier = identifier[1];
+	data.shuffle = shuffle[1];
+	data.fixed_ch = fixed_ch;
+	data.fixed_ans = fixed_ans;
+	data.fdb = fdb;
+
+	var body = ed.selection.dom.doc.body.innerHTML;
+	rg = new RegExp('<modalFeedback[^>]*senderIdentifier="' + identifier[1] + '"[^>]*identifier="([^"]*)"[^>]*sound="([^"]*)"[^>]*>','gi');
+	var fdArr = body.match(rg);
+	var fd = new Array;
+	if(fdArr != undefined) {
+		for (i in fdArr) {
+			rg = new RegExp('<modalFeedback[^>]*senderIdentifier="' + identifier[1] + '"[^>]*identifier="([^"]*)"[^>]*sound="([^"]*)"[^>]*>','i');
+			var arr = rg.exec(fdArr[i]);
+			fd[arr[1]] = arr[2]
+		}
+	}
+	data.fd = fd;
+	tinyMCE.selectedNode = selectedNode;
+	tinyMCE.execCommand('mceSelection', false, data);
 
 }
 

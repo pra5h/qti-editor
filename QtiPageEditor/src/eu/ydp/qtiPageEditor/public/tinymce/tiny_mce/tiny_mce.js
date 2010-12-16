@@ -1983,7 +1983,25 @@ tinymce.create('static tinymce.util.XHR', {
 				}
 			}
 			h = h.replace(/(<textEntryInteraction[^>]*>[^<]*(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/textEntryInteraction>)(?! -->)/gi, "<!-- $1 --><span id=\"gap\" class=\"mceNonEditable\" style=\"border: 1px solid blue; color: blue; background-color: #f0f0f0;\">$2</span>");
-			
+
+			//Selection support
+			h = h.replace(/(<selectionInteraction[^>]*>)(?! -->)/gi, '<!-- $1 --><div id="selectionInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">');
+			h = h.replace(/<prompt>([^<]*)<\/prompt>(?=\s*<simpleChoice)/gi, '<p id="choiceInteraction">$1</p>');
+			for(var i in answers) {
+				if(answers[i][1] != 'ordered') {
+					for(var j in answers[i][0]) {
+						var simpleChoice = new RegExp('(<simpleChoice identifier="' + answers[i][0][j] + '"[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice>)(?! -->)', "gi");
+						h = h.replace(simpleChoice, '<!-- $1 --><br /><input id="choiceInteraction" name="simpleChoice" type="checkbox" checked="checked" />$2');
+					}
+				}
+			}
+			var sc = new RegExp('(<simpleChoice[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice>)(?! -->)', 'gi');
+			h = h.replace(sc, '<!-- $1 --><br /><input id="choiceInteraction" name="simpleChoice" type="checkbox" />$2');
+			var sc = new RegExp('(<item[^>]*>([^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/item>)(?! -->)', 'gi');
+			h = h.replace(sc, '<!-- $1 --><li>$2</li>');
+			h = h.replace(/<\/selectionInteraction>/gi, '</div><!-- end of selectionInteraction -->');
+
+
 			//Order support
 			h = h.replace(/(<orderInteraction[^>]*>)(?! -->)/gi, '<!-- $1 --><div id="orderInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">');
 			h = h.replace(/<prompt>([^<]*)<\/prompt>(?=\s*<simpleChoice)/gi, '<p id="choiceInteraction">$1</p>');
@@ -6566,7 +6584,14 @@ window.tinymce.dom.Sizzle = Sizzle;
 			
 			// Gaps support
 			h = h.replace(/<!-- (<textEntryInteraction[^>]*>[^<]*(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/textEntryInteraction>) --><span id="gap" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">([^<]*)<\/span>/gi, '<qy:tag name="exercise">$1</qy:tag>');
-			
+
+			//Selection support
+			h = h.replace(/(?:<p>)?<!-- (<selectionInteraction[^>]*>) -->(?:<\/p>)?<div id="selectionInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">/gi, '<qy:tag name="exercise">$1');
+			h = h.replace(/<prompt>([^<]*)<\/prompt>(?=\s*<simpleChoice)/gi, '<p id="choiceInteraction">$1</p>');
+			var sc = new RegExp('<!-- (<item[^>]*>([^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/item>) --><li>[^<]*</li>', 'gi');
+			h = h.replace(sc, '$1');
+			h = h.replace(/<\/div><!-- end of selectionInteraction -->/gi, '</selectionInteraction></qy:tag>');
+
 			//Choices support
 			h = h.replace(/(?:<p>)?<!-- (<choiceInteraction[^>]*>) -->(?:<\/p>)?<div id="choiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">/gi, '<qy:tag name="exercise">$1');
 			h = h.replace(/<p id="choiceInteraction">([^<]*)<\/p>/gi, '<prompt>$1</prompt>');
