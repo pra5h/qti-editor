@@ -18,11 +18,11 @@ function add_answer_row(form) {
 		</td>\n\
 		<input type="hidden" id="id" name="ids[]" value="' + id + '"/>\n\
 		<td width="400px" id="optionsSpans">\n\
-		<span name="optionSpan" style="margin-left: 10px; margin-right: 10px;">\n\
+		<span class="optionSpan" style="margin-left: 10px; margin-right: 10px;">\n\
 		<strong>1.</strong>&nbsp;\n\
 		<input id="point_0" type="radio" value="0" name="points[' + id + ']" style="margin: 0; padding: 0;"/>\n\
 		</span>\n\
-		<span name="optionSpan" style="margin-left: 10px; margin-right: 10px;">\n\
+		<span class="optionSpan" style="margin-left: 10px; margin-right: 10px;">\n\
 		<strong>2.</strong>&nbsp;\n\
 		<input id="point_0" type="radio" value="1" name="points[' + id + ']" style="margin: 0; padding: 0;"/>\n\
 		</span>\n\
@@ -51,9 +51,36 @@ function add_option_row(form) {
 	last = parseInt(last.replace('.',''));
 	var next = last + 1;
 	newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
-	newDiv.innerHTML = '<strong>' + next + '.</strong>&nbsp;<input type="hidden" name="choices_ids[]" value="' + id + '"><input type="text" name="choices[]" value="" id="choice_' + last + '">&nbsp;<input type="button" id="remove_option" name="remove_option" value="Remove" onclick="remove_option_row(this);" />';
+	newDiv.innerHTML = '<strong>' + next + '.</strong>&nbsp;\n\
+		<input type="hidden" name="choices_ids[]" value="' + id + '">\n\
+		<input type="text" name="choices[]" value="" id="choice_' + last + '">&nbsp;\n\
+		<input type="button" id="remove_option" name="remove_option" value="Remove" onclick="remove_option_row(this);" />';
 	document.getElementById('option_list').appendChild(newDiv);
-	
+
+	var optionSpans = document.getElementsByClassName('optionSpan');
+	var ids = new Array();
+	var els = new Array();
+	for(i in optionSpans) {
+		if(optionSpans[i].children != undefined) {
+			var name = optionSpans[i].children[1].getAttribute('name');
+			name = name.match(/points\[([^\]]*)\]/);
+			name = name[1];
+			if(ids[name] == undefined) {
+				ids[name] = id;
+				els[name] = optionSpans[i];
+			}
+		}
+	}
+
+	for(i in els) {
+		var newSpan = document.createElement('span');
+		newSpan.setAttribute('class','optionSpan');
+		newSpan.setAttribute('style','margin-left: 10px; margin-right: 10px;');
+		newSpan.innerHTML = '<strong>' + next + '.</strong>&nbsp;\n\
+			<input id="point_' + last + '" type="radio" value="' + ids[i] + '" name="points[' + i + ']" style="margin: 0; padding: 0;"';
+		els[i].parentNode.appendChild(newSpan);
+	}
+
 }
 
 
@@ -68,6 +95,18 @@ function remove_option_row(row) {
 
 	var div = row.parentNode;
 	div.parentNode.removeChild(div);
+
+	var removedId = div.children[1].getAttribute('value');
+
+	var optionSpans = document.getElementsByClassName('optionSpan');
+	for(i in optionSpans) {
+		if(optionSpans[i] != undefined && optionSpans[i].children != undefined) {
+			var val = optionSpans[i].children[1].getAttribute('value');
+			if(val == removedId) {
+				optionSpans[i].parentNode.removeChild(optionSpans[i]);
+			}
+		}
+	}
 
 }
 

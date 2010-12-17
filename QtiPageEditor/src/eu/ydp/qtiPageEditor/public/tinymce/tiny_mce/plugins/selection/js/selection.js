@@ -57,7 +57,8 @@ var selectionDialog = {
 				}
 				var odp = data.answers[q];
 
-				newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr>\n\
+				var newInnerHTML = '';
+				newInnerHTML = '<table cellpadding=0 cellspacing=0><tr>\n\
 					<td width="260px" style="padding-right: 5px;">\n\
 					<input type="text" id="answer_0" name="answers[]" style="width: 100%; margin-right: 5px;" value="' + odp + '"/>\n\
 					</td>\n\
@@ -65,16 +66,21 @@ var selectionDialog = {
 					<td width="400px" id="optionsSpans">';
 				for(p=0; p<data.choices.length;p++) {
 					var ct = p+1;
-					newDiv.innerHTML += '<span name="optionSpan" style="margin-left: 10px; margin-right: 10px;">\n\
+					newInnerHTML += '<span class="optionSpan" style="margin-left: 10px; margin-right: 10px;">\n\
 						<strong>' + ct + '.</strong>&nbsp;\n\
-						<input id="point_' + p + '" type="radio" value="' + data.ids_ch[p] + '" name="points[' + data.ids_ans[q] + ']" style="margin: 0; padding: 0;"/>\n\
-						</span>\n';
+						<input id="point_' + p + '" type="radio" value="' + data.ids_ch[p] + '" name="points[' + data.ids_ans[q] + ']" style="margin: 0; padding: 0;"';
+					if(data.points[data.ids_ans[q]] == data.ids_ch[p]) {
+						newInnerHTML += ' checked="checked" ';
+					}
+					newInnerHTML += '/></span>';
 				}
-				newDiv.innerHTML += '</td>\n\
+				newInnerHTML += '</td>\n\
 					<td width="50px"><input id="fixed_0" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" ' + fixed + '/></td>\n\
 					<td width="80px"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td>\n\
 					<td width="50px"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr>\n\
 					</table>';
+
+				newDiv.innerHTML = newInnerHTML;
 
 				document.getElementById('answer_list').appendChild(newDiv);
 
@@ -114,7 +120,7 @@ var selectionDialog = {
 			var newDiv = document.createElement('div');
 			newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
 			newDiv.innerHTML = '<strong>1.</strong>&nbsp;\n\
-				<input type="hidden" name="choices_ids[]" value="' + id_0 + '">\n\
+				<input type="hidden" name="choices_ids[]" value="' + id_2 + '">\n\
 				<input type="text" name="choices[]" value="" id="choice_0">&nbsp;\n\
 				<input type="button" id="remove_option" name="remove_option" value="Remove" onclick="remove_option_row(this);" />';
 			document.getElementById('option_list').appendChild(newDiv);
@@ -122,7 +128,7 @@ var selectionDialog = {
 			var newDiv = document.createElement('div');
 			newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
 			newDiv.innerHTML = '<strong>2.</strong>&nbsp;\n\
-				<input type="hidden" name="choices_ids[]" value="' + id_1 + '">\n\
+				<input type="hidden" name="choices_ids[]" value="' + id_3 + '">\n\
 				<input type="text" name="choices[]" value="" id="choice_1">&nbsp;\n\
 				<input type="button" id="remove_option" name="remove_option" value="Remove" onclick="remove_option_row(this);" />';
 			document.getElementById('option_list').appendChild(newDiv);
@@ -147,11 +153,11 @@ var selectionDialog = {
 				</td>\n\
 				<input type="hidden" id="id_0" name="ids[]" value="' + id_0 + '"/>\n\
 				<td width="400px" id="optionsSpans">\n\
-				<span name="optionSpan" style="margin-left: 10px; margin-right: 10px;">\n\
+				<span class="optionSpan" style="margin-left: 10px; margin-right: 10px;">\n\
 				<strong>1.</strong>&nbsp;\n\
 				<input id="point_0" type="radio" value="' + id_2 + '" name="points[' + id_0 + ']" style="margin: 0; padding: 0;"/>\n\
 				</span>\n\
-				<span name="optionSpan" style="margin-left: 10px; margin-right: 10px;">\n\
+				<span class="optionSpan" style="margin-left: 10px; margin-right: 10px;">\n\
 				<strong>2.</strong>&nbsp;\n\
 				<input id="point_0" type="radio" value="' + id_3 + '" name="' + id_0 + '" style="margin: 0; padding: 0;"/>\n\
 				</span>\n\
@@ -170,11 +176,11 @@ var selectionDialog = {
 				</td>\n\
 				<input type="hidden" id="id_1" name="ids[]" value="' + id_1 + '"/>\n\
 				<td width="400px" id="optionsSpans">\n\
-				<span name="optionSpan" style="margin-left: 10px; margin-right: 10px;">\n\
+				<span class="optionSpan" style="margin-left: 10px; margin-right: 10px;">\n\
 				<strong>1.</strong>&nbsp;\n\
 				<input id="point_1" type="radio" value="' + id_2 + '" name="points[' + id_1 + ']" style="margin: 0; padding: 0;"/>\n\
 				</span>\n\
-				<span name="optionSpan" style="margin-left: 10px; margin-right: 10px;">\n\
+				<span class="optionSpan" style="margin-left: 10px; margin-right: 10px;">\n\
 				<strong>2.</strong>&nbsp;\n\
 				<input id="point_1" type="radio" value="' + id_3 + '" name="points[' + id_1 + ']" style="margin: 0; padding: 0;"/>\n\
 				</span>\n\
@@ -255,7 +261,7 @@ var selectionDialog = {
 			}
 			if(element.getAttribute('name') != undefined && element.getAttribute('name').match(/points\[.*/i)) {
 				var mc = element.getAttribute('name').match(/points\[([^\]]*)\]/i);
-				if(skip_point == 0) {
+				if(skip_point == 0 && element.checked === true) {
 					dataobj.points[mc[1]] = element.value;
 				} else {
 					skip_point = 0;
@@ -282,23 +288,23 @@ var selectionDialog = {
 //			return false;
 //		}
 
-		console.log(dataobj.points);
-
 		var responseDeclaration = '';
 
 		if(adding == 1) {
 			var selectionSection = '<p>&nbsp;</p><!-- <selectionInteraction responseIdentifier="' + dataobj.identifier + '" shuffle="' + String(dataobj.shuffle) + '"> --><div id="selectionInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">';
 			selectionSection += '<p id="choiceInteraction">' + dataobj.question + '</p>';
 			responseDeclaration = '<!-- <responseDeclaration identifier="' + dataobj.identifier + '" cardinality="multiple" baseType="integer"><correctResponse>';
+
 			for(i in dataobj.options) {
 				selectionSection += '<!-- <simpleChoice identifier="' + dataobj.options_ids[i] + '"';
 				selectionSection += '>' + dataobj.options[i];
 //				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].text[ids[i]] != undefined) {
 //					selectionSection += '<feedbackInline identifier="' + dataobj.options_ids[i] + '" showHide="show">' + tinyMCE.feedback[identifier].text[ids[i]] + '</feedbackInline>'
 //				}
-				selectionSection += '</simpleChoice> --><br /><input id="choiceInteraction" name="choiceChoice" type="checkbox" ';
+				selectionSection += '</simpleChoice> --><br /><input id="choiceInteraction" name="simpleChoice" type="checkbox" ';
 				selectionSection += '/>' + dataobj.options[i];
 			}
+
 			for(i in dataobj.answers) {
 				selectionSection += '<!-- <item identifier="' + dataobj.ids[i] + '"';
 				if(dataobj.fixed[i] == 1) {
@@ -313,10 +319,12 @@ var selectionDialog = {
 //					selectionSection += 'checked="checked" '
 //				}
 				selectionSection += dataobj.answers[i] + '</li>';
-//				if(dataobj.points[i] == 1) {
-//					responseDeclaration += '<value>' + ids[i] + '</value>';
-//				}
 			}
+
+			for(i in dataobj.points) {
+				responseDeclaration += '<value>' + i + ' ' + dataobj.points[i] + '</value>';
+			}
+
 			responseDeclaration += '</correctResponse></responseDeclaration> -->';
 			selectionSection += '</div><!-- end of selectionInteraction -->';
 			selectionSection += '<p>&nbsp;</p>';
@@ -377,9 +385,10 @@ var selectionDialog = {
 //					selectionSection += 'checked="checked" '
 //				}
 				selectionSection += dataobj.answers[i] + '</li>';
-//				if(dataobj.points[i] == 1) {
-//					responseDeclaration += '<value>' + ids[i] + '</value>';
-//				}
+			}
+
+			for(i in dataobj.points) {
+				responseDeclaration += '<value>' + i + ' ' + dataobj.points[i] + '</value>';
 			}
 
 			nd.innerHTML = selectionSection;

@@ -567,12 +567,17 @@ function runSelection(selectedNode) {
 	var fixed_ch = new Array();
 	var fixed_ans = new Array();
 	var fdb = new Array();
+	var points = new Array();
 	var question = '';
 	var data = {};
 
 	var sectionDiv = selectedNode;
 	while(sectionDiv.nodeName != 'DIV') {
 		sectionDiv = sectionDiv.parentNode;
+	}
+	var body = sectionDiv;
+	while(body.nodeName != 'BODY') {
+		body = body.parentNode;
 	}
 	var selectionSectionHTML = sectionDiv.innerHTML;
 	if(sectionDiv.previousSibling.nodeName == "P") {
@@ -586,8 +591,6 @@ function runSelection(selectedNode) {
 	var question = selectionSectionHTML.match(/<p id="choiceInteraction">(.*?)<\/p>/i);
 
 	var choices_paragraph = selectionSectionHTML.match(/<!-- <simpleChoice identifier="[^"]*"[^>]*>([^<]*)(?:<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?[^<]*<\/simpleChoice>[^<]* --><br[^>]*><input id="choiceInteraction" name="simpleChoice" (checked="checked" )?type="checkbox">(<img[^>]*>|[^<]*)/gi);
-
-	console.log(selectionSectionHTML);
 
 	var answers_paragraph = selectionSectionHTML.match(/<!-- <item identifier="[^"]*"[^>]*>([^<]*)(?:<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?[^<]*<\/item>[^<]* --><li>([^<]*)<\/li>/gi);
 
@@ -619,6 +622,16 @@ function runSelection(selectedNode) {
 		i++;
 	}
 
+	var rg = new RegExp('<responseDeclaration identifier="' + identifier[1] + '"[^>]*>[^<]*<correctResponse>[^<]*(?:[^<]*<value>[^<]*</value>[^<]*)*</correctResponse>[^<]*</responseDeclaration>','gi');
+	var pointsSection = rg.exec(body.innerHTML);
+	pointsSection = pointsSection[0];
+	var valuesSection = pointsSection.match(/<value>([^<]*)<\/value>/gi);
+	for (sec in valuesSection) {
+		var rs = valuesSection[sec].match(/<value>([^<]*)<\/value>/i);
+		rs = rs[1];
+		rs = rs.split(' ');
+		points[rs[0]] = rs[1];
+	}
 
 	data.question = question[1];
 	data.choices = choices;
@@ -630,6 +643,7 @@ function runSelection(selectedNode) {
 	data.fixed_ch = fixed_ch;
 	data.fixed_ans = fixed_ans;
 	data.fdb = fdb;
+	data.points = points;
 
 	var body = ed.selection.dom.doc.body.innerHTML;
 	rg = new RegExp('<modalFeedback[^>]*senderIdentifier="' + identifier[1] + '"[^>]*identifier="([^"]*)"[^>]*sound="([^"]*)"[^>]*>','gi');
