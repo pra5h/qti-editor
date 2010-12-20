@@ -441,16 +441,16 @@ function runMultipleChoice(selectedNode) {
 		var shuffle = sectionDiv.previousSibling.data.match(/<choiceInteraction.*?shuffle="([^"]*)"[^>]*>/i);
 		var maxChoices = sectionDiv.previousSibling.data.match(/<choiceInteraction.*?maxChoices="([^"]*)"[^>]*>/i);
 	}
-	var answers_paragraph = choiceSectionHTML.match(/<!-- <simpleChoice identifier="[^"]*"[^>]*>([^<]*|<img[^>]*>)[^<]*(?:<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?[^<]*<\/simpleChoice>[^<]* --><br[^>]*><input id="choiceInteraction" name="simpleChoice" (checked="checked" )?type="checkbox">(<img[^>]*>|[^<]*)/gi);
+	var answers_paragraph = choiceSectionHTML.match(/<!-- <simpleChoice identifier="[^"]*"[^>]*>([^<]*|<img[^>]*>)[^<]*(?:<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?[^<]*<\/simpleChoice>[^<]* --><br[^>]*><input id="choiceInteraction" name="simpleChoice"[\s]*(?:type="checkbox")?[\s]*(checked="checked")?[\s]*(?:type="checkbox")?>(<img[^>]*>|[^<]*)/gi);
 	var values = new Array();
 	for (ans in answers_paragraph) {
-		values.push(answers_paragraph[ans].match(/<!-- <simpleChoice identifier="([^"]*)"\s*(?:fixed="([^"]*)")?[^>]*>(?:[^<]*|<img[^>]*>)[^<]*(?:<feedbackInline[^>]*>([^<]*)<\/feedbackInline>)?[^<]*<\/simpleChoice>[^<]* --><br[^>]*><input id="choiceInteraction" name="simpleChoice" (checked="checked" )?type="checkbox">(<img[^>]*>|[^<]*)/i));
+		values.push(answers_paragraph[ans].match(/<!-- <simpleChoice identifier="([^"]*)"\s*(?:fixed="([^"]*)")?[^>]*>(?:[^<]*|<img[^>]*>)[^<]*(?:<feedbackInline[^>]*>([^<]*)<\/feedbackInline>)?[^<]*<\/simpleChoice>[^<]* --><br[^>]*><input id="choiceInteraction" name="simpleChoice"[\s]*(?:type="checkbox")?[\s]*(checked="checked")?[\s]*(?:type="checkbox")?>(<img[^>]*>|[^<]*)/i));
 	}
 	var i=0;
 	while(values[i] != undefined) {
 		ids.push(values[i][1]);
 		answers.push(values[i][5]);
-		if(values[i][4] == 'checked="checked" ') {
+		if(values[i][4] == 'checked="checked"') {
 			points.push('1');
 		} else {
 			points.push('0');
