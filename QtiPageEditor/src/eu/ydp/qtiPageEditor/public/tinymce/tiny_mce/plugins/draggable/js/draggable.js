@@ -153,7 +153,7 @@ var draggableDialog = {
 		}
 
 		if(adding == 1) {
-			var responseDeclaration = '<!-- <responseDeclaration identifier="' + identifier + '" cardinality="single" baseType="identifier"><correctResponse>';
+			var responseDeclaration = '<!-- <responseDeclaration identifier="' + identifier + '" cardinality="commutative" baseType="identifier"><correctResponse>';
 			var draggableSection = '<p>&nbsp;</p><!-- <dragDropInteraction responseIdentifier="' + identifier + '" shuffle="' + String(shuffle) + '"> --><div id="dragDropInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">';
 			draggableSection += '<!-- <contents> --><p id="dragDropInteractionContents">' + contents;
 
