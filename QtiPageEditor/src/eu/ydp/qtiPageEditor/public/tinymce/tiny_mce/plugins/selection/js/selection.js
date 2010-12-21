@@ -57,8 +57,7 @@ var selectionDialog = {
 				}
 				var odp = data.answers[q];
 
-				var newInnerHTML = '';
-				newInnerHTML = '<table cellpadding=0 cellspacing=0><tr>\n\
+				var newInnerHTML = '<table cellpadding=0 cellspacing=0><tr>\n\
 					<td width="260px" style="padding-right: 5px;">\n\
 					<input type="text" id="answer_0" name="answers[]" style="width: 100%; margin-right: 5px;" value="' + odp + '"/>\n\
 					</td>\n\
@@ -159,7 +158,7 @@ var selectionDialog = {
 				</span>\n\
 				<span class="optionSpan" style="margin-left: 10px; margin-right: 10px;">\n\
 				<strong>2.</strong>&nbsp;\n\
-				<input id="point_0" type="radio" value="' + id_3 + '" name="' + id_0 + '" style="margin: 0; padding: 0;"/>\n\
+				<input id="point_0" type="radio" value="' + id_3 + '" name="points[' + id_0 + ']" style="margin: 0; padding: 0;"/>\n\
 				</span>\n\
 				</td>\n\
 				<td width="50px"><input id="fixed_0" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" /></td>\n\

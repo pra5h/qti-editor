@@ -9,28 +9,36 @@ function add_answer_row(form) {
 	while(form.nodeName != 'FORM') {
 		form = form.parentNode;
 	}
-	
+
+	var optionList = new Array();
+	var optionsDiv = document.getElementById('option_list');
+	for(var i in optionsDiv.children) {
+		if(optionsDiv.children[i] != undefined && optionsDiv.children[i].nodeName == 'DIV') {
+			optionList.push(optionsDiv.children[i].children[1].value);
+		}
+	}
+
 	var newDiv = document.createElement('div');
 	newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
-	newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr>\n\
+	var newInnerHTML = '<table cellpadding=0 cellspacing=0><tr>\n\
 		<td width="260px" style="padding-right: 5px;">\n\
 		<input type="text" id="answer" name="answers[]" style="width: 100%; margin-right: 5px;" value=""/>\n\
 		</td>\n\
 		<input type="hidden" id="id" name="ids[]" value="' + id + '"/>\n\
-		<td width="400px" id="optionsSpans">\n\
-		<span class="optionSpan" style="margin-left: 10px; margin-right: 10px;">\n\
-		<strong>1.</strong>&nbsp;\n\
-		<input id="point_0" type="radio" value="0" name="points[' + id + ']" style="margin: 0; padding: 0;"/>\n\
-		</span>\n\
-		<span class="optionSpan" style="margin-left: 10px; margin-right: 10px;">\n\
-		<strong>2.</strong>&nbsp;\n\
-		<input id="point_0" type="radio" value="1" name="points[' + id + ']" style="margin: 0; padding: 0;"/>\n\
-		</span>\n\
-		</td>\n\
+		<td width="400px" id="optionsSpans">';
+	for(var i in optionList) {
+		var lp = parseInt(i) + 1;
+		newInnerHTML += '<span class="optionSpan" style="margin-left: 10px; margin-right: 10px;">\n\
+		<strong>' + lp + '.</strong>&nbsp;\n\
+		<input id="point_' + i + '" type="radio" value="' + optionList[i] + '" name="points[' + id + ']" style="margin: 0; padding: 0;"/>\n\
+		</span>\n';
+	}
+		newInnerHTML += '</td>\n\
 		<td width="50px"><input id="fixed_0" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" /></td>\n\
 		<td width="80px"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td>\n\
 		<td width="50px"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr>\n\
 		</table>';
+	newDiv.innerHTML = newInnerHTML;
 	document.getElementById('answer_list').appendChild(newDiv);
 }
 
