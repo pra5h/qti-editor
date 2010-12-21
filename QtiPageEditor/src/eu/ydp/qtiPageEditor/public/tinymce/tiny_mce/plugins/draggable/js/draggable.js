@@ -9,7 +9,8 @@ var draggableDialog = {
 
 		if(data != undefined && data.contents != undefined) {
 
-			var value = data.contents.replace(/<!-- <slot>(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/slot> --><span id="mgap"[^>]*>[^<]*<\/span>/gi, '\[slot\]');
+			var it = 0;
+			var value = data.contents.replace(/<!-- <slot>(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/slot> --><span id="mgap"[^>]*>[^<]*<\/span>/gi, function() { return '\[slot #' + ++it + '\]'});
 
 			f.contents.value = value;
 		}
@@ -41,7 +42,9 @@ var draggableDialog = {
 				}
 				var odp = data.slots[q];
 				
-				newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td width="260px" style="padding-right: 5px;"><input type="text" id="answer_' + q + '" name="slots[]" style="width: 100%; margin-right: 5px;" value="' + odp + '"/></td><input type="hidden" id="id_' + q + '" name="ids[]" value="' + data.ids[q] + '"/><td width="50px"><input id="fixed_' + q + '" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" ' + fixed + '/></td><td width="80px"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td width="50px"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr></table>';
+				var qc = q + 1;
+
+				newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td width="200px" style="padding-right: 5px;"><input type="text" id="answer_' + q + '" name="slots[]" style="width: 100%; margin-right: 5px;" value="' + odp + '"/></td><input type="hidden" id="id_' + q + '" name="ids[]" value="' + data.ids[q] + '"/><td width="50px"><input id="fixed_' + q + '" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" ' + fixed + '/></td><td width="80px"><input type="button" id="add_slot_' + qc + '" class="apply_slot" name="add_slot" value="Add" onclick="apply_slot(' + qc + ');" /></td><td width="80px"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td width="50px"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr></table>';
 				
 				document.getElementById('slots_list').appendChild(newDiv);
 				
@@ -80,12 +83,12 @@ var draggableDialog = {
 			
 			var newDiv = document.createElement('div');
 			newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
-			newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td width="260px" style="padding-right: 5px;"><input type="text" id="answer_0" name="slots[]" style="width: 100%; margin-right: 5px;" value=""/></td><input type="hidden" id="id_0" name="ids[]" value="' + id_0 + '"/><td width="50px"><input id="fixed_0" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" /></td><td width="80px"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td width="50px"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr></table>';
+			newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td width="200px" style="padding-right: 5px;"><input type="text" id="answer_0" name="slots[]" style="width: 100%; margin-right: 5px;" value=""/></td><input type="hidden" id="id_0" name="ids[]" value="' + id_0 + '"/><td width="50px"><input id="fixed_0" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" /></td><td width="80px"><input type="button" id="add_slot_1" class="apply_slot" name="add_slot" value="Add" onclick="apply_slot(1);" /></td><td width="80px"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td width="50px"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr></table>';
 			document.getElementById('slots_list').appendChild(newDiv);
 			
 			var newDiv = document.createElement('div');
 			newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
-			newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td width="260px" style="padding-right: 5px;"><input type="text" id="answer_1" name="slots[]" style="width: 100%; margin-right: 5px;" value=""/></td><input type="hidden" id="id_1" name="ids[]" value="' + id_1 + '"/><td width="50px"><input id="fixed_1" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" /></td><td width="80px"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td width="50px"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr></table>';
+			newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td width="200px" style="padding-right: 5px;"><input type="text" id="answer_1" name="slots[]" style="width: 100%; margin-right: 5px;" value=""/></td><input type="hidden" id="id_1" name="ids[]" value="' + id_1 + '"/><td width="50px"><input id="fixed_1" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" /></td><td width="80px"><input type="button" id="add_slot_2" class="apply_slot" name="add_slot" value="Add" onclick="apply_slot(2);" /></td><td width="80px"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td width="50px"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr></table>';
 			document.getElementById('slots_list').appendChild(newDiv);
 			
 			var removeButton = document.getElementById('remove_button');

@@ -501,6 +501,12 @@ function runDraggable(selectedNode) {
 	while(sectionDiv.nodeName != 'DIV') {
 		sectionDiv = sectionDiv.parentNode;
 	}
+
+	var body = sectionDiv;
+	while(body.nodeName != 'BODY') {
+		body = body.parentNode;
+	}
+	
 	var draggableSectionHTML = sectionDiv.innerHTML;
 	var contents = draggableSectionHTML.match(/<!-- <contents> --><p id="dragDropInteractionContents">(.*?)<\/p><!-- <\/contents> -->/i);
 	if(sectionDiv.previousSibling.nodeName == "P") {
@@ -521,15 +527,20 @@ function runDraggable(selectedNode) {
 	while(values[i] != undefined) {
 		ids.push(values[i][1]);
 		slots.push(values[i][3]);
-//		if(values[i][4] == 'checked="checked" ') {
-//			points.push('1');
-//		} else {
-//			points.push('0');
-//		}
 		fixed.push(values[i][2]);
 		//fdb[values[i][1]] = values[i][3];
 		i++;
 	}
+
+	var rg = new RegExp('<responseDeclaration identifier="' + identifier[1] + '"[^>]*>[^<]*<correctResponse>[^<]*(?:[^<]*<value>[^<]*</value>[^<]*)*</correctResponse>[^<]*</responseDeclaration>','gi');
+	var pointsSection = rg.exec(body.innerHTML);
+	pointsSection = pointsSection[0];
+	var valuesSection = pointsSection.match(/<value>([^<]*)<\/value>/gi);
+	for (sec in valuesSection) {
+		var rs = valuesSection[sec].match(/<value>([^<]*)<\/value>/i);
+		points[sec] = rs[1];
+	}
+
 	data.contents = contents[1];
 	data.slots = slots;
 	data.points = points;

@@ -1,3 +1,12 @@
+function apply_slot(lp) {
+	
+	var contents = document.getElementById('contents');
+	var before = contents.value.substring(0,contents.selectionStart);
+	var after = contents.value.substring(contents.selectionEnd);
+	contents.value = before + '[slot #' + lp + ']' + after;
+
+}
+
 function add_slot_row(form) {
 
 	var randid = Math.random();
@@ -10,15 +19,19 @@ function add_slot_row(form) {
 		form = form.parentNode;
 	}
 	
-//	if(form.multiple.checked == true) {
-//		var type = 'checkbox';
-//	} else {
-//		var type = 'radio';
-//	}
-	
+	var apply_slots = document.getElementsByClassName('apply_slot');
+	if(apply_slots.length > 0) {
+		var lastIdx = apply_slots.length - 1;
+		var lp = apply_slots[lastIdx].id;
+		lp = lp.split('_');
+		lp = parseInt(lp[2]) + 1;
+	} else {
+		lp = 1;
+	}
+
 	var newDiv = document.createElement('div');
 	newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
-	newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td width="260px" style="padding-right: 5px;"><input type="text" id="" name="slots[]" style="width: 100%; margin-right: 5px;" /></td><input type="hidden" id="id_" name="ids[]" value="' + id + '"/><td width="50px"><input id="" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" /></td><td width="80px"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td width="50px"><img src="img/feedback.png" onclick="feedback(this);"/></td></tr></table>';
+	newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td width="200px" style="padding-right: 5px;"><input type="text" id="" name="slots[]" style="width: 100%; margin-right: 5px;" /></td><input type="hidden" id="id_" name="ids[]" value="' + id + '"/><td width="50px"><input id="" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" /></td><td width="80px"><input type="button" id="add_slot_' + lp + '" class="apply_slot" name="add_slot" value="Add" onclick="apply_slot(' + lp + ');" /></td><td width="80px"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td width="50px"><img src="img/feedback.png" onclick="feedback(this);"/></td></tr></table>';
 	document.getElementById('slots_list').appendChild(newDiv);
 	
 }

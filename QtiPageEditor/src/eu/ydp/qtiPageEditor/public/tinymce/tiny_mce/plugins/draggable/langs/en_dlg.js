@@ -14,7 +14,8 @@ tinyMCE.addI18n('en.draggable_dlg',{
 	slot_points:"Correct",
 	slot_fixed:"Fixed",
 	add_slot_button:"Add slot",
-	remove_slot_button:"Remove"
+	remove_slot_button:"Remove",
+	add_slot_button:"Apply slot"
 });
 
 tinyMCE.addI18n('en.feedback_dlg',{
