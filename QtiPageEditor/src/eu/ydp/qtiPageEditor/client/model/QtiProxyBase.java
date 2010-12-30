@@ -23,7 +23,7 @@ public class QtiProxyBase extends Proxy {
 	/**
 	 * Save request from saveQueue are executed with defined timeout 
 	 */
-	protected int saveTimeout = 250;
+	protected int saveTimeout = 500;
 	
 	public QtiProxyBase(String name, Object data) {
 		super(name, data);
