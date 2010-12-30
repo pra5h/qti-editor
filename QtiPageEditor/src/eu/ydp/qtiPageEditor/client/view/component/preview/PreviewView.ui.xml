@@ -5,17 +5,7 @@
 		
 		.main{
 			padding: 4px;			
-		}
-	
-		.playerContainer{
-			width: 600px; 
-			height: 450px;	
-			overflow: auto;		
-		}
-		
-		.playerContainer2{ 
-			overflow: scroll;
-		}
+		}	
 		
 		.buttonPanel{			
 			padding-top:8px;
@@ -24,7 +14,7 @@
 		
 	</ui:style>
 	<g:HTMLPanel styleName="{style.main}">
-		<g:ScrollPanel width ="600px" height="450px">
+		<g:ScrollPanel ui:field="_scrollPanel">
 			<g:FlowPanel ui:field="_playerContainer">
 			</g:FlowPanel>
 		</g:ScrollPanel>
