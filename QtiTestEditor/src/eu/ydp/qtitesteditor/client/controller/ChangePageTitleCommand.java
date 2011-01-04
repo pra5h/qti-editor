@@ -9,14 +9,13 @@ public class ChangePageTitleCommand extends SimpleCommand {
 	@Override
 	public void execute(INotification notification) {
 		String newTitle = (String)notification.getBody();
-		QTIPageModelProxy pmp = (QTIPageModelProxy)getFacade().retrieveProxy(QTIPageModelProxy.NAME);
-		int pageIndex = pmp.getSelectedIndex();		
-		
-		pmp.getPage(pageIndex).setTitle(newTitle);
-		pmp.save(pageIndex);
-		
-		
-		
+		if(notification.getType() != "noSave"){
+			QTIPageModelProxy pmp = (QTIPageModelProxy)getFacade().retrieveProxy(QTIPageModelProxy.NAME);
+			int pageIndex = pmp.getSelectedIndex();		
+			
+			pmp.getPage(pageIndex).setTitle(newTitle);
+			pmp.save(pageIndex);
+		}	
 	}
 
 }
