@@ -1984,6 +1984,23 @@ tinymce.create('static tinymce.util.XHR', {
 			}
 			h = h.replace(/(<textEntryInteraction[^>]*>[^<]*(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/textEntryInteraction>)(?! -->)/gi, "<!-- $1 --><span id=\"gap\" class=\"mceNonEditable\" style=\"border: 1px solid blue; color: blue; background-color: #f0f0f0;\">$2</span>");
 
+			//Order support
+			h = h.replace(/(<orderInteraction[^>]*>)(?! -->)/gi, '<!-- $1 --><div id="orderInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">');
+			h = h.replace(/<prompt>([^<]*)<\/prompt>(?=\s*<simpleChoice)/gi, '<p id="choiceInteraction">$1</p>');
+			for(var i in answers) {
+				if(answers[i][1] == 'ordered') {
+					for(var j in answers[i][0]) {
+						var idj = parseInt(j);
+						idj++;
+						var simpleChoice = new RegExp('(<simpleChoice identifier="' + answers[i][0][j] + '"[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)<\/simpleChoice>)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?[^<]*(?! -->)', "gi");
+						h = h.replace(simpleChoice, '<!-- $1 --><div id="orderOption" name="' + idj + '" style="border: 1px solid green; margin: 2px;">$2</div><!-- $3 -->');
+					}
+					//h = h.replace(sc, '<!-- $1 --><br /><span id="simpleChoice" name="simpleChoice" style="border: 1px dotted blue;">$2</span>');
+					//var sc = new RegExp('(<simpleChoice[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)<\/simpleChoice>)(?! -->)','gi');
+				}
+			}
+			h = h.replace(/<\/orderInteraction>/gi, '</div><!-- end of orderInteraction -->');
+
 			//Selection support
 			h = h.replace(/(<selectionInteraction[^>]*>)(?! -->)/gi, '<!-- $1 --><div id="selectionInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">');
 			h = h.replace(/<prompt>([^<]*)<\/prompt>(?=\s*<simpleChoice)/gi, '<p id="choiceInteraction">$1</p>');
@@ -2002,23 +2019,6 @@ tinymce.create('static tinymce.util.XHR', {
 			h = h.replace(/<\/selectionInteraction>/gi, '</div><!-- end of selectionInteraction -->');
 
 
-			//Order support
-			h = h.replace(/(<orderInteraction[^>]*>)(?! -->)/gi, '<!-- $1 --><div id="orderInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">');
-			h = h.replace(/<prompt>([^<]*)<\/prompt>(?=\s*<simpleChoice)/gi, '<p id="choiceInteraction">$1</p>');
-			for(var i in answers) {
-				if(answers[i][1] == 'ordered') {
-					for(var j in answers[i][0]) {
-						var idj = parseInt(j);
-						idj++;
-						var simpleChoice = new RegExp('(<simpleChoice identifier="' + answers[i][0][j] + '"[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)<\/simpleChoice>)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?[^<]*(?! -->)', "gi");
-						h = h.replace(simpleChoice, '<!-- $1 --><div id="orderOption" name="' + idj + '" style="border: 1px solid green; margin: 2px;">$2</div><!-- $3 -->');
-					}
-					//h = h.replace(sc, '<!-- $1 --><br /><span id="simpleChoice" name="simpleChoice" style="border: 1px dotted blue;">$2</span>');
-					//var sc = new RegExp('(<simpleChoice[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)<\/simpleChoice>)(?! -->)','gi');
-				}
-			}
-			h = h.replace(/<\/orderInteraction>/gi, '</div><!-- end of orderInteraction -->');
-			
 			//Choices support
 			h = h.replace(/(<choiceInteraction[^>]*>)(?! -->)/gi, '<!-- $1 --><div id="choiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">');
 			h = h.replace(/<prompt>([^<]*)<\/prompt>(?=\s*<simpleChoice)/gi, '<p id="choiceInteraction">$1</p>');
@@ -2089,6 +2089,8 @@ tinymce.create('static tinymce.util.XHR', {
 			h = h.replace(/(<\/simpleMatchSet>)(?! -->)/gi, '<!-- $1 --></tbody></table></td>');
 			h = h.replace(/(<!-- <\/simpleMatchSet> --><\/tbody><\/table><\/td>)[^<]*(<!-- <simpleMatchSet> --><td[^>]*>)/gi, '$1<td id="canvas_td" width="200px" style="border: none;"><canvas id="canvas" width="200px" style="border: 1px solid blue;"></canvas></td>$2');
 			h = h.replace(/(<\/matchInteraction>)(?! -->)/gi, '</tr></tbody></table></div><!-- end of matchInteraction -->');
+
+			h = h.replace(/(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)(?! -->)/gi,'<!-- $1 -->');
 
 			//Modal feedbacks
 			h = h.replace(/(<modalFeedback[^>]*>[^<]*<\/modalFeedback>)/gi, '<!-- $1 -->');
