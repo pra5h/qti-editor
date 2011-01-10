@@ -2115,6 +2115,13 @@ tinymce.create('static tinymce.util.XHR', {
 			return h;
 			
 		},
+
+		processEmbeds : function(h) {
+
+			//h = h.replace(/(<embed src="[^"]*" href="[^"]*" autostart="false" type="video\/mp4" target="myself" scale="1" id=""\/>)/gi,'<!-- $1 -->');
+
+			return h;
+		},
 		
 		setCanvasParams : function() {
 			
@@ -2186,6 +2193,7 @@ tinymce.create('static tinymce.util.XHR', {
 					basePagePath = basePagePath.join('/');
 					basePagePath += '/';
 					h = h.replace(/src="([^"]*media[^"]*)"/gi, 'src="' + basePagePath + '$1"');
+					h = h.replace(/href="([^"]*media[^"]*)"/gi, 'href="' + basePagePath + '$1"');
 					
 				} 
 				
@@ -2213,6 +2221,7 @@ tinymce.create('static tinymce.util.XHR', {
 				h = this.processQTI(h);
 				h = this.processQYComments(h);
 				h = this.processPlayPause(h);
+				h = this.processEmbeds(h);
 			}
 			
 			// Convert strong and em to b and i in FF since it can't handle them
@@ -6693,6 +6702,8 @@ window.tinymce.dom.Sizzle = Sizzle;
 				basePagePath += '/';
 				var rg = new RegExp('src="(' + basePagePath + ')*([^"]*)"', 'gi');
 				h = h.replace(rg, 'src="$2"');
+				var rg = new RegExp('href="(' + basePagePath + ')*([^"]*)"', 'gi');
+				h = h.replace(rg, 'href="$2"');
 				
 			} 
 			
