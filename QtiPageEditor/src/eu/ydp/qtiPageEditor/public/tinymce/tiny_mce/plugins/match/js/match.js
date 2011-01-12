@@ -3,7 +3,7 @@ tinyMCEPopup.requireLangPack();
 var matchDialog = {
 
 	imagesElementHeight : 45,
-	textElementHeight : 19,
+	textElementHeight : 45,
 	rightCoordinates : new Array,
 	leftCoordinates : new Array,
 	mouseX : 0,
@@ -65,12 +65,41 @@ var matchDialog = {
 					odp = odp.replace(/^<img src="([^"]*)"[^>]*\/?>$/, '$1');
 					src = odp.split('/');
 					src = src[src.length - 1];
-					newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td width="70px"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td width="50px" align="center"><input id="fixed_left_' + q + '" type="checkbox" name="fixed_left[]" style="margin: 0; padding: 0;" ' + fixed + '/></td><td width="200px" style="" align="right"><input type="hidden" id="id_left_' + q + '" name="ids_left[]" value="' + data[4][q] + '"/><input type="hidden" id="answer_left_' + q + '" name="answers_left[]" style="" value="' + odp + '"/><div style="width: 80px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;" onclick="tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'' + src + '\',div:this});"><img style="max-height: 40px; max-width: 80px;" src="' + odp + '"/></div></td></tr></table>';
+					var odpfull = '<img src="' + odp + '">';
+					newDiv.innerHTML = '<table cellpadding=0 cellspacing=0>\n\
+						<tr><td width="70px">\n\
+							<input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" />\n\
+						</td><td width="70px">\n\
+							<input type="checkbox" id="switch_image_text_chbx" name="switch_image_text_chbx" onclick="switch_text_images(this, false);" checked="checked"/>\n\
+						</td><td width="50px" align="center">\n\
+							<input id="fixed_left_' + q + '" type="checkbox" name="fixed_left[]" style="margin: 0; padding: 0;" ' + fixed + '/>\n\
+						</td><td width="200px" style="" align="right">\n\
+							<input type="hidden" id="id_left_' + q + '" name="ids_left[]" value="' + data[4][q] + '"/>\n\
+							<div style="width: 120px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;" onclick="tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'' + src + '\',div:this});">\n\
+								<input type="hidden" id="answer_left_' + q + '" name="answers_left[]" style="" value=""/>\n\
+								<img style="max-height: 40px; max-width: 80px;" src="' + odp + '"/>\n\
+							</div>\n\
+						</td></tr></table>';
+					document.getElementById('left_container').appendChild(newDiv);
+					document.getElementById('answer_left_' + q).setAttribute('value', odpfull);
 				} else {
 					f.images.checked = false;
-					newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td width="70px"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td width="50px" align="center"><input id="fixed_left_' + q + '" type="checkbox" name="fixed_left[]" style="margin: 0; padding: 0;" ' + fixed + '/></td><td width="200px" style="" align="right"><input type="hidden" id="id_left_' + q + '" name="ids_left[]" value="' + data[4][q] + '"/><input type="text" id="answer_left_' + q + '" name="answers_left[]" style="width: 100%; margin-right: 5px;" value="' + odp + '"/></td></tr></table>';
+					newDiv.innerHTML = '<table cellpadding=0 cellspacing=0>\n\
+						<tr><td width="70px">\n\
+							<input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" />\n\
+						</td><td width="70px">\n\
+							<input type="checkbox" id="switch_image_text_chbx" name="switch_image_text_chbx" onclick="switch_text_images(this, false);" />\n\
+						</td><td width="50px" align="center">\n\
+							<input id="fixed_left_' + q + '" type="checkbox" name="fixed_left[]" style="margin: 0; padding: 0;" ' + fixed + '/>\n\
+						</td><td width="200px" style="" align="right">\n\
+							<input type="hidden" id="id_left_' + q + '" name="ids_left[]" value="' + data[4][q] + '"/>\n\
+							<div style="width: 120px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;">\n\
+								<input type="text" id="answer_left_' + q + '" name="answers_left[]" style="width: 100%; margin-right: 5px; margin-top: 12px;" value="' + odp + '"/>\n\
+							</div>\n\
+						</td></tr></table>';
+					document.getElementById('left_container').appendChild(newDiv);
 				}
-				document.getElementById('left_container').appendChild(newDiv);
+			
 			}
 		
 		} else {
@@ -94,13 +123,37 @@ var matchDialog = {
 			var newDiv = document.createElement('div');
 			newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
 			newDiv.setAttribute('id', id_0);
-			newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td width="70px"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td width="50px" align="center"><input id="fixed_left_0" type="checkbox" name="fixed_left[]" style="margin: 0; padding: 0;"/></td><td width="200px" style="" align="right"><input type="hidden" id="id_left_0" name="ids_left[]" value="' + id_0 + '"/><input type="text" id="answer_left_0" name="answers_left[]" style="width: 100%; margin-right: 5px;" value=""/></td></tr></table>';
+			newDiv.innerHTML = '<table cellpadding=0 cellspacing=0>\n\
+				<tr><td width="70px">\n\
+					<input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" />\n\
+				</td><td width="70px">\n\
+					<input type="checkbox" id="switch_image_text_chbx" name="switch_image_text_chbx" onclick="switch_text_images(this, false);" />\n\
+				</td><td width="50px" align="center">\n\
+					<input id="fixed_left_0" type="checkbox" name="fixed_left[]" style="margin: 0; padding: 0;"/>\n\
+				</td><td width="200px" style="" align="right">\n\
+					<input type="hidden" id="id_left_0" name="ids_left[]" value="' + id_0 + '"/>\n\
+					<div style="width: 120px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;">\n\
+						<input type="text" id="answer_left_0" name="answers_left[]" style="width: 100%; margin-right: 5px; margin-top: 12px;" value=""/>\n\
+					</div>\n\
+				</td></tr></table>';
 			document.getElementById('left_container').appendChild(newDiv);
 			
 			var newDiv = document.createElement('div');
 			newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
 			newDiv.setAttribute('id', id_1);
-			newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td width="70px"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td width="50px" align="center"><input id="fixed_left_1" type="checkbox" name="fixed_left[]" style="margin: 0; padding: 0;"/></td><td width="200px" style="" align="right"><input type="hidden" id="id_left_1" name="ids_left[]" value="' + id_1 + '"/><input type="text" id="answer_left_1" name="answers_left[]" style="width: 100%; margin-right: 5px;" value=""/></td></tr></table>';
+			newDiv.innerHTML = '<table cellpadding=0 cellspacing=0>\n\
+				<tr><td width="70px">\n\
+					<input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" />\n\
+				</td><td width="70px">\n\
+					<input type="checkbox" id="switch_image_text_chbx" name="switch_image_text_chbx" onclick="switch_text_images(this, false);" />\n\
+				</td><td width="50px" align="center">\n\
+					<input id="fixed_left_1" type="checkbox" name="fixed_left[]" style="margin: 0; padding: 0;"/>\n\
+				</td><td width="200px" style="" align="right">\n\
+					<input type="hidden" id="id_left_1" name="ids_left[]" value="' + id_1 + '"/>\n\
+					<div style="width: 120px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;">\n\
+						<input type="text" id="answer_left_1" name="answers_left[]" style="width: 100%; margin-right: 5px; margin-top: 12px;" value=""/>\n\
+					</div>\n\
+				</td></tr></table>';
 			document.getElementById('left_container').appendChild(newDiv);
 			
 		}
@@ -121,17 +174,46 @@ var matchDialog = {
 					fixed = '';
 				}
 				var odp = data[5][q];
-				if(odp.match(/^<img[^>]*\/>$/i)) {
+				if(odp.match(/^<img[^>]*\/?>$/i)) {
 					f.images.checked = true;
-					odp = odp.replace(/^<img src="([^"]*)"[^>]*\/>$/, '$1');
+					odp = odp.replace(/^<img src="([^"]*)"[^>]*\/?>$/, '$1');
 					src = odp.split('/');
 					src = src[src.length - 1];
-					newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td width="200px" style="" align="left"><input type="hidden" id="id_right_' + q + '" name="ids_right[]" value="' + data[6][q] + '"/><input type="hidden" id="answer_right_' + q + '" name="answers_right[]" style="" value="' + odp + '"/><div style="width: 80px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;" onclick="tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'' + src + '\',div:this});"><img style="max-height: 40px; max-width: 80px;" src="' + odp + '"/></div></td><td width="50px" align="center"><input id="fixed_right_' + q + '" type="checkbox" name="fixed_right[]" style="margin: 0; padding: 0;" ' + fixed + '/></td><td width="70px"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td></tr></table>';
+					var odpfull = '<img src="' + odp + '">';
+					newDiv.innerHTML = '<table cellpadding=0 cellspacing=0>\n\
+						<tr><td width="200px" style="" align="left">\n\
+							<input type="hidden" id="id_right_' + q + '" name="ids_right[]" value="' + data[6][q] + '"/>\n\
+							<div style="width: 120px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;" onclick="tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'' + src + '\',div:this});">\n\
+								<input type="hidden" id="answer_right_' + q + '" name="answers_right[]" style="" value=""/>\n\
+								<img style="max-height: 40px; max-width: 80px;" src="' + odp + '"/>\n\
+							</div>\n\
+						</td><td width="50px" align="center">\n\
+							<input id="fixed_right_' + q + '" type="checkbox" name="fixed_right[]" style="margin: 0; padding: 0;" ' + fixed + '/>\n\
+						</td><td width="70px">\n\
+							<input type="checkbox" id="switch_image_text_chbx" name="switch_image_text_chbx" onclick="switch_text_images(this, false);" checked="checked"/>\n\
+						</td><td width="70px">\n\
+							<input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" />\n\
+						</td></tr></table>';
+					document.getElementById('right_container').appendChild(newDiv);
+					document.getElementById('answer_right_' + q).setAttribute('value', odpfull);
+
 				} else {
 					f.images.checked = false;
-					newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td width="200px" style="" align="left"><input type="hidden" id="id_right_' + q + '" name="ids_right[]" value="' + data[6][q] + '"/><input type="text" id="answer_right_' + q + '" name="answers_right[]" style="width: 100%; margin-right: 15px;" value="' + odp + '"/></td><td width="50px" align="center"><input id="fixed_right_' + q + '" type="checkbox" name="fixed_right[]" style="margin: 0; padding: 0;" ' + fixed + '/></td><td width="70px"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td></tr></table>';
+					newDiv.innerHTML = '<table cellpadding=0 cellspacing=0>\n\
+						<tr><td width="200px" style="" align="left">\n\
+							<input type="hidden" id="id_right_' + q + '" name="ids_right[]" value="' + data[6][q] + '"/>\n\
+							<div style="width: 120px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;">\n\
+								<input type="text" id="answer_right_' + q + '" name="answers_right[]" style="width: 100%; margin-right: 15px; margin-top: 12px;" value="' + odp + '"/>\n\
+							</div>\n\
+						</td><td width="50px" align="center">\n\
+							<input id="fixed_right_' + q + '" type="checkbox" name="fixed_right[]" style="margin: 0; padding: 0;" ' + fixed + '/>\n\
+						</td><td width="70px">\n\
+							<input type="checkbox" id="switch_image_text_chbx" name="switch_image_text_chbx" onclick="switch_text_images(this, false);" />\n\
+						</td><td width="70px">\n\
+							<input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" />\n\
+						</td></tr></table>';
+					document.getElementById('right_container').appendChild(newDiv);
 				}
-				document.getElementById('right_container').appendChild(newDiv);
 			}
 		
 		} else {
@@ -155,13 +237,37 @@ var matchDialog = {
 			var newDiv = document.createElement('div');
 			newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
 			newDiv.setAttribute('id', id_0);
-			newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td width="200px" style="" align="left"><input type="hidden" id="id_right_0" name="ids_right[]" value="' + id_0 + '"/><input type="text" id="answer_right_0" name="answers_right[]" style="width: 100%; margin-right: 15px;" value=""/></td><td width="50px" align="center"><input id="fixed_right_0" type="checkbox" name="fixed_right[]" style="margin: 0; padding: 0;"/></td><td width="70px"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td></tr></table>';
+			newDiv.innerHTML = '<table cellpadding=0 cellspacing=0>\n\
+				<tr><td width="200px" style="" align="left">\n\
+					<input type="hidden" id="id_right_0" name="ids_right[]" value="' + id_0 + '"/>\n\
+					<div style="width: 120px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;">\n\
+						<input type="text" id="answer_right_0" name="answers_right[]" style="width: 100%; margin-right: 15px; margin-top: 12px;" value=""/>\n\
+					</div>\n\
+				</td><td width="50px" align="center">\n\
+					<input id="fixed_right_0" type="checkbox" name="fixed_right[]" style="margin: 0; padding: 0;"/>\n\
+				</td><td width="70px">\n\
+					<input type="checkbox" id="switch_image_text_chbx" name="switch_image_text_chbx" onclick="switch_text_images(this, false);" />\n\
+				</td><td width="70px">\n\
+					<input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" />\n\
+				</td></tr></table>';
 			document.getElementById('right_container').appendChild(newDiv);
 			
 			var newDiv = document.createElement('div');
 			newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
 			newDiv.setAttribute('id', id_1);
-			newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td width="200px" style="" align="left"><input type="hidden" id="id_right_1" name="ids_right[]" value="' + id_1 + '"/><input type="text" id="answer_right_1" name="answers_right[]" style="width: 100%; margin-right: 15px;" value=""/></td><td width="50px" align="center"><input id="fixed_right_1" type="checkbox" name="fixed_right[]" style="margin: 0; padding: 0;"/></td><td width="70px"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td></tr></table>';
+			newDiv.innerHTML = '<table cellpadding=0 cellspacing=0>\n\
+				<tr><td width="200px" style="" align="left">\n\
+					<input type="hidden" id="id_right_1" name="ids_right[]" value="' + id_1 + '"/>\n\
+					<div style="width: 120px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;">\n\
+						<input type="text" id="answer_right_1" name="answers_right[]" style="width: 100%; margin-right: 15px; margin-top: 12px;" value=""/>\n\
+					</div>\n\
+				</td><td width="50px" align="center">\n\
+					<input id="fixed_right_1" type="checkbox" name="fixed_right[]" style="margin: 0; padding: 0;"/>\n\
+				</td><td width="70px">\n\
+					<input type="checkbox" id="switch_image_text_chbx" name="switch_image_text_chbx" onclick="switch_text_images(this, false);" />\n\
+				</td><td width="70px">\n\
+					<input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" />\n\
+				</td></tr></table>';
 			document.getElementById('right_container').appendChild(newDiv);
 			
 		}
@@ -228,11 +334,11 @@ var matchDialog = {
 	// resizing canvas
 	resizeCanvas : function(images, maxElementCount) {
 		
-		if(images) {
+		//if(images) {
 			matchDialog.canvasHeight = matchDialog.imagesElementHeight * maxElementCount;
-		} else {
-			matchDialog.canvasHeight = matchDialog.textElementHeight * maxElementCount;
-		}
+		//} else {
+		//	matchDialog.canvasHeight = matchDialog.textElementHeight * maxElementCount;
+		//}
 		
 		document.getElementById('canvas').setAttribute('height', String(matchDialog.canvasHeight) + 'px');
 		document.getElementById('canvas_temp').setAttribute('height', String(matchDialog.canvasHeight) + 'px');
@@ -252,8 +358,8 @@ var matchDialog = {
 				ctx.fillRect(0, (el * matchDialog.imagesElementHeight) + 20,10,10);
 				matchDialog.leftCoordinates.push( {min: (el * matchDialog.imagesElementHeight)+20, max: (el * matchDialog.imagesElementHeight) + 20 + 10, middle: (el * matchDialog.imagesElementHeight) + 20 + 5} );
 			} else {
-				ctx.fillRect(0, (el * matchDialog.textElementHeight) + 5,10,10);
-				matchDialog.leftCoordinates.push( {min: (el * matchDialog.textElementHeight) + 5, max: (el * matchDialog.textElementHeight) + 5 + 10, middle: (el * matchDialog.textElementHeight) + 5 + 5} );
+				ctx.fillRect(0, (el * matchDialog.textElementHeight) + 20,10,10);
+				matchDialog.leftCoordinates.push( {min: (el * matchDialog.textElementHeight) + 20, max: (el * matchDialog.textElementHeight) + 20 + 10, middle: (el * matchDialog.textElementHeight) + 20 + 5} );
 			}
 			ctx.stroke();
 		}
@@ -265,8 +371,8 @@ var matchDialog = {
 				ctx.fillRect(190, (el * matchDialog.imagesElementHeight) + 20,10,10);
 				matchDialog.rightCoordinates.push( {min: (el * matchDialog.imagesElementHeight) + 20, max: (el * matchDialog.imagesElementHeight) + 20 + 10, middle: (el * matchDialog.imagesElementHeight) + 20 + 5} );
 			} else {
-				ctx.fillRect(190, (el * matchDialog.textElementHeight) + 5,10,10);
-				matchDialog.rightCoordinates.push( {min: (el * matchDialog.textElementHeight) + 5, max: (el * matchDialog.textElementHeight) + 5 + 10, middle: (el * matchDialog.textElementHeight) + 5 + 5} );
+				ctx.fillRect(190, (el * matchDialog.textElementHeight) + 20,10,10);
+				matchDialog.rightCoordinates.push( {min: (el * matchDialog.textElementHeight) + 20, max: (el * matchDialog.textElementHeight) + 20 + 10, middle: (el * matchDialog.textElementHeight) + 20 + 5} );
 			}
 			ctx.stroke();
 		}
@@ -520,9 +626,9 @@ var matchDialog = {
 			if(element.getAttribute('name') == 'shuffle') {
 				shuffle = element.checked;
 			}
-			if(element.getAttribute('name') == 'images') {
-				images = element.checked;
-			}
+//			if(element.getAttribute('name') == 'images') {
+//				images = element.checked;
+//			}
 			if(element.getAttribute('name') == 'answers_left[]') {
 				if(element.value != '') {
 					if(images == true) {
@@ -608,7 +714,7 @@ var matchDialog = {
 			var matchSection = '<p>&nbsp;</p><!-- <matchInteraction responseIdentifier="' + identifier + '" shuffle="' + String(shuffle) + '" maxAssociations="4"> --><div id="matchInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">';
 			matchSection += '<p id="matchInteraction">' + question + '</p><table width="100%" border=0 style="border: none;"><tbody><tr valign="top" style="border: none;">';
 			
-			// rozpoczêcie lewego matchset
+			// rozpoczï¿½cie lewego matchset
 			matchSection += '<!-- <simpleMatchSet> --><td align="center" width="50%" style="border: none;"><table class="mceNonEditable" width="100%" border=0 style="border: none;"><tbody>';
 			for(i in answers_left) {
 				matchSection += '<!-- <simpleAssociableChoice identifier="' + ids_left[i] + '"';
@@ -698,7 +804,7 @@ var matchDialog = {
 			
 			ed.selection.moveToBookmark(bm);
 			
-		// edycja istniej¹cego match
+		// edycja istniejï¿½cego match
 		} else {
 			
 			var ed = tinymce.EditorManager.activeEditor;
@@ -720,7 +826,7 @@ var matchDialog = {
 			
 			matchSection += '<p id="matchInteraction">' + question + '</p><table width="100%" border=0 style="border: none;"><tbody><tr valign="top" style="border: none;">';
 			
-			// rozpoczêcie lewego matchset
+			// rozpoczï¿½cie lewego matchset
 			matchSection += '<!-- <simpleMatchSet> --><td align="center" width="50%" style="border: none;"><table class="mceNonEditable" width="100%" border=0 style="border: none;"><tbody>';
 			for(i in answers_left) {
 				matchSection += '<!-- <simpleAssociableChoice identifier="' + ids_left[i] + '"';

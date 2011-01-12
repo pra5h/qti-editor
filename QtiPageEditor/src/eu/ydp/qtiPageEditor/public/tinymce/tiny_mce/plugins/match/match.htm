@@ -40,10 +40,10 @@
 							{#match_dlg.question_shuffle}
 						</td>
 						<td width="40px" align="right">
-							<input type="checkbox" id="images" name="images" style="margin: 0; padding: 0;" onchange="switch_text_images(this);"/>
+							<input type="checkbox" id="images" name="images" style="display: none;" onchange="switch_text_images(this, true);"/>
 						</td>
 						<td>
-							{#match_dlg.question_images}
+							<!--{#match_dlg.question_images}-->
 						</td>
 					</tr>
 				</table>
@@ -60,6 +60,8 @@
 					<td style="width: 50px;">
 						<div style="width: 100%; font-weight: bold;" align="center">{#match_dlg.remove_answer_button}:</div>
 					</td><td style="width: 50px;">
+						<div style="width: 100%; font-weight: bold;" align="center">{#match_dlg.switch_images_text}:</div>
+					</td><td style="width: 50px;">
 						<div style="width: 100%; font-weight: bold;" align="center">{#match_dlg.answer_fixed}:</div>
 					</td><td style="width: 200px;">
 						<div style="width: 100%; font-weight: bold;" align="center">{#match_dlg.answer_content}:</div>
@@ -75,6 +77,8 @@
 						<div style="width: 100%; font-weight: bold;" align="center">{#match_dlg.answer_content}:</div>
 					</td><td style="width: 50px;">
 						<div style="width: 100%; font-weight: bold;" align="center">{#match_dlg.answer_fixed}:</div>
+					</td><td style="width: 50px;">
+						<div style="width: 100%; font-weight: bold;" align="center">{#match_dlg.switch_images_text}:</div>
 					</td><td style="width: 50px;">
 						<div style="width: 100%; font-weight: bold;" align="center">{#match_dlg.remove_answer_button}:</div>
 					</td>

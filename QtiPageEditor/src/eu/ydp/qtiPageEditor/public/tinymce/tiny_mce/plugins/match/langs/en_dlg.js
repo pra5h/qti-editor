@@ -16,7 +16,8 @@ tinyMCE.addI18n('en.match_dlg',{
 	add_answer_button:"Add element",
 	remove_answer_button:"Remove",
 	connections:"Connections",
-	feedbacks:"Set feedbacks"
+	feedbacks:"Set feedbacks",
+	switch_images_text:"Img/Txt"
 });
 
 tinyMCE.addI18n('en.feedback_dlg',{

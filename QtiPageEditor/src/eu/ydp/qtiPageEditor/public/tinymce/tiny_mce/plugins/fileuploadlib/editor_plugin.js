@@ -94,6 +94,46 @@
 				assetBrowser.browse(browseCallback, extensions);
 			
 			});
+
+			ed.addCommand('mceAppendImageToExerciseMatch', function(ui,data) {
+
+				var browseCallback = {
+
+					onBrowseComplete : function(filePath,title) {
+						var imgSrc = $('#thumb > img').attr('src');
+
+						var fromPath =tinyMCE.gwtProxy.getPageBasePath();
+						fromPath = fromPath.split('/');
+						fromPath.pop();
+						fromPath = fromPath.join('/');
+						filePath = getRelativeFromAbsoute(fromPath, filePath);
+
+						data.div.children[1].setAttribute('src',fromPath + '/' + filePath);
+						data.div.children[0].setAttribute('value','<img src="' + fromPath + '/' + filePath + '">');
+						return true;
+					},
+
+					onBrowseError : function(error) {
+						tinyMCE.activeEditor.windowManager.alert(error);
+						return false;
+					}
+
+				}
+
+				var extensions = [".jpg",".jpeg", ".gif", ".bmp", ".png"];
+
+				var assetBrowser = tinyMCE.gwtProxy.getAssetBrowser();
+
+				if(data.src != undefined && data.src != '') {
+					srcArr = data.src.split('/');
+					fileName = String(srcArr[srcArr.length-1]);
+					assetBrowser.setSelectedFile(fileName);
+				}
+
+				assetBrowser.browse(browseCallback, extensions);
+
+			});
+
 			
 			ed.addCommand('mceAddFeedbackSound', function(ui,data) {
 				
