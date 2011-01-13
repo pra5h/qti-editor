@@ -198,7 +198,7 @@ var choiceDialog = {
 		if(adding == 1) {
 			var choiceSection = '<p>&nbsp;</p><!-- <choiceInteraction responseIdentifier="' + identifier + '" shuffle="' + String(shuffle) + '" maxChoices="' + String(maxChoices) + '"> --><div id="choiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">';
 			choiceSection += '<p id="choiceInteraction">' + question + '</p>';
-			responseDeclaration = '<!-- <responseDeclaration identifier="' + identifier + '" cardinality="single" baseType="identifier"><correctResponse>';
+			responseDeclaration = '<!-- <responseDeclaration identifier="' + identifier + '" cardinality="' + (multiple ? 'multiple' : 'single') + '" baseType="identifier"><correctResponse>';
 			for(i in answers) {
 				choiceSection += '<!-- <simpleChoice identifier="' + ids[i] + '"';
 				if(fixed[i] == 1) {
@@ -291,6 +291,8 @@ var choiceDialog = {
 			}
 			regexp = new RegExp('(<!-- <responseDeclaration identifier="' + identifier + '"[^>]*>[^<]*<correctResponse>)(?:[^<]*<value>[^<]*<\/value>[^<]*)*(<\/correctResponse>[^>]*<\/responseDeclaration> -->)','gi');
 			body.innerHTML = body.innerHTML.replace(regexp, '$1' + responseDeclaration + '$2');
+			regexp = new RegExp('(<!-- <responseDeclaration identifier="' + identifier + '" cardinality=")[^"]*("[^>]*>)','gi');
+			body.innerHTML = body.innerHTML.replace(regexp, '$1' + (multiple ? 'multiple' : 'single') + '$2');
 			
 			ed.selection.moveToBookmark(bm);
 			
