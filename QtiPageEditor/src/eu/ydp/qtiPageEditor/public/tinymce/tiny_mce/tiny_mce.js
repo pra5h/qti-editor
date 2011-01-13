@@ -6871,9 +6871,9 @@ window.tinymce.dom.Sizzle = Sizzle;
 							t.elementName = nn;
 						}
 						ru = t.findRule(nn);
-						console.log(ru);
-						console.log(t);
-						console.log(nn);
+						//console.log(ru);
+						//console.log(t);
+						//console.log(nn);
 						nn = ru.name || nn;
 						closed = s.closed.test(nn);
 
