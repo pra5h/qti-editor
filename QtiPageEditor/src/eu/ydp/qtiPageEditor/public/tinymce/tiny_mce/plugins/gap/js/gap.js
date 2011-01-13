@@ -88,7 +88,7 @@ var gapDialog = {
 				regexp = new RegExp('(<!-- <itemBody> -->)','gi');
 				body.innerHTML = body.innerHTML.replace(regexp, responseDeclaration + '$1');
 				ed.selection.moveToBookmark(bm);
-				
+
 			} else {
 				
 				var archStrResponseDeclaration = '';
