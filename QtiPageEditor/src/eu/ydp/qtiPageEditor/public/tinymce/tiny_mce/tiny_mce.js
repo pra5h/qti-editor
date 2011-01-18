@@ -2078,6 +2078,17 @@ tinymce.create('static tinymce.util.XHR', {
 			}
 			h = h.replace(/(<inlineChoice[^>]*>([^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/inlineChoice>)(?! -->)/gi, '<!-- $1 --><span id="inlineChoiceAnswer" style="display: none;">$2</span>');
 			h = h.replace(/<\/inlineChoiceInteraction>/gi, '</span><!-- end of inlineChoiceInteraction -->');
+
+			//Identification support
+			h = h.replace(/(<identificationInteraction responseIdentifier="[^"]+" shuffle="[^"]+"[^>]*>)(?! -->)/gi, '<!-- $1 --><div id="identificationInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">');
+//			for(var i in answers) {
+//				for(var j in answers[i][0]) {
+//					var inlineChoice = new RegExp('(<inlineChoice identifier="' + answers[i][0][j] + '"[^>]*>([^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/inlineChoice>)(?! -->)', "gi");
+//					h = h.replace(inlineChoice, '<!-- $1 --><span id="inlineChoiceAnswer" style="border: none; color: blue; background-color: #f0f0f0;">$2<span style="color: green; font-weight: bold;"> &raquo;</span></span>');
+//				}
+//			}
+			//h = h.replace(/(<simpleChoice[^>]*>([^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/inlineChoice>)(?! -->)/gi, '<!-- $1 --><span id="inlineChoiceAnswer" style="display: none;">$2</span>');
+			h = h.replace(/<\/identificationInteraction>/gi, '</div><!-- end of identificationInteraction -->');
 			
 			//Match support
 			h = h.replace(/(<matchInteraction[^>]*>)(?! -->)/gi, '<!-- $1 --><div id="matchInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">');
@@ -6623,14 +6634,17 @@ window.tinymce.dom.Sizzle = Sizzle;
 			h = h.replace(/<\/div><!-- end of dragDropInteraction -->/gi,'</dragDropInteraction></qy:tag>');
 
 			//Inline choices support
-			
 			//h = h.replace(/(?:<p>)?<!-- (<inlineChoiceInteraction[^>]*>) -->(?:<\/?p>)?<span id="inlineChoiceInteraction" class="mceNonEditable" style="[^"]*">/gi, '$1');
 			//Previous line replaced with following (bug 37575):
 			h = h.replace(/<!-- (<inlineChoiceInteraction[^>]*>) -->(?:<\/?p>)?<span id="inlineChoiceInteraction" class="mceNonEditable" style="[^"]*">/gi, '<qy:tag name="exercise">$1');
-			
 			h = h.replace(/<!-- (<inlineChoice[^>]*>[^<]*(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/inlineChoice>) --><span id="inlineChoiceAnswer" style="[^"]*">[^<]*(?:<span[^>]*>[^<]*<\/span>)?<\/span>/gi,'$1');
 			h = h.replace(/<\/span>[^<]*(?:<\/p>)?[^<]*<!-- end of inlineChoiceInteraction -->/gi,'</inlineChoiceInteraction></qy:tag>');
-			
+
+			//Identification support
+			h = h.replace(/(?:<p>)?<!-- (<identificationInteraction[^>]*>) -->(?:<\/p>)?<div id="identificationInteraction"[^>]*>/gi, '<qy:tag name="exercise">$1');
+			h = h.replace(/ mce_src="[^"]*"/gi,'');
+			h = h.replace(/<\/div><!-- end of identificationInteraction -->/gi,'</identificationInteraction></qy:tag>');
+
 			//Order support
 			h = h.replace(/(?:<p>)?<!-- (<orderInteraction[^>]*>) -->(?:<\/p>)?<div id="orderInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">/gi, '<qy:tag name="exercise">$1');
 			h = h.replace(/<p id="choiceInteraction">([^<]*)<\/p>/gi, '<prompt>$1</prompt>');

@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>{#identification_dlg.window_title}</title>
+	<script type="text/javascript" src="../../tiny_mce_popup.js"></script>
+	<script type="text/javascript" src="../../utils/mctabs.js"></script>
+	<script type="text/javascript" src="../../utils/form_utils.js"></script>
+	<script type="text/javascript" src="../../../jquery/jquery-1.4.2.min.js"></script>
+	<script type="text/javascript" src="../../../jquery/jquery-ui-1.8.1.custom.min.js"></script>
+	<script type="text/javascript" src="js/utils.js"></script>
+	<script type="text/javascript" src="js/identification.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/identification.css" />
+</head>
+<body style="display:none;">
+<form onsubmit="identificationDialog.insertIdentification(this);" action="#">
+	
+	<div style="border: 1px solid #999999; min-height: 300px;">
+		
+		<div id="validator_errors" style="color: red; font-weight: bold"></div>
+		
+		<fieldset style="margin: 10px;">
+			<legend>{#identification_dlg.question_data}:</legend>
+			<input type="hidden" id="identifier" name="identifier" style="width: 100%;"/>
+			<table width="100%">
+			<tr>
+				<td width="60px">
+					{#identification_dlg.question_shuffle}
+				</td><td width="70px">
+					<input type="checkbox" id="shuffle" name="shuffle" style="margin: 0; padding: 0;"/>
+				</td>
+
+				<td width="100px">
+					{#identification_dlg.max_selections}
+				</td><td width="70px">
+					<input type="text" id="max_selections" name="max_selections" style="margin: 0; padding: 0;" size="5"/>
+				</td>
+
+				<td width="80px">
+					{#identification_dlg.separator}
+				</td><td width="70px">
+					<input type="text" id="separator" name="separator" style="margin: 0; padding: 0;" size="5"/>
+				</td>
+			</tr>
+			</table>
+		</fieldset>
+		
+		<fieldset id="answer_list" style="margin: 10px;">
+			<legend>{#identification_dlg.answers_label}:</legend>
+			<div style="width: 100%; margin: 3px;">
+				<table><tr><td style="width: 240px;">
+					<div style="width: 100%; font-weight: bold;">{#identification_dlg.answer_content}:</div>
+				</td><td style="width: 40px;">
+					<div id="div_points" style="width: 100%; font-weight: bold;">{#identification_dlg.answer_points}:</div>
+				</td><td style="width: 50px;">
+					<div style="width: 100%; font-weight: bold;">{#identification_dlg.answer_fixed}:</div>
+				</td><td style="width: 50px;">
+					<div style="width: 100%; font-weight: bold;">{#identification_dlg.remove_answer_button}:</div>
+				</td><td style="width: 70px;">
+				</td></tr></table>
+			</div>
+			<!-- tutaj appendowane b�d� inputy z init()-->
+		</fieldset>
+		
+		<div align="right" style="width: 100%;">
+		<input type="button" id="add_answer" name="add_answer" value="{#identification_dlg.add_answer_button}" onclick="add_answer_row();" style="
+				border: none; 
+				width: 94px; 
+				height: 25px; 
+				background-attachment:scroll;
+				background-color:transparent;
+				background-image:url(img/buttons.png);
+				background-position:0 -26px;
+				background-repeat:repeat; 
+				margin: 2px;
+				margin-right: 8px;
+				font-weight: bold;
+				padding-bottom: 2px;" />
+		</div>
+		
+	</div>
+
+	<div class="mceActionPanel">
+		<div style="float: left">
+			<input type="button" id="remove_button" name="remove" value="{#identification_dlg.remove}" style="
+				border: none; 
+				width: 94px; 
+				height: 25px; 
+				background-attachment:scroll;
+				background-color:transparent;
+				background-image:url(img/buttons.png);
+				background-position:0 0;
+				background-repeat:repeat; 
+				margin: 2px; 
+				font-weight: bold;
+				padding-bottom: 2px;" 
+			onclick="tinyMCE.execCommand('mceIdentificationRemove');tinyMCEPopup.close();" />
+		</div>
+
+		<div style="float: right">	
+		
+			<input type="submit" id="insert" name="insert" value="{#identification_dlg.modify}" onclick="return validateExercise(document.forms[0]);"/>
+		
+			<input type="button" id="cancel" name="cancel" value="{#cancel}" style="
+				border: none; 
+				width: 94px; 
+				height: 25px; 
+				background-attachment:scroll;
+				background-color:transparent;
+				background-image:url(img/buttons.png);
+				background-position:0 -26px;
+				background-repeat:repeat; 
+				margin: 2px; 
+				font-weight: bold;
+				padding-bottom: 2px;"  
+			onclick="tinyMCEPopup.close();" />
+		</div>
+	</div>
+</form>
+</body>
+</html>

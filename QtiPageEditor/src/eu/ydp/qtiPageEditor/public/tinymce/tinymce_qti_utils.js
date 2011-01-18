@@ -210,7 +210,13 @@ function actionOnQTI(e) {
 					runMatch(selectedNode);
 					break;
 				}
-				
+
+				// Identification
+				if (selectedNode.id == 'identificationInteraction' || selectedNode.id == 'identificationAnswer' || selectedNode.parentNode.id == 'identificationAnswer') {
+					runIdentification(selectedNode);
+					break;
+				}
+
 			}
 			selectedNode = selectedNode.parentNode;
 		}
@@ -731,6 +737,81 @@ function runOrder(selectedNode) {
 	tinyMCE.selectedNode = selectedNode;
 	tinyMCE.execCommand('mceOrder', false, data);
 	
+}
+
+// Identification
+function runIdentification(selectedNode) {
+
+	var ed = tinymce.EditorManager.activeEditor;
+	var answers = new Array();
+	var points = new Array();
+	var ids = new Array();
+	var fixed = new Array();
+	var fdb = new Array();
+	var data = new Array();
+
+	var sectionDiv = selectedNode;
+	while(sectionDiv.nodeName != 'DIV') {
+		sectionDiv = sectionDiv.parentNode;
+	}
+	var choiceSectionHTML = sectionDiv.innerHTML;
+	if(sectionDiv.previousSibling.nodeName == "P") {
+		var identifier = sectionDiv.previousSibling.innerHTML.match(/<identificationInteraction responseIdentifier="([^"]+)"[^>]*>/i);
+		var shuffle = sectionDiv.previousSibling.innerHTML.match(/<identificationInteraction.*?shuffle="([^"]*)"[^>]*>/i);
+		var max_selections = sectionDiv.previousSibling.innerHTML.match(/<identificationInteraction.*?max_selections="([^"]*)"[^>]*>/i);
+		var separator = sectionDiv.previousSibling.innerHTML.match(/<identificationInteraction.*?separator="([^"]*)"[^>]*>/i);
+	} else {
+		var identifier = sectionDiv.previousSibling.data.match(/<identificationInteraction responseIdentifier="([^"]+)"[^>]*>/i);
+		var shuffle = sectionDiv.previousSibling.data.match(/<identificationInteraction.*?shuffle="([^"]*)"[^>]*>/i);
+		var max_selections = sectionDiv.previousSibling.data.match(/<identificationInteraction.*?max_selections="([^"]*)"[^>]*>/i);
+		var separator = sectionDiv.previousSibling.data.match(/<identificationInteraction.*?separator="([^"]*)"[^>]*>/i);
+	}
+	var answers_paragraph = choiceSectionHTML.match(/<!-- <simpleChoice identifier="[^"]*"[^>]*>([^<]*|<img[^>]*>)[^<]*(?:<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?[^<]*<\/simpleChoice>[^<]* --><br[^>]*><input id="choiceInteraction" name="simpleChoice"[\s]*(?:type="checkbox")?[\s]*(checked="checked")?[\s]*(?:type="checkbox")?>(<img[^>]*>|[^<]*)/gi);
+	var values = new Array();
+	for (ans in answers_paragraph) {
+		values.push(answers_paragraph[ans].match(/<!-- <simpleChoice identifier="([^"]*)"\s*(?:fixed="([^"]*)")?[^>]*>(?:[^<]*|<img[^>]*>)[^<]*(?:<feedbackInline[^>]*>([^<]*)<\/feedbackInline>)?[^<]*<\/simpleChoice>[^<]* --><br[^>]*><input id="choiceInteraction" name="simpleChoice"[\s]*(?:type="checkbox")?[\s]*(checked="checked")?[\s]*(?:type="checkbox")?>(<img[^>]*>|[^<]*)/i));
+	}
+	var i=0;
+	while(values[i] != undefined) {
+		ids.push(values[i][1]);
+		answers.push(values[i][5]);
+		if(values[i][4] == 'checked="checked"') {
+			points.push('1');
+		} else {
+			points.push('0');
+		}
+		fixed.push(values[i][2]);
+		fdb[values[i][1]] = values[i][3];
+		i++;
+	}
+
+	data = {};
+	data.answers = answers;
+	data.points = points;
+	data.ids = ids;
+	data.identifier = identifier[1];
+	data.shuffle = shuffle[1];
+	data.fixed = fixed;
+	data.max_selections = max_selections[1];
+	data.separator = separator[1];
+	data.fdb = fdb;
+
+	var body = ed.selection.dom.doc.body.innerHTML;
+	rg = new RegExp('<modalFeedback[^>]*senderIdentifier="' + identifier[1] + '"[^>]*identifier="([^"]*)"[^>]*sound="([^"]*)"[^>]*>','gi');
+	var fdArr = body.match(rg);
+	var fd = new Array;
+	if(fdArr != undefined) {
+		for (i in fdArr) {
+			rg = new RegExp('<modalFeedback[^>]*senderIdentifier="' + identifier[1] + '"[^>]*identifier="([^"]*)"[^>]*sound="([^"]*)"[^>]*>','i');
+			var arr = rg.exec(fdArr[i]);
+			fd[arr[1]] = arr[2]
+		}
+	}
+	data.fd = fd;
+	
+	tinyMCE.selectedNode = selectedNode;
+	tinyMCE.execCommand('mceIdentification', false, data);
+
 }
 
 // Match
