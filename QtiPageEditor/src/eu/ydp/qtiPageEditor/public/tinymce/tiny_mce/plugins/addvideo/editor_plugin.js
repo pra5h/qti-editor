@@ -20,12 +20,12 @@
 						}
 						
 						var fromPath = tinyMCE.gwtProxy.getPageBasePath();
+						var prefix = fromPath.match(/^.*\/webapp\//i);
 						fromPath = fromPath.split('/');
 						fromPath.pop();
 						fromPath = fromPath.join('/');
 						filePath = getRelativeFromAbsoute(fromPath, filePath);
-						
-						var videotag = '<fieldset id="runFileUploadLib" class="mceNonEditable" style="font-size: 10px; font-color: #b0b0b0; color: #b0b0b0; border: 1px solid #d0d0d0;"><embed src="' + fromPath + '/' + filePath + '" href="' + fromPath + '/' + filePath + '" autostart="false" type="video/mp4" target="myself" scale="1"/><br>' + title + '</fieldset>';
+						var videotag = '<fieldset id="runFileUploadLib" class="mceNonEditable" style="font-size: 10px; font-color: #b0b0b0; color: #b0b0b0; border: 1px solid #d0d0d0;"><embed src="' + fromPath + '/' + filePath + '" href="' + fromPath + '/' + filePath + '" autostart="false" type="video/mp4" target="myself" scale="1"/><img id="mceVideo" src="' + prefix[0] + 'tools/qtitesteditor/tinymce/tiny_mce/plugins/addvideo/img/movie.png" /><br>' + title + '</fieldset>';
 						ed.selection.moveToBookmark(ed.selection.getBookmark());
 						tinyMCE.execCommand('mceInsertContent', false, videotag);
 						return true;

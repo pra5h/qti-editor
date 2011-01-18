@@ -2123,15 +2123,24 @@ tinymce.create('static tinymce.util.XHR', {
 		},
 		
 		processPlayPause : function(h) {
-			
-			h = h.replace(/(<audioPlayer[^>]*>)(?! -->)/gi, '<!-- $1 --><img id="mcePlayPause" src="/work/tools/qtitesteditor/tinymce/tiny_mce/plugins/playpause/img/playpause.png" />');
+
+			var fromPath = tinyMCE.gwtProxy.getPageBasePath();
+			if(fromPath == undefined) return h;
+
+			var prefix = fromPath.match(/^.*\/webapp\//i);
+			h = h.replace(/(<audioPlayer[^>]*>)(?! -->)/gi, '<!-- $1 --><img id="mcePlayPause" src="' + prefix[0] + 'tools/qtitesteditor/tinymce/tiny_mce/plugins/playpause/img/playpause.png" />');
+
 			return h;
 			
 		},
 
 		processEmbeds : function(h) {
 
-			//h = h.replace(/(<embed src="[^"]*" href="[^"]*" autostart="false" type="video\/mp4" target="myself" scale="1" id=""\/>)/gi,'<!-- $1 -->');
+			var fromPath = tinyMCE.gwtProxy.getPageBasePath();
+			if(fromPath == undefined) return h;
+			
+			var prefix = fromPath.match(/^.*\/webapp\//i);
+			h = h.replace(/(<embed[^>]*>)(?!<img)/gi,'$1<img id="mceVideo" src="' + prefix[0] + 'tools/qtitesteditor/tinymce/tiny_mce/plugins/addvideo/img/movie.png" />');
 
 			return h;
 		},
@@ -6679,11 +6688,16 @@ window.tinymce.dom.Sizzle = Sizzle;
 			
 		},
 		
-		parsePlayPauseToQTI: function(h) {
+		parsePlayPauseToQTI : function(h) {
 			
 			h = h.replace(/<!-- (<audioPlayer[^>]*>) --><img id="mcePlayPause"[^>]*>/gi, '</p><qy:tag name="media">$1</qy:tag><p>');
 			return h;
 			
+		},
+
+		parseEmbedsToQTI : function(h) {
+			h = h.replace(/<img id="mceVideo" src=".*?tools\/qtitesteditor\/tinymce\/tiny_mce\/plugins\/addvideo\/img\/[^"]*"[^>]*>/gi,'');
+			return h;
 		},
 		
 		_postProcess : function(o) {
@@ -6703,7 +6717,8 @@ window.tinymce.dom.Sizzle = Sizzle;
 			h = this.parseToQTI(h);
 			h = this.parseCommentsToQY(h);
 			h = this.parsePlayPauseToQTI(h);
-			
+			h = this.parseEmbedsToQTI(h);
+
 			h = h.replace(/(<p[^>a-z]*>)/gi, '<qy:tag name="text">$1');
 			h = h.replace(/(<\/p>)/gi, '$1</qy:tag>');
 			
