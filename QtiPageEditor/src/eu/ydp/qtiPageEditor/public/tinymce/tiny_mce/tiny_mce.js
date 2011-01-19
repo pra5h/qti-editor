@@ -2129,7 +2129,6 @@ tinymce.create('static tinymce.util.XHR', {
 
 			var prefix = fromPath.match(/^.*\/webapp\//i);
 			h = h.replace(/(<audioPlayer[^>]*>)(?! -->)/gi, '<!-- $1 --><img id="mcePlayPause" src="' + prefix[0] + 'tools/qtitesteditor/tinymce/tiny_mce/plugins/playpause/img/playpause.png" />');
-
 			return h;
 			
 		},
@@ -6689,8 +6688,8 @@ window.tinymce.dom.Sizzle = Sizzle;
 		},
 		
 		parsePlayPauseToQTI : function(h) {
-			
-			h = h.replace(/<!-- (<audioPlayer[^>]*>) --><img id="mcePlayPause"[^>]*>/gi, '</p><qy:tag name="media">$1</qy:tag><p>');
+
+			h = h.replace(/<!-- (<audioPlayer[^>]*>) -->(?:<p>)?<img id="mcePlayPause"[^>]*>(?:<\/p>)?/gi, '<qy:tag name="media">$1</qy:tag>');
 			return h;
 			
 		},
