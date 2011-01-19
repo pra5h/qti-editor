@@ -2127,8 +2127,8 @@ tinymce.create('static tinymce.util.XHR', {
 			var fromPath = tinyMCE.gwtProxy.getPageBasePath();
 			if(fromPath == undefined) return h;
 
-			var prefix = fromPath.match(/^.*\/webapp\//i);
-			h = h.replace(/(<audioPlayer[^>]*>)(?! -->)/gi, '<!-- $1 --><img id="mcePlayPause" src="' + prefix[0] + 'tools/qtitesteditor/tinymce/tiny_mce/plugins/playpause/img/playpause.png" />');
+			var prefix = fromPath.match(/^(.*\/)ctrl.php/i);
+			h = h.replace(/(<audioPlayer[^>]*>)(?! -->)/gi, '<!-- $1 --><img id="mcePlayPause" src="' + prefix[1] + 'tools/qtitesteditor/tinymce/tiny_mce/plugins/playpause/img/playpause.png" />');
 			return h;
 			
 		},
@@ -2138,8 +2138,8 @@ tinymce.create('static tinymce.util.XHR', {
 			var fromPath = tinyMCE.gwtProxy.getPageBasePath();
 			if(fromPath == undefined) return h;
 			
-			var prefix = fromPath.match(/^.*\/webapp\//i);
-			h = h.replace(/(<embed[^>]*>)(?!<img)/gi,'$1<img id="mceVideo" src="' + prefix[0] + 'tools/qtitesteditor/tinymce/tiny_mce/plugins/addvideo/img/movie.png" />');
+			var prefix = fromPath.match(/^(.*\/)ctrl.php/i);
+			h = h.replace(/(<embed[^>]*>)(?!<img)/gi,'$1<img id="mceVideo" src="' + prefix[1] + 'tools/qtitesteditor/tinymce/tiny_mce/plugins/addvideo/img/movie.png" />');
 
 			return h;
 		},

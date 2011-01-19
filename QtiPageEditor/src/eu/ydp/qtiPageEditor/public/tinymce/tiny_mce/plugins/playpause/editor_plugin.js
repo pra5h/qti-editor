@@ -20,13 +20,13 @@
 						}
 						
 						var fromPath = tinyMCE.gwtProxy.getPageBasePath();
-						var prefix = fromPath.match(/^.*\/webapp\//i);
+						var prefix = fromPath.match(/^(.*\/)ctrl.php/i);
 						fromPath = fromPath.split('/');
 						fromPath.pop();
 						fromPath = fromPath.join('/');
 						filePath = getRelativeFromAbsoute(fromPath, filePath);
 						
-						var playpausetag = '<!-- <audioPlayer src="' + fromPath + '/' + filePath + '" /> --><img id="mcePlayPause" src="' + prefix[0] + 'tools/qtitesteditor/tinymce/tiny_mce/plugins/playpause/img/playpause.png" />';
+						var playpausetag = '<!-- <audioPlayer src="' + fromPath + '/' + filePath + '" /> --><img id="mcePlayPause" src="' + prefix[1] + 'tools/qtitesteditor/tinymce/tiny_mce/plugins/playpause/img/playpause.png" />';
 						ed.selection.moveToBookmark(ed.selection.getBookmark());
 						tinyMCE.execCommand('mceInsertContent', false, playpausetag);
 						return true;
