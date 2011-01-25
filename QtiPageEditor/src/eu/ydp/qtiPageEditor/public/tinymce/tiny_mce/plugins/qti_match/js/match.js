@@ -711,7 +711,7 @@ var matchDialog = {
 		// dodawanie nowego match
 		if(adding == 1) {
 			
-			var matchSection = '<p>&nbsp;</p><!-- <matchInteraction responseIdentifier="' + identifier + '" shuffle="' + String(shuffle) + '" maxAssociations="4"> --><div id="matchInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">';
+			var matchSection = '<p>&nbsp;</p><!-- <matchInteraction responseIdentifier="' + identifier + '" shuffle="' + String(shuffle) + '" maxAssociations="' + String(answers_left.length * answers_right.length) + '"> --><div id="matchInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">';
 			matchSection += '<p id="matchInteraction">' + question + '</p><table width="100%" border=0 style="border: none;"><tbody><tr valign="top" style="border: none;">';
 			
 			// rozpocz�cie lewego matchset
@@ -817,11 +817,11 @@ var matchDialog = {
 			}
 			
 			if(nd.previousSibling.nodeName == "P") {
-				var regexp = new RegExp('<!-- <matchInteraction responseIdentifier="' + identifier + '" shuffle="[^"]*"([^>]*)> -->','gi');
-				nd.previousSibling.innerHTML = nd.previousSibling.innerHTML.replace(regexp, '<!-- <matchInteraction responseIdentifier="' + identifier + '" shuffle="' + String(shuffle) + '"$1> -->');
+				var regexp = new RegExp('<!-- <matchInteraction responseIdentifier="' + identifier + '" shuffle="[^"]*" maxAssociations="[^"]*"> -->','gi');
+				nd.previousSibling.innerHTML = nd.previousSibling.innerHTML.replace(regexp, '<!-- <matchInteraction responseIdentifier="' + identifier + '" shuffle="' + String(shuffle) + '" maxAssociations="' + String(answers_left.length * answers_right.length) + '"> -->');
 			} else {
-				var regexp = new RegExp(' <matchInteraction responseIdentifier="' + identifier + '" shuffle="[^"]*"([^>]*)> ','gi');
-				nd.previousSibling.data = nd.previousSibling.data.replace(regexp, ' <matchInteraction responseIdentifier="' + identifier + '" shuffle="' + String(shuffle) + '"$1> ');
+				var regexp = new RegExp(' <matchInteraction responseIdentifier="' + identifier + '" shuffle="[^"]*" maxAssociations="[^"]*"> ','gi');
+				nd.previousSibling.data = nd.previousSibling.data.replace(regexp, ' <matchInteraction responseIdentifier="' + identifier + '" shuffle="' + String(shuffle) + '" maxAssociations="' + String(answers_left.length * answers_right.length) + '"> ');
 			}
 			
 			matchSection += '<p id="matchInteraction">' + question + '</p><table width="100%" border=0 style="border: none;"><tbody><tr valign="top" style="border: none;">';
