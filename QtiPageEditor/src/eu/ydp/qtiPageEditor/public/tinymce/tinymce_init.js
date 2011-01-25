@@ -6,9 +6,11 @@ tinyMCE.init({
 	mode: "textareas",
 	elements : "content",
 	skin : "o2k7",
-	plugins : "safari,spellchecker,pagebreak,style,layer,table,save,advhr,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,"
-		+"searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,imagemanager,"
-		+"filemanager,noneditable,asciimath,asciimathcharmap,asciisvg,choice,gap,inlinechoice,order,match,fileuploadlib,comment,trackchanges,addvideo,copyqti,playpause,selection,draggable,identification",
+	plugins : "safari,spellchecker,pagebreak,style,layer,table,save,advhr,advlink,emotions,iespell,inlinepopups,"
+		+"insertdatetime,qti_preview,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,"
+		+"visualchars,nonbreaking,xhtmlxtras,template,imagemanager,filemanager,noneditable,asciimath,asciimathcharmap,asciisvg,"
+		+"qti_choice,qti_gap,qti_inlinechoice,qti_order,qti_match,qti_fileuploadlib,qti_comment,qti_trackchanges,"
+		+"qti_addvideo,qti_copyqti,qti_playpause,qti_selection,qti_draggable,qti_identification",
 
 	theme_advanced_toolbar_location : "top",
 	theme_advanced_toolbar_align : "left",
@@ -34,13 +36,13 @@ tinyMCE.init({
 	noneditable_leave_contenteditable : true,
 	remove_linebreaks : false,
 	apply_source_formatting : true,
-	entity_encoding : "",
+	entity_encoding : "numeric",
 	dialog_type : "modal",
 	height:"100%",
 	width:"100%",
 	object_resizing: false,
-	spellchecker_rpc_url : "/work/tools/qtitesteditor/tinymce/tiny_mce/plugins/spellchecker/rpc.php",
-	spellchecker_languages : "+English=en",
+	spellchecker_rpc_url : "tools/qtitesteditor/tinymce/tiny_mce/plugins/spellchecker/rpc.php",
+	spellchecker_languages : "+English=en,Polish=pl",
 
 	paste_auto_cleanup_on_paste : true,
 	paste_preprocess : function(pl, o) {
@@ -86,6 +88,23 @@ tinyMCE.init({
             }
         };
 
-    }
+		// Parse QTI to HTML (on editor first load)
+		ed.onBeforeSetContent.add(function(ed, o){
+			o.content = QTI2HTML(o.content);
+		});
+		
+		// Parse QTI to HTML (on page load)
+		ed.onSetContent.add(function(ed, o){
+			o.content = QTI2HTML(o.content);
+		});
+
+		// Parse HTML to QTI (on page save)
+		ed.onPostProcess.add(function(ed, o) {
+            if (o.get) {
+				o.content = HTML2QTI(o.content);
+            }
+        });
+
+	}
 
 });
