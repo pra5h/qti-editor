@@ -281,7 +281,6 @@ function processQTI(h) {
 	h = h.replace(/(<modalFeedback[^>]*>)/gi, '<!-- $1 -->');
 	h = h.replace(/(<\/modalFeedback>)/gi, '<!-- $1 -->');
 
-
 	return h;
 
 }
@@ -454,6 +453,9 @@ function parseToQTI(h) {
 	//h = h.replace(/(<!-- (<modalFeedback [^>]*>[^<]*<\/modalFeedback>) -->)/gi, '$2');
 	h = h.replace(/<!-- (<modalFeedback[^>]*>) -->/gi, '$1');
 	h = h.replace(/<!-- (<\/modalFeedback>) -->/gi, '$1');
+
+	// Fix for bug #42087
+	h = h.replace(/(<img[^>]*[^\/])(>)/gi,'$1 /$2');
 
 	return h;
 
