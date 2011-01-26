@@ -25,8 +25,8 @@
 						fromPath.pop();
 						fromPath = fromPath.join('/');
 						filePath = getRelativeFromAbsoute(fromPath, filePath);
-						
-						var playpausetag = '<!-- <audioPlayer data="' + fromPath + '/' + filePath + '" /> --><img id="mcePlayPause" src="' + prefix[1] + 'tools/qtitesteditor/tinymce/tiny_mce/plugins/qti_playpause/img/playpause.png" />';
+
+						var playpausetag = '<!-- <audioPlayer data="' + filePath + '" /> --><img id="mcePlayPause" src="' + prefix[1] + 'tools/qtitesteditor/tinymce/tiny_mce/plugins/qti_playpause/img/playpause.png" />';
 						ed.selection.moveToBookmark(ed.selection.getBookmark());
 						tinyMCE.execCommand('mceInsertContent', false, playpausetag);
 						return true;

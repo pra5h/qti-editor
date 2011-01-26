@@ -24,6 +24,7 @@
 						if(data != undefined && data.src != undefined && data.src != '') {
 							node.parentNode.removeChild(node);
 						}
+
 						var imgTag = '<fieldset id="runFileUploadLib" class="mceNonEditable" style="font-size: 10px; font-color: #b0b0b0; color: #b0b0b0; border: 1px solid #d0d0d0;"><img src="' + fromPath + '/' + filePath + '" border="0" title="' + title + '" alt="' + title + '"/><br>' + title + '</fieldset>';
 						ed.selection.moveToBookmark(ed.selection.getBookmark());
 						tinyMCE.execCommand('mceInsertContent', false, imgTag);
@@ -68,9 +69,9 @@
 						fromPath.pop();
 						fromPath = fromPath.join('/');
 						filePath = getRelativeFromAbsoute(fromPath, filePath);
-						
+
 						data.div.innerHTML = '<img style="max-height: 40px; max-width: 80px;" src="' + fromPath + '/' + filePath + '">';
-						data.div.previousSibling.setAttribute('value',filePath);
+						data.div.previousSibling.setAttribute('value', fromPath + '/' + filePath);
 						return true;
 					},
 					
@@ -142,6 +143,7 @@
 					onBrowseComplete : function(filePath) {
 						filePath = filePath.split('/');
 						filePath = String(filePath[filePath.length-2] + '/' + filePath[filePath.length-1]);
+
 						data.dest.setAttribute('value', filePath);
 						return true;
 					},

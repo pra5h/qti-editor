@@ -199,7 +199,7 @@ function processQTI(h) {
 		if(answers[i][1] != 'ordered') {
 			for(var j in answers[i][0]) {
 				var simpleChoice = new RegExp('(<simpleChoice identifier="' + answers[i][0][j] + '"[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice>)(?! -->)', "gi");
-				h = h.replace(simpleChoice, '<!-- $1 --><br /><input id="choiceInteraction" name="simpleChoice" type="checkbox" checked="checked" />$2');
+				h = h.replace(simpleChoice, '<!-- $1 --><br /><input id="choiceInteraction" checked="checked" name="simpleChoice" type="checkbox" />$2');
 			}
 		}
 	}
@@ -963,10 +963,10 @@ function runMultipleChoice(selectedNode) {
 		var shuffle = sectionDiv.previousSibling.data.match(/<choiceInteraction.*?shuffle="([^"]*)"[^>]*>/i);
 		var maxChoices = sectionDiv.previousSibling.data.match(/<choiceInteraction.*?maxChoices="([^"]*)"[^>]*>/i);
 	}
-	var answers_paragraph = choiceSectionHTML.match(/<!-- <simpleChoice identifier="[^"]*"[^>]*>([^<]*|<img[^>]*>)[^<]*(?:<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?[^<]*<\/simpleChoice>[^<]* --><br[^>]*><input id="choiceInteraction" name="simpleChoice"[\s]*(?:type="checkbox")?[\s]*(checked="checked")?[\s]*(?:type="checkbox")?>(<img[^>]*>|[^<]*)/gi);
+	var answers_paragraph = choiceSectionHTML.match(/<!-- <simpleChoice identifier="[^"]*"[^>]*>([^<]*|<img[^>]*>)[^<]*(?:<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?[^<]*<\/simpleChoice>[^<]* --><br[^>]*><input id="choiceInteraction" (checked="checked")?[\s]*name="simpleChoice"[\s]*(?:type="checkbox")?[\s]*(?:type="checkbox")?>(<img[^>]*>|[^<]*)/gi);
 	var values = new Array();
 	for (ans in answers_paragraph) {
-		values.push(answers_paragraph[ans].match(/<!-- <simpleChoice identifier="([^"]*)"\s*(?:fixed="([^"]*)")?[^>]*>(?:[^<]*|<img[^>]*>)[^<]*(?:<feedbackInline[^>]*>([^<]*)<\/feedbackInline>)?[^<]*<\/simpleChoice>[^<]* --><br[^>]*><input id="choiceInteraction" name="simpleChoice"[\s]*(?:type="checkbox")?[\s]*(checked="checked")?[\s]*(?:type="checkbox")?>(<img[^>]*>|[^<]*)/i));
+		values.push(answers_paragraph[ans].match(/<!-- <simpleChoice identifier="([^"]*)"\s*(?:fixed="([^"]*)")?[^>]*>(?:[^<]*|<img[^>]*>)[^<]*(?:<feedbackInline[^>]*>([^<]*)<\/feedbackInline>)?[^<]*<\/simpleChoice>[^<]* --><br[^>]*><input id="choiceInteraction" (checked="checked")?[\s]*name="simpleChoice"[\s]*(?:type="checkbox")?[\s]*(?:type="checkbox")?>(<img[^>]*>|[^<]*)/i));
 	}
 	var i=0;
 	while(values[i] != undefined) {

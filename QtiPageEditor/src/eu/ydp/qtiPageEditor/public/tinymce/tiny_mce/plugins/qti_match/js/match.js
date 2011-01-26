@@ -803,7 +803,7 @@ var matchDialog = {
 			body.innerHTML = body.innerHTML.replace(regexp, responseDeclaration + '$1');
 			
 			ed.selection.moveToBookmark(bm);
-			
+
 		// edycja istniej�cego match
 		} else {
 			

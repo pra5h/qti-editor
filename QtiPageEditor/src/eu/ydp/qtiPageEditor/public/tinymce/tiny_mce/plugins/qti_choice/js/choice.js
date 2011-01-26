@@ -6,7 +6,7 @@ var choiceDialog = {
 		var ed = ed;
 		var f = document.forms[0]; 
 		var data = tinyMCEPopup.getWindowArg("choicedata");
-		
+
 		if(data != undefined && data[0] != undefined) {
 			f.question.value = data[0];
 		}
@@ -214,11 +214,11 @@ var choiceDialog = {
 					}
 					choiceSection += ' fadeEffect="300" outcomeIdentifier="' + identifier + '-LASTCHANGE" identifier=".*' + ids[i] + '.*" showHide="show">' + tinyMCE.feedback[identifier].text[ids[i]] + '</feedbackInline>';
 				} 
-				choiceSection += '</simpleChoice> --><br /><input id="choiceInteraction" name="simpleChoice" type="checkbox" ';
+				choiceSection += '</simpleChoice> --><br /><input id="choiceInteraction" ';
 				if(points[i] > 0) {
 					choiceSection += 'checked="checked" ';
 				}
-				choiceSection += '/>' + answers[i];
+				choiceSection += 'name="simpleChoice" type="checkbox" />' + answers[i];
 				if(points[i] == 1) {
 					responseDeclaration += '<value>' + ids[i] + '</value>';
 				}
@@ -241,7 +241,7 @@ var choiceDialog = {
 			body.innerHTML = body.innerHTML.replace(regexp, responseDeclaration + '$1');
 			
 			ed.selection.moveToBookmark(bm);
-			
+
 		} else {
 		
 			var ed = tinymce.EditorManager.activeEditor;
@@ -274,11 +274,11 @@ var choiceDialog = {
 					}
 					choiceSection += ' fadeEffect="300"  outcomeIdentifier="' + identifier + '-LASTCHANGE" identifier=".*' + ids[i] + '.*" showHide="show">' + tinyMCE.feedback[identifier].text[ids[i]] + '</feedbackInline>';
 				} 
-				choiceSection += '</simpleChoice> --><br /><input id="choiceInteraction" name="simpleChoice" type="checkbox" ';
+				choiceSection += '</simpleChoice> --><br /><input id="choiceInteraction" ';
 				if(points[i] > 0) {
 					choiceSection += 'checked="checked" ';
 				}
-				choiceSection += '/>' + answers[i];
+				choiceSection += 'name="simpleChoice" type="checkbox" />' + answers[i];
 				if(points[i] == 1) {
 					responseDeclaration += '<value>' + ids[i] + '</value>';
 				}
