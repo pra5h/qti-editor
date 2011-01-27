@@ -283,10 +283,6 @@ var selectionDialog = {
 			i++;
 		}
 
-//		if(dataobj.question == '' || dataobj.answers.length < 1 || dataobj.answers.length != dataobj.points.length) {
-//			return false;
-//		}
-
 		var responseDeclaration = '';
 
 		if(adding == 1) {
@@ -297,9 +293,6 @@ var selectionDialog = {
 			for(i in dataobj.options) {
 				selectionSection += '<!-- <simpleChoice identifier="' + dataobj.options_ids[i] + '"';
 				selectionSection += '>' + dataobj.options[i];
-//				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].text[ids[i]] != undefined) {
-//					selectionSection += '<feedbackInline identifier="' + dataobj.options_ids[i] + '" showHide="show">' + tinyMCE.feedback[identifier].text[ids[i]] + '</feedbackInline>'
-//				}
 				selectionSection += '</simpleChoice> --><br /><input id="choiceInteraction" name="simpleChoice" type="checkbox" ';
 				selectionSection += '/>' + dataobj.options[i];
 			}
@@ -310,13 +303,10 @@ var selectionDialog = {
 					selectionSection += ' fixed="true" ';
 				}
 				selectionSection += '>' + dataobj.answers[i];
-//				if(tinyMCE.feedback != undefined && tinyMCE.feedback[dataobj.identifier] != undefined && tinyMCE.feedback[identifier].text[ids[i]] != undefined) {
-//					selectionSection += '<feedbackInline identifier="' + dataobj.ids[i] + '" showHide="show">' + tinyMCE.feedback[identifier].text[ids[i]] + '</feedbackInline>'
-//				}
+				if(tinyMCE.feedback != undefined && tinyMCE.feedback[dataobj.identifier] != undefined && tinyMCE.feedback[dataobj.identifier].text[dataobj.ids[i]] != undefined) {
+					selectionSection += '<feedbackInline identifier="' + dataobj.ids[i] + '" showHide="show">' + tinyMCE.feedback[dataobj.identifier].text[dataobj.ids[i]] + '</feedbackInline>'
+				}
 				selectionSection += '</item> --><li>';
-//				if(dataobj.points[i] > 0) {
-//					selectionSection += 'checked="checked" '
-//				}
 				selectionSection += dataobj.answers[i] + '</li>';
 			}
 
@@ -341,7 +331,7 @@ var selectionDialog = {
 			body.innerHTML = body.innerHTML.replace(regexp, responseDeclaration + '$1');
 			
 			ed.selection.moveToBookmark(bm);
-			
+
 		} else {
 		
 			var ed = tinymce.EditorManager.activeEditor;
@@ -364,9 +354,6 @@ var selectionDialog = {
 			for(i in dataobj.options) {
 				selectionSection += '<!-- <simpleChoice identifier="' + dataobj.options_ids[i] + '"';
 				selectionSection += '>' + dataobj.options[i];
-//				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].text[ids[i]] != undefined) {
-//					selectionSection += '<feedbackInline identifier="' + dataobj.options_ids[i] + '" showHide="show">' + tinyMCE.feedback[identifier].text[ids[i]] + '</feedbackInline>'
-//				}
 				selectionSection += '</simpleChoice> --><br /><input id="choiceInteraction" name="simpleChoice" type="checkbox" ';
 				selectionSection += '/>' + dataobj.options[i];
 			}
@@ -376,13 +363,10 @@ var selectionDialog = {
 					selectionSection += ' fixed="true" ';
 				}
 				selectionSection += '>' + dataobj.answers[i];
-//				if(tinyMCE.feedback != undefined && tinyMCE.feedback[dataobj.identifier] != undefined && tinyMCE.feedback[identifier].text[ids[i]] != undefined) {
-//					selectionSection += '<feedbackInline identifier="' + dataobj.ids[i] + '" showHide="show">' + tinyMCE.feedback[identifier].text[ids[i]] + '</feedbackInline>'
-//				}
+				if(tinyMCE.feedback != undefined && tinyMCE.feedback[dataobj.identifier] != undefined && tinyMCE.feedback[dataobj.identifier].text[dataobj.ids[i]] != undefined) {
+					selectionSection += '<feedbackInline identifier="' + dataobj.ids[i] + '" showHide="show">' + tinyMCE.feedback[dataobj.identifier].text[dataobj.ids[i]] + '</feedbackInline>'
+				}
 				selectionSection += '</item> --><li>';
-//				if(dataobj.points[i] > 0) {
-//					selectionSection += 'checked="checked" '
-//				}
 				selectionSection += dataobj.answers[i] + '</li>';
 			}
 

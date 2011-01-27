@@ -167,8 +167,6 @@ function processQTI(h) {
 				var simpleChoice = new RegExp('(<simpleChoice identifier="' + answers[i][0][j] + '"[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)<\/simpleChoice>)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?[^<]*(?! -->)', "gi");
 				h = h.replace(simpleChoice, '<!-- $1 --><div id="orderOption" name="' + idj + '" style="border: 1px solid green; margin: 2px;">$2</div><!-- $3 -->');
 			}
-			//h = h.replace(sc, '<!-- $1 --><br /><span id="simpleChoice" name="simpleChoice" style="border: 1px dotted blue;">$2</span>');
-			//var sc = new RegExp('(<simpleChoice[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)<\/simpleChoice>)(?! -->)','gi');
 		}
 	}
 	h = h.replace(/(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)(?=<\/orderInteraction>)/gi, '<!-- $1 -->');
@@ -211,34 +209,11 @@ function processQTI(h) {
 	h = h.replace(/(<dragDropInteraction[^>]*>)(?! -->)/gi, '<!-- $1 --><div id="dragDropInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">');
 	h = h.replace(/<contents>(.*)<\/contents>(?! -->)/gi, '<!-- <contents> --><p id="dragDropInteractionContents">$1</p><!-- </contents> -->');
 	h = h.replace(/(<slot>(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/slot>)(?! -->)/gi, '<!-- $1 --><span id="mgap" style="border: 1px solid green;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>');
-//			for(var i in answers) {
-//				if(answers[i][1] != 'ordered') {
-//					for(var j in answers[i][0]) {
-//						var simpleChoice = new RegExp('(<simpleChoice identifier="' + answers[i][0][j] + '"[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice>)(?! -->)', "gi");
-//						h = h.replace(simpleChoice, '<!-- $1 --><br /><input id="choiceInteraction" name="simpleChoice" type="checkbox" checked="checked" />$2');
-//					}
-//				}
-//			}
 	h = h.replace(/(<sourcelist>)(?! -->)/gi, '<!-- $1 -->');
 	h = h.replace(/(<\/sourcelist>)(?! -->)/gi, '<!-- $1 -->');
 	var sc = new RegExp('(<dragElement[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)<\/dragElement>)(?! -->)', 'gi');
 	h = h.replace(sc, '<!-- $1 --><span class="dragElement" name="dragElement" style="border: 1px solid green; margin: 5px;">$2</span>');
 	h = h.replace(/<\/dragDropInteraction>/gi, '</div><!-- end of dragDropInteraction -->');
-
-	//Selection support
-	//h = h.replace(/(<selectionInteraction[^>]*>)(?! -->)/gi, '<!-- $1 --><div id="selectionInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">');
-	//h = h.replace(/<prompt>([^<]*)<\/prompt>(?=\s*<simpleChoice)/gi, '<p id="choiceInteraction">$1</p>');
-	//for(var i in answers) {
-	//	if(answers[i][1] != 'ordered') {
-	//		for(var j in answers[i][0]) {
-	//			var simpleChoice = new RegExp('(<simpleChoice identifier="' + answers[i][0][j] + '"[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice>)(?! -->)', "gi");
-	//			h = h.replace(simpleChoice, '<!-- $1 --><br /><input id="choiceInteraction" name="simpleChoice" type="checkbox" checked="checked" />$2');
-	//		}
-	//		var sc = new RegExp('(<simpleChoice[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice>)(?! -->)', 'gi');
-	//		h = h.replace(sc, '<!-- $1 --><br /><input id="choiceInteraction" name="simpleChoice" type="checkbox" />$2');
-	//	}
-	//}
-	//h = h.replace(/<\/choiceInteraction>/gi, '</div><!-- end of choiceInteraction -->');
 
 	//Inline choices support
 	h = h.replace(/(<inlineChoiceInteraction responseIdentifier="[^"]+" shuffle="[^"]+"[^>]*>)(?! -->)/gi, '<!-- $1 --><span id="inlineChoiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">');
@@ -253,13 +228,6 @@ function processQTI(h) {
 
 	//Identification support
 	h = h.replace(/(<identificationInteraction responseIdentifier="[^"]+" shuffle="[^"]+"[^>]*>)(?! -->)/gi, '<!-- $1 --><div id="identificationInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">');
-//			for(var i in answers) {
-//				for(var j in answers[i][0]) {
-//					var inlineChoice = new RegExp('(<inlineChoice identifier="' + answers[i][0][j] + '"[^>]*>([^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/inlineChoice>)(?! -->)', "gi");
-//					h = h.replace(inlineChoice, '<!-- $1 --><span id="inlineChoiceAnswer" style="border: none; color: blue; background-color: #f0f0f0;">$2<span style="color: green; font-weight: bold;"> &raquo;</span></span>');
-//				}
-//			}
-	//h = h.replace(/(<simpleChoice[^>]*>([^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/inlineChoice>)(?! -->)/gi, '<!-- $1 --><span id="inlineChoiceAnswer" style="display: none;">$2</span>');
 	h = h.replace(/<\/identificationInteraction>/gi, '</div><!-- end of identificationInteraction -->');
 
 	//Match support
@@ -274,10 +242,7 @@ function processQTI(h) {
 	h = h.replace(/(<!-- <\/simpleMatchSet> --><\/tbody><\/table><\/td>)[^<]*(<!-- <simpleMatchSet> --><td[^>]*>)/gi, '$1<td id="canvas_td" width="200px" style="border: none;"><canvas id="canvas" width="200px" style="border: 1px solid blue;"></canvas></td>$2');
 	h = h.replace(/(<\/matchInteraction>)(?! -->)/gi, '</tr></tbody></table></div><!-- end of matchInteraction -->');
 
-	//h = h.replace(/(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)(<\/orderInteraction>)/gi,'<!-- $1 -->');
-
 	//Modal feedbacks
-	//h = h.replace(/(<modalFeedback[^>]*>.*?<\/modalFeedback>)/gi, '<!-- $1 -->');
 	h = h.replace(/(<modalFeedback[^>]*>)/gi, '<!-- $1 -->');
 	h = h.replace(/(<\/modalFeedback>)/gi, '<!-- $1 -->');
 
@@ -389,9 +354,6 @@ function parseToQTI(h) {
 	h = h.replace(/<!-- (<itemBody>) -->/gi,'$1');
 	h = h.replace(/<!-- (<\/itemBody>) -->/gi,'$1');
 
-	// workaround
-	//h = h.replace(/<!-- (<\/qy:tag>) -->/gi,'$1');
-
 	// Gaps support
 	h = h.replace(/<!-- (<textEntryInteraction[^>]*>[^<]*(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/textEntryInteraction>) --><span id="gap" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">([^<]*)<\/span>/gi, '<qy:tag name="exercise">$1</qy:tag>');
 
@@ -450,7 +412,6 @@ function parseToQTI(h) {
 	h = h.replace(/<\/tr><\/tbody><\/table><\/div><!-- end of matchInteraction -->/gi, '</matchInteraction></qy:tag>');
 
 	//Modal feedbacks
-	//h = h.replace(/(<!-- (<modalFeedback [^>]*>[^<]*<\/modalFeedback>) -->)/gi, '$2');
 	h = h.replace(/<!-- (<modalFeedback[^>]*>) -->/gi, '$1');
 	h = h.replace(/<!-- (<\/modalFeedback>) -->/gi, '$1');
 
@@ -1123,7 +1084,7 @@ function runSelection(selectedNode) {
 
 	var question = selectionSectionHTML.match(/<p id="choiceInteraction">(.*?)<\/p>/i);
 
-	var choices_paragraph = selectionSectionHTML.match(/<!-- <simpleChoice identifier="[^"]*"[^>]*>([^<]*)(?:<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?[^<]*<\/simpleChoice>[^<]* --><br[^>]*><input id="choiceInteraction" name="simpleChoice" (checked="checked" )?type="checkbox">(<img[^>]*>|[^<]*)/gi);
+	var choices_paragraph = selectionSectionHTML.match(/<!-- <simpleChoice identifier="[^"]*"[^>]*>([^<]*)(?:<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?[^<]*<\/simpleChoice>[^<]* --><br[^>]*><input id="choiceInteraction" (checked="checked" )?name="simpleChoice" type="checkbox">(<img[^>]*>|[^<]*)/gi);
 
 	var answers_paragraph = selectionSectionHTML.match(/<!-- <item identifier="[^"]*"[^>]*>([^<]*)(?:<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?[^<]*<\/item>[^<]* --><li>([^<]*)<\/li>/gi);
 
@@ -1134,7 +1095,7 @@ function runSelection(selectedNode) {
 
 	var values_ans = new Array();
 	for (ans in answers_paragraph) {
-		values_ans.push(answers_paragraph[ans].match(/<!-- <item identifier="([^"]*)"\s*(?:fixed="([^"]*)")?[^>]*>([^<]*)<\/item> --><li>([^<]*)<\/li>/i));
+		values_ans.push(answers_paragraph[ans].match(/<!-- <item identifier="([^"]*)"\s*(?:fixed="([^"]*)")?[^>]*>([^<]*)(?:<feedbackInline[^>]*>([^<]*)<\/feedbackInline>)?<\/item> --><li>([^<]*)<\/li>/i));
 	}
 
 	var i=0;
@@ -1142,7 +1103,6 @@ function runSelection(selectedNode) {
 		ids_ch.push(values_ch[i][1]);
 		choices.push(values_ch[i][3]);
 		fixed_ch.push(values_ch[i][2]);
-		fdb[values_ch[i][1]] = values_ch[i][4];
 		i++;
 	}
 
@@ -1151,7 +1111,7 @@ function runSelection(selectedNode) {
 		ids_ans.push(values_ans[i][1]);
 		answers.push(values_ans[i][3]);
 		fixed_ans.push(values_ans[i][2]);
-		//fdb[values[i][1]] = values[i][3];
+		fdb[values_ans[i][1]] = values_ans[i][3];
 		i++;
 	}
 
@@ -1190,6 +1150,7 @@ function runSelection(selectedNode) {
 		}
 	}
 	data.fd = fd;
+
 	tinyMCE.selectedNode = selectedNode;
 	tinyMCE.execCommand('mceSelection', false, data);
 
