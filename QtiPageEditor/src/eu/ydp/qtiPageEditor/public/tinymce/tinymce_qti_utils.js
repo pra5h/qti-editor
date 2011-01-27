@@ -449,7 +449,7 @@ function applyFormatting(h) {
 	h = h.replace(/(\n)+/g, '');
 
 	// begin tags with two newlines before
-	h = h.replace(/<(inlineChoiceInteraction|choiceInteraction|orderInteraction|matchInteraction)([^>]*)>\s*/gi, '\n\n<$1$2>');
+	h = h.replace(/<(inlineChoiceInteraction|choiceInteraction|orderInteraction|matchInteraction|selectionInteraction|dragDropInteraction|identificationInteraction)([^>]*)>\s*/gi, '\n\n<$1$2>');
 
 	// begin tags with one newline before
 	h = h.replace(/<(qy:tag|assessmentItem|modalFeedback)([^>]*)>\s*/gi, '\n<$1$2>');
@@ -458,13 +458,13 @@ function applyFormatting(h) {
 	h = h.replace(/<(assessmentItem|itemBody)([^>]*)>\s*/gi, '<$1$2>\n\n');
 
 	// begin tags with one newline after
-	h = h.replace(/<(qy:tag|simpleMatchSet|mapping|mapEntry|correctResponse|responseDeclaration|inlineChoiceInteraction|choiceInteraction|orderInteraction|matchInteraction)([^>]*)>\s*/gi, '<$1$2>\n');
+	h = h.replace(/<(qy:tag|simpleMatchSet|mapping|mapEntry|correctResponse|responseDeclaration|inlineChoiceInteraction|choiceInteraction|orderInteraction|matchInteraction|selectionInteraction|dragDropInteraction|identificationInteraction)([^>]*)>\s*/gi, '<$1$2>\n');
 
 	// end tags with two newlines after
-	h = h.replace(/<\/(responseDeclaration|inlineChoiceInteraction|choiceInteraction|orderInteraction|matchInteraction)>\s*/gi, '</$1>\n\n');
+	h = h.replace(/<\/(responseDeclaration|inlineChoiceInteraction|choiceInteraction|orderInteraction|matchInteraction|selectionInteraction|dragDropInteraction|identificationInteraction)>\s*/gi, '</$1>\n\n');
 
 	// end tags with one newline after
-	h = h.replace(/<\/(qy:tag|simpleMatchSet|simpleAssociableChoice|mapping|assessmentItem|value|correctResponse|prompt|simpleChoice|inlineChoice)>\s*/gi, '</$1>\n');
+	h = h.replace(/<\/(qy:tag|simpleMatchSet|simpleAssociableChoice|mapping|assessmentItem|value|correctResponse|prompt|simpleChoice|inlineChoice|item|contents|slot|sourcelist|dragElement)>\s*/gi, '</$1>\n');
 
 	// end tags with two newlines before
 	h = h.replace(/<\/(itemBody)>\s*/gi, '\n\n</$1>');
