@@ -153,6 +153,24 @@
 							node = 'match';
 							break;
 						}
+
+						// Selection
+						if (selectedNode.id != undefined  && selectedNode.id == 'selectionInteraction' && selectedNode.nodeName == 'DIV') {
+							node = 'selection';
+							break;
+						}
+
+						// Draggable
+						if (selectedNode.id != undefined  && selectedNode.id == 'dragDropInteraction' && selectedNode.nodeName == 'DIV') {
+							node = 'draggable';
+							break;
+						}
+
+						// Identification
+						if (selectedNode.id != undefined  && selectedNode.id == 'identificationInteraction' && selectedNode.nodeName == 'DIV') {
+							node = 'identification';
+							break;
+						}
 						
 					}
 					selectedNode = selectedNode.parentNode;
@@ -251,7 +269,7 @@
 			
 			m.addSeparator();
 				
-			if(node == 'gap' || node == 'inlinechoice' || node == 'multiplechoice' || node == 'order' || node == 'match') {
+			if(node == 'gap' || node == 'inlinechoice' || node == 'multiplechoice' || node == 'order' || node == 'match' || node == 'selection' || node == 'draggable' || node == 'identification') {
 				m.add({title : 'Copy QTI activity', icon : 'copyqtibutton', cmd : 'mceCopyQTI', ui: selectedNode});
 			} else if (tinyMCE.clipboard != undefined && ed.selection.getContent() == '') {
 				m.add({title : 'Paste QTI activity', icon : 'pasteqtibutton', cmd : 'mcePasteQTI'});

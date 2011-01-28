@@ -18,8 +18,13 @@
 				} else if (selectedNode.id == 'orderOption' || (selectedNode.id == 'choiceInteraction' && selectedNode.parentNode.id == 'orderInteraction')) {
 					tinyMCE.clipboard = {type: 'order', comment: selectedNode.previousSibling.data, content: selectedNode.innerHTML};
 				} else if (selectedNode.id != undefined && (selectedNode.id == 'matchInteraction' || selectedNode.id.match(/canvas_/))) {
-					console.log(selectedNode);
 					tinyMCE.clipboard = {type: 'match', comment: selectedNode.previousSibling.data, content: selectedNode.innerHTML};
+				} else if ((selectedNode.nodeName == 'DIV' && selectedNode.id == 'selectionInteraction') || (selectedNode.nodeName == 'P' && selectedNode.id == 'choiceInteraction' && selectedNode.parentNode.id == 'selectionInteraction')  || (selectedNode.nodeName == 'INPUT' && selectedNode.id == 'selectionInteraction' && selectedNode.parentNode.id == 'selectionInteraction')) {
+					tinyMCE.clipboard = {type: 'selection', comment: selectedNode.previousSibling.data, content: selectedNode.innerHTML};
+				} else if ((selectedNode.nodeName == 'DIV' && selectedNode.id == 'dragDropInteraction') || (selectedNode.nodeName == 'P' && selectedNode.id == 'dragDropInteraction' && selectedNode.parentNode.id == 'dragDropInteraction')  || (selectedNode.nodeName == 'INPUT' && selectedNode.id == 'dragDropInteraction' && selectedNode.parentNode.id == 'selectionInteraction')) {
+					tinyMCE.clipboard = {type: 'draggable', comment: selectedNode.previousSibling.data, content: selectedNode.innerHTML};
+				} else if ((selectedNode.nodeName == 'DIV' && selectedNode.id == 'identificationInteraction') || (selectedNode.nodeName == 'P' && selectedNode.id == 'identificationInteraction' && selectedNode.parentNode.id == 'identificationInteraction')  || (selectedNode.nodeName == 'INPUT' && selectedNode.id == 'identificationInteraction' && selectedNode.parentNode.id == 'identificationInteraction')) {
+					tinyMCE.clipboard = {type: 'identification', comment: selectedNode.previousSibling.data, content: selectedNode.innerHTML};
 				}
 				
 			});
@@ -71,6 +76,33 @@
 					activity += '<p>&nbsp;</p><!--' + comment + '-->';
 					activity += '<div id="matchInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">' + content + '</div><!-- end of matchInteraction --><p>&nbsp;</p>';
 					
+				} else if(tinyMCE.clipboard.type == 'selection') {
+
+					var comment = tinyMCE.clipboard.comment;
+					comment = comment.replace(/responseIdentifier="([^"]*)"/, 'responseIdentifier="' + newRandId() + '"');
+					var content = tinyMCE.clipboard.content;
+					content = content.replace(/identifier="([^"]*)"/g, 'identifier="' + newRandId() + '"');
+					activity += '<p>&nbsp;</p><!--' + comment + '-->';
+					activity += '<div id="selectionInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">' + content + '</div><!-- end of selectionInteraction --><p>&nbsp;</p>';
+
+				} else if(tinyMCE.clipboard.type == 'draggable') {
+
+					var comment = tinyMCE.clipboard.comment;
+					comment = comment.replace(/responseIdentifier="([^"]*)"/, 'responseIdentifier="' + newRandId() + '"');
+					var content = tinyMCE.clipboard.content;
+					content = content.replace(/identifier="([^"]*)"/g, 'identifier="' + newRandId() + '"');
+					activity += '<p>&nbsp;</p><!--' + comment + '-->';
+					activity += '<div id="dragDropInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">' + content + '</div><!-- end of dragDropInteraction --><p>&nbsp;</p>';
+
+				} else if(tinyMCE.clipboard.type == 'identification') {
+
+					var comment = tinyMCE.clipboard.comment;
+					comment = comment.replace(/responseIdentifier="([^"]*)"/, 'responseIdentifier="' + newRandId() + '"');
+					var content = tinyMCE.clipboard.content;
+					content = content.replace(/identifier="([^"]*)"/g, 'identifier="' + newRandId() + '"');
+					activity += '<p>&nbsp;</p><!--' + comment + '-->';
+					activity += '<div id="identificationInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">' + content + '</div><!-- end of identificationInteraction --><p>&nbsp;</p>';
+
 				}
 				
 				tinyMCE.execCommand('mceInsertContent', false, activity);
