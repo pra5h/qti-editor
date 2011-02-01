@@ -235,6 +235,39 @@
 			} else {
 				qtimenu.add({title : 'Remove match section', icon : 'removematchsection', cmd : 'mceMatchRemove'}).setDisabled(true);	
 			}
+
+			if(node != '') {
+				qtimenu.add({title : 'Insert selection section', icon : 'insertselectionsection', cmd : 'mceSelection'}).setDisabled(true);
+			} else {
+				qtimenu.add({title : 'Insert selection section', icon : 'insertselectionsection', cmd : 'mceSelection'});
+			}
+			if(node == 'selection') {
+				qtimenu.add({title : 'Remove selection section', icon : 'removeselectionsection', cmd : 'mceSelectionRemove'});
+			} else {
+				qtimenu.add({title : 'Remove selection section', icon : 'removeselectionsection', cmd : 'mceSelectionRemove'}).setDisabled(true);
+			}
+
+			if(node != '') {
+				qtimenu.add({title : 'Insert drag&drop section', icon : 'insertdraggablesection', cmd : 'mceDraggable'}).setDisabled(true);
+			} else {
+				qtimenu.add({title : 'Insert drag&drop section', icon : 'insertdraggablesection', cmd : 'mceDraggable'});
+			}
+			if(node == 'draggable') {
+				qtimenu.add({title : 'Remove drag&drop section', icon : 'removedraggablesection', cmd : 'mceDraggableRemove'});
+			} else {
+				qtimenu.add({title : 'Remove drag&drop section', icon : 'removedraggablesection', cmd : 'mceDraggableRemove'}).setDisabled(true);
+			}
+
+			if(node != '') {
+				qtimenu.add({title : 'Insert identification section', icon : 'insertidentificationsection', cmd : 'mceIdentification'}).setDisabled(true);
+			} else {
+				qtimenu.add({title : 'Insert identification section', icon : 'insertidentificationsection', cmd : 'mceIdentification'});
+			}
+			if(node == 'identification') {
+				qtimenu.add({title : 'Remove identification section', icon : 'removeidentificationsection', cmd : 'mceIdentificationRemove'});
+			} else {
+				qtimenu.add({title : 'Remove identification section', icon : 'removeidentificationsection', cmd : 'mceIdentificationRemove'}).setDisabled(true);
+			}
 		
 			//if(tinymce.plugins.applinkPlugin != undefined) {
 			//	
