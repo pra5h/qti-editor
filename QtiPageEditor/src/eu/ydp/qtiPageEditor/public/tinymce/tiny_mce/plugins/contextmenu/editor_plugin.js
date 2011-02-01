@@ -24,8 +24,6 @@
 					}
 				}
 			});
-			ed.addButton('insertgap', {title : 'Insert Gap', cmd : 'InsertGap'});
-			//ed.addButton('removegap', {title : 'Remove Gap', cmd : 'RemoveGap'});
 			
 			function hide() {
 				if (t._menu) {

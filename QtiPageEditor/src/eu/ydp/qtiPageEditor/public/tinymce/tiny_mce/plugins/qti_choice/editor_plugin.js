@@ -95,7 +95,7 @@
 			});
 
 			ed.addButton('insertchoicesection', {title : 'Insert choice activity', cmd : 'mceChoice'});			
-			
+
 		},
 
 
