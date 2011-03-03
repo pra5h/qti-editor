@@ -43,8 +43,8 @@ function QTI2HTML(h) {
 
 function HTML2QTI(h) {
 
-	if(h.match(/<!-- <assessmentItem[^>]*>/i) && !h.match(/<!-- \?xml version="1\.0" encoding="UTF-8"\? -->/i)) {
-		h = h.replace(/(<!-- <assessmentItem[^>]*>)/i, '<!-- ?xml version="1.0" encoding="UTF-8"? -->$1');
+	if(h.match(/<!-- <assessmentItem[^>]*>/i) && !h.match(/<!-- \?xml version="1\.0" encoding="UTF-8"( standalone="no")?\? -->/i)) {
+		h = h.replace(/(<!-- <assessmentItem[^>]*>)/i, '<!-- ?xml version="1.0" encoding="UTF-8" standalone="no"? -->$1');
 	}
 
 	// Remove illegal text before headins
@@ -93,7 +93,7 @@ function processQTI(h) {
 
 	// Prepare QTI base template if file is empty
 	if(h == '<br mce_bogus="1" />' || h == '') {
-		h = '<?xml version="1.0" encoding="UTF-8"?><assessmentItem xmlns="http://www.imsglobal.org/xsd/imsqti_v2p1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqti_v2p1 imsqti_v2p1.xsd"  identifier="" title="" adaptive="false" timeDependent="false"> <itemBody>' + h + '</itemBody></assessmentItem>';
+		h = '<?xml version="1.0" encoding="UTF-8" standalone="no"?><assessmentItem xmlns="http://www.imsglobal.org/xsd/imsqti_v2p1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqti_v2p1 imsqti_v2p1.xsd"  identifier="" title="" adaptive="false" timeDependent="false"> <itemBody>' + h + '</itemBody></assessmentItem>';
 	}
 
 	// Remove illegal text before headins
@@ -339,7 +339,7 @@ function parseToQTI(h) {
 	if(h.match(/<!-- \?(xml[^\?]*)\? -->/gi)) {
 		h = h.replace(/<!-- \?(xml[^\?]*)\? -->/gi,'<?$1?>');
 	} else {
-		h = h.replace(/^.*(<!-- <assessmentItem [^>]*> -->)/gmi,'<?xml version="1.0" encoding="UTF-8"?>$1\n');
+		h = h.replace(/^.*(<!-- <assessmentItem [^>]*> -->)/gmi,'<?xml version="1.0" encoding="UTF-8" standalone="no"?>$1\n');
 	}
 
 	h = h.replace(/<!-- (<assessmentItem [^>]*>) -->/gi,'$1');
