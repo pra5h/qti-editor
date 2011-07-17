@@ -7,7 +7,7 @@ function QTI2HTML(h) {
 			basePagePath.pop();
 			basePagePath = basePagePath.join('/');
 			basePagePath += '/';
-			h = h.replace(/src="([^"]*media[^"]*)"/gi, 'src="' + basePagePath + '$1"');
+			h = h.replace(/src="([^"(ctrl)]+media[^"]*)"/gi, 'src="' + basePagePath + '$1"');
 			h = h.replace(/href="([^"]*media[^"]*)"/gi, 'href="' + basePagePath + '$1"');
 
 		}
