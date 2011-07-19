@@ -318,10 +318,30 @@ var selectionDialog = {
 			selectionSection += '</div><!-- end of selectionInteraction -->';
 			selectionSection += '<p>&nbsp;</p>';
 
-			var ed = tinymce.EditorManager.activeEditor;
+			var ed = tinyMCEPopup.editor;
+			var dom = ed.dom;
+			var patt = '';
+			
+			ed.execCommand('mceBeginUndoLevel');
 			var bm = ed.selection.getBookmark();
+			
+			ed.execCommand('mceInsertContent', false, '<br class="_mce_marker" />');
+
+			tinymce.each('h1,h2,h3,h4,h5,h6,p'.split(','), function(n) {
+
+				if (patt) {
+					patt += ',';
+				}
+				patt += n + ' ._mce_marker';
+			});
+
+			tinymce.each(dom.select(patt), function(n) {
+				ed.dom.split(ed.dom.getParent(n, 'h1,h2,h3,h4,h5,h6,p'), n);
+			});
+
+			dom.setOuterHTML(dom.select('._mce_marker')[0], selectionSection);
 			ed.selection.moveToBookmark(bm);
-			tinyMCE.execCommand('mceInsertContent', false, selectionSection);
+			ed.execCommand('mceEndUndoLevel');
 			
 			body = ed.selection.getNode();
 			while(body.nodeName != 'BODY') {
