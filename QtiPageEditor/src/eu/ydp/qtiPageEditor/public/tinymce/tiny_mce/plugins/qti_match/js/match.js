@@ -811,6 +811,7 @@ var matchDialog = {
 			});
 
 			dom.setOuterHTML(dom.select('._mce_marker')[0], matchSection);
+			
 			ed.selection.moveToBookmark(bm);
 			ed.execCommand('mceEndUndoLevel');
 			
