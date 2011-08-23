@@ -9,10 +9,8 @@
 				
 				var selectedNode = ui;
 				
-				if(selectedNode.nodeName == 'SPAN' && selectedNode.id == 'gap') {
-					tinyMCE.clipboard = {type: 'gap', comment: selectedNode.previousSibling.data, content: selectedNode.innerHTML};
-				} else if (selectedNode.id == 'inlineChoiceInteraction' || selectedNode.id == 'inlineChoiceAnswer' || selectedNode.parentNode.id == 'inlineChoiceAnswer') {
-					tinyMCE.clipboard = {type: 'inlinechoice', comment: selectedNode.previousSibling.data, content: selectedNode.innerHTML};
+				if(selectedNode.nodeName == 'DIV' && selectedNode.id == 'gapInlineChoiceInteraction') {
+					tinyMCE.clipboard = {type: 'gapInlineChoiceInteraction', comment: selectedNode.previousSibling.data, content: selectedNode.innerHTML};
 				} else if ((selectedNode.nodeName == 'P' && selectedNode.id == 'choiceInteraction' && selectedNode.parentNode.id == 'choiceInteraction') || (selectedNode.nodeName == 'DIV' && selectedNode.id == 'choiceInteraction')) {
 					tinyMCE.clipboard = {type: 'multiplechoice', comment: selectedNode.previousSibling.data, content: selectedNode.innerHTML};
 				} else if (selectedNode.id == 'orderOption' || (selectedNode.id == 'choiceInteraction' && selectedNode.parentNode.id == 'orderInteraction')) {
@@ -32,24 +30,9 @@
 			ed.addCommand('mcePasteQTI', function(ui, data) {
 				
 				var activity = '';
-				
-				if(tinyMCE.clipboard.type == 'gap') {
-					
-					var comment = tinyMCE.clipboard.comment;
-					comment = comment.replace(/responseIdentifier="([^"]*)"/, 'responseIdentifier="' + newRandId() + '"');
-					activity += '<!--' + comment + '-->';
-					activity += '<span id="gap" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">' + tinyMCE.clipboard.content + '</span>&nbsp;';
-					
-				} else if(tinyMCE.clipboard.type == 'inlinechoice') {
-					
-					var comment = tinyMCE.clipboard.comment;
-					comment = comment.replace(/responseIdentifier="([^"]*)"/, 'responseIdentifier="' + newRandId() + '"');
-					var content = tinyMCE.clipboard.content;
-					content = content.replace(/identifier="([^"]*)"/g, 'identifier="' + newRandId() + '"');
-					activity += '<!--' + comment + '-->';
-					activity += '<span id="inlineChoiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">' + content + '</span><!-- end of inlineChoiceInteraction -->&nbsp;';
-					
-				} else if(tinyMCE.clipboard.type == 'multiplechoice') {
+				var correctResp = '';
+
+				if(tinyMCE.clipboard.type == 'multiplechoice') {
 					
 					var comment = tinyMCE.clipboard.comment;
 					comment = comment.replace(/responseIdentifier="([^"]*)"/, 'responseIdentifier="' + newRandId() + '"');
@@ -103,9 +86,48 @@
 					activity += '<p>&nbsp;</p><!--' + comment + '-->';
 					activity += '<div id="identificationInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">' + content + '</div><!-- end of identificationInteraction --><p>&nbsp;</p>';
 
+				} else if(tinyMCE.clipboard.type == 'gapInlineChoiceInteraction') {
+
+					var comment = tinyMCE.clipboard.comment;
+					var content = tinyMCE.clipboard.content;
+					var rg = new RegExp(/<([a-zA-Z]+) responseIdentifier="([^"]*)"/g);
+					var inlElmAns = '';
+					var randId = null;
+					var tmpContent = content;
+
+					while(null != (inlElmAns = rg.exec(tmpContent))) {
+						randId = newRandId();
+						var correctAnswerRgx = new RegExp('<!-- <responseDeclaration identifier="' + inlElmAns[2] + '"[^>]*>[^<]*<correctResponse>[^<]*<value>([^<]*)?<\/value>[^<]*<\/correctResponse>[^<]*<\/responseDeclaration> -->','gi');
+						var correctAnswerRgxRes = correctAnswerRgx.exec(ed.dom.doc.body.innerHTML); 
+						var oldCorrectResp = correctAnswerRgxRes[0];
+						
+						if ('textEntryInteraction' == inlElmAns[1]) {
+							oldCorrectResp = oldCorrectResp.replace(/identifier="([^"]*)"/gi, 'identifier="' + randId + '"');
+							correctResp += oldCorrectResp; 
+						}
+						
+						if ('inlineChoiceInteraction' == inlElmAns[1]) {
+							var inlineChoiceNewId = newRandId();
+							oldCorrectResp = oldCorrectResp.replace(/identifier="([^"]*)"/gi, 'identifier="' + randId + '"');
+							oldCorrectResp = oldCorrectResp.replace(/<value>([^<]*)<\/value>/gi, '<value>' + inlineChoiceNewId + '<\/value>');
+							content = content.replace('identifier="'+correctAnswerRgxRes[1]+'"', 'identifier="' + inlineChoiceNewId + '"');
+							correctResp += oldCorrectResp;
+						}
+						content = content.replace('responseIdentifier="'+inlElmAns[2]+'"', 'responseIdentifier="' + randId + '"');
+						content = content.replace('id="'+inlElmAns[2]+'"', 'id="' + randId + '"');
+					}
+
+					activity += '<p>&nbsp;</p><!--' + comment + '-->';
+					activity += '<div id="gapInlineChoiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue;padding: 5px; background-color: rgb(240, 240, 240);">' + content + '</div><!-- end of </gapInlineChoiceInteraction> --><p>&nbsp;</p>';
+
 				}
 				
 				tinyMCE.execCommand('mceInsertContent', false, activity);
+				
+				if ('' != correctResp) {
+					var regexp = new RegExp('(<!-- <itemBody> -->)','gi');
+					ed.dom.doc.body.innerHTML = ed.dom.doc.body.innerHTML.replace(regexp, correctResp + '$1');
+				}
 				delete(tinyMCE.clipboard);
 				
 			});

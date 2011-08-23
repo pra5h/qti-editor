@@ -122,18 +122,24 @@
 							break;
 						}
 						
+						// GapInlineChoice
+						if (selectedNode.id != undefined  && selectedNode.nodeName == 'DIV' && selectedNode.id == 'gapInlineChoiceInteraction') {
+							node = 'gapinlinechoice';
+							break
+						}
+												
 						// Gap
-						if (selectedNode.id != undefined  && selectedNode.nodeName == 'SPAN' && selectedNode.id == 'gap') {
+/*						if (selectedNode.id != undefined  && selectedNode.nodeName == 'SPAN' && selectedNode.id == 'gap') {
 							node = 'gap';
 							break
 						}
-						
+	*/					
 						// Inline choice
-						if (selectedNode.id != undefined  && selectedNode.id == 'inlineChoiceInteraction' && selectedNode.nodeName == 'SPAN') {
+		/*				if (selectedNode.id != undefined  && selectedNode.id == 'inlineChoiceInteraction' && selectedNode.nodeName == 'SPAN') {
 							node = 'inlinechoice';
 							break;
 						}
-						
+			*/			
 						// Multiple choice
 						if (selectedNode.id != undefined  && selectedNode.id == 'choiceInteraction' && selectedNode.nodeName == 'DIV') {
 							node = 'multiplechoice';
@@ -181,26 +187,15 @@
 			qtimenu = m.addMenu({title : 'QTI Support'});
 			
 			if(node != '') {
-				qtimenu.add({title : 'Insert gap', icon : 'insertgap', cmd : 'mceGap'}).setDisabled(true);
+				qtimenu.add({title : 'Insert gapInlineChoice', icon : 'insertgapinlinechoice', cmd : 'mceGapInlineChoice'}).setDisabled(true);
 			} else {
-				qtimenu.add({title : 'Insert gap', icon : 'insertgap', cmd : 'mceGap'});
+				qtimenu.add({title : 'Insert gapInlineChoice', icon : 'insertgapinlinechoice', cmd : 'mceGapInlineChoice'});
 			}
 			
-			if(node == 'gap') {
-				qtimenu.add({title : 'Remove gap', icon : 'removegap', cmd : 'mceGapRemove'});	
+			if(node == 'gapinlinechoice') {
+				qtimenu.add({title : 'Remove gapInlineChoice', icon : 'removegapinlinechoice', cmd : 'mceGapInlineChoiceRemove'});	
 			} else {
-				qtimenu.add({title : 'Remove gap', icon : 'removegap', cmd : 'mceGapRemove'}).setDisabled(true);	
-			}
-			
-			if(node != '') {
-				qtimenu.add({title : 'Insert inline choice element', icon : 'insertinlinechoice', cmd : 'mceInlineChoice'}).setDisabled(true);
-			} else {
-				qtimenu.add({title : 'Insert inline choice element', icon : 'insertinlinechoice', cmd : 'mceInlineChoice'});
-			}
-			if(node == 'inlinechoice') {
-				qtimenu.add({title : 'Remove inline choice element', icon : 'removeinlinechoice', cmd : 'mceInlineChoiceRemove'});
-			} else {
-				qtimenu.add({title : 'Remove inline choice element', icon : 'removeinlinechoice', cmd : 'mceInlineChoiceRemove'}).setDisabled(true);	
+				qtimenu.add({title : 'Remove gapInlineChoice', icon : 'removegapinlinechoice', cmd : 'mceGapInlineChoiceRemove'}).setDisabled(true);	
 			}
 			
 			if(node != '') {
@@ -300,7 +295,7 @@
 			
 			m.addSeparator();
 				
-			if(node == 'gap' || node == 'inlinechoice' || node == 'multiplechoice' || node == 'order' || node == 'match' || node == 'selection' || node == 'draggable' || node == 'identification') {
+			if(node == 'gapinlinechoice' || node == 'multiplechoice' || node == 'order' || node == 'match' || node == 'selection' || node == 'draggable' || node == 'identification') {
 				m.add({title : 'Copy QTI activity', icon : 'copyqtibutton', cmd : 'mceCopyQTI', ui: selectedNode});
 			} else if (tinyMCE.clipboard != undefined && ed.selection.getContent() == '') {
 				m.add({title : 'Paste QTI activity', icon : 'pasteqtibutton', cmd : 'mcePasteQTI'});
