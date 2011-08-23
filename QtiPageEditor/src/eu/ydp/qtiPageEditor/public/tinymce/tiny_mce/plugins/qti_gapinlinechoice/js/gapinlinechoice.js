@@ -160,7 +160,7 @@ var gapInlineChoiceDialog = {
 					content = '<p>&nbsp;</p><!-- <gapInlineChoiceInteraction> -->';
 					content += '<div id="gapInlineChoiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue;padding: 5px; background-color: rgb(240, 240, 240);">';
 				}
-				content += '<!-- <question> --><p id="gapInlineChoiceInteractionQuestion">'+obj.question+'</p><!-- </question> -->';
+				content += '<!-- <prompt> --><p id="gapInlineChoiceInteractionQuestion">'+obj.question+'</p><!-- </prompt> -->';
 				content += '<!-- <content> --><p id="gapInlineChoiceInteractionContent">'+obj.content+'</p><!-- </content> -->'; 
 
 				var sourcesList = new Object();
