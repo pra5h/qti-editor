@@ -149,7 +149,7 @@ function processQTI(h) {
 
 	//GapInlineChoice support
 	h = h.replace(/[\s]*(?! <!--)(<gapInlineChoiceInteraction[^>]*>)(?! -->)/gi, '<!-- $1 --><div id="gapInlineChoiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue;padding: 5px; background-color: rgb(240, 240, 240);" mce_style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">');
-	h = h.replace(/[\s]*(?! <!--)<question>(.*)<\/question>(?! -->)[\s]*/gi, '<!-- <question> --><p id="gapInlineChoiceInteractionQuestion">$1</p><!-- </question> -->');
+	h = h.replace(/[\s]*(?! <!--)<prompt>(.*)<\/prompt>(?! -->)[\s]*/gi, '<!-- <prompt> --><p id="gapInlineChoiceInteractionQuestion">$1</p><!-- </prompt> -->');
 	h = h.replace(/[\s]*(?! <!--)<content>/gi, '<!-- <content> --><p id="gapInlineChoiceInteractionContent">');
 	h = h.replace(/[\s]*(?! <!--)<\/content>/gi, '<\/p><!-- </content> -->');
 
@@ -391,7 +391,7 @@ function parseToQTI(h) {
 
 	//GapInlineChoice support
 	h = h.replace(/(?:<p>)?<!-- (<gapInlineChoiceInteraction[^>]*>) -->(?:<\/p>)?<div id="gapInlineChoiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">/gi, '<qy:tag name="exercise">$1');
-	h = h.replace(/<!-- <question> --><p id="gapInlineChoiceInteractionQuestion">(.*)<\/p><!-- <\/question> -->/gi, '<question>$1</question>');
+	h = h.replace(/<!-- <prompt> --><p id="gapInlineChoiceInteractionQuestion">(.*)<\/p><!-- <\/prompt> -->/gi, '<prompt>$1</prompt>');
 //	h = h.replace(/<!-- <content> --><p id="gapInlineChoiceInteractionContent">([\S\n\r\t\s.]*)<\/p><!-- <\/content> -->/gi, '<content>$1</content>');
 	h = h.replace(/<!-- <content> --><p id="gapInlineChoiceInteractionContent">/gi, '<content>');
 	h = h.replace(/<\/p><!-- <\/content> -->/gi, '</content>');
@@ -494,7 +494,7 @@ function applyFormatting(h) {
 	h = h.replace(/<(gapInlineChoiceInteraction|inlineChoiceInteraction|choiceInteraction|orderInteraction|matchInteraction|selectionInteraction|dragDropInteraction|identificationInteraction)([^>]*)>\s*/gi, '\n\n<$1$2>');
 
 	// begin tags with one newline before
-	h = h.replace(/<(qy:tag|textEntryInteraction|sourcesList|question|content|assessmentItem|modalFeedback)([^>]*)>\s*/gi, '\n<$1$2>');
+	h = h.replace(/<(qy:tag|textEntryInteraction|sourcesList|prompt|content|assessmentItem|modalFeedback)([^>]*)>\s*/gi, '\n<$1$2>');
 
 	// begin tags with two newlines after
 	h = h.replace(/<(assessmentItem|itemBody)([^>]*)>\s*/gi, '<$1$2>\n\n');
@@ -784,7 +784,7 @@ function runGapInlineChoice(selectedNode) {
 	var qtiNodeInnerHTML = qtiNode.innerHTML;
 	var data = new Object();
 
-	var rg = new RegExp(/<!-- <question> --><p id="gapInlineChoiceInteractionQuestion">(.*)<\/p><!-- <\/question> -->/gi);
+	var rg = new RegExp(/<!-- <prompt> --><p id="gapInlineChoiceInteractionQuestion">(.*)<\/p><!-- <\/prompt> -->/gi);
 	data.question = rg.exec(qtiNodeInnerHTML)[1];
 	
 	
