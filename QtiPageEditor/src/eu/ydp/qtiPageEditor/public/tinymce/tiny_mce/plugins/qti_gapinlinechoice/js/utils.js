@@ -1,0 +1,149 @@
+var gapRowTemplate = '<tr id="{number}">'
+						+'<td style="width: 190px;">'
+							+'<input type="hidden" id="identifier{number}" name="identifier" value="{identifier}"/>'
+							+'<input type="hidden" id="distractorData{number}" name="distractorData" value=""/>'
+							+'<input class="answer" type="text" id="answer{number}" name="answer"/>'
+						+'</td>'
+						+'<td>'
+							+'<input type="checkbox" id="checkbox{number}" name="checkbox" onChange="changeRowType(this);"/>'
+						+'</td>'
+						+'<td>'
+							+'<input type="button" id="distractor{number}" name="distractor" value="'+tinyMCE.i18n['en.gapinlinechoice_dlg.gap_distractor']+'" disabled="disabled" onClick="gapInlineChoiceDialog.openInlineChoice({number});" />'
+						+'</td>'
+						+'<td>'
+							+'<input type="button" id="{number}_add" name="add" value="'+tinyMCE.i18n['en.gapinlinechoice_dlg.gap_add']+'" onClick="applyExternalRowData(\'{number}\')"/>'
+						+'</td>'
+						+'<td>'
+							+'<input type="button" id="{number}_remove" name="remove" value="'+tinyMCE.i18n['en.gapinlinechoice_dlg.gap_remove']+'" onClick="removeExternalRowData(this);" />'
+						+'</td>'
+						+'<td>'
+							+'<input type="hidden" id="feedback{number}" name="feedback" />'
+							+'<img alt="Set feedback" title="Set feedback" onclick="feedback({number});" src="img/feedback.png"/>'
+						+'</td>'
+					+'</tr>';
+
+function feedback(rowId) {
+	//console.log(tinyMCE.i18n['en.gapinlinechoice_dlg.gap_distractor']);
+	//console.dir(rowId);
+	/*
+	var tr = row;
+	while(tr.nodeName != 'FORM') {
+		tr = tr.parentNode;
+	}
+	var exerciseId = tr.identifier.value;
+	var tr = row.parentNode.parentNode;
+	var inputs = tr.getElementsByTagName('input');
+	for(i in inputs) {
+		if(inputs[i].attributes != undefined && inputs[i].getAttribute('id').match(/^id_/i)) {
+			var identifier = inputs[i].getAttribute('value');
+			break;
+		}
+	}
+	if(identifier != undefined && exerciseId != undefined) {
+		if(tinyMCE.feedback != undefined && tinyMCE.feedback[exerciseId] != undefined) {
+			tinyMCE.execCommand('mceFeedbackChoice', false, {exerciseid: exerciseId, identifier: identifier, feedback: tinyMCE.feedback[exerciseId].text[identifier], feedback_sound:  tinyMCE.feedback[exerciseId].sound[identifier]});
+		} else {
+			tinyMCE.execCommand('mceFeedbackChoice', false, {exerciseid: exerciseId, identifier: identifier});
+		}
+	}
+	*/
+}
+
+function addNewRow(row) {
+	var lastId;
+	var newId;
+	var gapId = $('#gaps tbody tr').last().attr('id');
+	var id;
+	
+	if (null != row) {
+		newId = row.id;
+		id = row.identifier;
+	} else {
+		
+		if ("undefined" == typeof(gapId)) {
+			newId = "1";
+		} else {
+			lastId = gapId.replace(/[a-z]+/i,'');
+			newId = parseInt(lastId) + 1;
+		}
+		
+		randid = String(Math.random());
+		var rg = new RegExp('0.([0-9]*)',"gi");
+		exec = rg.exec(randid);
+		id = 'id_' + exec[1];
+	}
+	var newRow = gapRowTemplate.replace(/{number}/g, newId);
+	
+
+	
+	newRow = newRow.replace(/{identifier}/, id);
+	
+	$('#gaps').last().append(newRow);
+	
+	if (null != row) {
+		$('#answer'+newId).attr('value', row.answer);
+		$('#identifier'+newId).attr('value', row.identifier);
+	}
+
+}
+
+function applyExternalRowData(identifier) {
+	
+	var lp = identifier;
+	var chboxElm = $('#checkbox' + lp);
+	var type;
+
+	if (false == chboxElm.attr('checked')) {
+		type = 'gap';
+	} else {
+		type = 'inlineChoice';
+	}
+
+	var contents = document.getElementById('exercise_content');
+	var before = contents.value.substring(0,contents.selectionStart);
+	var after = contents.value.substring(contents.selectionEnd);
+	contents.value = before + '['+type+'#' + lp + ']' + after;
+}
+
+function removeExternalRowData(removeElement) {
+	
+	var tr = removeElement.parentNode.parentNode;
+	var id = tr.id;
+	var ch = $('#checkbox'+id);
+	var contentNode = $('#exercise_content');
+	var contentValue = contentNode.val();
+	if (true == ch.attr('checked')) {
+		contentValue = contentValue.replace('[inlineChoice#'+id+']', '');
+	} else if (false == ch.attr('checked')) {
+		contentValue = contentValue.replace('[gap#'+id+']', '');
+	}
+	contentNode.val(contentValue);
+	tr.parentNode.removeChild(tr);
+}
+
+function changeRowType(checkboxElement) {
+	if (checkboxElement.checked) {
+		$('#distractor' + checkboxElement.id.replace('checkbox','')).attr('disabled', false);
+		$('#answer' + checkboxElement.id.replace('checkbox','')).attr('disabled', true);
+
+	} else {
+		$('#distractor' + checkboxElement.id.replace('checkbox','')).attr('disabled', true);
+		$('#answer' + checkboxElement.id.replace('checkbox','')).attr('disabled', false);
+	}
+	
+}
+
+function add_answer_row() {
+	
+	var randid = Math.random();
+	randid = String(randid);
+	var rg = new RegExp('0.([0-9]*)',"gi");
+	exec = rg.exec(randid);
+	var id = 'id_' + exec[1];
+
+	var newDiv = document.createElement('div');
+	newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
+	newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td width="260px" style="padding-right: 5px;"><input type="text" id="" name="answers[]" style="width: 100%; margin-right: 5px;" /></td><input type="hidden" id="id_" name="ids[]" value="' + id + '"/><td width="50px" align="center"><input type="radio" name="points[]" style="margin: 0; padding: 0;" /></td><td width="50px" align="center"><input id="" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" /></td><td width="80px"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td width="50px" align="left"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr></table>';
+	document.getElementById('answer_list').appendChild(newDiv);
+	
+}
