@@ -94,7 +94,9 @@
 					var inlElmAns = '';
 					var randId = null;
 					var tmpContent = content;
-
+									
+					var replacedIdentifier = new Array();
+					
 					while(null != (inlElmAns = rg.exec(tmpContent))) {
 						randId = newRandId();
 						var correctAnswerRgx = new RegExp('<!-- <responseDeclaration identifier="' + inlElmAns[2] + '"[^>]*>[^<]*<correctResponse>[^<]*<value>([^<]*)?<\/value>[^<]*<\/correctResponse>[^<]*<\/responseDeclaration> -->','gi');
@@ -111,12 +113,23 @@
 							oldCorrectResp = oldCorrectResp.replace(/identifier="([^"]*)"/gi, 'identifier="' + randId + '"');
 							oldCorrectResp = oldCorrectResp.replace(/<value>([^<]*)<\/value>/gi, '<value>' + inlineChoiceNewId + '<\/value>');
 							content = content.replace('identifier="'+correctAnswerRgxRes[1]+'"', 'identifier="' + inlineChoiceNewId + '"');
+							replacedIdentifier.push(inlineChoiceNewId); //zapamiętuje jakie identifiery już zamieniłem
 							correctResp += oldCorrectResp;
 						}
 						content = content.replace('responseIdentifier="'+inlElmAns[2]+'"', 'responseIdentifier="' + randId + '"');
 						content = content.replace('id="'+inlElmAns[2]+'"', 'id="' + randId + '"');
 					}
 
+					var inlChElmRgx = new RegExp('<!-- (<inlineChoice identifier="([^"]+)")','gi');
+					var inlChElmRgxRes = '';
+					tmpContent = content;
+					while (null != (inlChElmRgxRes = inlChElmRgx.exec(tmpContent))) {
+						
+						if (replacedIdentifier.indexOf(inlChElmRgxRes[2]) === -1) {
+							randId = newRandId();
+							content = content.replace(inlChElmRgxRes[2], randId);
+						}
+					}
 					activity += '<p>&nbsp;</p><!--' + comment + '-->';
 					activity += '<div id="gapInlineChoiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue;padding: 5px; background-color: rgb(240, 240, 240);">' + content + '</div><!-- end of </gapInlineChoiceInteraction> --><p>&nbsp;</p>';
 

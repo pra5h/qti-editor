@@ -165,7 +165,7 @@ var gapInlineChoiceDialog = {
 
 				var sourcesList = new Object();
 				sourcesList.content = '<!-- <sourcesList> -->';
-				sourcesList.responses = "";
+				sourcesList.responses = '';
 				
 				for (i in obj.inlineRows) {
 					var row = obj.inlineRows[i];
@@ -218,6 +218,7 @@ var gapInlineChoiceDialog = {
 
 				} else {
 					var nd = tinyMCE.selectedNode;
+					
 					while(nd.id != 'gapInlineChoiceInteraction') {
 						nd = nd.parentNode;
 					}
@@ -227,8 +228,23 @@ var gapInlineChoiceDialog = {
 						body = body.parentNode;
 					}
 
-					regexp = new RegExp('(<\/styleDeclaration> -->)([.\\s\\S]*)?(<!-- <itemBody> -->)','mgi');
-					body.innerHTML = body.innerHTML.replace(regexp, '$1'+sourcesList.responses+'$3');
+					var identifier = '';
+					var resp = '';
+					
+					for (i in obj.inlineRows) {
+						resp = obj.inlineRows[i];
+					
+						if ('inlineChoice' == resp.type) {
+							identifier = resp.data.identifier;
+					
+						} else if ('gap' == resp.type) {
+							identifier = resp.identifier;
+						}
+						var respOldRgx = new RegExp('<!-- <responseDeclaration identifier="'+identifier+'"[^>]*>[^<]*<correctResponse>[^<]*<value>[^<]*<\/value>[^<]*<\/correctResponse>[^<]*<\/responseDeclaration> -->', 'gi');
+						var respNewRgx = new RegExp('<!-- <responseDeclaration identifier="'+identifier+'"[^>]*>[^<]*<correctResponse>[^<]*<value>[^<]*<\/value>[^<]*<\/correctResponse>[^<]*<\/responseDeclaration> -->', 'gi');
+						var newRespRgxRes = respNewRgx.exec(sourcesList.responses);
+						body.innerHTML = body.innerHTML.replace(respOldRgx, newRespRgxRes[0]);
+					}
 				}
 				ed.selection.moveToBookmark(bm);
 
