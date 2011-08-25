@@ -150,8 +150,13 @@ function processQTI(h) {
 	//GapInlineChoice support
 	h = h.replace(/[\s]*(?! <!--)(<gapInlineChoiceInteraction[^>]*>)(?! -->)/gi, '<!-- $1 --><div id="gapInlineChoiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue;padding: 5px; background-color: rgb(240, 240, 240);" mce_style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">');
 	h = h.replace(/[\s]*(?! <!--)<prompt>(.*)<\/prompt>(?! -->)[\s]*/gi, '<!-- <prompt> --><p id="gapInlineChoiceInteractionQuestion">$1</p><!-- </prompt> -->');
-	h = h.replace(/[\s]*(?! <!--)<content>/gi, '<!-- <content> --><p id="gapInlineChoiceInteractionContent">');
-	h = h.replace(/[\s]*(?! <!--)<\/content>/gi, '<\/p><!-- </content> -->');
+	
+	//nie działało na ctrl+z
+//	h = h.replace(/[\s]*(?! <!--)<content>/gi, '<!-- <content> --><p id="gapInlineChoiceInteractionContent">');
+//	h = h.replace(/[\s]*(?! <!--)<\/content>/gi, '<\/p><!-- </content> -->');
+	
+	h = h.replace(/[\s]*<content>(?! -->)/gi, '<!-- <content> --><p id="gapInlineChoiceInteractionContent">');
+	h = h.replace(/[\s]*<\/content>(?! -->)/gi, '<\/p><!-- </content> -->');
 
 	h = h.replace(/(<sourcesList>)(?! -->)[\s]*/gi, '<!-- $1 -->');
 	h = h.replace(/[\s]*(?! <!--)(<\/sourcesList>)(?! -->)[\s]*/gi, '<!-- $1 -->');
@@ -521,6 +526,18 @@ function applyFormatting(h) {
 
 }
 
+function selectNodeAfterMouseEvent(e, ed) {
+	if (e.type == 'mouseup') {
+		var sn = ed.selection.getNode() || ed.getBody();
+		if(sn.nodeName != 'HTML') {
+
+			while(sn.nodeName != 'BODY') {
+				sn = sn.parentNode;
+			}
+		}
+	}
+}
+
 function actionOnQTI(e) {
 	
 	var ed = tinymce.EditorManager.activeEditor;
@@ -539,6 +556,18 @@ function actionOnQTI(e) {
 			} 
 		} 
 	} 
+	
+	selectNodeAfterMouseEvent(e, ed);
+	//onDelete if Tracking is disable
+	if (e.keyCode == 46 && e.type == 'keypress') {
+		
+		var dd = ed.selection.getNode() || ed.getBody();
+		if(dd.attributes != undefined) {
+			if (dd.id != undefined  && dd.nodeName == 'DIV' && dd.id == 'gapInlineChoiceInteraction') {
+				ed.execCommand('mceGapInlineChoiceRemove', false);
+			}
+		}
+	}
 	
 	if(tinyMCE.changesTracking != undefined) {
 		if(tinyMCE.changesTracking === true) {
