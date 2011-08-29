@@ -47,8 +47,8 @@ var gapInlineChoiceDialog = {
 			}
 		},
 
-		insertGapActivityRow: function(row, sourcesList) {
-
+		insertGapActivityRow: function(row, sourcesList, newData) {
+			var pattern = '[gap#'+row.id+']';
 			var gapTag = '<!-- <textEntryInteraction responseIdentifier="' + row.identifier + '" expectedLength="100">';
 
 			if('' != row.feedback) {
@@ -75,9 +75,11 @@ var gapInlineChoiceDialog = {
 			gapTag += '</textEntryInteraction> -->';
 			gapTag += '<span id="gap" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">';
 			gapTag += row.answer;
-			gapTag += '</span>&nbsp;';
-
-			sourcesList.content += gapTag;
+			gapTag += '</span>';
+			//console.log(content);
+			newData.content = newData.content.replace(pattern, gapTag);
+			//console.log(content);
+			//sourcesList.content += gapTag;
 			var responseDeclaration = '<!-- <responseDeclaration identifier="' + row.identifier + '" cardinality="single" baseType="string">';
 			responseDeclaration += '<correctResponse>';
 			responseDeclaration += '<value>' + row.answer + '</value>';
@@ -87,8 +89,9 @@ var gapInlineChoiceDialog = {
 			sourcesList.responses += responseDeclaration;
 		},
 
-		insertInlineChoiceActivityRow: function(row, sourcesList) {
+		insertInlineChoiceActivityRow: function(row, sourcesList, newData) {
 
+			var pattern = '[inlineChoice#'+row.id+']';
 			var choiceSection = '<!-- <inlineChoiceInteraction responseIdentifier="' + row.data.identifier + '" shuffle="' + String(row.data.shuffle) + '"> --><span id="inlineChoiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">';
 			responseDeclaration = '<!-- <responseDeclaration identifier="' + row.data.identifier + '" cardinality="single" baseType="identifier"><correctResponse>';
 			for(i in row.data.answers) {
@@ -117,9 +120,10 @@ var gapInlineChoiceDialog = {
 				}
 			}
 			responseDeclaration += '</correctResponse></responseDeclaration> -->';
-			choiceSection += '</span><!-- end of inlineChoiceInteraction -->&nbsp;';
+			choiceSection += '</span><!-- end of inlineChoiceInteraction -->';
 
-			sourcesList.content += choiceSection;
+			newData.content = newData.content.replace(pattern, choiceSection);
+			//sourcesList.content += choiceSection;
 			sourcesList.responses += responseDeclaration;
 		},
 
@@ -127,7 +131,8 @@ var gapInlineChoiceDialog = {
 			var obj = new Object();
 			obj.identifier = $('#identifier').val();
 			obj.question = $('[name=question]').val();
-			obj.content = $('[name=exercise_content]').val().replace(/[ ]/gi,'&nbsp;').replace(/\n/g,'<br />');
+			obj.content = $('[name=exercise_content]').val().replace(/\n/g,'<br/>').replace(/[ ]/gi,'&nbsp;');
+			
 			obj.inlineRows = new Array();
 
 			$('#gaps tbody tr').each(function() {
@@ -154,40 +159,41 @@ var gapInlineChoiceDialog = {
 				ed.selection.moveToBookmark(bm);
 
 
-				var content = '';		
+				var newData = new Object();
+				newData.content = '';
 
 				if(form.addnew != undefined && form.addnew.getAttribute('value') == '1') {
-					content = '<p>&nbsp;</p><!-- <gapInlineChoiceInteraction> -->';
-					content += '<div id="gapInlineChoiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue;padding: 5px; background-color: rgb(240, 240, 240);">';
+					newData.content = '<p>&nbsp;</p><!-- <gapInlineChoiceInteraction> -->';
+					newData.content += '<div id="gapInlineChoiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue;padding: 5px; background-color: rgb(240, 240, 240);">';
 				}
-				content += '<!-- <prompt> --><p id="gapInlineChoiceInteractionQuestion">'+obj.question+'</p><!-- </prompt> -->';
-				content += '<!-- <content> --><p id="gapInlineChoiceInteractionContent">'+obj.content+'</p><!-- </content> -->'; 
+				newData.content += '<!-- <prompt> --><p id="gapInlineChoiceInteractionQuestion">'+obj.question+'</p><!-- </prompt> -->';
+				newData.content += '<!-- <content> --><p id="gapInlineChoiceInteractionContent">'+obj.content+'</p><!-- </content> -->'; 
 
 				var sourcesList = new Object();
-				sourcesList.content = '<!-- <sourcesList> -->';
+				//sourcesList.content = '<!-- <sourcesList> -->';
 				sourcesList.responses = '';
 				
 				for (i in obj.inlineRows) {
 					var row = obj.inlineRows[i];
 
 					if ('gap' == row.type) {
-						var pattern = '[gap#'+row.id+']';
-						content = content.replace(pattern, '<!-- <slot id="'+row.identifier+'"></slot> --><span id="mgap" style="border: 1px solid green;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>');
-						this.insertGapActivityRow(row, sourcesList);
+						//content = content.replace(pattern, '<!-- <slot id="'+row.identifier+'"></slot> --><span id="mgap" style="border: 1px solid green;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>');
+						this.insertGapActivityRow(row, sourcesList, newData);
 					} else if ('inlineChoice' == row.type){
-						var pattern = '[inlineChoice#'+row.id+']';
-						content = content.replace(pattern, '<!-- <slot id="'+row.data.identifier+'"></slot> --><span id="minlineChoice" style="border: 1px solid green;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>');
-						this.insertInlineChoiceActivityRow(row, sourcesList);
+						//var pattern = '[inlineChoice#'+row.id+']';
+						//newData.content = newData.content.replace(pattern, '<!-- <slot id="'+row.data.identifier+'"></slot> --><span id="minlineChoice" style="border: 1px solid green;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>');
+						this.insertInlineChoiceActivityRow(row, sourcesList, newData);
 					}
 				}
-				sourcesList.content += '<!-- </sourcesList> -->';
-				content += sourcesList.content;
+				
+				//sourcesList.content += '<!-- </sourcesList> -->';
+				//content += sourcesList.content;
 
 				var ed = tinymce.EditorManager.activeEditor;
 				var bm = ed.selection.getBookmark();
 
 				if(form.addnew != undefined && form.addnew.getAttribute('value') == '1') {
-					content += '</div><!-- end of </gapInlineChoiceInteraction> --><p>&nbsp;</p>';
+					newData.content += '</div><!-- end of </gapInlineChoiceInteraction> --><p>&nbsp;</p>';
 
 					var dom = ed.dom;
 					var patt = '';
@@ -206,7 +212,7 @@ var gapInlineChoiceDialog = {
 						ed.dom.split(ed.dom.getParent(n, 'h1,h2,h3,h4,h5,h6,p'), n);
 					});
 
-					dom.setOuterHTML(dom.select('._mce_marker')[0], content);
+					dom.setOuterHTML(dom.select('._mce_marker')[0], newData.content);
 					ed.selection.moveToBookmark(bm);
 
 					body = ed.selection.getNode();
@@ -222,7 +228,7 @@ var gapInlineChoiceDialog = {
 					while(nd.id != 'gapInlineChoiceInteraction') {
 						nd = nd.parentNode;
 					}
-					nd.innerHTML = content;
+					nd.innerHTML = newData.content;
 					body = nd;
 					while(body.nodeName != 'BODY') {
 						body = body.parentNode;

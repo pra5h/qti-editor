@@ -158,10 +158,10 @@ function processQTI(h) {
 	h = h.replace(/[\s]*<content>(?! -->)/gi, '<!-- <content> --><p id="gapInlineChoiceInteractionContent">');
 	h = h.replace(/[\s]*<\/content>(?! -->)/gi, '<\/p><!-- </content> -->');
 
-	h = h.replace(/(<sourcesList>)(?! -->)[\s]*/gi, '<!-- $1 -->');
-	h = h.replace(/[\s]*(?! <!--)(<\/sourcesList>)(?! -->)[\s]*/gi, '<!-- $1 -->');
+	//h = h.replace(/(<sourcesList>)(?! -->)[\s]*/gi, '<!-- $1 -->');
+	//h = h.replace(/[\s]*(?! <!--)(<\/sourcesList>)(?! -->)[\s]*/gi, '<!-- $1 -->');
 	h = h.replace(/<\/gapInlineChoiceInteraction>(?! -->)/gi, '</div><!-- end of </gapInlineChoiceInteraction> -->');
-	
+	/*
 	var sourcesPattern = /<!-- <sourcesList> -->([\s\S.]*)<!-- <\/sourcesList> -->/gi;
 	var sources = sourcesPattern.exec(h);
 	
@@ -186,7 +186,7 @@ function processQTI(h) {
 			}
 		}
 	}
-
+*/
 	// inlineChoice*
 	h = h.replace(/[\s]?(<inlineChoiceInteraction responseIdentifier="[^"]+" shuffle="[^"]+"[^>]*>)(?! -->)/gi, '<!-- $1 --><span id="inlineChoiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">');
 	for(var i in answers) {
@@ -196,12 +196,12 @@ function processQTI(h) {
 		}
 	}
 	h = h.replace(/[\s]?(<inlineChoice[^>]*>([^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/inlineChoice>)(?! -->)/gi, '<!-- $1 --><span id="inlineChoiceAnswer" style="display: none;">$2</span>');
-	h = h.replace(/<\/inlineChoiceInteraction>[\s]?/gi, '</span><!-- end of inlineChoiceInteraction -->');
+	h = h.replace(/<\/inlineChoiceInteraction>/gi, '</span><!-- end of inlineChoiceInteraction -->');
 	
 	// gap*
 	for(var i in answers) {
 		for(var j in answers[i][0]) {
-			var gap_rg = new RegExp('(<textEntryInteraction responseIdentifier="' + i + '"[^>]*>[^<]*(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/textEntryInteraction>)(?! -->)', "gi");
+			var gap_rg = new RegExp('[/\s/\n]?(<textEntryInteraction responseIdentifier="' + i + '"[^>]*>[^<]*(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/textEntryInteraction>)(?! -->)', "gi");
 			h = h.replace(gap_rg, '<!-- $1 --><span id="gap" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">' + answers[i][0][j] + '</span>');
 		}
 	}
@@ -404,11 +404,11 @@ function parseToQTI(h) {
 	h = h.replace(/<!-- (<textEntryInteraction[^>]*>[^<]*(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/textEntryInteraction>) --><span id="gap" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">([^<]*)<\/span>/gi, '$1');
 	h = h.replace(/<!-- (<inlineChoiceInteraction[^>]*>) -->(?:<\/?p>)?<span id="inlineChoiceInteraction" class="mceNonEditable" style="[^"]*">/gi, '$1');
 	h = h.replace(/<!-- (<inlineChoice[^>]*>[^<]*(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/inlineChoice>) --><span id="inlineChoiceAnswer" style="[^"]*">[^<]*(?:<span[^>]*>[^<]*<\/span>)?<\/span>/gi,'$1');
-	h = h.replace(/<!-- (<slot[^>]*>(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/slot>) --><span id="(?:(?:mgap)?|(?:minlineChoice)?)"[^>]*>[^<]*<\/span>/gi, '$1');
+	//h = h.replace(/<!-- (<slot[^>]*>(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/slot>) --><span id="(?:(?:mgap)?|(?:minlineChoice)?)"[^>]*>[^<]*<\/span>/gi, '$1');
 	h = h.replace(/<\/span>[^<]*(?:<\/p>)?[^<]*<!-- end of inlineChoiceInteraction -->/gi,'</inlineChoiceInteraction>');
 	h = h.replace(/ mce_src="[^"]*"/gi,'');
-	h = h.replace(/<!-- (<sourceslist>) -->/gi, '$1');
-	h = h.replace(/<!-- (<\/sourceslist>) -->/gi, '$1');
+	//h = h.replace(/<!-- (<sourceslist>) -->/gi, '$1');
+	//h = h.replace(/<!-- (<\/sourceslist>) -->/gi, '$1');
 	h = h.replace(/<\/div><!-- end of <\/gapInlineChoiceInteraction> -->/gi,'</gapInlineChoiceInteraction></qy:tag>');
 
 	//Selection support
@@ -496,10 +496,10 @@ function applyFormatting(h) {
 	h = h.replace(/(\n)+/g, '');
 
 	// begin tags with two newlines before
-	h = h.replace(/<(gapInlineChoiceInteraction|inlineChoiceInteraction|choiceInteraction|orderInteraction|matchInteraction|selectionInteraction|dragDropInteraction|identificationInteraction)([^>]*)>\s*/gi, '\n\n<$1$2>');
+	h = h.replace(/<(gapInlineChoiceInteraction|choiceInteraction|orderInteraction|matchInteraction|selectionInteraction|dragDropInteraction|identificationInteraction)([^>]*)>\s*/gi, '\n\n<$1$2>');
 
 	// begin tags with one newline before
-	h = h.replace(/<(qy:tag|textEntryInteraction|sourcesList|prompt|content|assessmentItem|modalFeedback)([^>]*)>\s*/gi, '\n<$1$2>');
+	h = h.replace(/<(qy:tag|inlineChoiceInteraction|textEntryInteraction|prompt|content|assessmentItem|modalFeedback)([^>]*)>\s*/gi, '\n<$1$2>');
 
 	// begin tags with two newlines after
 	h = h.replace(/<(assessmentItem|itemBody)([^>]*)>\s*/gi, '<$1$2>\n\n');
@@ -508,19 +508,16 @@ function applyFormatting(h) {
 	h = h.replace(/<(qy:tag|content|simpleMatchSet|mapping|mapEntry|correctResponse|responseDeclaration|inlineChoiceInteraction|choiceInteraction|orderInteraction|matchInteraction|selectionInteraction|dragDropInteraction|identificationInteraction)([^>]*)>\s*/gi, '<$1$2>\n');
 
 	// end tags with two newlines after
-	h = h.replace(/<\/(gapInlineChoiceInteraction|responseDeclaration|inlineChoiceInteraction|choiceInteraction|orderInteraction|matchInteraction|selectionInteraction|dragDropInteraction|identificationInteraction)>\s*/gi, '</$1>\n\n');
+	h = h.replace(/<\/(gapInlineChoiceInteraction|responseDeclaration|choiceInteraction|orderInteraction|matchInteraction|selectionInteraction|dragDropInteraction|identificationInteraction)>\s*/gi, '</$1>\n\n');
 
 	// end tags with one newline after
-	h = h.replace(/<\/(qy:tag|sourcesList|simpleMatchSet|simpleAssociableChoice|mapping|assessmentItem|value|correctResponse|prompt|simpleChoice|inlineChoice|item|contents|sourcelist|dragElement)>\s*/gi, '</$1>\n');
-
-	// end tags with one newline after (spacje pozostają nie zamieniane na newline)
-	h = h.replace(/<\/(slot)>/gi, '</$1>\n');
+	h = h.replace(/<\/(qy:tag|simpleMatchSet|simpleAssociableChoice|mapping|assessmentItem|value|correctResponse|prompt|simpleChoice|inlineChoice|item|contents|sourcelist|dragElement)>\s*/gi, '</$1>\n');
 
 	// end tags with two newlines before
 	h = h.replace(/<\/(itemBody)>\s*/gi, '\n\n</$1>');
 
 	// end tags with one newline before
-	h = h.replace(/<\/(qy:tag|assessmentItem)>/gi, '\n</$1>');
+	h = h.replace(/<\/(qy:tag|assessmentItem|content|gapInlineChoiceInteraction)>/gi, '\n</$1>');
 
 	return h;
 
@@ -817,14 +814,15 @@ function runGapInlineChoice(selectedNode) {
 	data.question = rg.exec(qtiNodeInnerHTML)[1];
 	
 	
-	var sourceRg = new RegExp(/<!-- <sourcesList> -->([\s\S.]*)<!-- <\/sourcesList> -->/gi);
-	var sourcesHtml = sourceRg.exec(qtiNodeInnerHTML);
+//	var sourceRg = new RegExp(/<!-- <sourcesList> -->([\s\S.]*)<!-- <\/sourcesList> -->/gi);
+//	var sourcesHtml = sourceRg.exec(qtiNodeInnerHTML);
 	
 	rg = new RegExp(/<!-- <content> --><p id="gapInlineChoiceInteractionContent">[\n]?([\s\S.]*)<\/p><!-- <\/content> -->/gi);
-	var content = rg.exec(qtiNodeInnerHTML)[1];
-	content = content.replace(/<span id="(?:(?:mgap)|(?:minlineChoice))"[^>]*>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<\/span>/gi, '');
+	//var content = rg.exec(qtiNodeInnerHTML)[1];
+	var content = rg.exec(qtiNodeInnerHTML);
+	//content = content.replace(/<span id="(?:(?:mgap)|(?:minlineChoice))"[^>]*>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<\/span>/gi, '');
 
-	var slot = null;
+	/*var slot = null;
 	var nodeName = null;
 	var nodeId = null;
 	rg = new RegExp('<!-- (<slot id="(id_[0-9]+)"[^>]*>(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/slot>) -->[\\n]?','gi');
@@ -834,11 +832,89 @@ function runGapInlineChoice(selectedNode) {
 	var sourceRegexp = null;
 
 	data.inlineRows = new Array();
-
+	
 	while (null != (slot = rg.exec(content))) {
-		
-		sourceRegexp = new RegExp('<!-- <([a-zA-Z]+) responseIdentifier="'+slot[2]+'"','gi');
-		nodeName = sourceRegexp.exec(sourcesHtml)[1];
+		*/
+	var tmpContent = content[1];
+	data.inlineRows = new Array();
+	var tag = '';
+	var tagRegexp = new RegExp('<!-- <([a-zA-Z]+) responseIdentifier="([^"]+)"','gi');
+	var i = 0;
+	var nodeName = '';
+
+	while (null != (tag = tagRegexp.exec(content[1]))) {
+		nodeName = tag[1];
+		if ('textEntryInteraction' == nodeName) {
+			var gapElement = new Object();
+			gapElement.id = i;
+			gapElement.identifier = tag[2];
+			
+			var gapRegexp = new RegExp('<!-- <textEntryInteraction responseIdentifier="'+tag[2]+'" [^>]*><\/textEntryInteraction> --><span[^>]*>([^<]*)<\/span>','gi');
+			var gapTag = gapRegexp.exec(content[1]);
+			gapElement.answer = gapTag[1];
+			gapElement.type = 'gap';
+			data.inlineRows.push(gapElement);
+			tmpContent = tmpContent.replace(gapRegexp, '[gap#'+i+']');
+			
+		} else if ('inlineChoiceInteraction' == nodeName) {
+			var inlChElement = new Object();
+			inlChElement.id = i;
+			inlChElement.identifier = tag[2];
+			inlChElement.answers = new Array(); 
+			inlChElement.fixed = new Array();
+			inlChElement.ids = new Array();
+			inlChElement.points = new Array();
+			//console.log(sourcesHtml[1]);
+			//var inlChRegexp = new RegExp('<!-- <inlineChoiceInteraction responseIdentifier="'+slot[2]+'" shuffle="([truefalse]+)"> --><span[^>]*><!-- <inlineChoice[^>]*>([^<]*)<\/inlineChoice> --><span[^>]*>([^<]*)<span[^>]*> »<\/span><\/span><!-- <inlineChoice identifier="(id_[0-9]+)" fixed="([truefalse]+)" >([^<]*)<\/inlineChoice> --><span[^>]*>([<]*)<\/span><\/span><!-- end of inlineChoiceInteraction -->', 'gi');
+			//var inlChElement = inlChRegexp.exec(sourcesHtml[1]);
+			//console.log(sourcesHtml[1]);
+			var inlChInteractionRgx = new RegExp('<!-- <inlineChoiceInteraction responseIdentifier="'+tag[2]+'" shuffle="(true|false)"> -->([.\\n\\s\\S]*?)?<!-- end of inlineChoiceInteraction -->', 'gi');
+			//var test = inlChInteractionRgx.exec(tmpContent);
+			//console.dir(test);
+			var inChResult = inlChInteractionRgx.exec(content[1]);
+			
+			if ("true" == inChResult[1]) {
+				inlChElement.shuffle = true;
+			} else {
+				inlChElement.shuffle = false;
+			}
+			
+			var correctAnswersReg = new RegExp('<responseDeclaration identifier="' + inlChElement.identifier + '"[^>]*>[^<]*<correctResponse>[^<]*<value>([^<]*)?<\/value>[^<]*<\/correctResponse>[^<]*<\/responseDeclaration>','gi');
+			var correctAnswerResult = correctAnswersReg.exec(ed.dom.doc.body.innerHTML);
+			var correctAnswer = '';
+			
+			//jeżeli zdefiniowano poprawne odpowiedzi - może być null przy "paste QTI activity" bo tam nie kopiuje się poprawnych odpowiedzi
+			if (null != correctAnswerResult) {
+				correctAnswer = correctAnswerResult[1];
+			}
+			
+			var inlChoiceRgx = new RegExp('<!-- <inlineChoice identifier="(id_[0-9]+)"(?: fixed="([^"]*)" )?>([^<]*)<\/inlineChoice> -->', 'gi');
+			var inlChoice;
+			var correctInlChReg;
+			while(null != (inlChoice = inlChoiceRgx.exec(inChResult[2]))) {
+				inlChElement.answers.push(inlChoice[3]);
+				inlChElement.ids.push(inlChoice[1]);
+				
+				if ("true" == inlChoice[2]) {
+					inlChElement.fixed.push(1);
+				} else {
+					inlChElement.fixed.push(0);
+				}
+				
+				if ("undefined" != typeof correctAnswer && null != correctAnswer && inlChoice[1] == correctAnswer) {
+						inlChElement.points.push(1);
+				} else {
+					inlChElement.points.push(0);
+				}
+			}
+			data.inlineRows.push(inlChElement);
+			tmpContent = tmpContent.replace(inlChInteractionRgx, '[inlineChoice#'+i+']');
+		}
+		i++;
+	}
+	/*
+//		sourceRegexp = new RegExp('<!-- <([a-zA-Z]+) responseIdentifier="'+slot[2]+'"','gi');
+	//	nodeName = sourceRegexp.exec(sourcesHtml)[1];
 
 		if ('textEntryInteraction' == nodeName) {
 			var gapElement = new Object();
@@ -906,8 +982,9 @@ function runGapInlineChoice(selectedNode) {
 		}
 		i++;
 	}
-	
+	*/
 	data.content = tmpContent;
+	
 	tinyMCE.selectedNode = selectedNode;
 	tinyMCE.execCommand('mceGapInlineChoice', false, data);
 	/*
