@@ -31,3 +31,13 @@ tinyMCE.addI18n('en.inlinechoice_dlg',{
 	question_data:"Question metadata",
 	question_shuffle:"Shuffle"
 });
+
+tinyMCE.addI18n('en.feedback_dlg',{
+    window_title:"Insert / modify choice feedback",
+    modify:"Save",
+    insert:"Insert",
+    remove:"Remove",
+    feedback_label:"Feedback",
+    feedback_onok:"On OK",
+    feedback_onwrong:"On Wrong"
+});

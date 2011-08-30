@@ -23,6 +23,27 @@ var gapRowTemplate = '<tr id="{number}">'
 					+'</tr>';
 
 function feedback(rowId) {
+	
+	var identifier = $('#identifier'+rowId).val();
+	var chboxElm = $('#checkbox' + rowId);
+
+	if (false == chboxElm.attr('checked')) {
+		//sekcja dla gap
+		if(identifier != undefined) {
+		
+			if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined) {
+				tinyMCE.execCommand('mceFeedbackGap', false, {identifier: identifier, feedback: tinyMCE.feedback[identifier]});
+			} else {
+				tinyMCE.execCommand('mceFeedbackGap', false, {identifier: identifier});
+			}
+		}
+	} else {
+		//sekcja dla inlineChoice
+alert('TODO');
+	}
+	
+
+	
 	//console.log(tinyMCE.i18n['en.gapinlinechoice_dlg.gap_distractor']);
 	//console.dir(rowId);
 	/*
@@ -47,6 +68,12 @@ function feedback(rowId) {
 		}
 	}
 	*/
+}
+
+function assignSound(row) {
+	
+	tinyMCE.execCommand('mceAddFeedbackSound', false, {dest: row.previousSibling.previousSibling, src: row.previousSibling.previousSibling.value});
+	
 }
 
 function addNewRow(row) {

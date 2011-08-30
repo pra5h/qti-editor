@@ -50,26 +50,28 @@ var gapInlineChoiceDialog = {
 		insertGapActivityRow: function(row, sourcesList, newData) {
 			var pattern = '[gap#'+row.id+']';
 			var gapTag = '<!-- <textEntryInteraction responseIdentifier="' + row.identifier + '" expectedLength="100">';
+			if ('undefined' != typeof tinyMCE.feedback) {
+				var feedbackObj = tinyMCE.feedback[row.identifier];//new tinymce.util.JSON.parse(row.feedback);
 
-			if('' != row.feedback) {
-				var feedbackObj = new tinymce.util.JSON.parse(row.feedback);
+				if('undefined' != typeof feedbackObj) {
 
-				if ('' != feedbackObj.onOk) {
-					gapTag += '<feedbackInline ';
-					gapTag += 'mark="CORRECT"';
-					gapTag += ' fadeEffect="300" ';
-					gapTag += 'senderIdentifier="^' + feedbackObj.identifier + '$" ';
-					gapTag += 'outcomeIdentifier="' + feedbackObj.identifier + '"'; 
-					gapTag += 'identifier="' + row.identifier + '" showHide="show">' + feedbackObj.onOk + '</feedbackInline>'
-				}
+					if ('undefined' != typeof feedbackObj.onOk) {
+						gapTag += '<feedbackInline ';
+						gapTag += 'mark="CORRECT"';
+						gapTag += ' fadeEffect="300" ';
+						gapTag += 'senderIdentifier="^' + row.identifier + '$" ';
+						gapTag += 'outcomeIdentifier="' + row.identifier + '" '; 
+						gapTag += 'identifier="' + row.answer + '" showHide="show">' + feedbackObj.onOk + '</feedbackInline>'
+					}
 
-				if ('' != feedbackObj.onWrong) {
-					gapTag += '<feedbackInline ';
-					gapTag += 'mark="WRONG"';
-					gapTag += ' fadeEffect="300" ';
-					gapTag += 'senderIdentifier="^' + feedbackObj.identifier + '$" ';
-					gapTag += 'outcomeIdentifier="' + feedbackObj.identifier + '" ';
-					gapTag += 'identifier="' + row.identifier + '" showHide="hide">' + feedbackObj.onWrong + '</feedbackInline>'
+					if ('undefined' != typeof feedbackObj.onWrong) {
+						gapTag += '<feedbackInline ';
+						gapTag += 'mark="WRONG"';
+						gapTag += ' fadeEffect="300" ';
+						gapTag += 'senderIdentifier="^' + row.identifier + '$" ';
+						gapTag += 'outcomeIdentifier="' + row.identifier + '" ';
+						gapTag += 'identifier="' + row.answer + '" showHide="hide">' + feedbackObj.onWrong + '</feedbackInline>'
+					}
 				}
 			}
 			gapTag += '</textEntryInteraction> -->';
@@ -143,7 +145,7 @@ var gapInlineChoiceDialog = {
 					row.identifier = $tr.find('#identifier'+row.id).val();
 					row.answer = $tr.find('#answer'+row.id).val();
 					row.checkboks = $tr.find('#checkbox'+row.id).attr('checked');
-					row.feedback = $tr.find('#feedback'+row.id).val();
+					//row.feedback = $tr.find('#feedback'+row.id).val();
 					row.type = 'gap';
 				} else {
 					row.data = tinymce.util.JSON.parse($('#distractorData'+$tr.attr('id')).val());
@@ -156,7 +158,7 @@ var gapInlineChoiceDialog = {
 			if (obj.question != undefined && obj.question != '') {
 				var ed = tinymce.EditorManager.activeEditor;
 				var bm = ed.selection.getBookmark();
-				ed.selection.moveToBookmark(bm);
+//				ed.selection.moveToBookmark(bm);
 
 
 				var newData = new Object();
@@ -263,6 +265,48 @@ var gapInlineChoiceDialog = {
 					ed.selection.dom.doc.body.innerHTML = ed.selection.dom.doc.body.innerHTML.replace(/<itemBody> -->/,'<itemBody> -->' + beforeHeadings[1]);
 				}
 			}
+			/*
+			if(tinyMCE.feedback != undefined) {
+				var row = '';
+				var identifier = '';
+				var gap = '';
+				
+				for (i in obj.inlineRows) {
+					row = obj.inlineRows[i];
+					if ('gap' == row.type) {
+						identifier = row.identifier;
+						gap = row.answer;
+					} else if ('inlineChoice' == row.type) {
+						identifier = row.data.identifier;
+					}
+
+					var rg_onok = new RegExp('<!-- <modalFeedback[^>]*outcomeIdentifier="' + identifier + '"[^>]*showHide="show"[^>]*>[^<]*</modalFeedback> -->','gi');
+					var rg_onwrong = new RegExp('<!-- <modalFeedback[^>]*outcomeIdentifier="' + identifier + '"[^>]*showHide="hide"[^>]*>[^<]*</modalFeedback> -->','gi');
+					if(rg_onok.exec(tinyMCE.activeEditor.dom.doc.body.innerHTML) != '') {
+						tinyMCE.activeEditor.dom.doc.body.innerHTML = tinyMCE.activeEditor.dom.doc.body.innerHTML.replace(rg_onok,'');
+					}
+					if(rg_onwrong.exec(tinyMCE.activeEditor.dom.doc.body.innerHTML) != '') {
+						tinyMCE.activeEditor.dom.doc.body.innerHTML = tinyMCE.activeEditor.dom.doc.body.innerHTML.replace(rg_onwrong,'');
+					}
+
+					if(tinyMCE.feedback[identifier] != undefined) {
+
+						var mf_onok = '<!-- <modalFeedback outcomeIdentifier="' + identifier + '" identifier="' + gap + '" showHide="show"';
+						if(tinyMCE.feedback[identifier].sound_onok != undefined && tinyMCE.feedback[identifier].sound_onok != '') {
+							mf_onok += ' sound="' + tinyMCE.feedback[identifier].sound_onok + '"';
+						}
+						mf_onok += '></modalFeedback> -->'
+							var mf_onwrong = '<!-- <modalFeedback outcomeIdentifier="' + identifier + '" identifier="' + gap + '" showHide="hide"';
+						if(tinyMCE.feedback[identifier].sound_onwrong != undefined && tinyMCE.feedback[identifier].sound_onwrong != '') {
+							mf_onwrong += ' sound="' + tinyMCE.feedback[identifier].sound_onwrong + '"';
+						}
+						mf_onwrong += '></modalFeedback> -->'
+
+							tinyMCE.activeEditor.dom.doc.body.innerHTML = tinyMCE.activeEditor.dom.doc.body.innerHTML.replace(/(<!-- <\/itemBody> -->)/i, '$1' + mf_onok + mf_onwrong);
+					}
+				}
+			} 
+			*/
 			tinyMCEPopup.close();
 			return true;
 		},

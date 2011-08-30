@@ -849,9 +849,32 @@ function runGapInlineChoice(selectedNode) {
 			gapElement.id = i;
 			gapElement.identifier = tag[2];
 			
-			var gapRegexp = new RegExp('<!-- <textEntryInteraction responseIdentifier="'+tag[2]+'" [^>]*><\/textEntryInteraction> --><span[^>]*>([^<]*)<\/span>','gi');
+			var gapRegexp = new RegExp('<!-- <textEntryInteraction responseIdentifier="'+tag[2]+'" [^>]*>([.\\s\\S]*)<\/textEntryInteraction> --><span[^>]*>([^<]*)<\/span>','gi');
 			var gapTag = gapRegexp.exec(content[1]);
-			gapElement.answer = gapTag[1];
+			//if feedback exists
+			if ('' != gapTag[1]) {
+				var rg = null;
+				var feedback = new Object();
+				
+				rg = new RegExp('<feedbackInline[^>]*showHide="show"[^>]*>([^<]*)<\/feedbackInline>','gi');
+				var onok = rg.exec(gapTag[1]);
+				
+				if(onok != undefined) {
+					feedback.onOk = onok[1];
+				} else {
+					feedback.onOk = '';
+				}
+				
+				rg = new RegExp('<feedbackInline[^>]*showHide="hide"[^>]*>([^<]*)<\/feedbackInline>','gi');
+				var onwrong = rg.exec(gapTag[1]);
+				if(onwrong != undefined) {
+					feedback.onWrong = onwrong[1];
+				} else {
+					feedback.onWrong = '';
+				}
+				gapElement.feedback = feedback;
+			}
+			gapElement.answer = gapTag[2];
 			gapElement.type = 'gap';
 			data.inlineRows.push(gapElement);
 			tmpContent = tmpContent.replace(gapRegexp, '[gap#'+i+']');
