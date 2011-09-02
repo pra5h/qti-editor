@@ -96,23 +96,24 @@ var gapInlineChoiceDialog = {
 			var pattern = '[inlineChoice#'+row.id+']';
 			var choiceSection = '<!-- <inlineChoiceInteraction responseIdentifier="' + row.data.identifier + '" shuffle="' + String(row.data.shuffle) + '"> --><span id="inlineChoiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">';
 			responseDeclaration = '<!-- <responseDeclaration identifier="' + row.data.identifier + '" cardinality="single" baseType="identifier"><correctResponse>';
+
 			for(i in row.data.answers) {
 				choiceSection += '<!-- <inlineChoice identifier="' + row.data.ids[i] + '"';
 				if(row.data.fixed[i] == 1) {
 					choiceSection += ' fixed="true" ';
 				}
 				choiceSection += '>' + row.data.answers[i];
-				/*
-			if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].text[ids[i]] != undefined) {
-				choiceSection += '<feedbackInline ';
-				if(points[i] == 1) { 
-					choiceSection += 'mark="CORRECT"';
-				} else {
-					choiceSection += 'mark="WRONG"';
-				}
-				choiceSection += ' fadeEffect="300" senderIdentifier="^' + ids[i] + '$" outcomeIdentifier="' + ids[i] + '" identifier="' + answers[i] + '" showHide="show">' + tinyMCE.feedback[identifier].text[ids[i]] + '</feedbackInline>'
-			} 
-				 */
+
+				if(row.data.feedbacks != undefined && row.data.feedbacks[row.data.ids[i]] != undefined) {
+					choiceSection += '<feedbackInline ';
+					if(row.data.points[i] == 1) { 
+						choiceSection += 'mark="CORRECT"';
+					} else {
+						choiceSection += 'mark="WRONG"';
+					}
+					choiceSection += ' fadeEffect="300" senderIdentifier="^' + row.data.ids[i] + '$" outcomeIdentifier="' + row.data.ids[i] + '" identifier="' + row.data.answers[i] + '" showHide="show">' + row.data.feedbacks[row.data.ids[i]] + '</feedbackInline>'
+				} 
+
 				choiceSection += '</inlineChoice> -->';
 				if(row.data.points[i] == 1) {
 					responseDeclaration += '<value>' + row.data.ids[i] + '</value>';
@@ -251,7 +252,12 @@ var gapInlineChoiceDialog = {
 						var respOldRgx = new RegExp('<!-- <responseDeclaration identifier="'+identifier+'"[^>]*>[^<]*<correctResponse>[^<]*<value>[^<]*<\/value>[^<]*<\/correctResponse>[^<]*<\/responseDeclaration> -->', 'gi');
 						var respNewRgx = new RegExp('<!-- <responseDeclaration identifier="'+identifier+'"[^>]*>[^<]*<correctResponse>[^<]*<value>[^<]*<\/value>[^<]*<\/correctResponse>[^<]*<\/responseDeclaration> -->', 'gi');
 						var newRespRgxRes = respNewRgx.exec(sourcesList.responses);
-						body.innerHTML = body.innerHTML.replace(respOldRgx, newRespRgxRes[0]);
+						var newRespSection = '';
+						
+						if (null != newRespRgxRes) {
+							newRespSection = newRespRgxRes[0]; 
+						}
+						body.innerHTML = body.innerHTML.replace(respOldRgx, newRespSection);
 					}
 				}
 				ed.selection.moveToBookmark(bm);
@@ -316,9 +322,11 @@ var gapInlineChoiceDialog = {
 			var url = tinyMCEPopup.getWindowArg("plugin_url");
 			var actualData = $('#distractorData'+rowNr).val();
 
+			
+			
 			ed.windowManager.open({
 				file : url + '/inlinechoice.htm',
-				width : 500,
+				width : 470,
 				height : 350,
 				inline : 1
 			}, {

@@ -285,7 +285,7 @@ function processQTI(h) {
 	//Modal feedbacks
 	h = h.replace(/(<modalFeedback[^>]*>)/gi, '<!-- $1 -->');
 	h = h.replace(/(<\/modalFeedback>)/gi, '<!-- $1 -->');
-
+	
 	return h;
 
 }
@@ -887,6 +887,7 @@ function runGapInlineChoice(selectedNode) {
 			inlChElement.fixed = new Array();
 			inlChElement.ids = new Array();
 			inlChElement.points = new Array();
+			inlChElement.feedbacks = new Object();
 			//console.log(sourcesHtml[1]);
 			//var inlChRegexp = new RegExp('<!-- <inlineChoiceInteraction responseIdentifier="'+slot[2]+'" shuffle="([truefalse]+)"> --><span[^>]*><!-- <inlineChoice[^>]*>([^<]*)<\/inlineChoice> --><span[^>]*>([^<]*)<span[^>]*> »<\/span><\/span><!-- <inlineChoice identifier="(id_[0-9]+)" fixed="([truefalse]+)" >([^<]*)<\/inlineChoice> --><span[^>]*>([<]*)<\/span><\/span><!-- end of inlineChoiceInteraction -->', 'gi');
 			//var inlChElement = inlChRegexp.exec(sourcesHtml[1]);
@@ -911,10 +912,11 @@ function runGapInlineChoice(selectedNode) {
 				correctAnswer = correctAnswerResult[1];
 			}
 			
-			var inlChoiceRgx = new RegExp('<!-- <inlineChoice identifier="(id_[0-9]+)"(?: fixed="([^"]*)" )?>([^<]*)<\/inlineChoice> -->', 'gi');
+			var inlChoiceRgx = new RegExp('<!-- <inlineChoice identifier="(id_[0-9]+)"(?: fixed="([^"]*)" )?>([^<]*)(<feedbackInline[^>]*>([^<]*)<\/feedbackInline>)*<\/inlineChoice> -->', 'gi');
 			var inlChoice;
 			var correctInlChReg;
 			while(null != (inlChoice = inlChoiceRgx.exec(inChResult[2]))) {
+				
 				inlChElement.answers.push(inlChoice[3]);
 				inlChElement.ids.push(inlChoice[1]);
 				
@@ -929,6 +931,14 @@ function runGapInlineChoice(selectedNode) {
 				} else {
 					inlChElement.points.push(0);
 				}
+
+				if ("undefined" != typeof inlChoice && "undefined" != typeof inlChoice[5]) {
+					inlChElement.feedbacks[inlChoice[1]] = inlChoice[5];
+				}
+				//else {
+					//inlChElement.feedbacks.push(null);
+				//}
+				inlChElement.type = 'inlineChoice';
 			}
 			data.inlineRows.push(inlChElement);
 			tmpContent = tmpContent.replace(inlChInteractionRgx, '[inlineChoice#'+i+']');
@@ -1007,7 +1017,6 @@ function runGapInlineChoice(selectedNode) {
 	}
 	*/
 	data.content = tmpContent;
-	
 	tinyMCE.selectedNode = selectedNode;
 	tinyMCE.execCommand('mceGapInlineChoice', false, data);
 	/*

@@ -15,30 +15,43 @@
 		init : function(ed, url) {
 			// Register the command so that it can be invoked by using tinyMCE.activeEditor.execCommand('mceExample');
 			ed.addCommand('mceGapInlineChoice', function(ui, data) {
-				/*
+
 				if(data != undefined) {
-					if((data.onok != undefined && data.onok != '') || (data.onwrong != undefined && data.onwrong != '')) {
-						tinyMCE.feedback = new Array;
-						tinyMCE.feedback[data.id] = {};
-					}
-					if(data.onok != undefined && data.onok != '') {
-						tinyMCE.feedback[data.id].onok = data.onok;
-					}
-					if(data.onwrong != undefined && data.onwrong != '') {
-						tinyMCE.feedback[data.id].onwrong = data.onwrong;
-					}
-					if(data.onok_sound != undefined && data.onok_sound != '') {
+
+					for (i in data.inlineRows) {
+						var row = data.inlineRows[i];
+						if ('gap' == row.type) {
+							
+							if(row.feedback != undefined) {
+								var feedback = row.feedback;
+
+								if((feedback.onOk != undefined && feedback.onOk != '') || (feedback.onWrong != undefined && feedback.onWrong != '')) {
+									tinyMCE.feedback = new Array;
+									tinyMCE.feedback[row.identifier] = {};
+								}
+								if(feedback.onOk != undefined && feedback.onOk != '') {
+									tinyMCE.feedback[row.identifier].onOk = feedback.onOk;
+								}
+								if(feedback.onWrong != undefined && feedback.onWrong != '') {
+									tinyMCE.feedback[row.identifier].onWrong = feedback.onWrong;
+								}
+								/*if(data.onok_sound != undefined && data.onok_sound != '') {
 						tinyMCE.feedback[data.id].onok_sound = data.onok_sound;
-					}
-					if(data.onwrong_sound != undefined && data.onwrong_sound != '') {
-						tinyMCE.feedback[data.id].onwrong_sound = data.onwrong_sound;
+						}
+
+						if(data.onwrong_sound != undefined && data.onwrong_sound != '') {
+							tinyMCE.feedback[data.id].onwrong_sound = data.onwrong_sound;
+						}
+								 */
+							}
+						}
 					}
 				}
-				*/
+
 				ed.windowManager.open({
 					file : url + '/gapinlinechoice.htm',
-					width : 800, //470,
-					height : 600, //330,
+					width : 470,
+					height : 330,
 					inline : 1
 				}, {
 					plugin_url : url, // Plugin absolute URL
@@ -78,13 +91,73 @@
 			});
 			
 			ed.addCommand('mceFeedbackGap', function(ui,data) {
-				alert('mceFeedbackGap');
-				return true;
+				ed.windowManager.open({
+					file : url + '/gapfeedback.htm',
+					width : 400,
+					height : 100,
+					inline : 1
+				}, {
+					plugin_url : url, // Plugin absolute URL
+					data: {identifier: data.identifier, feedback: data.feedback, type: 'gap'}
+				});
+			});
+
+			ed.addCommand('mceFeedbackInlinechoice', function(ui,data) {
+
+				ed.windowManager.open({
+					file : url + '/inlinechoicefeedback.htm',
+					width : 400,
+					height : 100,
+					inline : 1
+				}, {
+					plugin_url : url, // Plugin absolute URL
+					data: {identifier: data.identifier, feedback: data.feedback, feedback_sound: data.feedback_sound, exerciseid: data.exerciseid, type: 'inlineChoice'}
+				});
+
+			});
+			ed.addCommand('mceFeedbackGapRemove', function(ui,data) {
+				
+				var form = data;
+				while(form.nodeName != 'FORM') {
+					form = form.parentNode;
+				}
+				if(tinyMCE.feedback != undefined) {
+					var tempArr = new Array;
+					for(i in tinyMCE.feedback) {
+						if(i != form.identifier.value) {
+							tempArr[i] = tinyMCE.feedback[i];
+						}
+					}
+					tinyMCE.feedback = tempArr;
+				}
+				
 			});
 			
-			ed.addCommand('mceFeedbackGapRemove', function(ui,data) {
-				alert('mceFeedbackGapRemove');
-				return true;	
+			ed.addCommand('mceFeedbackInlineChoiceRemove', function(ui,data) {
+
+				var form = data;
+				while(form.nodeName != 'FORM') {
+					form = form.parentNode;
+				}
+
+				if(tinyMCE.feedback != undefined) {
+					if(tinyMCE.feedback[form.exerciseid.value] != undefined) {
+
+						for(i in tinyMCE.feedback[form.exerciseid.value].text) {
+							
+							if(i == form.identifier.value) {
+								delete tinyMCE.feedback[form.exerciseid.value].text[i];
+							}
+						}
+						
+						for(i in tinyMCE.feedback[form.exerciseid.value].sound) {
+							
+							if(i == form.identifier.value) {
+								delete tinyMCE.feedback[form.exerciseid.value].sound[i];
+							}
+						}
+					}
+				}
 			});
 			
 			ed.addButton('insertgapinlinechoice', {title : 'Insert gapinlinechoice activity', cmd : 'mceGapInlineChoice'});

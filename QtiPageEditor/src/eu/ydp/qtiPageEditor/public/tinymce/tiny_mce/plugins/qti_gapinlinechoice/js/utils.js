@@ -22,52 +22,48 @@ var gapRowTemplate = '<tr id="{number}">'
 						+'</td>'
 					+'</tr>';
 
-function feedback(rowId) {
-	
-	var identifier = $('#identifier'+rowId).val();
-	var chboxElm = $('#checkbox' + rowId);
+function feedback(obj) {
 
-	if (false == chboxElm.attr('checked')) {
-		//sekcja dla gap
-		if(identifier != undefined) {
-		
-			if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined) {
-				tinyMCE.execCommand('mceFeedbackGap', false, {identifier: identifier, feedback: tinyMCE.feedback[identifier]});
-			} else {
-				tinyMCE.execCommand('mceFeedbackGap', false, {identifier: identifier});
+	//sekcja dla gap
+	if ('number' == typeof obj) {  
+		var identifier = $('#identifier'+obj).val();
+		var chboxElm = $('#checkbox' + obj);
+
+		if (false == chboxElm.attr('checked')) {
+	
+			if(identifier != undefined) {
+
+				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined) {
+					tinyMCE.execCommand('mceFeedbackGap', false, {identifier: identifier, feedback: tinyMCE.feedback[identifier]});
+				} else {
+					tinyMCE.execCommand('mceFeedbackGap', false, {identifier: identifier});
+				}
 			}
 		}
-	} else {
-		//sekcja dla inlineChoice
-alert('TODO');
-	}
-	
 
-	
-	//console.log(tinyMCE.i18n['en.gapinlinechoice_dlg.gap_distractor']);
-	//console.dir(rowId);
-	/*
-	var tr = row;
-	while(tr.nodeName != 'FORM') {
-		tr = tr.parentNode;
-	}
-	var exerciseId = tr.identifier.value;
-	var tr = row.parentNode.parentNode;
-	var inputs = tr.getElementsByTagName('input');
-	for(i in inputs) {
-		if(inputs[i].attributes != undefined && inputs[i].getAttribute('id').match(/^id_/i)) {
-			var identifier = inputs[i].getAttribute('value');
-			break;
+	} else if ('object' == typeof obj) {
+		//sekcja dla inlineChoice
+		var tr = obj;
+		while(tr.nodeName != 'FORM') {
+			tr = tr.parentNode;
+		}
+		var exerciseId = tr.identifier.value;
+		tr = obj.parentNode.parentNode;
+		var inputs = tr.getElementsByTagName('input');
+		for(i in inputs) {
+			if(inputs[i].attributes != undefined && inputs[i].getAttribute('id').match(/id_/)) {
+				var identifier = inputs[i].getAttribute('value');
+				break;
+			}
+		}
+		if(identifier != undefined && exerciseId != undefined) {
+			if(tinyMCE.feedback != undefined && tinyMCE.feedback[exerciseId] != undefined) {
+				tinyMCE.execCommand('mceFeedbackInlinechoice', false, {identifier: identifier, exerciseid: exerciseId, feedback: tinyMCE.feedback[exerciseId].text[identifier], feedback_sound: tinyMCE.feedback[exerciseId].sound[identifier]});
+			} else {
+				tinyMCE.execCommand('mceFeedbackInlinechoice', false, {identifier: identifier, exerciseid: exerciseId});
+			}
 		}
 	}
-	if(identifier != undefined && exerciseId != undefined) {
-		if(tinyMCE.feedback != undefined && tinyMCE.feedback[exerciseId] != undefined) {
-			tinyMCE.execCommand('mceFeedbackChoice', false, {exerciseid: exerciseId, identifier: identifier, feedback: tinyMCE.feedback[exerciseId].text[identifier], feedback_sound:  tinyMCE.feedback[exerciseId].sound[identifier]});
-		} else {
-			tinyMCE.execCommand('mceFeedbackChoice', false, {exerciseid: exerciseId, identifier: identifier});
-		}
-	}
-	*/
 }
 
 function assignSound(row) {
@@ -88,7 +84,7 @@ function addNewRow(row) {
 	} else {
 		
 		if ("undefined" == typeof(gapId)) {
-			newId = "1";
+			newId = "0";
 		} else {
 			lastId = gapId.replace(/[a-z]+/i,'');
 			newId = parseInt(lastId) + 1;
@@ -172,5 +168,12 @@ function add_answer_row() {
 	newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
 	newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td width="260px" style="padding-right: 5px;"><input type="text" id="" name="answers[]" style="width: 100%; margin-right: 5px;" /></td><input type="hidden" id="id_" name="ids[]" value="' + id + '"/><td width="50px" align="center"><input type="radio" name="points[]" style="margin: 0; padding: 0;" /></td><td width="50px" align="center"><input id="" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" /></td><td width="80px"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td width="50px" align="left"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr></table>';
 	document.getElementById('answer_list').appendChild(newDiv);
+	
+}
+
+function remove_answer_row(row) {
+
+	var table = row.parentNode.parentNode.parentNode.parentNode;
+	table.parentNode.removeChild(table);
 	
 }
