@@ -50,6 +50,7 @@ var gapInlineChoiceDialog = {
 						}
 					}
 				}
+				$('#gapinlinechoice_insert').attr('value', 'Modify');
 			} else {
 				addNewRow(null);
 			}
