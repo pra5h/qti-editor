@@ -841,15 +841,28 @@ function runGapInlineChoice(selectedNode) {
 	var tagRegexp = new RegExp('<!-- <([a-zA-Z]+) responseIdentifier="([^"]+)"','gi');
 	var i = 0;
 	var nodeName = '';
+	var matchedTags = new Object();
 
 	while (null != (tag = tagRegexp.exec(content[1]))) {
 		nodeName = tag[1];
+		
+		//Jeżeli tag jest wstawiony kilka razy w content to nie dublujemy jego definicji
+		if ("undefined" == typeof matchedTags[tag[2]]) {
+			matchedTags[tag[2]] = 0;
+		} else {
+			matchedTags[tag[2]]++;
+		}
+		
+		if (0 < matchedTags[tag[2]]) {
+			continue;
+		}
+		
 		if ('textEntryInteraction' == nodeName) {
 			var gapElement = new Object();
 			gapElement.id = i;
 			gapElement.identifier = tag[2];
 			
-			var gapRegexp = new RegExp('<!-- <textEntryInteraction responseIdentifier="'+tag[2]+'" [^>]*>([.\\s\\S]*)<\/textEntryInteraction> --><span[^>]*>([^<]*)<\/span>','gi');
+			var gapRegexp = new RegExp('<!-- <textEntryInteraction responseIdentifier="'+tag[2]+'" [^>]*>([.\\s\\S]*)*?<\/textEntryInteraction> --><span[^>]*>([^<]*)<\/span>','gi');
 			var gapTag = gapRegexp.exec(content[1]);
 			//if feedback exists
 			if ('' != gapTag[1]) {

@@ -57,7 +57,8 @@ var gapInlineChoiceDialog = {
 		},
 
 		insertGapActivityRow: function(row, sourcesList, newData) {
-			var pattern = '[gap#'+row.id+']';
+			
+			var pattern = new RegExp('\\[gap#'+row.id+'\\]', 'gi');
 			var gapTag = '<!-- <textEntryInteraction responseIdentifier="' + row.identifier + '" expectedLength="100">';
 			if ('undefined' != typeof tinyMCE.feedback) {
 				var feedbackObj = tinyMCE.feedback[row.identifier];//new tinymce.util.JSON.parse(row.feedback);
@@ -102,7 +103,7 @@ var gapInlineChoiceDialog = {
 
 		insertInlineChoiceActivityRow: function(row, sourcesList, newData) {
 
-			var pattern = '[inlineChoice#'+row.id+']';
+			var pattern = new RegExp('\\[inlineChoice#'+row.id+'\\]', 'gi');
 			var choiceSection = '<!-- <inlineChoiceInteraction responseIdentifier="' + row.data.identifier + '" shuffle="' + String(row.data.shuffle) + '"> --><span id="inlineChoiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">';
 			responseDeclaration = '<!-- <responseDeclaration identifier="' + row.data.identifier + '" cardinality="single" baseType="identifier"><correctResponse>';
 

@@ -176,7 +176,7 @@ var inlineChoiceDialog = {
 			var win = tinyMCEPopup.getWindowArg("win");
 			var jsonString = tinymce.util.JSON.serialize(objData);
 			win.$('#distractorData'+rowNr).val(jsonString);
-			
+
 			//pokazanie w formularzu poprawnej odpowiedzi
 			for (i in objData.answers) {
 				

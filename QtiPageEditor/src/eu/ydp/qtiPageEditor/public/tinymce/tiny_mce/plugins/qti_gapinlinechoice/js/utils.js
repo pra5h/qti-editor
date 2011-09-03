@@ -18,7 +18,7 @@ var gapRowTemplate = '<tr id="{number}">'
 						+'</td>'
 						+'<td>'
 							+'<input type="hidden" id="feedback{number}" name="feedback" />'
-							+'<img alt="Set feedback" title="Set feedback" onclick="feedback({number});" src="img/feedback.png"/>'
+							+'<img id="feedback{number}" alt="Set feedback" title="Set feedback" onclick="feedback({number});" src="img/feedback.png"/>'
 						+'</td>'
 					+'</tr>';
 
@@ -136,9 +136,11 @@ function removeExternalRowData(removeElement) {
 	var contentNode = $('#exercise_content');
 	var contentValue = contentNode.val();
 	if (true == ch.attr('checked')) {
-		contentValue = contentValue.replace('[inlineChoice#'+id+']', '');
+		var pattern = new RegExp('\\[inlineChoice#'+id+'\\]', 'gi');
+		contentValue = contentValue.replace(pattern, '');
 	} else if (false == ch.attr('checked')) {
-		contentValue = contentValue.replace('[gap#'+id+']', '');
+		var pattern = new RegExp('\\[gap#'+id+'\\]', 'gi');
+		contentValue = contentValue.replace(pattern, '');
 	}
 	contentNode.val(contentValue);
 	tr.parentNode.removeChild(tr);
