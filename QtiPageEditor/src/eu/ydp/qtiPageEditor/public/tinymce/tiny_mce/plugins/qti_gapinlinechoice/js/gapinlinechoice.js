@@ -50,7 +50,12 @@ var gapInlineChoiceDialog = {
 						}
 					}
 				}
+				
+				if (0 == data.inlineRows.length) {
+					addNewRow(null);
+				}
 				$('#gapinlinechoice_insert').attr('value', 'Modify');
+
 			} else {
 				addNewRow(null);
 			}
