@@ -159,7 +159,7 @@ var gapInlineChoiceDialog = {
 				row.id = $tr.attr('id');
 				if (false == $('#checkbox' + row.id).attr('checked')) {
 					row.identifier = $tr.find('#identifier'+row.id).val();
-					row.answer = $tr.find('#answer'+row.id).val();
+					row.answer = stringEncode($tr.find('#answer'+row.id).val());
 					row.checkboks = $tr.find('#checkbox'+row.id).attr('checked');
 					//row.feedback = $tr.find('#feedback'+row.id).val();
 					row.type = 'gap';

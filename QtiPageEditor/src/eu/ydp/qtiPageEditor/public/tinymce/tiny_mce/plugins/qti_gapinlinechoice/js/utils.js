@@ -66,6 +66,13 @@ function feedback(obj) {
 	}
 }
 
+function stringEncode(text) {
+	return $('<div/>').text(text).html();
+}
+function stringDecode(text) {
+	return $('<div/>').html(text).text();
+}
+
 function assignSound(row) {
 	
 	tinyMCE.execCommand('mceAddFeedbackSound', false, {dest: row.previousSibling.previousSibling, src: row.previousSibling.previousSibling.value});
@@ -104,7 +111,7 @@ function addNewRow(row) {
 	$('#gaps').last().append(newRow);
 	
 	if (null != row) {
-		$('#answer'+newId).attr('value', row.answer);
+		$('#answer'+newId).attr('value', stringDecode(row.answer));
 		$('#identifier'+newId).attr('value', row.identifier);
 	}
 
