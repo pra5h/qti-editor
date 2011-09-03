@@ -148,10 +148,12 @@ function changeRowType(checkboxElement) {
 	if (checkboxElement.checked) {
 		$('#distractor' + checkboxElement.id.replace('checkbox','')).attr('disabled', false);
 		$('#answer' + checkboxElement.id.replace('checkbox','')).attr('disabled', true);
+		$('#feedback' + checkboxElement.id.replace('checkbox','')).attr('disabled', true);
 
 	} else {
 		$('#distractor' + checkboxElement.id.replace('checkbox','')).attr('disabled', true);
 		$('#answer' + checkboxElement.id.replace('checkbox','')).attr('disabled', false);
+		$('#feedback' + checkboxElement.id.replace('checkbox','')).attr('disabled', false);
 	}
 	
 }

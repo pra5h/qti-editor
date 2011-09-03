@@ -40,6 +40,14 @@ var gapInlineChoiceDialog = {
 						$('#distractor' + data.inlineRows[r].id).attr('disabled', false);
 						$('#answer' + data.inlineRows[r].id).attr('disabled', true);
 						$('#checkbox' + data.inlineRows[r].id).attr('checked', true);
+						$('#feedback' + data.inlineRows[r].id).attr('disabled', true);
+						
+						//pokazanie w formularzu poprawnej odpowiedzi
+						for (i in data.inlineRows[r].points) {
+							if (1 == data.inlineRows[r].points[i]) {
+								$('#answer'+data.inlineRows[r].id).val(data.inlineRows[r].answers[i]);
+							}
+						}
 					}
 				}
 			} else {
