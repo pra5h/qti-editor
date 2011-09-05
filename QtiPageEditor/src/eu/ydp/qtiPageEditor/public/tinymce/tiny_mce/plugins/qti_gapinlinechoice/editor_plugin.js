@@ -51,7 +51,7 @@
 				ed.windowManager.open({
 					file : url + '/gapinlinechoice.htm',
 					width : 470,
-					height : 330,
+					height : 450,
 					inline : 1
 				}, {
 					plugin_url : url, // Plugin absolute URL
