@@ -61,33 +61,38 @@
 			});
 			
 			ed.addCommand('mceGapInlineChoiceRemove', function(ui, data) {
-					
-					var node = ed.selection.getNode();
-					while(node.nodeName != 'DIV') {
-						node = node.parentNode;
-					}
-					
-					var body = node;
-					while(body.nodeName != 'BODY') {
-						body = body.parentNode;
-					}
-					
-					var rg = new RegExp(/responseIdentifier="([^"]*)"/g);
-					var elm = '';
-					var ids = new Array();
-					while (null != (elm = rg.exec(node.innerHTML))) {
-						ids.push(elm[1]);
-					}
+				var node = null;
+				
+				if ("object" == typeof data) {
+					node = tinyMCE.selectedNode; 
+				} else {
+					node = ed.selection.getNode();
+				}
+				
+				while(node.nodeName != 'DIV') {
+					node = node.parentNode;
+				}
+				var body = node;
+				while(body.nodeName != 'BODY') {
+					body = body.parentNode;
+				}
 
-					node.parentNode.removeChild(node.previousSibling);
-					node.parentNode.removeChild(node.nextSibling);
-					node.parentNode.removeChild(node);
+				var rg = new RegExp(/responseIdentifier="([^"]*)"/g);
+				var elm = '';
+				var ids = new Array();
+				while (null != (elm = rg.exec(node.innerHTML))) {
+					ids.push(elm[1]);
+				}
 
-					for (i in ids) {
-						var rg = new RegExp('<!--[^<]*<responseDeclaration identifier="' + ids[i] + '"[^>]*>[^<]*<correctResponse>[^<]*(?:<value>[^<]*<\/value>[^<]*)*<\/correctResponse>[^<]*<\/responseDeclaration>[^-]*-->', 'gi');
-						body.innerHTML = body.innerHTML.replace(rg,'');
-					}
-					return true;
+				node.parentNode.removeChild(node.previousSibling);
+				node.parentNode.removeChild(node.nextSibling);
+				node.parentNode.removeChild(node);
+
+				for (i in ids) {
+					var rg = new RegExp('<!--[^<]*<responseDeclaration identifier="' + ids[i] + '"[^>]*>[^<]*<correctResponse>[^<]*(?:<value>[^<]*<\/value>[^<]*)*<\/correctResponse>[^<]*<\/responseDeclaration>[^-]*-->', 'gi');
+					body.innerHTML = body.innerHTML.replace(rg,'');
+				}
+				return true;
 			});
 			
 			ed.addCommand('mceFeedbackGap', function(ui,data) {

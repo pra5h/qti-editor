@@ -15,6 +15,7 @@ tinyMCE.addI18n('en.gapinlinechoice_dlg',{
 	gapinlinechoice_add_new_gap:"Add new gap",
 	gapinlinechoice_insert:"Insert",
 	gapinlinechoice_cancel:"Cancel",
+	gapinlinechoice_remove:"Remove"
 });
 
 tinyMCE.addI18n('en.inlinechoice_dlg',{

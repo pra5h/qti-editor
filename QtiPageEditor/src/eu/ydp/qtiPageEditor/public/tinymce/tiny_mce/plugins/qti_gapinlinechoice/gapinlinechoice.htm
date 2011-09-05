@@ -93,6 +93,21 @@
 	</div>
 
 	<div class="mceActionPanel">
+		<div style="float: left">
+			<input type="button" id="remove_button" name="remove" value="{#gapinlinechoice_dlg.gapinlinechoice_remove}" style="
+				border: none; 
+				width: 94px; 
+				height: 25px; 
+				background-attachment:scroll;
+				background-color:transparent;
+				background-image:url(img/buttons.png);
+				background-position:0 0;
+				background-repeat:repeat; 
+				margin: 2px; 
+				font-weight: bold;
+				padding-bottom: 2px;" 
+			onclick="tinyMCE.execCommand('mceGapInlineChoiceRemove', false, tinyMCE.selectedNode); tinyMCEPopup.close();" />
+		</div>
 		<div style="float: right">	
 			
 			<input type="submit" id="gapinlinechoice_insert" name="gapinlinechoice_insert" value="{#gapinlinechoice_dlg.gapinlinechoice_insert}" style="

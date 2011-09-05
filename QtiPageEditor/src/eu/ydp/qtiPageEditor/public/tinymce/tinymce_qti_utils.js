@@ -810,6 +810,9 @@ function runGapInlineChoice(selectedNode) {
 	var qtiNodeInnerHTML = qtiNode.innerHTML;
 	var data = new Object();
 
+	var rg = new RegExp(/<gapInlineChoiceInteraction identifier="([^"]*)">/);
+	data.identifier = rg.exec(qtiNode.previousSibling.data)[1];
+	
 	var rg = new RegExp(/<!-- <prompt> --><p id="gapInlineChoiceInteractionQuestion">(.*)<\/p><!-- <\/prompt> -->/gi);
 	data.question = rg.exec(qtiNodeInnerHTML)[1];
 	

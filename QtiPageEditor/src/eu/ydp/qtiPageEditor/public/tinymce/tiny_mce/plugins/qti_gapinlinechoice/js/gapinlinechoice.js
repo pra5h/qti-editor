@@ -15,13 +15,15 @@ var gapInlineChoiceDialog = {
 				f.exercise_content.value = data.content;
 			}
 
-			var randid = Math.random();
-			randid = String(randid);
-			var rg = new RegExp('0.([0-9]*)',"gi");
-			exec = rg.exec(randid);
-			f.identifier.value = 'id_' + exec[1];
-
-
+			if(data != undefined && data.identifier != undefined) {
+				f.identifier.value = data.identifier;
+			} else {
+				var randid = Math.random();
+				randid = String(randid);
+				var rg = new RegExp('0.([0-9]*)',"gi");
+				exec = rg.exec(randid);
+				f.identifier.value = 'id_' + exec[1];
+			}
 
 			if (data == undefined) {
 				document.getElementById('gaps_list').innerHTML += '<input type="hidden" name="addnew" value="1">';
@@ -181,7 +183,7 @@ var gapInlineChoiceDialog = {
 				newData.content = '';
 
 				if(form.addnew != undefined && form.addnew.getAttribute('value') == '1') {
-					newData.content = '<p>&nbsp;</p><!-- <gapInlineChoiceInteraction> -->';
+					newData.content = '<p>&nbsp;</p><!-- <gapInlineChoiceInteraction identifier="'+obj.identifier+'"> -->';
 					newData.content += '<div id="gapInlineChoiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue;padding: 5px; background-color: rgb(240, 240, 240);">';
 				}
 				newData.content += '<!-- <prompt> --><p id="gapInlineChoiceInteractionQuestion">'+obj.question+'</p><!-- </prompt> -->';
