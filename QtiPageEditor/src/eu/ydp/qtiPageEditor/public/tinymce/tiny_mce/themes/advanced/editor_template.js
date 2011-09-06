@@ -2,7 +2,7 @@
  * $Id: editor_template_src.js 1045 2009-03-04 20:03:18Z spocke $
  *
  * @author Moxiecode
- * @copyright Copyright © 2004-2008, Moxiecode Systems AB, All rights reserved.
+ * @copyright Copyright ï¿½ 2004-2008, Moxiecode Systems AB, All rights reserved.
  */
 
 (function(tinymce) {
@@ -1116,7 +1116,8 @@
 			ed.windowManager.confirm('advanced.newdocument', function(s) {
 				if (s) {
 					ed.selection.dom.doc.body.innerHTML = ed.selection.dom.doc.body.innerHTML.replace(/(<!-- <itemBody> -->)[\s\S]*(<!-- <\/itemBody> -->)/gi, '$1<p>&#160;</p>$2');
-					ed.selection.dom.doc.body.innerHTML = ed.selection.dom.doc.body.innerHTML.replace(/(<!-- <assessmentItem [^>]*> -->)[\s\S]*(<!-- <itemBody> -->)/gi, '$1$2');
+					//ed.selection.dom.doc.body.innerHTML = ed.selection.dom.doc.body.innerHTML.replace(/(<!-- <assessmentItem [^>]*> -->)[\s\S]*(<!-- <itemBody> -->)/gi, '$1$2');
+					ed.selection.dom.doc.body.innerHTML = ed.selection.dom.doc.body.innerHTML.replace(/(<\/styleDeclaration> -->)[\s\S]*(<!-- <itemBody> -->)/gi, '$1$2');
 					ed.selection.dom.doc.body.innerHTML = ed.selection.dom.doc.body.innerHTML.replace(/(<!-- <\/itemBody> -->)[\s\S]*(<!-- <\/assessmentItem> -->)/gi, '$1$2');
 				}
 			});
