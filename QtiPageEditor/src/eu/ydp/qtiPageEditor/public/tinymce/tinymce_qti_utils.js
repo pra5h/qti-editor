@@ -150,8 +150,8 @@ function processQTI(h) {
 
 	//GapInlineChoice support
 	h = h.replace(/[\s]*(?! <!--)(<gapInlineChoiceInteraction[^>]*>)(?! -->)/gi, '<!-- $1 --><div id="gapInlineChoiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue;padding: 5px; background-color: rgb(240, 240, 240);" mce_style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">');
-	h = h.replace(/[\s]*(?! <!--)<prompt>(.*)<\/prompt>(?! -->)[\s]*/gi, '<!-- <prompt> --><p id="gapInlineChoiceInteractionQuestion">$1</p><!-- </prompt> -->');
-	
+//	h = h.replace(/[\s]*(?! <!--)<prompt>(.*)<\/prompt>(?! -->)[\s]*/gi, '<!-- <prompt> --><p id="gapInlineChoiceInteractionQuestion">$1</p><!-- </prompt> -->');
+	h = h.replace(/[\s]*(?! <!--)<prompt>(.*)<\/prompt>(?! -->)(?=\s*<content)[\s]*/gi, '<!-- <prompt> --><p id="gapInlineChoiceInteractionQuestion">$1</p><!-- </prompt> -->');	
 	//nie działało na ctrl+z
 //	h = h.replace(/[\s]*(?! <!--)<content>/gi, '<!-- <content> --><p id="gapInlineChoiceInteractionContent">');
 //	h = h.replace(/[\s]*(?! <!--)<\/content>/gi, '<\/p><!-- </content> -->');
