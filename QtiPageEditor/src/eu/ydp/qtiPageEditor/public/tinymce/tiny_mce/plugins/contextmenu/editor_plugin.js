@@ -19,7 +19,7 @@
 				if (!e.ctrlKey) {
 					if(ed.settings.readonly != true) {
 						t._getMenu(ed).showMenu(e.clientX, e.clientY);
-						Event.add(ed.getDoc(), 'click', hide);
+						//Event.add(ed.getDoc(), 'click', hide);
 						Event.cancel(e);
 					}
 				}
