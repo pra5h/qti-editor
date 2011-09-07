@@ -60,6 +60,7 @@ function HTML2QTI(h) {
 	h = parseCommentsToQY(h);
 	h = parsePlayPauseToQTI(h);
 	h = parseEmbedsToQTI(h);
+	h = parseMediaToQTI(h);
 
 	h = h.replace(/(<p[^>a-z]*>)/gi, '<qy:tag name="text">$1');
 	h = h.replace(/(<\/p>)/gi, '$1</qy:tag>');
@@ -479,7 +480,7 @@ function parseCommentsToQY(h) {
 
 function parsePlayPauseToQTI(h) {
 
-	h = h.replace(/<!-- (<audioPlayer[^>]*>) -->(?:<p>)?<img id="mcePlayPause"[^>]*>(?:<\/p>)?/gi, '<qy:tag name="media">$1</qy:tag>');
+	h = h.replace(/(?:<p>[^<]*)?<!-- (<audioPlayer[^>]*>) -->(?:<p>)?<img id="mcePlayPause"[^>]*>(?:<\/p>)?/gi, '<qy:tag name="media">$1</qy:tag>');
 	return h;
 
 }
@@ -489,6 +490,14 @@ function parseEmbedsToQTI(h) {
 	h = h.replace(/<img id="mceVideo" src=".*?tools\/qtitesteditor\/tinymce\/tiny_mce\/plugins\/qti_addvideo\/img\/[^"]*"[^>]*>/gi,'');
 	return h;
 
+}
+
+function parseMediaToQTI(h) {
+
+	//h = h.replace(/<p>[^<]*(<fieldset id="runFileUploadLib"[^>]*>[^<]*<img[^>]*>[^<]*<br[^>]*>[^<]*<\/fieldset>)[^<]*<\/p>/gi, '<qy:tag name="media">$1<\/qy:tag>');
+	//IMG,Flash,MP4
+	h = h.replace(/(?:<p>[^<]*)?(<fieldset id="runFileUploadLib"[^>]*>[\s\S]*(?:<br[^\/]*\/>.*)*<\/fieldset>)[^<]*(?:<\/p>)?/gi, '<qy:tag name="media">$1<\/qy:tag>');
+	return h;
 }
 
 function applyFormatting(h) {
