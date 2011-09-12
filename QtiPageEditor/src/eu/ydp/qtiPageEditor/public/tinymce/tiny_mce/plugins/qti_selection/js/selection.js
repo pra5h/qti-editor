@@ -82,7 +82,7 @@ var selectionDialog = {
 				newDiv.innerHTML = newInnerHTML;
 
 				document.getElementById('answer_list').appendChild(newDiv);
-
+/*
 				if(tinyMCE.feedback == undefined) {
 					tinyMCE.feedback = new Array;
 				}
@@ -95,7 +95,7 @@ var selectionDialog = {
 				if(data.fd[q] != undefined) {
 					tinyMCE.feedback[data.ids_ans[q]].sound = data.fd[q];
 				}
-
+				*/
 			}
 		
 		} else {
@@ -304,7 +304,15 @@ var selectionDialog = {
 				}
 				selectionSection += '>' + dataobj.answers[i];
 				if(tinyMCE.feedback != undefined && tinyMCE.feedback[dataobj.identifier] != undefined && tinyMCE.feedback[dataobj.identifier].text[dataobj.ids[i]] != undefined) {
-					selectionSection += '<feedbackInline identifier="' + dataobj.ids[i] + '" showHide="show">' + tinyMCE.feedback[dataobj.identifier].text[dataobj.ids[i]] + '</feedbackInline>'
+					//selectionSection += '<feedbackInline identifier="' + dataobj.ids[i] + '" showHide="show">' + tinyMCE.feedback[dataobj.identifier].text[dataobj.ids[i]] + '</feedbackInline>'
+					
+					selectionSection += '<feedbackInline ';
+					selectionSection += 'identifier=".*' + dataobj.ids[i] + ' '+dataobj.options_ids[i]+'.*" ';
+					//selectionSection += 'mark="CORRECT"';
+					selectionSection += 'fadeEffect="300" ';
+					//selectionSection += 'senderIdentifier="^' + dataobj.identifier + '$" ';
+					selectionSection += 'outcomeIdentifier="' + dataobj.identifier + '" '; 
+					selectionSection += 'showHide="show">' + tinyMCE.feedback[dataobj.identifier].text[dataobj.ids[i]] + '</feedbackInline>';
 				}
 				selectionSection += '</item> --><li>';
 				selectionSection += dataobj.answers[i] + '</li>';
@@ -384,7 +392,14 @@ var selectionDialog = {
 				}
 				selectionSection += '>' + dataobj.answers[i];
 				if(tinyMCE.feedback != undefined && tinyMCE.feedback[dataobj.identifier] != undefined && tinyMCE.feedback[dataobj.identifier].text[dataobj.ids[i]] != undefined) {
-					selectionSection += '<feedbackInline identifier="' + dataobj.ids[i] + '" showHide="show">' + tinyMCE.feedback[dataobj.identifier].text[dataobj.ids[i]] + '</feedbackInline>'
+					//selectionSection += '<feedbackInline identifier="' + dataobj.ids[i] + '" showHide="show">' + tinyMCE.feedback[dataobj.identifier].text[dataobj.ids[i]] + '</feedbackInline>'
+					selectionSection += '<feedbackInline ';
+					selectionSection += 'identifier=".*' + dataobj.ids[i] + ' '+dataobj.options_ids[i]+'.*" ';
+					//selectionSection += 'mark="CORRECT"';
+					selectionSection += 'fadeEffect="300" ';
+					//selectionSection += 'senderIdentifier="^' + dataobj.identifier + '$" ';
+					selectionSection += 'outcomeIdentifier="' + dataobj.identifier + '" '; 
+					selectionSection += 'showHide="show">' + tinyMCE.feedback[dataobj.identifier].text[dataobj.ids[i]] + '</feedbackInline>';
 				}
 				selectionSection += '</item> --><li>';
 				selectionSection += dataobj.answers[i] + '</li>';
@@ -416,6 +431,7 @@ var selectionDialog = {
 			ed.selection.dom.doc.body.innerHTML = ed.selection.dom.doc.body.innerHTML.replace(/<itemBody> -->/,'<itemBody> -->' + beforeHeadings[1]);
 		}
 		
+		/*
 		if(tinyMCE.feedback != undefined) {
 			
 			var rg = new RegExp('<!-- <modalFeedback[^>]*senderIdentifier="' + dataobj.identifier + '"[^>]*>[^<]*</modalFeedback> -->','gi');
@@ -439,7 +455,7 @@ var selectionDialog = {
 			tinyMCE.feedback = new Array;
 			
 		} 
-
+*/
 		tinyMCEPopup.close();
 		return true;
 		

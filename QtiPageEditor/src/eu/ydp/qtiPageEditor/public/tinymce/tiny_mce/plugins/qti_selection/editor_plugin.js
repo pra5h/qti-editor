@@ -15,12 +15,15 @@
 			// Register the command so that it can be invoked by using tinyMCE.activeEditor.execCommand('mceExample');
 			ed.addCommand('mceSelection', function(ui, data) {
 
+				
 				if(data != undefined) {
-					tinyMCE.feedback = new Array;
-					tinyMCE.feedback[data.identifier] = {text: new Array, sound: new Array}
+					tinyMCE.feedback = new Array();
+					tinyMCE.feedback[data.identifier] = {text: new Array(), sound: new Array()}
+
 					if(data.fdb != undefined ) {
 						tinyMCE.feedback[data.identifier].text = data.fdb;
 					}
+					
 					if(data.fd != undefined ) {
 						tinyMCE.feedback[data.identifier].sound = data.fd;
 					}
@@ -77,19 +80,28 @@
 			});
 			
 			ed.addCommand('mceFeedbackSelectionRemove', function(ui,data) {
-				
 				var form = data;
 				while(form.nodeName != 'FORM') {
 					form = form.parentNode;
 				}
+				
 				if(tinyMCE.feedback != undefined) {
-					var tempArr = new Array;
-					for(i in tinyMCE.feedback) {
-						if(i != form.identifier.value) {
-							tempArr[i] = tinyMCE.feedback[i];
+					if(tinyMCE.feedback[form.exerciseid.value] != undefined) {
+
+						for(i in tinyMCE.feedback[form.exerciseid.value].text) {
+
+							if(i == form.identifier.value) {
+								delete tinyMCE.feedback[form.exerciseid.value].text[i];
+							}
+						}
+
+						for(i in tinyMCE.feedback[form.exerciseid.value].sound) {
+
+							if(i == form.identifier.value) {
+								delete tinyMCE.feedback[form.exerciseid.value].sound[i];
+							}
 						}
 					}
-					tinyMCE.feedback = tempArr;
 				}
 				
 			});

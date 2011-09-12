@@ -1467,7 +1467,7 @@ function runSelection(selectedNode) {
 		ids_ans.push(values_ans[i][1]);
 		answers.push(values_ans[i][3]);
 		fixed_ans.push(values_ans[i][2]);
-		fdb[values_ans[i][1]] = values_ans[i][3];
+		fdb[values_ans[i][1]] = values_ans[i][4];
 		i++;
 	}
 
