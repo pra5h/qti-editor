@@ -813,7 +813,7 @@ function runPlayPause(selectedNode) {
 
 //GapInlineChoice
 function runGapInlineChoice(selectedNode) {
-			
+
 	var ed = tinymce.EditorManager.activeEditor;
 	var qtiNode = selectedNode;
 	var qtiNodeInnerHTML = qtiNode.innerHTML;
@@ -873,8 +873,9 @@ function runGapInlineChoice(selectedNode) {
 			var gapElement = new Object();
 			gapElement.id = i;
 			gapElement.identifier = tag[2];
+			//var gapRegexp = new RegExp('<!-- <textEntryInteraction responseIdentifier="'+tag[2]+'" [^>]*>([.\\s\\S]*)*?<\/textEntryInteraction> --><span[^>]*>([^<]*)<\/span>','gi');
+			var gapRegexp = new RegExp('<!-- <textEntryInteraction responseIdentifier="'+tag[2]+'" [^>]*>([.\\n\\s\\S]*?)?<\/textEntryInteraction> --><span[^>]*>([^<]*)<\/span>','gi');
 			
-			var gapRegexp = new RegExp('<!-- <textEntryInteraction responseIdentifier="'+tag[2]+'" [^>]*>([.\\s\\S]*)*?<\/textEntryInteraction> --><span[^>]*>([^<]*)<\/span>','gi');
 			var gapTag = gapRegexp.exec(content[1]);
 			//if feedback exists
 			if ('' != gapTag[1]) {

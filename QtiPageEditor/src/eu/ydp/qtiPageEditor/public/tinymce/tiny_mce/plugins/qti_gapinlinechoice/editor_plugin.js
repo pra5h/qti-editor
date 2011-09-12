@@ -20,13 +20,17 @@
 
 					for (i in data.inlineRows) {
 						var row = data.inlineRows[i];
+
 						if ('gap' == row.type) {
 							
 							if(row.feedback != undefined) {
 								var feedback = row.feedback;
 
 								if((feedback.onOk != undefined && feedback.onOk != '') || (feedback.onWrong != undefined && feedback.onWrong != '')) {
-									tinyMCE.feedback = new Array;
+									
+									if ("undefined" == typeof tinyMCE.feedback) {
+										tinyMCE.feedback = new Array;
+									}
 									tinyMCE.feedback[row.identifier] = {};
 								}
 								if(feedback.onOk != undefined && feedback.onOk != '') {
@@ -99,7 +103,7 @@
 				ed.windowManager.open({
 					file : url + '/gapfeedback.htm',
 					width : 400,
-					height : 100,
+					height : 140,
 					inline : 1
 				}, {
 					plugin_url : url, // Plugin absolute URL

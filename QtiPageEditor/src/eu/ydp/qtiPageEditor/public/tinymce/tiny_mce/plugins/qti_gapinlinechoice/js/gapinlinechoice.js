@@ -263,7 +263,7 @@ var gapInlineChoiceDialog = {
 
 					var identifier = '';
 					var resp = '';
-					
+
 					for (i in obj.inlineRows) {
 						resp = obj.inlineRows[i];
 					
@@ -276,12 +276,19 @@ var gapInlineChoiceDialog = {
 						var respOldRgx = new RegExp('<!-- <responseDeclaration identifier="'+identifier+'"[^>]*>[^<]*<correctResponse>[^<]*<value>[^<]*<\/value>[^<]*<\/correctResponse>[^<]*<\/responseDeclaration> -->', 'gi');
 						var respNewRgx = new RegExp('<!-- <responseDeclaration identifier="'+identifier+'"[^>]*>[^<]*<correctResponse>[^<]*<value>[^<]*<\/value>[^<]*<\/correctResponse>[^<]*<\/responseDeclaration> -->', 'gi');
 						var newRespRgxRes = respNewRgx.exec(sourcesList.responses);
+						
 						var newRespSection = '';
 						
 						if (null != newRespRgxRes) {
 							newRespSection = newRespRgxRes[0]; 
 						}
-						body.innerHTML = body.innerHTML.replace(respOldRgx, newRespSection);
+						
+						if (null != respOldRgx.exec(body.innerHTML)) {
+							body.innerHTML = body.innerHTML.replace(respOldRgx, newRespSection);
+						} else {
+							regexp = new RegExp('(<!-- <itemBody> -->)','gi');
+							body.innerHTML = body.innerHTML.replace(regexp, newRespSection + '$1');
+						}
 					}
 				}
 				ed.selection.moveToBookmark(bm);
