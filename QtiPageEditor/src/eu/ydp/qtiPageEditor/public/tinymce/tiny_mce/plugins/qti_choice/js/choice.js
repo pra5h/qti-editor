@@ -212,7 +212,7 @@ var choiceDialog = {
 					} else {
 						choiceSection += 'mark="WRONG"';
 					}
-					choiceSection += ' fadeEffect="300" outcomeIdentifier="' + identifier + '-LASTCHANGE" identifier=".*' + ids[i] + '.*" showHide="show">' + tinyMCE.feedback[identifier].text[ids[i]] + '</feedbackInline>';
+					choiceSection += ' fadeEffect="300" outcomeIdentifier="' + identifier + '" identifier="' + ids[i] + '" showHide="show">' + tinyMCE.feedback[identifier].text[ids[i]] + '</feedbackInline>';
 				} 
 				choiceSection += '</simpleChoice> --><br /><input id="choiceInteraction" ';
 				if(points[i] > 0) {
@@ -292,7 +292,7 @@ var choiceDialog = {
 					} else {
 						choiceSection += 'mark="WRONG"';
 					}
-					choiceSection += ' fadeEffect="300"  outcomeIdentifier="' + identifier + '-LASTCHANGE" identifier=".*' + ids[i] + '.*" showHide="show">' + tinyMCE.feedback[identifier].text[ids[i]] + '</feedbackInline>';
+					choiceSection += ' fadeEffect="300"  outcomeIdentifier="' + identifier + '" identifier="' + ids[i] + '" showHide="show">' + tinyMCE.feedback[identifier].text[ids[i]] + '</feedbackInline>';
 				} 
 				choiceSection += '</simpleChoice> --><br /><input id="choiceInteraction" ';
 				if(points[i] > 0) {
@@ -326,7 +326,7 @@ var choiceDialog = {
 		if(beforeHeadings && beforeHeadings[1] != '') {
 			ed.selection.dom.doc.body.innerHTML = ed.selection.dom.doc.body.innerHTML.replace(/<itemBody> -->/,'<itemBody> -->' + beforeHeadings[1]);
 		}
-		
+		/*
 		if(tinyMCE.feedback != undefined) {
 			
 			var rg = new RegExp('<!-- <modalFeedback[^>]*senderIdentifier="' + identifier + '"[^>]*>[^<]*</modalFeedback> -->','gi');
@@ -350,7 +350,7 @@ var choiceDialog = {
 			tinyMCE.feedback = new Array;
 			
 		} 
-		
+		*/
 		tinyMCEPopup.close();
 		return true;
 		
