@@ -496,7 +496,8 @@ function parseMediaToQTI(h) {
 
 	//h = h.replace(/<p>[^<]*(<fieldset id="runFileUploadLib"[^>]*>[^<]*<img[^>]*>[^<]*<br[^>]*>[^<]*<\/fieldset>)[^<]*<\/p>/gi, '<qy:tag name="media">$1<\/qy:tag>');
 	//IMG,Flash,MP4
-	h = h.replace(/(?:<p>[^<]*)?(<fieldset id="runFileUploadLib"[^>]*>[\s\S]*(?:<br[^\/]*\/>.*)*<\/fieldset>)[^<]*(?:<\/p>)?/gi, '<qy:tag name="media">$1<\/qy:tag>');
+//	h = h.replace(/(?:<p>[^<]*)?(<fieldset id="runFileUploadLib"[^>]*>([\s\S]*)?(?:<br[^\/]*\/>.*)?(?:<\/fieldset>)?)[^<]*(?:<\/p>)?/gi, '<qy:tag name="media">$1<\/qy:tag>');
+	h = h.replace(/(?:<p>[^<]*)?(<fieldset id="runFileUploadLib"[^>]*>([\s\S]*?)?<\/fieldset>)[^<]*(?:<\/p>)?/gi, '<qy:tag name="media">$1<\/qy:tag>');
 	return h;
 }
 
