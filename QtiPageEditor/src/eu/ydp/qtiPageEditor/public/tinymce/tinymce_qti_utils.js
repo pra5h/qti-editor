@@ -62,7 +62,8 @@ function HTML2QTI(h) {
 	h = parseEmbedsToQTI(h);
 	h = parseMediaToQTI(h);
 
-	h = h.replace(/(<p[^>a-z]*>)/gi, '<qy:tag name="text">$1');
+//	h = h.replace(/(<p[^>a-z]*>)/gi, '<qy:tag name="text">$1');
+	h = h.replace(/(<p[\s>][^>]*[>]?)/gi, '<qy:tag name="text">$1');
 	h = h.replace(/(<\/p>)/gi, '$1</qy:tag>');
 
 	h = h.replace(/(<span[^>]*class="changestracking_original"[^>]*style=")[^"]*("[^>]*>)/gi,'$1$2');
