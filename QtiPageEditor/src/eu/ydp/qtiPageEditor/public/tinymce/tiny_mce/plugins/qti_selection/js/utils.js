@@ -150,18 +150,23 @@ function assignSound(row) {
 }
 
 function validateExercise(form) {
-	
 	var i = 0;
 	var selected_answers = true;
 	var question = false;
 	var answers_contents = new Array;
 	var validator_errors = new Array;
+	var points = new Array;
+	var ids = new Array;
+	var validOptions = true;
+	var options = new Array();
+	var validCorrectAnswers = true;
 	
 	$('#div_points').attr('style' , 'width: 100%; font-weight: bold;');
 	$("input[name='answers[]']").attr('style' , 'width: 100%; margin-right: 5px;');
 	$('#question').attr('style' , 'width: 100%;');
 	
 	while(form.elements[i] != undefined) {
+		
 		if(form.elements[i].getAttribute('name') == 'question') {
 			if(form.elements[i].value != '') {
 				question = true;
@@ -172,13 +177,26 @@ function validateExercise(form) {
 				answers_contents.push(form.elements[i]);
 			}
 		}
-//		if(form.elements[i].getAttribute('name') == 'points[]') {
-//			if(form.elements[i].checked) {
-//				selected_answers = true;
-//			}
-//		}
+		if(form.elements[i].getAttribute('name') == 'ids[]') {
+			ids.push(form.elements[i].value);
+		}
+		
+		if(form.elements[i].getAttribute('name') == 'choices[]') {
+			options.push(form.elements[i].value);
+		}
+
+		if(0 === strpos(form.elements[i].getAttribute('name'), 'points')) { // == 'points[]'
+			var id = form.elements[i].name;
+			id = id.replace('points\[','');
+			id = id.replace('\]','');
+
+			if ("undefined" == typeof points[id] || false == points[id]) {
+				points[id] = form.elements[i].checked;
+			}
+		}
 		i++;
 	}
+	
 //	if(selected_answers === false) {
 //		$('#div_points').attr('style' , 'width: 100%; font-weight: bold; color: red;');
 //		validator_errors.push('Set correct answers');
@@ -198,6 +216,34 @@ function validateExercise(form) {
 		validator_errors.push('Fill the question field');
 		tinyMCE.activeEditor.windowManager.resizeBy(0, 30, 'mce_0');
 	}
+
+	if(options.length === 0) {
+		validator_errors.push('Add minimum one option field');
+		tinyMCE.activeEditor.windowManager.resizeBy(0, 30, 'mce_0');
+		validOptions = false;
+	} else {
+		
+		for(i in options) {
+			
+			if (options[i] == '') {
+				$('#choice_'+i).attr('style' , 'border: 2px solid red;');
+				validator_errors.push('Fill the option field');
+				tinyMCE.activeEditor.windowManager.resizeBy(0, 30, 'mce_0');
+				validOptions = false;
+				break;
+			}
+		}
+	}
+	
+	for(i in ids) {
+
+		if (false == points[ids[i]]) {
+			validator_errors.push('Select the correct answer');
+			tinyMCE.activeEditor.windowManager.resizeBy(0, 30, 'mce_0');
+			validCorrectAnswers = false;
+			break;
+		}
+	}
 	
 	var errInf = '';
 	if(validator_errors.length > 0) {
@@ -209,6 +255,11 @@ function validateExercise(form) {
 	}
 	$('#validator_errors').html(errInf);
 
-	return /* selected_answers && */ question && (answers_contents.length == 0);
+	return /* selected_answers && */ question && (answers_contents.length == 0) && validOptions && validCorrectAnswers;
 	
+}
+
+function strpos(haystack, needle, offset) {
+	  var i = (haystack+'').indexOf(needle, (offset || 0));
+	  return i === -1 ? false : i;
 }
