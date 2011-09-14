@@ -135,7 +135,7 @@ var gapInlineChoiceDialog = {
 					var rg = new RegExp('0.([0-9]*)',"gi");
 					exec = rg.exec(randid);
 					var fId = 'id_' + exec[1];
-					choiceSection += ' fadeEffect="300" senderIdentifier="^' + row.data.identifier + '$" outcomeIdentifier="' + row.data.identifier + '" identifier="' + fId + '" showHide="show">' + row.data.feedbacks[row.data.ids[i]] + '</feedbackInline>'
+					choiceSection += ' fadeEffect="300" senderIdentifier="' + row.data.identifier + '" outcomeIdentifier="' + row.data.identifier + '" identifier="' + row.data.ids[i] + '" showHide="show">' + row.data.feedbacks[row.data.ids[i]] + '</feedbackInline>'
 				} 
 
 				choiceSection += '</inlineChoice> -->';
