@@ -100,22 +100,31 @@ function remove_answer_row(row) {
 }
 
 function remove_option_row(row) {
+	var i = 0;
+	var fieldset = $(row).parent().parent();
 
-	var div = row.parentNode;
-	div.parentNode.removeChild(div);
+	$("div", fieldset).each(function(a,b){
+		i++;
+	});
 
-	var removedId = div.children[1].getAttribute('value');
+	if (i > 1) {
+		var div = row.parentNode;
+		div.parentNode.removeChild(div);
 
-	var optionSpans = document.getElementsByClassName('optionSpan');
-	for(i in optionSpans) {
-		if(optionSpans[i] != undefined && optionSpans[i].children != undefined) {
-			var val = optionSpans[i].children[1].getAttribute('value');
-			if(val == removedId) {
-				optionSpans[i].parentNode.removeChild(optionSpans[i]);
+		var removedId = div.children[1].getAttribute('value');
+
+		var optionSpans = document.getElementsByClassName('optionSpan');
+		for(i in optionSpans) {
+			if(optionSpans[i] != undefined && optionSpans[i].children != undefined) {
+				var val = optionSpans[i].children[1].getAttribute('value');
+				if(val == removedId) {
+					optionSpans[i].parentNode.removeChild(optionSpans[i]);
+				}
 			}
 		}
+	} else {
+		$('#validator_errors').html("<ul><li>Sorry, you don't remove last available option. Least one option must be set.</li></ul>");
 	}
-
 }
 
 function feedback(row) {
