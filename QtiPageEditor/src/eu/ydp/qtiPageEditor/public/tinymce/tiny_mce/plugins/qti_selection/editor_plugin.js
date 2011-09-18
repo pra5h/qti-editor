@@ -31,7 +31,7 @@
 				
 				ed.windowManager.open({
 					file : url + '/selection.htm',
-					width : 800,
+					width : 600,
 					height : 450,
 					inline : 1
 				}, {
