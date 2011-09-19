@@ -21,13 +21,13 @@ function add_answer_row(form, side) {
 	if(form.images.checked == true) {
 		if(side == 'left') {
 			newDiv.innerHTML = '<table cellpadding=0 cellspacing=0>\n\
-				<tr><td width="70px">\n\
+				<tr><td class="remove">\n\
 					<input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" />\n\
-				</td><td width="70px">\n\
+				</td><td class="img">\n\
 					<input type="checkbox" id="switch_image_text_chbx" name="switch_image_text_chbx" onclick="switch_text_images(this, false);" />\n\
-				</td><td width="50px" align="center">\n\
+				</td><td class="fixed">\n\
 					<input id="fixed_left" type="checkbox" name="fixed_left[]" style="margin: 0; padding: 0;"/>\n\
-				</td><td width="200px" style="" align="right">\n\
+				</td><td class="answer">\n\
 					<input type="hidden" id="id_left" name="ids_left[]" value="' + id + '"/>\n\
 					<div style="width: 120px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;">\n\
 						<input type="text" id="answer_left" name="answers_left[]" style="width: 100%; margin-right: 5px; margin-top: 12px;" value=""/>\n\
@@ -36,29 +36,29 @@ function add_answer_row(form, side) {
 		}
 		if(side == 'right') {
 			newDiv.innerHTML = '<table cellpadding=0 cellspacing=0>\n\
-				<tr><td width="200px" style="" align="left">\n\
+				<tr><td class="answer">\n\
 					<input type="hidden" id="id_right" name="ids_right[]" value="' + id + '"/>\n\
 					<div style="width: 120px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;">\n\
 						<input type="text" id="answer_right" name="answers_right[]" style="width: 100%; margin-right: 15px; margin-top: 12px;" value=""/>\n\
 					</div>\n\
-				</td><td width="50px" align="center">\n\
+				</td><td class="fixed">\n\
 					<input id="fixed_right" type="checkbox" name="fixed_right[]" style="margin: 0; padding: 0;"/>\n\
-				</td><td width="70px">\n\
+				</td><td class="img">\n\
 					<input type="checkbox" id="switch_image_text_chbx" name="switch_image_text_chbx" onclick="switch_text_images(this, false);" />\n\
-				</td><td width="70px">\n\
+				</td><td class="remove">\n\
 					<input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" />\n\
 				</td></tr></table>';
 		}
 	} else {
 		if(side == 'left') {
 			newDiv.innerHTML = '<table cellpadding=0 cellspacing=0>\n\
-				<tr><td width="70px">\n\
+				<tr><td class="remove">\n\
 					<input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" />\n\
-				</td><td width="70px">\n\
+				</td><td class="img">\n\
 					<input type="checkbox" id="switch_image_text_chbx" name="switch_image_text_chbx" onclick="switch_text_images(this, false);" />\n\
-				</td><td width="50px" align="center">\n\
+				</td><td class="fixed">\n\
 					<input id="fixed_left" type="checkbox" name="fixed_left[]" style="margin: 0; padding: 0;"/>\n\
-				</td><td width="200px" style="" align="right">\n\
+				</td><td class="answer">\n\
 					<input type="hidden" id="id_left" name="ids_left[]" value="' + id + '"/>\n\
 					<div style="width: 120px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;">\n\
 						<input type="text" id="answer_left" name="answers_left[]" style="width: 100%; margin-right: 5px; margin-top: 12px;" value=""/>\n\
@@ -67,16 +67,16 @@ function add_answer_row(form, side) {
 		}
 		if(side == 'right') {
 			newDiv.innerHTML = '<table cellpadding=0 cellspacing=0>\n\
-				<tr><td width="200px" style="" align="left">\n\
+				<tr><td class="answer">\n\
 					<input type="hidden" id="id_right" name="ids_right[]" value="' + id + '"/>\n\
 					<div style="width: 120px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;">\n\
 						<input type="text" id="answer_right" name="answers_right[]" style="width: 100%; margin-right: 15px; margin-top: 12px;" value=""/>\n\
 					</div>\n\
-				</td><td width="50px" align="center">\n\
+				</td><td class="fixed">\n\
 					<input id="fixed_right" type="checkbox" name="fixed_right[]" style="margin: 0; padding: 0;"/>\n\
-				</td><td width="70px">\n\
+				</td><td class="img">\n\
 					<input type="checkbox" id="switch_image_text_chbx" name="switch_image_text_chbx" onclick="switch_text_images(this, false);" />\n\
-				</td><td width="70px">\n\
+				</td><td class="remove">\n\
 					<input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" />\n\
 				</td></tr></table>';
 		}

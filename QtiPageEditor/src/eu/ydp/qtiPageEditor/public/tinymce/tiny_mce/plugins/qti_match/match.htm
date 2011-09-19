@@ -57,30 +57,30 @@
 				<table width="100%"><tr>
 				<td width="300px">
 					<table><tr>
-					<td style="width: 50px;">
-						<div style="width: 100%; font-weight: bold;" align="center">{#match_dlg.remove_answer_button}:</div>
-					</td><td style="width: 50px;">
-						<div style="width: 100%; font-weight: bold;" align="center">{#match_dlg.switch_images_text}:</div>
-					</td><td style="width: 50px;">
-						<div style="width: 100%; font-weight: bold;" align="center">{#match_dlg.answer_fixed}:</div>
-					</td><td style="width: 200px;">
-						<div style="width: 100%; font-weight: bold;" align="center">{#match_dlg.answer_content}:</div>
+					<td class="removeTitle">
+						<div style="font-weight: bold;" align="center"></div>
+					</td><td class="imgTitle">
+						<div style="font-weight: bold;" align="center">{#match_dlg.switch_images_text}:</div>
+					</td><td class="fixedTitle">
+						<div style="font-weight: bold;" align="center">{#match_dlg.answer_fixed}:</div>
+					</td><td class="answerTitle">
+						<div style="font-weight: bold;" align="center">{#match_dlg.answer_content}:</div>
 					</td>
 					</tr></table>
 				</td>
-				<td width="300px">
+				<td class="connections">
 					<div style="width: 100%; font-weight: bold;" align="center">{#match_dlg.connections}:</div>
 				</td>
 				<td width="300px">
 					<table><tr>
-					<td style="width: 200px;">
-						<div style="width: 100%; font-weight: bold;" align="center">{#match_dlg.answer_content}:</div>
-					</td><td style="width: 50px;">
-						<div style="width: 100%; font-weight: bold;" align="center">{#match_dlg.answer_fixed}:</div>
-					</td><td style="width: 50px;">
-						<div style="width: 100%; font-weight: bold;" align="center">{#match_dlg.switch_images_text}:</div>
-					</td><td style="width: 50px;">
-						<div style="width: 100%; font-weight: bold;" align="center">{#match_dlg.remove_answer_button}:</div>
+					<td class="answerTitle">
+						<div style="font-weight: bold;" align="center">{#match_dlg.answer_content}:</div>
+					</td><td class="fixedTitle">
+						<div style="font-weight: bold;" align="center">{#match_dlg.answer_fixed}:</div>
+					</td><td class="imgTitle">
+						<div style="font-weight: bold;" align="center">{#match_dlg.switch_images_text}:</div>
+					</td><td class="removeTitle">
+						<div style="font-weight: bold;" align="center"></div>
 					</td>
 					</tr></table>
 				</td>
@@ -89,10 +89,10 @@
 			
 			<div id="elements_container" style="width: 100%; margin: 3px;">
 				<table width="100%"><tr>
-				<td id="left_container" width="250px" valign="top">
+				<td id="left_container" width="240px" valign="top">
 					<!-- tutaj appendowac elementy lewego zbioru -->
 				</td>
-				<td id="" width="200px" valign="top" align="right">
+				<td id="" class="connections" valign="top" align="right">
 					<div id="middle_container" style="display: none;">
 						
 					</div>
@@ -109,7 +109,7 @@
 						
 					</div>
 				</td>
-				<td id="right_container" width="250px" valign="top">
+				<td id="right_container" width="240px" valign="top">
 					<!-- tutaj appendowac elementy prawego zbioru -->
 				</td>
 				</table>

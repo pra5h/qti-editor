@@ -67,13 +67,13 @@ var matchDialog = {
 					src = src[src.length - 1];
 					var odpfull = '<img src="' + odp + '">';
 					newDiv.innerHTML = '<table cellpadding=0 cellspacing=0>\n\
-						<tr><td width="70px">\n\
+						<tr><td class="remove">\n\
 							<input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" />\n\
-						</td><td width="70px">\n\
+						</td><td class="img">\n\
 							<input type="checkbox" id="switch_image_text_chbx" name="switch_image_text_chbx" onclick="switch_text_images(this, false);" checked="checked"/>\n\
-						</td><td width="50px" align="center">\n\
+						</td><td class="fixed">\n\
 							<input id="fixed_left_' + q + '" type="checkbox" name="fixed_left[]" style="margin: 0; padding: 0;" ' + fixed + '/>\n\
-						</td><td width="200px" style="" align="right">\n\
+						</td><td class="answer">\n\
 							<input type="hidden" id="id_left_' + q + '" name="ids_left[]" value="' + data[4][q] + '"/>\n\
 							<div style="width: 120px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;" onclick="tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'' + src + '\',div:this});">\n\
 								<input type="hidden" id="answer_left_' + q + '" name="answers_left[]" style="" value=""/>\n\
@@ -85,13 +85,13 @@ var matchDialog = {
 				} else {
 					f.images.checked = false;
 					newDiv.innerHTML = '<table cellpadding=0 cellspacing=0>\n\
-						<tr><td width="70px">\n\
+						<tr><td class="remove">\n\
 							<input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" />\n\
-						</td><td width="70px">\n\
+						</td><td class="img">\n\
 							<input type="checkbox" id="switch_image_text_chbx" name="switch_image_text_chbx" onclick="switch_text_images(this, false);" />\n\
-						</td><td width="50px" align="center">\n\
+						</td><td class="fixed">\n\
 							<input id="fixed_left_' + q + '" type="checkbox" name="fixed_left[]" style="margin: 0; padding: 0;" ' + fixed + '/>\n\
-						</td><td width="200px" style="" align="right">\n\
+						</td><td class="answer">\n\
 							<input type="hidden" id="id_left_' + q + '" name="ids_left[]" value="' + data[4][q] + '"/>\n\
 							<div style="width: 120px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;">\n\
 								<input type="text" id="answer_left_' + q + '" name="answers_left[]" style="width: 100%; margin-right: 5px; margin-top: 12px;" value="' + odp + '"/>\n\
@@ -124,13 +124,13 @@ var matchDialog = {
 			newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
 			newDiv.setAttribute('id', id_0);
 			newDiv.innerHTML = '<table cellpadding=0 cellspacing=0>\n\
-				<tr><td width="70px">\n\
+				<tr><td class="remove">\n\
 					<input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" />\n\
-				</td><td width="70px">\n\
+				</td><td class="img">\n\
 					<input type="checkbox" id="switch_image_text_chbx" name="switch_image_text_chbx" onclick="switch_text_images(this, false);" />\n\
-				</td><td width="50px" align="center">\n\
+				</td><td class="fixed">\n\
 					<input id="fixed_left_0" type="checkbox" name="fixed_left[]" style="margin: 0; padding: 0;"/>\n\
-				</td><td width="200px" style="" align="right">\n\
+				</td><td class="answer">\n\
 					<input type="hidden" id="id_left_0" name="ids_left[]" value="' + id_0 + '"/>\n\
 					<div style="width: 120px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;">\n\
 						<input type="text" id="answer_left_0" name="answers_left[]" style="width: 100%; margin-right: 5px; margin-top: 12px;" value=""/>\n\
@@ -142,13 +142,13 @@ var matchDialog = {
 			newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
 			newDiv.setAttribute('id', id_1);
 			newDiv.innerHTML = '<table cellpadding=0 cellspacing=0>\n\
-				<tr><td width="70px">\n\
+				<tr><td class="remove">\n\
 					<input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" />\n\
-				</td><td width="70px">\n\
+				</td><td class="img">\n\
 					<input type="checkbox" id="switch_image_text_chbx" name="switch_image_text_chbx" onclick="switch_text_images(this, false);" />\n\
-				</td><td width="50px" align="center">\n\
+				</td><td class="fixed">\n\
 					<input id="fixed_left_1" type="checkbox" name="fixed_left[]" style="margin: 0; padding: 0;"/>\n\
-				</td><td width="200px" style="" align="right">\n\
+				</td><td class="answer">\n\
 					<input type="hidden" id="id_left_1" name="ids_left[]" value="' + id_1 + '"/>\n\
 					<div style="width: 120px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;">\n\
 						<input type="text" id="answer_left_1" name="answers_left[]" style="width: 100%; margin-right: 5px; margin-top: 12px;" value=""/>\n\
@@ -181,17 +181,17 @@ var matchDialog = {
 					src = src[src.length - 1];
 					var odpfull = '<img src="' + odp + '">';
 					newDiv.innerHTML = '<table cellpadding=0 cellspacing=0>\n\
-						<tr><td width="200px" style="" align="left">\n\
+						<tr><td class="answer">\n\
 							<input type="hidden" id="id_right_' + q + '" name="ids_right[]" value="' + data[6][q] + '"/>\n\
 							<div style="width: 120px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;" onclick="tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'' + src + '\',div:this});">\n\
 								<input type="hidden" id="answer_right_' + q + '" name="answers_right[]" style="" value=""/>\n\
 								<img style="max-height: 40px; max-width: 80px;" src="' + odp + '"/>\n\
 							</div>\n\
-						</td><td width="50px" align="center">\n\
+						</td><td class="fixed">\n\
 							<input id="fixed_right_' + q + '" type="checkbox" name="fixed_right[]" style="margin: 0; padding: 0;" ' + fixed + '/>\n\
-						</td><td width="70px">\n\
+						</td><td class="img">\n\
 							<input type="checkbox" id="switch_image_text_chbx" name="switch_image_text_chbx" onclick="switch_text_images(this, false);" checked="checked"/>\n\
-						</td><td width="70px">\n\
+						</td><td class="remove">\n\
 							<input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" />\n\
 						</td></tr></table>';
 					document.getElementById('right_container').appendChild(newDiv);
@@ -200,16 +200,16 @@ var matchDialog = {
 				} else {
 					f.images.checked = false;
 					newDiv.innerHTML = '<table cellpadding=0 cellspacing=0>\n\
-						<tr><td width="200px" style="" align="left">\n\
+						<tr><td class="answer">\n\
 							<input type="hidden" id="id_right_' + q + '" name="ids_right[]" value="' + data[6][q] + '"/>\n\
 							<div style="width: 120px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;">\n\
 								<input type="text" id="answer_right_' + q + '" name="answers_right[]" style="width: 100%; margin-right: 15px; margin-top: 12px;" value="' + odp + '"/>\n\
 							</div>\n\
-						</td><td width="50px" align="center">\n\
+						</td><td class="fixed">\n\
 							<input id="fixed_right_' + q + '" type="checkbox" name="fixed_right[]" style="margin: 0; padding: 0;" ' + fixed + '/>\n\
-						</td><td width="70px">\n\
+						</td><td class="img">\n\
 							<input type="checkbox" id="switch_image_text_chbx" name="switch_image_text_chbx" onclick="switch_text_images(this, false);" />\n\
-						</td><td width="70px">\n\
+						</td><td class="remove">\n\
 							<input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" />\n\
 						</td></tr></table>';
 					document.getElementById('right_container').appendChild(newDiv);
@@ -238,16 +238,16 @@ var matchDialog = {
 			newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
 			newDiv.setAttribute('id', id_0);
 			newDiv.innerHTML = '<table cellpadding=0 cellspacing=0>\n\
-				<tr><td width="200px" style="" align="left">\n\
+				<tr><td class="answer">\n\
 					<input type="hidden" id="id_right_0" name="ids_right[]" value="' + id_0 + '"/>\n\
 					<div style="width: 120px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;">\n\
 						<input type="text" id="answer_right_0" name="answers_right[]" style="width: 100%; margin-right: 15px; margin-top: 12px;" value=""/>\n\
 					</div>\n\
-				</td><td width="50px" align="center">\n\
+				</td><td class="fixed">\n\
 					<input id="fixed_right_0" type="checkbox" name="fixed_right[]" style="margin: 0; padding: 0;"/>\n\
-				</td><td width="70px">\n\
+				</td><td class="img">\n\
 					<input type="checkbox" id="switch_image_text_chbx" name="switch_image_text_chbx" onclick="switch_text_images(this, false);" />\n\
-				</td><td width="70px">\n\
+				</td><td class="remove">\n\
 					<input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" />\n\
 				</td></tr></table>';
 			document.getElementById('right_container').appendChild(newDiv);
@@ -256,16 +256,16 @@ var matchDialog = {
 			newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
 			newDiv.setAttribute('id', id_1);
 			newDiv.innerHTML = '<table cellpadding=0 cellspacing=0>\n\
-				<tr><td width="200px" style="" align="left">\n\
+				<tr><td class="answer">\n\
 					<input type="hidden" id="id_right_1" name="ids_right[]" value="' + id_1 + '"/>\n\
 					<div style="width: 120px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;">\n\
 						<input type="text" id="answer_right_1" name="answers_right[]" style="width: 100%; margin-right: 15px; margin-top: 12px;" value=""/>\n\
 					</div>\n\
-				</td><td width="50px" align="center">\n\
+				</td><td class="fixed">\n\
 					<input id="fixed_right_1" type="checkbox" name="fixed_right[]" style="margin: 0; padding: 0;"/>\n\
-				</td><td width="70px">\n\
+				</td><td class="img">\n\
 					<input type="checkbox" id="switch_image_text_chbx" name="switch_image_text_chbx" onclick="switch_text_images(this, false);" />\n\
-				</td><td width="70px">\n\
+				</td><td class="remove">\n\
 					<input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" />\n\
 				</td></tr></table>';
 			document.getElementById('right_container').appendChild(newDiv);
