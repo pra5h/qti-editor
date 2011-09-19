@@ -190,11 +190,11 @@ var gapInlineChoiceDialog = {
 				newData.content = '';
 
 				if(form.addnew != undefined && form.addnew.getAttribute('value') == '1') {
-					newData.content = '<p>&nbsp;</p><!-- <gapInlineChoiceInteraction identifier="'+obj.identifier+'"> -->';
+					newData.content = '<p>&nbsp;</p><!-- <textInteractionsGroup> -->';
 					newData.content += '<div id="gapInlineChoiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue;padding: 5px; background-color: rgb(240, 240, 240);">';
 				}
 				newData.content += '<!-- <prompt> --><p id="gapInlineChoiceInteractionQuestion">'+obj.question+'</p><!-- </prompt> -->';
-				newData.content += '<!-- <content> --><p id="gapInlineChoiceInteractionContent">'+obj.content+'</p><!-- </content> -->'; 
+				newData.content += '<p id="gapInlineChoiceInteractionContent">'+obj.content+'</p>'; 
 
 				var sourcesList = new Object();
 				//sourcesList.content = '<!-- <sourcesList> -->';
@@ -220,7 +220,7 @@ var gapInlineChoiceDialog = {
 				var bm = ed.selection.getBookmark();
 
 				if(form.addnew != undefined && form.addnew.getAttribute('value') == '1') {
-					newData.content += '</div><!-- end of </gapInlineChoiceInteraction> --><p>&nbsp;</p>';
+					newData.content += '</div><!-- end of </textInteractionsGroup> --><p>&nbsp;</p>';
 
 					var dom = ed.dom;
 					var patt = '';
