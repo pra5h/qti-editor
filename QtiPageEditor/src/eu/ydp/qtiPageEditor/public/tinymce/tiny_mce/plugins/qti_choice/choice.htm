@@ -60,16 +60,23 @@
 		<fieldset id="answer_list" style="margin: 10px;">
 			<legend>{#choice_dlg.answers_label}:</legend>
 			<div style="width: 100%; margin: 3px;">
-				<table><tr><td style="width: 255px;">
-					<div style="width: 100%; font-weight: bold;">{#choice_dlg.answer_content}:</div>
-				</td><td style="width: 40px;">
-					<div id="div_points" style="width: 100%; font-weight: bold;">{#choice_dlg.answer_points}:</div>
-				</td><td style="width: 50px;">
-					<div style="width: 100%; font-weight: bold;">{#choice_dlg.answer_fixed}:</div>
-				</td><td style="width: 50px;">
-					<div style="width: 100%; font-weight: bold;">{#choice_dlg.remove_answer_button}:</div>
-				</td><td style="width: 50px;">
-				</td></tr></table>
+				<table>
+				<tr>
+					<td class="answer">
+						<div style="font-weight: bold;">{#choice_dlg.answer_content}:</div>
+					</td>
+					<td class="correct">
+						<div id="div_points" style="font-weight: bold;">{#choice_dlg.answer_points}:</div>
+					</td>
+					<td class="fixed">
+						<div style="font-weight: bold;">{#choice_dlg.answer_fixed}:</div>
+					</td>
+					<td class="remove">
+					</td>
+					<td class="feedback">
+					</td>
+				</tr>
+				</table>
 			</div>
 			<!-- tutaj appendowane b�d� inputy z init()-->
 		</fieldset>

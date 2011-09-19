@@ -5,3 +5,12 @@
 /* IE */
 * html .panel_wrapper {height:100px;}
 * html .panel_wrapper div.current {height:100px;}
+
+td.answer {width: 250px; text-align: left;}
+td.correct {width: 50px; text-align: center;}
+td.fixed {width: 50px; text-align: center;}
+td.remove {width: 60px; text-align: right;}
+td.feedback {width: 30px; text-align: right;}
+td.answerTitle {width: 262px; text-align: left;}
+td.correctTitle {width: 38px; text-align: left;}
+td.fixedTitle {width: 50px; text-align: left;}
