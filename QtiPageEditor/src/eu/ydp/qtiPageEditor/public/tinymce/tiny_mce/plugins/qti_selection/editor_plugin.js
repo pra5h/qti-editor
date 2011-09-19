@@ -32,7 +32,7 @@
 				ed.windowManager.open({
 					file : url + '/selection.htm',
 					width : 550,
-					height : 400,
+					height : 430,
 					inline : 1
 				}, {
 					plugin_url : url, // Plugin absolute URL
