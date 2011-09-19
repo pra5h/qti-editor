@@ -227,7 +227,7 @@ function validateExercise(form) {
 	}
 
 	if(options.length === 0) {
-		validator_errors.push('Add minimum one option field');
+		validator_errors.push('The last option cannot be removed.');
 		tinyMCE.activeEditor.windowManager.resizeBy(0, 30, 'mce_0');
 		validOptions = false;
 	} else {
