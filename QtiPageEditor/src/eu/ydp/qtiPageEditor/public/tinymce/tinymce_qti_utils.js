@@ -205,7 +205,7 @@ function processQTI(h) {
 	}
 	var sc = new RegExp('(<simpleChoice[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice>)(?! -->)', 'gi');
 	h = h.replace(sc, '<!-- $1 --><br /><input id="choiceInteraction" name="simpleChoice" type="checkbox" />$2');
-	var sc = new RegExp('(<item[^>]*>([^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/item>)(?! -->)', 'gi');
+	var sc = new RegExp('(<item[^>]*>([^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*<\/item>)(?! -->)', 'gi');
 	h = h.replace(sc, '<!-- $1 --><li>$2</li>');
 	h = h.replace(/<\/selectionInteraction>/gi, '</div><!-- end of selectionInteraction -->');
 
@@ -383,7 +383,7 @@ function parseToQTI(h) {
 	//Selection support
 	h = h.replace(/(?:<p>)?<!-- (<selectionInteraction[^>]*>) -->(?:<\/p>)?<div id="selectionInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">/gi, '<qy:tag name="exercise">$1');
 	h = h.replace(/<prompt>([^<]*)<\/prompt>(?=\s*<simpleChoice)/gi, '<p id="choiceInteraction">$1</p>');
-	var sc = new RegExp('<!-- (<item[^>]*>([^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/item>) --><li>[^<]*</li>', 'gi');
+	var sc = new RegExp('<!-- (<item[^>]*>([^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*<\/item>) --><li>[^<]*</li>', 'gi');
 	h = h.replace(sc, '$1');
 	h = h.replace(/<\/div><!-- end of selectionInteraction -->/gi, '</selectionInteraction></qy:tag>');
 
@@ -1375,7 +1375,7 @@ function runDraggable(selectedNode) {
 
 }
 
-// Selection
+//Selection
 function runSelection(selectedNode) {
 
 	var ed = tinymce.EditorManager.activeEditor;
@@ -1385,7 +1385,7 @@ function runSelection(selectedNode) {
 	var ids_ans = new Array();
 	var fixed_ch = new Array();
 	var fixed_ans = new Array();
-	var fdb = new Array();
+	var feedbacks = new Object();
 	var points = new Array();
 	var question = '';
 	var data = {};
@@ -1411,7 +1411,7 @@ function runSelection(selectedNode) {
 
 	var choices_paragraph = selectionSectionHTML.match(/<!-- <simpleChoice identifier="[^"]*"[^>]*>([^<]*)(?:<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?[^<]*<\/simpleChoice>[^<]* --><br[^>]*><input id="choiceInteraction" (checked="checked" )?name="simpleChoice" type="checkbox">(<img[^>]*>|[^<]*)/gi);
 
-	var answers_paragraph = selectionSectionHTML.match(/<!-- <item identifier="[^"]*"[^>]*>([^<]*)(?:<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?[^<]*<\/item>[^<]* --><li>([^<]*)<\/li>/gi);
+	var answers_paragraph = selectionSectionHTML.match(/<!-- <item identifier="[^"]*"[^>]*>([^<]*)(?:<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/item>[^<]* --><li>([^<]*)<\/li>/gi);
 
 	var values_ch = new Array();
 	for (ans in choices_paragraph) {
@@ -1420,7 +1420,7 @@ function runSelection(selectedNode) {
 
 	var values_ans = new Array();
 	for (ans in answers_paragraph) {
-		values_ans.push(answers_paragraph[ans].match(/<!-- <item identifier="([^"]*)"\s*(?:fixed="([^"]*)")?[^>]*>([^<]*)(?:<feedbackInline[^>]*>([^<]*)<\/feedbackInline>)?<\/item> --><li>([^<]*)<\/li>/i));
+		values_ans.push(answers_paragraph[ans].match(/<!-- <item identifier="([^"]*)"\s*(?:fixed="([^"]*)")?[^>]*>([^<]*)(<feedbackInline[^>]*>(?:[\s\S]*)<\/feedbackInline>)*<\/item> --><li>([^<]*)<\/li>/i));
 	}
 
 	var i=0;
@@ -1432,14 +1432,33 @@ function runSelection(selectedNode) {
 	}
 
 	var i=0;
+	var fdbObj = new Object();
 	while(values_ans[i] != undefined) {
 		ids_ans.push(values_ans[i][1]);
 		answers.push(values_ans[i][3]);
 		fixed_ans.push(values_ans[i][2]);
-		fdb[values_ans[i][1]] = values_ans[i][4];
+		
+		rg = new RegExp('<feedbackInline[^>]*showHide="show"[^>]*>([^<]*)<\/feedbackInline>','gi');
+		var onok = rg.exec(values_ans[i][4]);
+		if(onok != undefined) {
+			var oo = onok[1];
+		} else {
+			var oo = '';
+		}
+		
+		rg = new RegExp('<feedbackInline[^>]*showHide="hide"[^>]*>([^<]*)<\/feedbackInline>','gi');
+		var onwrong = rg.exec(values_ans[i][4]);
+		if(onwrong != undefined) {
+			var ow = onwrong[1];
+		} else {
+			var ow = '';
+		}
+		
+		fdbObj[values_ans[i][1]] = {'onOk': oo, 'onWrong': ow};
 		i++;
 	}
-
+	feedbacks.text = fdbObj;
+	
 	var rg = new RegExp('<responseDeclaration identifier="' + identifier[1] + '"[^>]*>[^<]*<correctResponse>[^<]*(?:[^<]*<value>[^<]*</value>[^<]*)*</correctResponse>[^<]*</responseDeclaration>','gi');
 	var pointsSection = rg.exec(body.innerHTML);
 	pointsSection = pointsSection[0];
@@ -1460,7 +1479,7 @@ function runSelection(selectedNode) {
 	data.shuffle = shuffle[1];
 	data.fixed_ch = fixed_ch;
 	data.fixed_ans = fixed_ans;
-	data.fdb = fdb;
+	data.feedbacks = feedbacks;
 	data.points = points;
 
 	var body = ed.selection.dom.doc.body.innerHTML;
@@ -1475,7 +1494,6 @@ function runSelection(selectedNode) {
 		}
 	}
 	data.fd = fd;
-
 	tinyMCE.selectedNode = selectedNode;
 	tinyMCE.execCommand('mceSelection', false, data);
 

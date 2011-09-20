@@ -15,7 +15,7 @@
 			// Register the command so that it can be invoked by using tinyMCE.activeEditor.execCommand('mceExample');
 			ed.addCommand('mceSelection', function(ui, data) {
 
-				
+				/*
 				if(data != undefined) {
 					tinyMCE.feedback = new Array();
 					tinyMCE.feedback[data.identifier] = {text: new Array(), sound: new Array()}
@@ -28,7 +28,7 @@
 						tinyMCE.feedback[data.identifier].sound = data.fd;
 					}
 				}
-				
+				*/
 				ed.windowManager.open({
 					file : url + '/selection.htm',
 					width : 550,
@@ -70,7 +70,7 @@
 				ed.windowManager.open({
 					file : url + '/feedback.htm',
 					width : 400,
-					height : 100,
+					height : 120,
 					inline : 1
 				}, {
 					plugin_url : url, // Plugin absolute URL

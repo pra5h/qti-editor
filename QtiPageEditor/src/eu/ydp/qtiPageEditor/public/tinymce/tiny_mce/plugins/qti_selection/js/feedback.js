@@ -5,16 +5,25 @@ var feedbackDialog = {
 	init : function(ed) {
 		
 		var data = tinyMCEPopup.getWindowArg("data");
-		document.getElementById('identifier').setAttribute('value',data.identifier);
-		document.getElementById('exerciseid').setAttribute('value',data.exerciseid);
-		if(data.feedback != undefined && data.feedback != '') {
-			document.getElementById('feedback').setAttribute('value',data.feedback);
-			document.getElementById('fdb_sound').setAttribute('value',data.feedback_sound);
-		} else if(tinyMCE.feedback != undefined && tinyMCE.feedback[data.identifier] != undefined) {
-			document.getElementById('feedback').setAttribute('value',tinyMCE.feedback[data.identifier].text);
-			document.getElementById('fdb_sound').setAttribute('value',tinyMCE.feedback[data.identifier].sound);
-		}
 		
+		$('#identifier').attr('value',data.identifier);
+		$('#exerciseid').attr('value',data.exerciseid);
+		
+		if(data.feedback != undefined && data.feedback != '') {
+			$('#feedback_onok').attr('value',data.feedback.onOk);
+			$('#feedback_onwrong').attr('value',data.feedback.onWrong);
+			//$('#fdb_sound_onok').attr('value',data.feedback.sound.onOk);
+			//$('#fdb_sound_onwrong').attr('value',data.feedback.sound.onWrong);
+		} 
+		//else if(tinyMCE.feedback != undefined && tinyMCE.feedback[data.exerciseid] != undefined) {
+			//console.log('znalazlem');
+			//console.dir(tinyMCE.feedback);
+		/*	$('#feedback_onok').attr('value',tinyMCE.feedback[data.identifier].onOk);
+			$('#feedback_onwrong').attr('value',tinyMCE.feedback[data.identifier].onWrong);
+			$('#fdb_sound_onok').attr('value',tinyMCE.feedback[data.identifier].onok_sound);
+			$('#fdb_sound_onwrong').attr('value',tinyMCE.feedback[data.identifier].onwrong_sound);
+			*/
+		//}
 	},
 
 	prepareFeedback : function(form) {
@@ -22,13 +31,15 @@ var feedbackDialog = {
 		var formElements = form.elements;
 		var identifier = '';
 		var exerciseid = '';
-		var feedback = '';
-		var feedback_sound = '';
-		
+		var feedback_onok = '';
+		var feedback_onwrong = '';
+		var fdb_sound_onok = '';
+		var fdb_sound_onwrong = '';
+
 		if(tinyMCE.feedback == undefined) {
-			tinyMCE.feedback = new Array;
+			tinyMCE.feedback = new Array();
 		}
-		
+
 		for(i in formElements) {
 			if(formElements[i].attributes != undefined) {
 				if(formElements[i].getAttribute('name') == 'identifier') {
@@ -37,21 +48,36 @@ var feedbackDialog = {
 				if(formElements[i].getAttribute('name') == 'exerciseid') {
 					exerciseid = formElements[i].getAttribute('value');
 				}
-				if(formElements[i].getAttribute('name') == 'feedback') {
-					feedback = formElements[i].value;
+				if(formElements[i].getAttribute('name') == 'feedback_onok') {
+					feedback_onok = formElements[i].value;
 				}
-				if(formElements[i].getAttribute('name') == 'fdb_sound') {
-					feedback_sound = formElements[i].value;
+				if(formElements[i].getAttribute('name') == 'fdb_sound_onok') {
+					fdb_sound_onok = formElements[i].value;
+				}
+				if(formElements[i].getAttribute('name') == 'feedback_onwrong') {
+					feedback_onwrong = formElements[i].value;
+				}
+				if(formElements[i].getAttribute('name') == 'fdb_sound_onwrong') {
+					fdb_sound_onwrong = formElements[i].value;
 				}
 			}
 		}
+
+		var textFdb = new Object()
+		textFdb.onOk = feedback_onok;
+		textFdb.onWrong = feedback_onwrong;
+
+		/*var soundFdb = new Object()
+		soundFdb.onOk = fdb_sound_onok;
+		soundFdb.onWrong = fdb_sound_onwrong;
+		*/
 		
 		if(tinyMCE.feedback[exerciseid] == undefined) {
-			tinyMCE.feedback[exerciseid] = {text: new Array, sound: new Array};
+			tinyMCE.feedback[exerciseid] = {text: new Object(), sound: new Object()};
 		}
-		tinyMCE.feedback[exerciseid].text[identifier] = feedback;
-		tinyMCE.feedback[exerciseid].sound[identifier] = feedback_sound;
 		
+		tinyMCE.feedback[exerciseid].text[identifier] = textFdb;
+		//tinyMCE.feedback[exerciseid].sound[identifier] = soundFdb;
 		tinyMCEPopup.close();
 		return true;
 		

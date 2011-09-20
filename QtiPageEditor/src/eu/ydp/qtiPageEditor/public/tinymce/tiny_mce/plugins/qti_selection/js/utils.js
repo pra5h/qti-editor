@@ -144,7 +144,7 @@ function feedback(row) {
 	}
 	if(identifier != undefined && exerciseId != undefined) {
 		if(tinyMCE.feedback != undefined && tinyMCE.feedback[exerciseId] != undefined) {
-			tinyMCE.execCommand('mceFeedbackSelection', false, {exerciseid: exerciseId, identifier: identifier, feedback: tinyMCE.feedback[exerciseId].text[identifier], feedback_sound:  tinyMCE.feedback[exerciseId].sound[identifier]});
+			tinyMCE.execCommand('mceFeedbackSelection', false, {exerciseid: exerciseId, identifier: identifier, feedback: tinyMCE.feedback[exerciseId].text[identifier]});
 		} else {
 			tinyMCE.execCommand('mceFeedbackSelection', false, {exerciseid: exerciseId, identifier: identifier});
 		}
@@ -272,3 +272,4 @@ function strpos(haystack, needle, offset) {
 	  var i = (haystack+'').indexOf(needle, (offset || 0));
 	  return i === -1 ? false : i;
 }
+
