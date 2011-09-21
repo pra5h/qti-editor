@@ -123,7 +123,7 @@ function remove_option_row(row) {
 			}
 		}
 	} else {
-		$('#validator_errors').html("<ul><li>Sorry, you don't remove last available option. Least one option must be set.</li></ul>");
+		$('#validator_errors').html("<ul><li>The last option cannot be removed.</li></ul>");
 	}
 }
 
@@ -227,7 +227,7 @@ function validateExercise(form) {
 	}
 
 	if(options.length === 0) {
-		validator_errors.push('The last option cannot be removed.');
+		validator_errors.push('Add minimum one option field.');
 		tinyMCE.activeEditor.windowManager.resizeBy(0, 30, 'mce_0');
 		validOptions = false;
 	} else {
