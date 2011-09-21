@@ -23,5 +23,7 @@ tinyMCE.addI18n('en.feedback_dlg',{
 	modify:"Save",
 	insert:"Insert",
 	remove:"Remove",
-	feedback_label:"Feedback"
+	feedback_label:"Feedback",
+	feedback_onok:"On OK",
+    feedback_onwrong:"On Wrong"
 });
