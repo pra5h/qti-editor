@@ -365,9 +365,10 @@ function parseToQTI(h) {
 
 	//GapInlineChoice support
 	h = h.replace(/(?:<p>)?<!-- (<textInteractionsGroup[^>]*>)[^<]+<div id="gapInlineChoiceInteraction"[^>]*>/gi, '<qy:tag name="exercise">$1');
-	h = h.replace(/<!-- <prompt> --><p id="gapInlineChoiceInteractionQuestion">(.*)<\/p><!-- <\/prompt> -->/gi, '<prompt>$1</prompt>');
+	h = h.replace(/<!-- <prompt> --><p id="gapInlineChoiceInteractionQuestion">([^<]*)<\/p><!-- <\/prompt> -->/gi, '<prompt>$1</prompt>');
 //	h = h.replace(/<!-- <content> --><p id="gapInlineChoiceInteractionContent">([\S\n\r\t\s.]*)<\/p><!-- <\/content> -->/gi, '<content>$1</content>');
 	h = h.replace(/<p id="gapInlineChoiceInteractionContent">/gi, '');
+
 	//h = h.replace(/<\/p>/gi, '');
 	//([\S\n\r\t\s.]*)<\/p><!-- <\/content> -->
 	h = h.replace(/<!-- (<textEntryInteraction[^>]*>[^<]*(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/textEntryInteraction>) --><span id="gap" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">([^<]*)<\/span>/gi, '$1');
