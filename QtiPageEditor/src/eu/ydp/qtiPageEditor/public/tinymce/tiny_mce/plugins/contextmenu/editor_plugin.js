@@ -301,6 +301,14 @@
 				m.add({title : 'Paste QTI activity', icon : 'pasteqtibutton', cmd : 'mcePasteQTI'});
 			}
 			
+			for (var itemName in m.items) {
+				if ('Alignment' == m.items[itemName].settings.title && node != '') {
+					for (item in m.items[itemName].items) {
+						m.items[itemName].items[item].setDisabled(true);
+					}
+				}
+			}
+			
 			return m;
 		}
 	});
