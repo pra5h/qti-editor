@@ -296,22 +296,22 @@ var selectionDialog = {
 				if(tinyMCE.feedback != undefined && tinyMCE.feedback[dataobj.identifier] != undefined && tinyMCE.feedback[dataobj.identifier].text[dataobj.ids[i]] != undefined) {
 					if ('' != tinyMCE.feedback[dataobj.identifier].text[dataobj.ids[i]].onOk) {
 						selectionSection += '<feedbackInline ';
-						selectionSection += 'identifier=".*' + dataobj.ids[i] + ' '+dataobj.options_ids[i]+'.*" ';
+						selectionSection += 'identifier="\\+' + dataobj.ids[i] + ' '+dataobj.options_ids[i]+'.*" ';
 						selectionSection += 'mark="CORRECT" ';
 						selectionSection += 'fadeEffect="300" ';
 						//selectionSection += 'senderIdentifier="^' + dataobj.identifier + '$" ';
-						selectionSection += 'outcomeIdentifier="' + dataobj.identifier + '" '; 
+						selectionSection += 'outcomeIdentifier="' + dataobj.identifier + '-LASTCHANGE" '; 
 						selectionSection += 'showHide="show">' + tinyMCE.feedback[dataobj.identifier].text[dataobj.ids[i]].onOk + '</feedbackInline>';
 					}
 					
 					if ('' != tinyMCE.feedback[dataobj.identifier].text[dataobj.ids[i]].onWrong) {
 						selectionSection += '<feedbackInline ';
-						selectionSection += 'identifier=".*' + dataobj.ids[i] + ' '+dataobj.options_ids[i]+'.*" ';
+						selectionSection += 'identifier="\\+' + dataobj.ids[i] + ' (?:(?!'+dataobj.options_ids[i]+').)*(;+?.*|$)" ';
 						selectionSection += 'mark="WRONG" ';
 						selectionSection += 'fadeEffect="300" ';
 						//selectionSection += 'senderIdentifier="^' + dataobj.identifier + '$" ';
-						selectionSection += 'outcomeIdentifier="' + dataobj.identifier + '" '; 
-						selectionSection += 'showHide="hide">' + tinyMCE.feedback[dataobj.identifier].text[dataobj.ids[i]].onWrong + '</feedbackInline>';
+						selectionSection += 'outcomeIdentifier="' + dataobj.identifier + '-LASTCHANGE" '; 
+						selectionSection += 'showHide="show">' + tinyMCE.feedback[dataobj.identifier].text[dataobj.ids[i]].onWrong + '</feedbackInline>';
 					}
 				}
 				selectionSection += '</item> --><li>';
@@ -394,22 +394,22 @@ var selectionDialog = {
 				if(tinyMCE.feedback != undefined && tinyMCE.feedback[dataobj.identifier] != undefined && tinyMCE.feedback[dataobj.identifier].text[dataobj.ids[i]] != undefined) {
 					if ('' != tinyMCE.feedback[dataobj.identifier].text[dataobj.ids[i]].onOk) {
 						selectionSection += '<feedbackInline ';
-						selectionSection += 'identifier=".*' + dataobj.ids[i] + ' '+dataobj.options_ids[i]+'.*" ';
+						selectionSection += 'identifier="\\+' + dataobj.ids[i] + ' '+dataobj.options_ids[i]+'.*" ';
 						selectionSection += 'mark="CORRECT" ';
 						selectionSection += 'fadeEffect="300" ';
 						//selectionSection += 'senderIdentifier="^' + dataobj.identifier + '$" ';
-						selectionSection += 'outcomeIdentifier="' + dataobj.identifier + '" '; 
+						selectionSection += 'outcomeIdentifier="' + dataobj.identifier + '-LASTCHANGE" '; 
 						selectionSection += 'showHide="show">' + tinyMCE.feedback[dataobj.identifier].text[dataobj.ids[i]].onOk + '</feedbackInline>';
 					}
 					
 					if ('' != tinyMCE.feedback[dataobj.identifier].text[dataobj.ids[i]].onWrong) {
 						selectionSection += '<feedbackInline ';
-						selectionSection += 'identifier=".*' + dataobj.ids[i] + ' '+dataobj.options_ids[i]+'.*" ';
+						selectionSection += 'identifier="\\+' + dataobj.ids[i] + ' (?:(?!'+dataobj.options_ids[i]+').)*(;+?.*|$)" ';
 						selectionSection += 'mark="WRONG" ';
 						selectionSection += 'fadeEffect="300" ';
 						//selectionSection += 'senderIdentifier="^' + dataobj.identifier + '$" ';
-						selectionSection += 'outcomeIdentifier="' + dataobj.identifier + '" '; 
-						selectionSection += 'showHide="hide">' + tinyMCE.feedback[dataobj.identifier].text[dataobj.ids[i]].onWrong + '</feedbackInline>';
+						selectionSection += 'outcomeIdentifier="' + dataobj.identifier + '-LASTCHANGE" '; 
+						selectionSection += 'showHide="show">' + tinyMCE.feedback[dataobj.identifier].text[dataobj.ids[i]].onWrong + '</feedbackInline>';
 					}
 				}
 				selectionSection += '</item> --><li>';
