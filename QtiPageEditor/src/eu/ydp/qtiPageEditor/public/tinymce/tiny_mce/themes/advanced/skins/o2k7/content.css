@@ -33,48 +33,48 @@ scrollbar-track-color:#F5F5F5;
 
 /*************** exercise ******************/
 
+#text, .text {
+	border: 1px dashed #fe7f7f;
+	background-image: url(img/frame_text.png);
+	background-repeat: no-repeat;
+	background-position: right top;
+	margin: 10px 0;
+	padding: 10px;
+}
 #exercise, .exercise {
-    margin-top: 5px;
-    padding: 0px 10px 10px 10px;
-    background: -webkit-gradient(linear, left top, left bottom, from(#fff),
-to(#e7f2ff));
-    background: -moz-linear-gradient(top, #fff, #e7f2ff);
-    border: 1px solid #999;
-    border-radius: 5px;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
+	border: 1px dashed #fe7f7f;
+	background-image: url(img/frame_exercise.png);
+	background-repeat: no-repeat;
+	background-position: right top;
+	margin: 10px 0;
+	padding: 10px;
 }
-.exercise_row {
-    margin: 5px;
-    width: 97%;
-    padding: 4px;
-    text-align: center;
-    border: 1px solid #999;
-    border-radius: 3px;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    background: -webkit-gradient(linear, left top, left bottom, from(#fff),
-to(#e7e7e7));
-    background: -moz-linear-gradient(top, #fff, #e7e7e7);
-}
-.exercise_row50 {
-    margin: 5px;
-    width: 46%;
-    padding: 4px;
-    text-align: center;
-    border: 1px solid #999;
-    border-radius: 3px;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    background: -webkit-gradient(linear, left top, left bottom, from(#fff),
-to(#e7e7e7));
-    background: -moz-linear-gradient(top, #fff, #e7e7e7);
-}
-.exercise_line {
-    margin: 5px;
-    width: 97%;
-    padding: 4px;
-    text-align: center;
-    border-bottom: 1px solid #999;
+#media, .media {
+	border: 1px dashed #fe7f7f;
+	background-image: url(img/frame_media.png);
+	background-repeat: no-repeat;
+	background-position: right top;
+	margin: 10px 0;
+	padding: 10px;
 }
 
+#text > p, .text > p, #exercise > p, .exercise > p, #media > p, .media > p{
+	background: none !important;
+	border: 1px dotted #ccc !important;
+	margin: 5px 0 !important;
+	padding: 10px !important;
+	}
+		
+#text > div, .text > div, #exercise > div, .exercise > div, #media > div, .media > div{
+	background: none !important;
+	border: 1px dotted #3366cc !important;
+	margin: 5px 0 !important;
+	padding: 10px !important;
+	}
+	
+#media > fieldset, .media > fieldset{
+	background: none !important;
+	border: 1px dotted #33cc66 !important;
+	margin: 5px 0 !important;
+	padding: 10px !important;
+	}
