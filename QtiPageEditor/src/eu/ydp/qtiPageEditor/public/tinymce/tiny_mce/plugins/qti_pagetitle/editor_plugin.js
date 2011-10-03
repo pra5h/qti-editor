@@ -14,7 +14,7 @@
 		init : function(ed, url) {
 			// Register the command so that it can be invoked by using tinyMCE.activeEditor.execCommand('mceExample');
 			ed.addCommand('mcePageTitle', function(ui,data) {
-				var reg = new RegExp(/<assessmentItem.*title="([^"]*)">/gi);
+				var reg = new RegExp(/<assessmentItem.*title="([^"]*)".*>/gi);
 				var pagetitle = reg.exec(ed.dom.doc.body.innerHTML)[1];
 				ed.windowManager.open({
 					file : url + '/pagetitle.htm',

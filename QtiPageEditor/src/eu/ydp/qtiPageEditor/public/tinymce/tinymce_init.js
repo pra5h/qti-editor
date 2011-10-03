@@ -16,9 +16,9 @@ tinyMCE.init({
 	theme_advanced_toolbar_align : "left",
 	theme_advanced_statusbar_location : "bottom",
 	theme_advanced_resizing : true,
-	theme_advanced_buttons1 : "save,newdocument,pagetitle,print,preview,|,formatselect,fontselect,fontsizeselect,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,anchor,|,help",
+	theme_advanced_buttons1 : "save,newdocument,print,preview,|,formatselect,fontselect,fontsizeselect,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,anchor,|,help",
 	theme_advanced_buttons2 : "undo,redo,|,cut,copy,|,paste,pastetext,pasteword,|,search,replace,|,forecolor,backcolor,|,bullist,numlist,|,outdent,indent,|,link,unlink,|,sub,sup,|,asciimath,asciimathcharmap,|,charmap,|,spellchecker",
-	theme_advanced_buttons3 : "insertgapinlinechoice,insertchoicesection,insertordersection,insertmatchsection,insertselectionsection,insertdraggablesection,insertidentificationsection,|,fileuploadlib_image,addvideo,playpause,|,insertcomment,|,tablecontrols,|,code",
+	theme_advanced_buttons3 : "pagetitle,insertgapinlinechoice,insertchoicesection,insertordersection,insertmatchsection,insertselectionsection,insertdraggablesection,insertidentificationsection,|,fileuploadlib_image,addvideo,playpause,|,insertcomment,|,tablecontrols,|,code",
 
 	extended_valid_elements : "canvas[id|style|width|height],gap[identifier],choiceInteraction[shuffle|maxChoices|responseIdentifier],"
 		+"orderInteracion[shuffle|responseIdentifier],selectionInteracion[shuffle|responseIdentifier],item[identifier],matchInteraction[shuffle|maxAssociations|responseIdentifier],prompt,"
