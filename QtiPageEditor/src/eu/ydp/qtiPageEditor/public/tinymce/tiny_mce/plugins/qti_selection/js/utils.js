@@ -84,8 +84,8 @@ function add_option_row(form) {
 		var newSpan = document.createElement('span');
 		newSpan.setAttribute('class','optionSpan');
 		newSpan.setAttribute('style','margin-left: 10px; margin-right: 10px;');
-		newSpan.innerHTML = '<strong>' + next + '.</strong>&nbsp;\n\
-			<input id="point_' + last + '" type="radio" value="' + ids[i] + '" name="points[' + i + ']" style="margin: 0; padding: 0;"';
+		newSpan.innerHTML = '<strong>' + next + '.</strong>&nbsp;\n'
+							+'<input id="point_' + last + '" type="radio" value="' + ids[i] + '" name="points[' + i + ']" style="margin: 0; padding: 0;" />';
 		els[i].parentNode.appendChild(newSpan);
 	}
 
@@ -137,7 +137,7 @@ function feedback(row) {
 	var tr = row.parentNode.parentNode;
 	var inputs = tr.getElementsByTagName('input');
 	for(i in inputs) {
-		if(inputs[i].attributes != undefined && inputs[i].getAttribute('id').match(/^id_/i)) {
+		if(inputs[i].attributes != undefined && inputs[i].id == 'id') {
 			var identifier = inputs[i].getAttribute('value');
 			break;
 		}
