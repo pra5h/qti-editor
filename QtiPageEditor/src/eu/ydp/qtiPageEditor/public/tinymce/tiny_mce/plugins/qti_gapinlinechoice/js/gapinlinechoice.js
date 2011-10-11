@@ -11,7 +11,7 @@ var gapInlineChoiceDialog = {
 				f.question.value = data.question;
 			}
 			if(data != undefined && data.content != undefined) {
-				data.content = data.content.replace(/&nbsp;/g,' ').replace(/<br \/>/g,'\n').replace(/<br>/g,'\n');
+				data.content = data.content.replace(/&#32;/g,' ').replace(/<br \/>/g,'\n').replace(/<br>/g,'\n');
 				f.exercise_content.value = data.content;
 			}
 
@@ -158,7 +158,7 @@ var gapInlineChoiceDialog = {
 			var obj = new Object();
 			obj.identifier = $('#identifier').val();
 			obj.question = $('[name=question]').val();
-			obj.content = $('[name=exercise_content]').val().replace(/\n/g,'<br/>').replace(/[ ]/gi,'&nbsp;');
+			obj.content = $('[name=exercise_content]').val().replace(/\n/g,'<br/>').replace(/[ ]/gi,'&#32;');
 			
 			obj.inlineRows = new Array();
 
