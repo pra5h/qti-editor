@@ -533,16 +533,22 @@ function actionOnQTI(e) {
 		} 
 	} 
 	
-	selectNodeAfterMouseEvent(e, ed);
+	//selectNodeAfterMouseEvent(e, ed);
 	//onDelete if Tracking is disable
 	if (e.keyCode == 46 && e.type == 'keypress') {
-		
 		var dd = ed.selection.getNode() || ed.getBody();
+
 		if(dd.attributes != undefined) {
 			if (dd.id != undefined  && dd.nodeName == 'DIV' && dd.id == 'gapInlineChoiceInteraction') {
 				ed.execCommand('mceGapInlineChoiceRemove', false);
 			}
 		}
+		
+		if ("P" == dd.nodeName && "&nbsp;" == dd.innerHTML) {
+			dd.parentNode.removeChild(dd);
+			return false;
+		}
+		return false;
 	}
 	
 	if(tinyMCE.changesTracking != undefined) {
