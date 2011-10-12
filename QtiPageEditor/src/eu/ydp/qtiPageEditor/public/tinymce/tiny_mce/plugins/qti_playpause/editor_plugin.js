@@ -58,7 +58,9 @@
 			});
 			
 			ed.addButton('playpause', {title : 'Insert Play / Pause button', cmd : 'mcePlayPause'});
-			
+			ed.onNodeChange.add(function(ed, cm, n) {
+				cm.setDisabled('playpause', true);
+			});
 		},
 
 		getInfo : function() {

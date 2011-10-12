@@ -99,7 +99,9 @@
 			});
 			
 			ed.addButton('insertidentificationsection', {title : 'Insert identification activity', cmd : 'mceIdentification'});
-			
+			ed.onNodeChange.add(function(ed, cm, n) {
+				cm.setDisabled('insertidentificationsection', true);
+			});
 		},
 
 

@@ -52,7 +52,9 @@
 			});
 
 			ed.addButton('insertordersection', {title : 'Insert order activity', cmd : 'mceOrder'});
-			
+			ed.onNodeChange.add(function(ed, cm, n) {
+				cm.setDisabled('insertordersection', true);
+			});
 		},
 
 
