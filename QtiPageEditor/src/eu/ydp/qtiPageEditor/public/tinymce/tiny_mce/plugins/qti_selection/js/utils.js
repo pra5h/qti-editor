@@ -20,24 +20,24 @@ function add_answer_row(form) {
 
 	var newDiv = document.createElement('div');
 	newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
-	var newInnerHTML = '<table cellpadding=0 cellspacing=0><tr>\n\
-		<td width="260px" style="padding-right: 5px;">\n\
-		<input type="text" id="answer" name="answers[]" style="width: 100%; margin-right: 5px;" value=""/>\n\
-		</td>\n\
-		<input type="hidden" id="id" name="ids[]" value="' + id + '"/>\n\
-		<td width="400px" id="optionsSpans">';
+	var newInnerHTML = '<table cellpadding=0 cellspacing=0><tr>\n'
+		+'<td width="260px" style="padding-right: 5px;">\n'
+		+'<input type="text" id="answer_0" name="answers[]" style="width: 100%; margin-right: 5px;" value=""/>\n'
+		+'</td>\n'
+		+'<input type="hidden" id="id_0" name="ids[]" value="' + id + '"/>\n'
+		+'<td width="400px" id="optionsSpans">';
 	for(var i in optionList) {
 		var lp = parseInt(i) + 1;
-		newInnerHTML += '<span class="optionSpan" style="margin-left: 10px; margin-right: 10px;">\n\
-		<strong>' + lp + '.</strong>&nbsp;\n\
-		<input id="point_' + i + '" type="radio" value="' + optionList[i] + '" name="points[' + id + ']" style="margin: 0; padding: 0;"/>\n\
-		</span>\n';
+		newInnerHTML += '<span class="optionSpan" style="margin-left: 10px; margin-right: 10px;">\n'
+			+'<strong>' + lp + '.</strong>&nbsp;\n'
+			+'<input id="point_' + i + '" type="radio" value="' + optionList[i] + '" name="points[' + id + ']" style="margin: 0; padding: 0;"/>\n'
+			+'</span>\n';
 	}
-		newInnerHTML += '</td>\n\
-		<td width="50px"><input id="fixed_0" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" /></td>\n\
-		<td width="80px"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td>\n\
-		<td width="50px"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr>\n\
-		</table>';
+		newInnerHTML += '</td>\n'
+			+'<td width="50px"><input id="fixed_0" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" /></td>\n'
+			+'<td width="80px"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td>\n'
+			+'<td width="50px"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr>\n'
+			+'</table>';
 	newDiv.innerHTML = newInnerHTML;
 	document.getElementById('answer_list').appendChild(newDiv);
 }
@@ -59,17 +59,19 @@ function add_option_row(form) {
 	last = parseInt(last.replace('.',''));
 	var next = last + 1;
 	newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
-	newDiv.innerHTML = '<strong>' + next + '.</strong>&nbsp;\n\
-		<input type="hidden" name="choices_ids[]" value="' + id + '">\n\
-		<input type="text" name="choices[]" value="" id="choice_' + last + '">&nbsp;\n\
-		<input type="button" id="remove_option" name="remove_option" value="Remove" onclick="remove_option_row(this);" />';
+	newDiv.innerHTML = '<strong>' + next + '.</strong>&nbsp;\n'
+		+'<input type="hidden" name="choices_ids[]" value="' + id + '">\n'
+		+'<input type="text" name="choices[]" value="" id="choice_' + last + '">&nbsp;\n'
+		+'<input type="button" id="remove_option" name="remove_option" value="Remove" onclick="remove_option_row(this);" />';
 	document.getElementById('option_list').appendChild(newDiv);
 
 	var optionSpans = document.getElementsByClassName('optionSpan');
 	var ids = new Array();
 	var els = new Array();
+	
 	for(i in optionSpans) {
-		if(optionSpans[i].children != undefined) {
+	
+		if('undefined' != typeof optionSpans[i] && optionSpans[i].children != undefined) {
 			var name = optionSpans[i].children[1].getAttribute('name');
 			name = name.match(/points\[([^\]]*)\]/);
 			name = name[1];
@@ -88,7 +90,6 @@ function add_option_row(form) {
 							+'<input id="point_' + last + '" type="radio" value="' + ids[i] + '" name="points[' + i + ']" style="margin: 0; padding: 0;" />';
 		els[i].parentNode.appendChild(newSpan);
 	}
-
 }
 
 
@@ -128,7 +129,7 @@ function remove_option_row(row) {
 }
 
 function feedback(row) {
-	
+
 	var tr = row;
 	while(tr.nodeName != 'FORM') {
 		tr = tr.parentNode;
@@ -137,11 +138,13 @@ function feedback(row) {
 	var tr = row.parentNode.parentNode;
 	var inputs = tr.getElementsByTagName('input');
 	for(i in inputs) {
-		if(inputs[i].attributes != undefined && inputs[i].id == 'id') {
+//		if(inputs[i].attributes != undefined && inputs[i].id == 'id') {
+		if(inputs[i].attributes != undefined && inputs[i].getAttribute('id').match(/^id_/i)) {
 			var identifier = inputs[i].getAttribute('value');
 			break;
 		}
 	}
+
 	if(identifier != undefined && exerciseId != undefined) {
 		if(tinyMCE.feedback != undefined && tinyMCE.feedback[exerciseId] != undefined) {
 			tinyMCE.execCommand('mceFeedbackSelection', false, {exerciseid: exerciseId, identifier: identifier, feedback: tinyMCE.feedback[exerciseId].text[identifier]});

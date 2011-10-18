@@ -1445,7 +1445,7 @@ function runSelection(selectedNode) {
 		answers.push(values_ans[i][3]);
 		fixed_ans.push(values_ans[i][2]);
 		
-		rg = new RegExp('<feedbackInline[^>]*showHide="show"[^>]*>([^<]*)<\/feedbackInline>','gi');
+		rg = new RegExp('<feedbackInline[^>]*mark="CORRECT"[^>]*>([^<]*)<\/feedbackInline>','gi');
 		var onok = rg.exec(values_ans[i][4]);
 		if(onok != undefined) {
 			var oo = onok[1];
@@ -1453,7 +1453,7 @@ function runSelection(selectedNode) {
 			var oo = '';
 		}
 		
-		rg = new RegExp('<feedbackInline[^>]*showHide="hide"[^>]*>([^<]*)<\/feedbackInline>','gi');
+		rg = new RegExp('<feedbackInline[^>]*mark="WRONG"[^>]*>([^<]*)<\/feedbackInline>','gi');
 		var onwrong = rg.exec(values_ans[i][4]);
 		if(onwrong != undefined) {
 			var ow = onwrong[1];
