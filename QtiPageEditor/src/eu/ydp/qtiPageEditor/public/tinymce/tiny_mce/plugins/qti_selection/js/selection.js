@@ -280,15 +280,24 @@ var selectionDialog = {
 			selectionSection += '<p id="choiceInteraction">' + dataobj.question + '</p>';
 			responseDeclaration = '<!-- <responseDeclaration identifier="' + dataobj.identifier + '" cardinality="multiple" baseType="integer"><correctResponse>';
 
+			if (dataobj.options.length > 0) {
+				selectionSection += '<table><tr><td></td>';
+			}
+			
 			for(i in dataobj.options) {
-				selectionSection += '<!-- <simpleChoice identifier="' + dataobj.options_ids[i] + '"';
-				selectionSection += '>' + dataobj.options[i];
-				selectionSection += '</simpleChoice> --><br /><input id="choiceInteraction" name="simpleChoice" type="checkbox" ';
-				selectionSection += '/>' + dataobj.options[i];
+				selectionSection += '<td><!-- <simpleChoice identifier="'+dataobj.options_ids[i]+'">'+dataobj.options[i]+'</simpleChoice> -->'+ dataobj.options[i]+'</td>';
+				//<!-- <simpleChoice identifier="' + dataobj.options_ids[i] + '"';
+				//selectionSection += '>' + dataobj.options[i];
+				//selectionSection += '</simpleChoice> --><input id="choiceInteraction" name="simpleChoice" type="checkbox" ';
+				//selectionSection += '/>' + dataobj.options[i]+'</td>';
+			}
+			
+			if (dataobj.options.length > 0) {
+				selectionSection += '</tr>';
 			}
 
 			for(i in dataobj.answers) {
-				selectionSection += '<!-- <item identifier="' + dataobj.ids[i] + '"';
+				selectionSection += '<tr><td><!-- <item identifier="' + dataobj.ids[i] + '"';
 				if(dataobj.fixed[i] == 1) {
 					selectionSection += ' fixed="true" ';
 				}
@@ -314,8 +323,21 @@ var selectionDialog = {
 						selectionSection += 'showHide="show">' + tinyMCE.feedback[dataobj.identifier].text[dataobj.ids[i]].onWrong + '</feedbackInline>';
 					}
 				}
-				selectionSection += '</item> --><li>';
-				selectionSection += dataobj.answers[i] + '</li>';
+				selectionSection += '</item> -->';
+				selectionSection += dataobj.answers[i] + '</td>';
+				var checked = '';
+				for(opi in dataobj.options_ids) {
+					if (dataobj.points[dataobj.ids[i]] == dataobj.options_ids[opi]) {
+						checked = 'checked="checked"';
+					}
+					selectionSection += '<td><input id="choiceInteraction" name="simpleChoice" type="checkbox" '+checked+'/></td>';
+					checked = '';
+				}
+				selectionSection += '</tr>';
+			}
+			
+			if (dataobj.options.length > 0) {
+				selectionSection += '</table>';
 			}
 
 			for(i in dataobj.points) {
@@ -361,7 +383,7 @@ var selectionDialog = {
 			ed.selection.moveToBookmark(bm);
 
 		} else {
-		
+
 			var ed = tinymce.EditorManager.activeEditor;
 			var nd = tinyMCE.selectedNode;	
 			var bm = ed.selection.getBookmark();
@@ -377,7 +399,24 @@ var selectionDialog = {
 				var regexp = new RegExp(' <selectionInteraction responseIdentifier="' + dataobj.identifier + '" shuffle="[^"]*"([^>]*)> ','gi');
 				nd.previousSibling.data = nd.previousSibling.data.replace(regexp, ' <selectionInteraction responseIdentifier="' + dataobj.identifier + '" shuffle="' + String(dataobj.shuffle) + '"$1> ');
 			}
+			selectionSection = '<p id="choiceInteraction">' + dataobj.question + '</p>';
 
+			if (dataobj.options.length > 0) {
+				selectionSection += '<table><tr><td></td>';
+			}
+			
+			for(i in dataobj.options) {
+				selectionSection += '<td><!-- <simpleChoice identifier="'+dataobj.options_ids[i]+'">'+dataobj.options[i]+'</simpleChoice> -->'+ dataobj.options[i]+'</td>';
+				//<!-- <simpleChoice identifier="' + dataobj.options_ids[i] + '"';
+				//selectionSection += '>' + dataobj.options[i];
+				//selectionSection += '</simpleChoice> --><input id="choiceInteraction" name="simpleChoice" type="checkbox" ';
+				//selectionSection += '/>' + dataobj.options[i]+'</td>';
+			}
+			
+			if (dataobj.options.length > 0) {
+				selectionSection += '</tr>';
+			}
+/*
 			selectionSection = '<p id="choiceInteraction">' + dataobj.question + '</p>';
 			for(i in dataobj.options) {
 				selectionSection += '<!-- <simpleChoice identifier="' + dataobj.options_ids[i] + '"';
@@ -385,8 +424,10 @@ var selectionDialog = {
 				selectionSection += '</simpleChoice> --><br /><input id="choiceInteraction" name="simpleChoice" type="checkbox" ';
 				selectionSection += '/>' + dataobj.options[i];
 			}
+			*/
 			for(i in dataobj.answers) {
-				selectionSection += '<!-- <item identifier="' + dataobj.ids[i] + '"';
+				selectionSection += '<tr><td><!-- <item identifier="' + dataobj.ids[i] + '"';
+				//selectionSection += '<!-- <item identifier="' + dataobj.ids[i] + '"';
 				if(dataobj.fixed[i] == 1) {
 					selectionSection += ' fixed="true" ';
 				}
@@ -412,8 +453,22 @@ var selectionDialog = {
 						selectionSection += 'showHide="show">' + tinyMCE.feedback[dataobj.identifier].text[dataobj.ids[i]].onWrong + '</feedbackInline>';
 					}
 				}
-				selectionSection += '</item> --><li>';
-				selectionSection += dataobj.answers[i] + '</li>';
+				selectionSection += '</item> -->';
+				selectionSection += dataobj.answers[i] + '</td>';
+				//selectionSection += '</item> --><li>';
+				//selectionSection += dataobj.answers[i] + '</li>';
+				var checked = '';
+				for(opi in dataobj.options_ids) {
+					if (dataobj.points[dataobj.ids[i]] == dataobj.options_ids[opi]) {
+						checked = 'checked="checked"';
+					}
+					selectionSection += '<td><input id="choiceInteraction" name="simpleChoice" type="checkbox" '+checked+'/></td>';
+					checked = '';
+				}
+				selectionSection += '</tr>';
+			}
+			if (dataobj.options.length > 0) {
+				selectionSection += '</table>';
 			}
 
 			for(i in dataobj.points) {

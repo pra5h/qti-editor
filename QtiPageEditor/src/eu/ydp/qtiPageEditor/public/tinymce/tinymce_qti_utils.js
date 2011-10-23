@@ -193,21 +193,63 @@ function processQTI(h) {
 	h = h.replace(/<\/orderInteraction>/gi,'</div><!-- end of orderInteraction -->');
 
 	//Selection support
-	h = h.replace(/(<selectionInteraction[^>]*>)(?! -->)/gi, '<!-- $1 --><div id="selectionInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">');
-	h = h.replace(/<prompt>([^<]*)<\/prompt>(?=\s*<simpleChoice)/gi, '<p id="choiceInteraction">$1</p>');
-	for(var i in answers) {
-		if(answers[i][1] != 'ordered') {
-			for(var j in answers[i][0]) {
-				var simpleChoice = new RegExp('(<simpleChoice identifier="' + answers[i][0][j] + '"[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice>)(?! -->)', "gi");
-				h = h.replace(simpleChoice, '<!-- $1 --><br /><input id="choiceInteraction" name="simpleChoice" type="checkbox" checked="checked" />$2');
-			}
+	var si = new RegExp('<selectionInteraction responseIdentifier="([^"]+)"[^>]*>[.\\n\\s\\S]*?<\/selectionInteraction>', 'gi');
+	var selectionSection = si.exec(h);
+	var selectionAnswers = new Array();
+
+	if (null != selectionSection) {
+		var selectionTagId = selectionSection[1];
+		for ( var ansI in answers[selectionTagId][0]) {
+			var tmp = answers[selectionTagId][0][ansI].split(' ');
+			selectionAnswers[tmp[0]] = tmp[1];
+		} 
+		selectionSection = selectionSection[0];
+		selectionSection = selectionSection.replace(/(<selectionInteraction[^>]*>)(?! -->)/gi, '<!-- $1 --><div id="selectionInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">');
+		selectionSection = selectionSection.replace(/<prompt>([^<]*)<\/prompt>(?=\s*<simpleChoice)/gi, '<p id="choiceInteraction1">$1</p>');
+		
+		var sc = new RegExp('(<simpleChoice identifier="([^"]+)"[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice>)(?! -->)', 'gi');
+		var scSection = null;
+		var scData = new Array();
+		var htmlTableSection = '';
+		htmlTableSection += '<table><tbody>';
+		while (null != (scSection = sc.exec(selectionSection))) {
+			scData.push({code: scSection[1], id: scSection[2], name: scSection[3]});
 		}
+
+		if (0 < scData.length) {
+			htmlTableSection += '<tr>';
+			for (var i = 0; i < scData.length; i++) {
+				if (0 == i) {
+					htmlTableSection += '<td>&nbsp;</td>';
+				}
+				htmlTableSection += '<td><!-- '+scData[i]['code']+' -->'+scData[i]['name']+'</td>';
+			}
+			htmlTableSection += '</tr>';
+		}
+		
+		var it = new RegExp('(<item identifier="([^"]+)"[^>]*>([^<]*)(?:<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/item>)[^<]*', 'gi');
+		var itSection = null;
+		var itData = new Array();
+		
+		while (null != (itSection = it.exec(selectionSection))) {
+
+			htmlTableSection += '<tr>';
+			htmlTableSection += '<td><!-- '+itSection[1]+' -->'+itSection[3]+'</td>';
+			var checked = '';
+			for ( var option in scData) {
+				if (selectionAnswers[itSection[2]] == scData[option]['id']) {
+					checked = 'checked="checked"';
+				}
+				htmlTableSection += '<td><input id="choiceInteraction" name="simpleChoice" '+checked+' type="checkbox"/></td>';
+				checked = '';
+			}
+			htmlTableSection += '</tr>';
+		}
+		htmlTableSection += '</tbody></table>';
+		selectionSection = selectionSection.replace(/(<p id="choiceInteraction">[^<]*<\/p>)[.\n\s\S]*?(<\/selectionInteraction>)/gi, '$1'+htmlTableSection+'$2');
+		selectionSection = selectionSection.replace(/<\/selectionInteraction>/gi, '</div><!-- end of selectionInteraction -->');
+		h = h.replace(si,selectionSection);
 	}
-	var sc = new RegExp('(<simpleChoice[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice>)(?! -->)', 'gi');
-	h = h.replace(sc, '<!-- $1 --><br /><input id="choiceInteraction" name="simpleChoice" type="checkbox" />$2');
-	var sc = new RegExp('(<item[^>]*>([^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*<\/item>)(?! -->)', 'gi');
-	h = h.replace(sc, '<!-- $1 --><li>$2</li>');
-	h = h.replace(/<\/selectionInteraction>/gi, '</div><!-- end of selectionInteraction -->');
 
 
 	//Choices support
@@ -384,8 +426,9 @@ function parseToQTI(h) {
 	//Selection support
 	h = h.replace(/(?:<p>)?<!-- (<selectionInteraction[^>]*>) -->(?:<\/p>)?<div id="selectionInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">/gi, '<qy:tag name="exercise">$1');
 	h = h.replace(/<prompt>([^<]*)<\/prompt>(?=\s*<simpleChoice)/gi, '<p id="choiceInteraction">$1</p>');
-	var sc = new RegExp('<!-- (<item[^>]*>([^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*<\/item>) --><li>[^<]*</li>', 'gi');
-	h = h.replace(sc, '$1');
+	h = h.replace(/<table>[^<]*<tbody>[^<]*([.\n\s\S]*)<\/tbody>[^<]*<\/table>/gi, '$1');
+	h = h.replace(/<td>(<!-- ([.\n\s\S]*?)[^-]-->)?[.\n\s\S]*?<\/td>/gi, '$2');//, '$1');
+	h = h.replace(/<tr>([.\n\s\S]*?)<\/tr>/gi, '$1');//, '$1');
 	h = h.replace(/<\/div><!-- end of selectionInteraction -->/gi, '</selectionInteraction></qy:tag>');
 
 	//Choices support
@@ -1416,18 +1459,17 @@ function runSelection(selectedNode) {
 
 	var question = selectionSectionHTML.match(/<p id="choiceInteraction">(.*?)<\/p>/i);
 
-	var choices_paragraph = selectionSectionHTML.match(/<!-- <simpleChoice identifier="[^"]*"[^>]*>([^<]*)(?:<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?[^<]*<\/simpleChoice>[^<]* --><br[^>]*><input id="choiceInteraction" (checked="checked" )?name="simpleChoice" type="checkbox">(<img[^>]*>|[^<]*)/gi);
-
-	var answers_paragraph = selectionSectionHTML.match(/<!-- <item identifier="[^"]*"[^>]*>([^<]*)(?:<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/item>[^<]* --><li>([^<]*)<\/li>/gi);
+	var choices_paragraph = selectionSectionHTML.match(/<!-- <simpleChoice identifier="[^"]*"[^>]*>([^<]*)(?:<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?[^<]*<\/simpleChoice>[^<]* -->/gi);
+	var answers_paragraph = selectionSectionHTML.match(/<!-- <item identifier="[^"]*"[^>]*>([^<]*)(?:<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/item>[^<]* -->/gi);
 
 	var values_ch = new Array();
 	for (ans in choices_paragraph) {
-		values_ch.push(choices_paragraph[ans].match(/<!-- <simpleChoice identifier="([^"]*)"\s*(?:fixed="([^"]*)")?[^>]*>([^<]*)(?:<feedbackInline[^>]*>([^<]*)<\/feedbackInline>)?[^<]*<\/simpleChoice>[^<]* --><br[^>]*><input id="choiceInteraction" name="simpleChoice" (?:checked="checked" )?type="checkbox">([^<]*)/i));
+		values_ch.push(choices_paragraph[ans].match(/<!-- <simpleChoice identifier="([^"]*)"\s*(?:fixed="([^"]*)")?[^>]*>([^<]*)(?:<feedbackInline[^>]*>([^<]*)<\/feedbackInline>)?[^<]*<\/simpleChoice>[^<]* -->/i));
 	}
 
 	var values_ans = new Array();
 	for (ans in answers_paragraph) {
-		values_ans.push(answers_paragraph[ans].match(/<!-- <item identifier="([^"]*)"\s*(?:fixed="([^"]*)")?[^>]*>([^<]*)(<feedbackInline[^>]*>(?:[\s\S]*)<\/feedbackInline>)*<\/item> --><li>([^<]*)<\/li>/i));
+		values_ans.push(answers_paragraph[ans].match(/<!-- <item identifier="([^"]*)"\s*(?:fixed="([^"]*)")?[^>]*>([^<]*)(<feedbackInline[^>]*>(?:[\s\S]*)<\/feedbackInline>)*<\/item> -->/i));
 	}
 
 	var i=0;
