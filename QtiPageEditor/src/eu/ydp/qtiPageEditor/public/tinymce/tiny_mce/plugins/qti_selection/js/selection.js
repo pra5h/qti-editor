@@ -281,7 +281,7 @@ var selectionDialog = {
 			responseDeclaration = '<!-- <responseDeclaration identifier="' + dataobj.identifier + '" cardinality="multiple" baseType="integer"><correctResponse>';
 
 			if (dataobj.options.length > 0) {
-				selectionSection += '<table><tr><td></td>';
+				selectionSection += '<table class="selectionTable"><tr><td></td>';
 			}
 			
 			for(i in dataobj.options) {
@@ -402,7 +402,7 @@ var selectionDialog = {
 			selectionSection = '<p id="choiceInteraction">' + dataobj.question + '</p>';
 
 			if (dataobj.options.length > 0) {
-				selectionSection += '<table><tr><td></td>';
+				selectionSection += '<table class="selectionTable"><tr><td></td>';
 			}
 			
 			for(i in dataobj.options) {

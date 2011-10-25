@@ -211,7 +211,7 @@ function processQTI(h) {
 		var scSection = null;
 		var scData = new Array();
 		var htmlTableSection = '';
-		htmlTableSection += '<table><tbody>';
+		htmlTableSection += '<table class="selectionTable"><tbody>';
 		while (null != (scSection = sc.exec(selectionSection))) {
 			scData.push({code: scSection[1], id: scSection[2], name: scSection[3]});
 		}
@@ -426,7 +426,7 @@ function parseToQTI(h) {
 	//Selection support
 	h = h.replace(/(?:<p>)?<!-- (<selectionInteraction[^>]*>) -->(?:<\/p>)?<div id="selectionInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">/gi, '<qy:tag name="exercise">$1');
 	h = h.replace(/<prompt>([^<]*)<\/prompt>(?=\s*<simpleChoice)/gi, '<p id="choiceInteraction">$1</p>');
-	h = h.replace(/<table>[^<]*<tbody>[^<]*([.\n\s\S]*)<\/tbody>[^<]*<\/table>/gi, '$1');
+	h = h.replace(/<table[^>]*>[^<]*<tbody>[^<]*([.\n\s\S]*)<\/tbody>[^<]*<\/table>/gi, '$1');
 	h = h.replace(/<td>(<!-- ([.\n\s\S]*?)[^-]-->)?[.\n\s\S]*?<\/td>/gi, '$2');//, '$1');
 	h = h.replace(/<tr>([.\n\s\S]*?)<\/tr>/gi, '$1');//, '$1');
 	h = h.replace(/<\/div><!-- end of selectionInteraction -->/gi, '</selectionInteraction></qy:tag>');

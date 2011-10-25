@@ -12,6 +12,17 @@
 		 * @param {string} url Absolute URL to where the plugin is located.
 		 */
 		init : function(ed, url) {
+			
+			ed.onNodeChange.add(function(ed, cm, node) {
+
+				var dom = ed.dom;
+
+				tinymce.each(dom.select('table.selectionTable', node), function(n) {
+					dom.removeClass(n, 'mceItemTable');
+					ed.isNotDirty = true;
+				});
+			});
+			
 			// Register the command so that it can be invoked by using tinyMCE.activeEditor.execCommand('mceExample');
 			ed.addCommand('mceSelection', function(ui, data) {
 

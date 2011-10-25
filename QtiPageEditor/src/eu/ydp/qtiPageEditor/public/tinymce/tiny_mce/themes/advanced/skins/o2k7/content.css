@@ -78,3 +78,7 @@ scrollbar-track-color:#F5F5F5;
 	margin: 5px 0 !important;
 	padding: 10px !important;
 	}
+
+div#selectionInteraction table td {
+	text-align: center;
+	}
