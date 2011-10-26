@@ -16,7 +16,12 @@
 					onBrowseComplete : function(filePath, title) {
 						
 						if(data != undefined && data.src != undefined && data.src != '') {
+							
+							if (node.nodeName == 'DIV' && (node.className == 'text' || node.className == 'exercise')) {
+								node.removeChild(node.childNodes[1]);
+							} else {
 								node.parentNode.removeChild(node);
+							}
 						}
 						
 						var fromPath = tinyMCE.gwtProxy.getPageBasePath();

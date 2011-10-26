@@ -1124,7 +1124,7 @@ function runMediaLib(selectedNode) {
 	
 	if(node.getAttribute('id') == 'mceVideo') {
 		var src = node.previousSibling.getAttribute('src');
-		var title = node.previousSibling.getAttribute('title');
+		var title = node.nextSibling.nextSibling.nodeValue;
 		tinyMCE.execCommand('mceAddVideo', false, {src: src, title: title});
 	} else {
 		var src = node.attributes['src'].value;
