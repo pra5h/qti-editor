@@ -14,15 +14,19 @@
 				var browseCallback = {
 				
 					onBrowseComplete : function(filePath, title) {
-						
+						var node = ed.selection.getNode();
+						var paragraph = '';
 						if(data != undefined && data.src != undefined && data.src != '') {
-							
-							if (node.nodeName == 'DIV' && (node.className == 'text' || node.className == 'exercise')) {
-								node.removeChild(node.childNodes[1]);
-							} else {
+
+							if (node.nodeName == 'FIELDSET' && node.id == 'runFileUploadLib') {
 								node.parentNode.removeChild(node);
 							}
-						}
+						} else {
+							paragraph = '<p>&nbsp;</p>';
+							if (node.nodeName == 'P' && node.attributes.length == 0) {
+								node.parentNode.removeChild(node);
+							}
+						} 
 						
 						var fromPath = tinyMCE.gwtProxy.getPageBasePath();
 						var prefix = fromPath.match(/^(.*\/)ctrl.php/i);
@@ -30,8 +34,7 @@
 						fromPath.pop();
 						fromPath = fromPath.join('/');
 						filePath = getRelativeFromAbsoute(fromPath, filePath);
-
-						var videotag = '<fieldset id="runFileUploadLib" class="mceNonEditable" style="font-size: 10px; font-color: #b0b0b0; color: #b0b0b0; border: 1px solid #d0d0d0;"><embed src="' + fromPath + '/' + filePath + '" href="' + fromPath + '/' + filePath + '" autostart="false" type="video/mp4" target="myself" scale="tofit"/><img id="mceVideo" src="' + prefix[1] + 'tools/qtitesteditor/tinymce/tiny_mce/plugins/qti_addvideo/img/movie.png" /><br>' + title + '</fieldset>';
+						var videotag = paragraph+'<fieldset id="runFileUploadLib" class="mceNonEditable" style="font-size: 10px; font-color: #b0b0b0; color: #b0b0b0; border: 1px solid #d0d0d0;"><embed src="' + fromPath + '/' + filePath + '" href="' + fromPath + '/' + filePath + '" autostart="false" type="video/mp4" target="myself" scale="tofit"/><img id="mceVideo" src="' + prefix[1] + 'tools/qtitesteditor/tinymce/tiny_mce/plugins/qti_addvideo/img/movie.png" /><br>' + title + '</fieldset>'+paragraph;
 						ed.selection.moveToBookmark(ed.selection.getBookmark());
 						tinyMCE.execCommand('mceInsertContent', false, videotag);
 						return true;
@@ -58,6 +61,7 @@
 						assetBrowser.setTitle(data.title);
 					}
 				}
+				
 				assetBrowser.browse(browseCallback, extensions);
 				
 			});
