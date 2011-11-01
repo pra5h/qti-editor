@@ -16,8 +16,13 @@
 					onBrowseComplete : function(filePath, title) {
 						var node = ed.selection.getNode();
 						var paragraph = '';
+						
 						if(data != undefined && data.src != undefined && data.src != '') {
-
+							
+							while(node.nodeName != 'FIELDSET') {
+								node = node.parentNode;
+							}
+							
 							if (node.nodeName == 'FIELDSET' && node.id == 'runFileUploadLib') {
 								node.parentNode.removeChild(node);
 							}
