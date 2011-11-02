@@ -29,6 +29,10 @@ h1 {
   color: red;
 }
 
+.qp-feedback-inline-correct {
+  z-index: 400001;
+}
+
 /** Set ids using widget.getElement().setId("idOfElement") */
 #closeButton {
   margin: 15px 6px 6px;
