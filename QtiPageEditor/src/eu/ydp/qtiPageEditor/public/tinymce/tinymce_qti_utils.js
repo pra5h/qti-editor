@@ -1279,7 +1279,7 @@ function runInlineChoice(selectedNode) {
 
 // Multiple choice
 function runMultipleChoice(selectedNode) {
-			
+
 	var ed = tinymce.EditorManager.activeEditor;
 	var answers = new Array();
 	var points = new Array();
@@ -1304,21 +1304,23 @@ function runMultipleChoice(selectedNode) {
 		var maxChoices = sectionDiv.previousSibling.data.match(/<choiceInteraction.*?maxChoices="([^"]*)"[^>]*>/i);
 	}
 	var answers_paragraph = choiceSectionHTML.match(/<!-- <simpleChoice identifier="[^"]*"[^>]*>([^<]*|<img[^>]*>)[^<]*(?:<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?[^<]*<\/simpleChoice>[^<]* --><br[^>]*><input id="choiceInteraction" (checked="checked")?[\s]*name="simpleChoice"[\s]*(?:type="checkbox")?[\s]*(?:type="checkbox")?>(<img[^>]*>|[^<]*)/gi);
+	
 	var values = new Array();
 	for (ans in answers_paragraph) {
-		values.push(answers_paragraph[ans].match(/<!-- <simpleChoice identifier="([^"]*)"\s*(?:fixed="([^"]*)")?[^>]*>(?:[^<]*|<img[^>]*>)[^<]*(?:<feedbackInline[^>]*>([^<]*)<\/feedbackInline>)?[^<]*<\/simpleChoice>[^<]* --><br[^>]*><input id="choiceInteraction" (checked="checked")?[\s]*name="simpleChoice"[\s]*(?:type="checkbox")?[\s]*(?:type="checkbox")?>(<img[^>]*>|[^<]*)/i));
+		values.push(answers_paragraph[ans].match(/<!-- <simpleChoice identifier="([^"]*)"\s*(?:fixed="([^"]*)")?[^>]*>(?:([^<]*)|<img[^>]*>)[^<]*(?:<feedbackInline[^>]*>([^<]*)<\/feedbackInline>)?[^<]*<\/simpleChoice>[^<]* --><br[^>]*><input id="choiceInteraction" (checked="checked")?[\s]*name="simpleChoice"[\s]*(?:type="checkbox")?[\s]*(?:type="checkbox")?>(<img[^>]*>|[^<]*)/i));
 	}
+
 	var i=0;
 	while(values[i] != undefined) {
 		ids.push(values[i][1]);
-		answers.push(values[i][5]);
-		if(values[i][4] == 'checked="checked"') {
+		answers.push(values[i][3]);
+		if(values[i][5] == 'checked="checked"') {
 			points.push('1');
 		} else {
 			points.push('0');
 		}
 		fixed.push(values[i][2]);
-		fdb[values[i][1]] = values[i][3];
+		fdb[values[i][1]] = values[i][4];
 		i++;
 	}
 	data.push(question[1]);

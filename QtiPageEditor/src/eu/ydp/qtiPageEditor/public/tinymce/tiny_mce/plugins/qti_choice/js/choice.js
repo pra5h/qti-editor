@@ -8,7 +8,7 @@ var choiceDialog = {
 		var data = tinyMCEPopup.getWindowArg("choicedata");
 
 		if(data != undefined && data[0] != undefined) {
-			f.question.value = data[0];
+			f.question.value = stringDecode(data[0]);
 		}
 		if(data != undefined && data[4] != undefined) {
 			f.identifier.value = data[4];
@@ -197,14 +197,14 @@ var choiceDialog = {
 		
 		if(adding == 1) {
 			var choiceSection = '<p>&nbsp;</p><!-- <choiceInteraction responseIdentifier="' + identifier + '" shuffle="' + String(shuffle) + '" maxChoices="' + String(maxChoices) + '"> --><div id="choiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">';
-			choiceSection += '<p id="choiceInteraction">' + question + '</p>';
+			choiceSection += '<p id="choiceInteraction">' + stringEncode(question) + '</p>';
 			responseDeclaration = '<!-- <responseDeclaration identifier="' + identifier + '" cardinality="' + (multiple ? 'multiple' : 'single') + '" baseType="identifier"><correctResponse>';
 			for(i in answers) {
 				choiceSection += '<!-- <simpleChoice identifier="' + ids[i] + '"';
 				if(fixed[i] == 1) {
 					choiceSection += ' fixed="true" ';
 				}
-				choiceSection += '>' + answers[i];
+				choiceSection += '>' + stringEncode(answers[i]);
 				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].text[ids[i]] != undefined) {
 					choiceSection += '<feedbackInline ';
 					if(points[i] > 0) {
@@ -218,7 +218,7 @@ var choiceDialog = {
 				if(points[i] > 0) {
 					choiceSection += 'checked="checked" ';
 				}
-				choiceSection += 'name="simpleChoice" type="checkbox" />' + answers[i];
+				choiceSection += 'name="simpleChoice" type="checkbox" />' + stringEncode(answers[i]);
 				if(points[i] == 1) {
 					responseDeclaration += '<value>' + ids[i] + '</value>';
 				}
@@ -278,13 +278,13 @@ var choiceDialog = {
 				var regexp = new RegExp(' <choiceInteraction responseIdentifier="' + identifier + '" shuffle="[^"]*" maxChoices="[^"]*"([^>]*)> ','gi');
 				nd.previousSibling.data = nd.previousSibling.data.replace(regexp, ' <choiceInteraction responseIdentifier="' + identifier + '" shuffle="' + String(shuffle) + '" maxChoices="' + String(maxChoices) + '"$1> ');
 			}
-			choiceSection = '<p id="choiceInteraction">' + question + '</p>';
+			choiceSection = '<p id="choiceInteraction">' + stringEncode(question) + '</p>';
 			for(i in answers) {
 				choiceSection += '<!-- <simpleChoice identifier="' + ids[i] + '"';
 				if(fixed[i] == 1) {
 					choiceSection += ' fixed="true" ';
 				}
-				choiceSection += '>' + answers[i];
+				choiceSection += '>' + stringEncode(answers[i]);
 				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].text[ids[i]] != undefined) {
 					choiceSection += '<feedbackInline ';
 					if(points[i] > 0) {
@@ -298,7 +298,7 @@ var choiceDialog = {
 				if(points[i] > 0) {
 					choiceSection += 'checked="checked" ';
 				}
-				choiceSection += 'name="simpleChoice" type="checkbox" />' + answers[i];
+				choiceSection += 'name="simpleChoice" type="checkbox" />' + stringEncode(answers[i]);
 				if(points[i] == 1) {
 					responseDeclaration += '<value>' + ids[i] + '</value>';
 				}
