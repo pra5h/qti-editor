@@ -893,7 +893,7 @@ function runGapInlineChoice(selectedNode) {
 			gapElement.id = i;
 			gapElement.identifier = tag[2];
 			//var gapRegexp = new RegExp('<!-- <textEntryInteraction responseIdentifier="'+tag[2]+'" [^>]*>([.\\s\\S]*)*?<\/textEntryInteraction> --><span[^>]*>([^<]*)<\/span>','gi');
-			var gapRegexp = new RegExp('<!-- <textEntryInteraction responseIdentifier="'+tag[2]+'" [^>]*>([.\\n\\s\\S]*?)?<\/textEntryInteraction> --><span[^>]*>([^<]*)<\/span>','gi');
+			var gapRegexp = new RegExp('<!-- <textEntryInteraction responseIdentifier="'+tag[2]+'" [^>]*>([.\\n\\s\\S]*?)<\/textEntryInteraction> --><span[^>]*>([^<]*)<\/span>','gi');
 			
 			var gapTag = gapRegexp.exec(content[1]);
 			//if feedback exists
