@@ -62,6 +62,7 @@ var gapInlineChoiceDialog = {
 			} else {
 				addNewRow(null);
 			}
+			$('.focusedGapInlineChoice').focus();
 		},
 
 		insertGapActivityRow: function(row, sourcesList, newData) {

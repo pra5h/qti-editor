@@ -317,7 +317,7 @@ var matchDialog = {
 			//feedbacksButton.parentNode.removeChild(feedbacksButton);
 		
 		}
-		
+		$('.focusedMatch').focus();
 	},
 	
 	// setting canvas objects

@@ -96,7 +96,7 @@ var orderDialog = {
 		
 		$("#answer_list_sortable").sortable();
 
-		
+		$('.focusedOrder').focus();
 	},
 
 	insertOrderSection : function(form) {

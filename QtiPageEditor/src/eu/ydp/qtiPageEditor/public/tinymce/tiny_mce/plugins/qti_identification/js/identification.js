@@ -82,7 +82,7 @@ var identificationDialog = {
 			insertButton.setAttribute('value', 'Insert');
 		
 		}
-		
+		$('.focusedIdentification').focus();
 	},
 
 	insertIdentification : function(form) {

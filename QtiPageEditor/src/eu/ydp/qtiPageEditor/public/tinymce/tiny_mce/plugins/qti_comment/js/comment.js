@@ -42,7 +42,7 @@ var commentDialog = {
 			$('#comment_content').attr('value', comment_content);
 			
 		}
-		
+		$('.focusedComment').focus();
 	},
 
 	insertComment : function(form) {

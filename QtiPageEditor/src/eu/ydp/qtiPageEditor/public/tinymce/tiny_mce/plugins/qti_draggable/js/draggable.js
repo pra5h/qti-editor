@@ -98,7 +98,7 @@ var draggableDialog = {
 			insertButton.setAttribute('value', 'Insert');
 		
 		}
-		
+		$('.focusedDraggable').focus();
 	},
 
 	insertDraggableSection : function(form) {

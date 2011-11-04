@@ -113,7 +113,7 @@ var choiceDialog = {
 			insertButton.setAttribute('value', 'Insert');
 		
 		}
-		
+		$('.focusedChoice').focus();
 	},
 
 	insertChoiceSection : function(form) {
