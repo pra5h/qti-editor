@@ -188,3 +188,13 @@ function remove_answer_row(row) {
 	table.parentNode.removeChild(table);
 	
 }
+
+function validateGapInlineChoiceExercise(object) {
+
+	if (object.tags.length < object.inlineRows.length) {
+		$('#validator_errors').html('<ul><li>Verify "gaps" with exercise content please.</li></ul>');
+		return false;
+	}
+	
+	return true;
+}

@@ -160,7 +160,12 @@ var gapInlineChoiceDialog = {
 			obj.identifier = $('#identifier').val();
 			obj.question = $('[name=question]').val();
 			obj.content = $('[name=exercise_content]').val().replace(/\n/g,'<br/>').replace(/[ ]/gi,'&#32;');
+			obj.tags = new Array();
+			var reg = new RegExp(/(?:\[(?:(?:gap#|inlineChoice#)[0-9]+)*?\])+/gi);
 			
+			while (null != (t = reg.exec(obj.content))) {
+				obj.tags.push(t[0]);
+			}
 			obj.inlineRows = new Array();
 
 			$('#gaps tbody tr').each(function() {
@@ -180,128 +185,133 @@ var gapInlineChoiceDialog = {
 
 				obj.inlineRows.push(row);
 			});
-
-			if (obj.question != undefined && obj.question != '') {
-				var ed = tinymce.EditorManager.activeEditor;
-				var bm = ed.selection.getBookmark();
-//				ed.selection.moveToBookmark(bm);
-
-
-				var newData = new Object();
-				newData.content = '';
-
-				if(form.addnew != undefined && form.addnew.getAttribute('value') == '1') {
-					newData.content = '<p>&nbsp;</p><!-- <textInteractionsGroup> -->';
-					newData.content += '<div id="gapInlineChoiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue;padding: 5px; background-color: rgb(240, 240, 240);">';
-				}
-				newData.content += '<!-- <prompt> --><p id="gapInlineChoiceInteractionQuestion">'+obj.question+'</p><!-- </prompt> -->';
-				newData.content += '<p id="gapInlineChoiceInteractionContent">'+obj.content+'</p>'; 
-
-				var sourcesList = new Object();
-				//sourcesList.content = '<!-- <sourcesList> -->';
-				sourcesList.responses = '';
+			
+			if (validateGapInlineChoiceExercise(obj)) {
 				
-				for (i in obj.inlineRows) {
-					var row = obj.inlineRows[i];
+				if (obj.question != undefined && obj.question != '') {
+					var ed = tinymce.EditorManager.activeEditor;
+					var bm = ed.selection.getBookmark();
+//					ed.selection.moveToBookmark(bm);
 
-					if ('gap' == row.type) {
-						//content = content.replace(pattern, '<!-- <slot id="'+row.identifier+'"></slot> --><span id="mgap" style="border: 1px solid green;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>');
-						this.insertGapActivityRow(row, sourcesList, newData);
-					} else if ('inlineChoice' == row.type){
-						//var pattern = '[inlineChoice#'+row.id+']';
-						//newData.content = newData.content.replace(pattern, '<!-- <slot id="'+row.data.identifier+'"></slot> --><span id="minlineChoice" style="border: 1px solid green;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>');
-						this.insertInlineChoiceActivityRow(row, sourcesList, newData);
+
+					var newData = new Object();
+					newData.content = '';
+
+					if(form.addnew != undefined && form.addnew.getAttribute('value') == '1') {
+						newData.content = '<p>&nbsp;</p><!-- <textInteractionsGroup> -->';
+						newData.content += '<div id="gapInlineChoiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue;padding: 5px; background-color: rgb(240, 240, 240);">';
 					}
-				}
-				
-				//sourcesList.content += '<!-- </sourcesList> -->';
-				//content += sourcesList.content;
+					newData.content += '<!-- <prompt> --><p id="gapInlineChoiceInteractionQuestion">'+obj.question+'</p><!-- </prompt> -->';
+					newData.content += '<p id="gapInlineChoiceInteractionContent">'+obj.content+'</p>'; 
 
-				var ed = tinymce.EditorManager.activeEditor;
-				var bm = ed.selection.getBookmark();
-
-				if(form.addnew != undefined && form.addnew.getAttribute('value') == '1') {
-					newData.content += '</div><!-- end of </textInteractionsGroup> --><p>&nbsp;</p>';
-
-					var dom = ed.dom;
-					var patt = '';
-
-					ed.execCommand('mceInsertContent', false, '<br class="_mce_marker" />');
-
-					tinymce.each('h1,h2,h3,h4,h5,h6,p'.split(','), function(n) {
-
-						if (patt) {
-							patt += ',';
-						}
-						patt += n + ' ._mce_marker';
-					});
-
-					tinymce.each(dom.select(patt), function(n) {
-						ed.dom.split(ed.dom.getParent(n, 'h1,h2,h3,h4,h5,h6,p'), n);
-					});
-
-					dom.setOuterHTML(dom.select('._mce_marker')[0], newData.content);
-					ed.selection.moveToBookmark(bm);
-
-					body = ed.selection.getNode();
-					while(body.nodeName != 'BODY') {
-						body = body.parentNode;
-					}
-					regexp = new RegExp('(<!-- <itemBody> -->)','gi');
-					body.innerHTML = body.innerHTML.replace(regexp, sourcesList.responses + '$1');
-
-				} else {
-					var nd = tinyMCE.selectedNode;
-					
-					while(nd.id != 'gapInlineChoiceInteraction') {
-						nd = nd.parentNode;
-					}
-					nd.innerHTML = newData.content;
-					body = nd;
-					while(body.nodeName != 'BODY') {
-						body = body.parentNode;
-					}
-
-					var identifier = '';
-					var resp = '';
+					var sourcesList = new Object();
+					//sourcesList.content = '<!-- <sourcesList> -->';
+					sourcesList.responses = '';
 
 					for (i in obj.inlineRows) {
-						resp = obj.inlineRows[i];
-					
-						if ('inlineChoice' == resp.type) {
-							identifier = resp.data.identifier;
-					
-						} else if ('gap' == resp.type) {
-							identifier = resp.identifier;
-						}
-						var respOldRgx = new RegExp('<!-- <responseDeclaration identifier="'+identifier+'"[^>]*>[^<]*<correctResponse>[^<]*<value>[^<]*<\/value>[^<]*<\/correctResponse>[^<]*<\/responseDeclaration> -->', 'gi');
-						var respNewRgx = new RegExp('<!-- <responseDeclaration identifier="'+identifier+'"[^>]*>[^<]*<correctResponse>[^<]*<value>[^<]*<\/value>[^<]*<\/correctResponse>[^<]*<\/responseDeclaration> -->', 'gi');
-						var newRespRgxRes = respNewRgx.exec(sourcesList.responses);
-						
-						var newRespSection = '';
-						
-						if (null != newRespRgxRes) {
-							newRespSection = newRespRgxRes[0]; 
-						}
-						
-						if (null != respOldRgx.exec(body.innerHTML)) {
-							body.innerHTML = body.innerHTML.replace(respOldRgx, newRespSection);
-						} else {
-							regexp = new RegExp('(<!-- <itemBody> -->)','gi');
-							body.innerHTML = body.innerHTML.replace(regexp, newRespSection + '$1');
+						var row = obj.inlineRows[i];
+
+						if ('gap' == row.type) {
+							//content = content.replace(pattern, '<!-- <slot id="'+row.identifier+'"></slot> --><span id="mgap" style="border: 1px solid green;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>');
+							this.insertGapActivityRow(row, sourcesList, newData);
+						} else if ('inlineChoice' == row.type){
+							//var pattern = '[inlineChoice#'+row.id+']';
+							//newData.content = newData.content.replace(pattern, '<!-- <slot id="'+row.data.identifier+'"></slot> --><span id="minlineChoice" style="border: 1px solid green;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>');
+							this.insertInlineChoiceActivityRow(row, sourcesList, newData);
 						}
 					}
-				}
-				ed.selection.moveToBookmark(bm);
 
-				// Remove illegal text before headins
-				var beforeHeadings = ed.selection.dom.doc.body.innerHTML.match(/(.*?)(?=<!-- \?xml)/);
-				if(beforeHeadings != undefined && beforeHeadings[1] != '') {
-					ed.selection.dom.doc.body.innerHTML = ed.selection.dom.doc.body.innerHTML.replace(/(.*?)(?=<!-- \?xml)/,'');
+					//sourcesList.content += '<!-- </sourcesList> -->';
+					//content += sourcesList.content;
+
+					var ed = tinymce.EditorManager.activeEditor;
+					var bm = ed.selection.getBookmark();
+
+					if(form.addnew != undefined && form.addnew.getAttribute('value') == '1') {
+						newData.content += '</div><!-- end of </textInteractionsGroup> --><p>&nbsp;</p>';
+
+						var dom = ed.dom;
+						var patt = '';
+
+						ed.execCommand('mceInsertContent', false, '<br class="_mce_marker" />');
+
+						tinymce.each('h1,h2,h3,h4,h5,h6,p'.split(','), function(n) {
+
+							if (patt) {
+								patt += ',';
+							}
+							patt += n + ' ._mce_marker';
+						});
+
+						tinymce.each(dom.select(patt), function(n) {
+							ed.dom.split(ed.dom.getParent(n, 'h1,h2,h3,h4,h5,h6,p'), n);
+						});
+
+						dom.setOuterHTML(dom.select('._mce_marker')[0], newData.content);
+						ed.selection.moveToBookmark(bm);
+
+						body = ed.selection.getNode();
+						while(body.nodeName != 'BODY') {
+							body = body.parentNode;
+						}
+						regexp = new RegExp('(<!-- <itemBody> -->)','gi');
+						body.innerHTML = body.innerHTML.replace(regexp, sourcesList.responses + '$1');
+
+					} else {
+						var nd = tinyMCE.selectedNode;
+
+						while(nd.id != 'gapInlineChoiceInteraction') {
+							nd = nd.parentNode;
+						}
+						nd.innerHTML = newData.content;
+						body = nd;
+						while(body.nodeName != 'BODY') {
+							body = body.parentNode;
+						}
+
+						var identifier = '';
+						var resp = '';
+
+						for (i in obj.inlineRows) {
+							resp = obj.inlineRows[i];
+
+							if ('inlineChoice' == resp.type) {
+								identifier = resp.data.identifier;
+
+							} else if ('gap' == resp.type) {
+								identifier = resp.identifier;
+							}
+							var respOldRgx = new RegExp('<!-- <responseDeclaration identifier="'+identifier+'"[^>]*>[^<]*<correctResponse>[^<]*<value>[^<]*<\/value>[^<]*<\/correctResponse>[^<]*<\/responseDeclaration> -->', 'gi');
+							var respNewRgx = new RegExp('<!-- <responseDeclaration identifier="'+identifier+'"[^>]*>[^<]*<correctResponse>[^<]*<value>[^<]*<\/value>[^<]*<\/correctResponse>[^<]*<\/responseDeclaration> -->', 'gi');
+							var newRespRgxRes = respNewRgx.exec(sourcesList.responses);
+
+							var newRespSection = '';
+
+							if (null != newRespRgxRes) {
+								newRespSection = newRespRgxRes[0]; 
+							}
+
+							if (null != respOldRgx.exec(body.innerHTML)) {
+								body.innerHTML = body.innerHTML.replace(respOldRgx, newRespSection);
+							} else {
+								regexp = new RegExp('(<!-- <itemBody> -->)','gi');
+								body.innerHTML = body.innerHTML.replace(regexp, newRespSection + '$1');
+							}
+						}
+					}
+					ed.selection.moveToBookmark(bm);
+
+					// Remove illegal text before headins
+					var beforeHeadings = ed.selection.dom.doc.body.innerHTML.match(/(.*?)(?=<!-- \?xml)/);
+					if(beforeHeadings != undefined && beforeHeadings[1] != '') {
+						ed.selection.dom.doc.body.innerHTML = ed.selection.dom.doc.body.innerHTML.replace(/(.*?)(?=<!-- \?xml)/,'');
+					}
+					if(beforeHeadings && beforeHeadings[1] != '') {
+						ed.selection.dom.doc.body.innerHTML = ed.selection.dom.doc.body.innerHTML.replace(/<itemBody> -->/,'<itemBody> -->' + beforeHeadings[1]);
+					}
 				}
-				if(beforeHeadings && beforeHeadings[1] != '') {
-					ed.selection.dom.doc.body.innerHTML = ed.selection.dom.doc.body.innerHTML.replace(/<itemBody> -->/,'<itemBody> -->' + beforeHeadings[1]);
-				}
+				tinyMCEPopup.close();
+				return true;
 			}
 			/*
 			if(tinyMCE.feedback != undefined) {
@@ -345,8 +355,8 @@ var gapInlineChoiceDialog = {
 				}
 			} 
 			*/
-			tinyMCEPopup.close();
-			return true;
+			
+			return false;
 		},
 
 		openInlineChoice: function(rowNr) {

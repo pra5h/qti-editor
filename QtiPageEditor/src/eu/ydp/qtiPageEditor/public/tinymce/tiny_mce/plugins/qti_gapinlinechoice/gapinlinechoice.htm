@@ -12,7 +12,7 @@
 	<script type="text/javascript" src="js/utils.js"></script>
 </head>
 <body style="display:none;">
-<form onsubmit="gapInlineChoiceDialog.insertGapInlineChoiceSection(this);" action="#">
+<form onsubmit="return gapInlineChoiceDialog.insertGapInlineChoiceSection(this);" action="#">
 	
 	<div style="border: 1px solid #999999; min-height: 400px;">
 		
@@ -122,7 +122,7 @@
 				background-repeat:repeat; 
 				margin: 2px; 
 				font-weight: bold;
-				padding-bottom: 2px;" 
+				padding-bottom: 2px;"
 			/>
 			
 			<input type="button" id="gapinlinechoice_cancel" name="gapinlinechoice_cancel" value="{#gapinlinechoice_dlg.gapinlinechoice_cancel}" style="
