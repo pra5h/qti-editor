@@ -8,11 +8,11 @@ var gapInlineChoiceDialog = {
 			var data = tinyMCEPopup.getWindowArg("gapInlineChoiceData");
 
 			if(data != undefined && data.question != undefined) {
-				f.question.value = data.question;
+				f.question.value = stringDecode(data.question);
 			}
 			if(data != undefined && data.content != undefined) {
 				data.content = data.content.replace(/&#32;/g,' ').replace(/<br \/>/g,'\n').replace(/<br>/g,'\n');
-				f.exercise_content.value = data.content;
+				f.exercise_content.value = stringDecode(data.content);
 			}
 
 			if(data != undefined && data.identifier != undefined) {
@@ -47,7 +47,7 @@ var gapInlineChoiceDialog = {
 						//pokazanie w formularzu poprawnej odpowiedzi
 						for (i in data.inlineRows[r].points) {
 							if (1 == data.inlineRows[r].points[i]) {
-								$('#answer'+data.inlineRows[r].id).val(data.inlineRows[r].answers[i]);
+								$('#answer'+data.inlineRows[r].id).val(stringDecode(data.inlineRows[r].answers[i]));
 							}
 						}
 					}
@@ -158,8 +158,8 @@ var gapInlineChoiceDialog = {
 		insertGapInlineChoiceSection : function(form) {
 			var obj = new Object();
 			obj.identifier = $('#identifier').val();
-			obj.question = $('[name=question]').val();
-			obj.content = $('[name=exercise_content]').val().replace(/\n/g,'<br/>').replace(/[ ]/gi,'&#32;');
+			obj.question = stringEncode($('[name=question]').val());
+			obj.content = stringEncode($('[name=exercise_content]').val()).replace(/\n/g,'<br/>').replace(/[ ]/gi,'&#32;');
 			obj.tags = new Array();
 			var reg = new RegExp(/(?:\[(?:(?:gap#|inlineChoice#)[0-9]+)*?\])+/gi);
 			

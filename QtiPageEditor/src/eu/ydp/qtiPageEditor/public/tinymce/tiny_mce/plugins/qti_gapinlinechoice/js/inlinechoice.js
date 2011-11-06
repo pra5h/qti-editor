@@ -6,7 +6,7 @@ var inlineChoiceDialog = {
 		var f = document.forms[0]; 
 		var jsonData = tinyMCEPopup.getWindowArg("inlineChoiceData");
 		var data = tinymce.util.JSON.parse(jsonData);
-						
+
 		if(data != undefined && data['identifier'] != undefined) {
 			f.identifier.value = data['identifier'];
 		} else {
@@ -24,8 +24,9 @@ var inlineChoiceDialog = {
 		}
 		
 		if(data != undefined && getObjectLength(data.answers) > 0) {
-		
+
 			for(q = 0; q < getObjectLength(data.answers); q++) {
+				
 				var newDiv = document.createElement('div');
 				newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
 				if(data['points'][q] == 0) {
@@ -38,8 +39,10 @@ var inlineChoiceDialog = {
 				} else {
 					fixed = '';
 				}
-				newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td width="260px" style="padding-right: 5px;"><input type="text" id="answer_' + q + '" name="answers[]" style="width: 100%; margin-right: 5px;" value="' + data['answers'][q] + '"/></td><input type="hidden" id="id_' + q + '" name="ids[]" value="' + data['ids'][q] + '"/><td width="50px" align="center"><input id="point_' + q + '" type="radio" name="points[]" style="margin: 0; padding: 0;"' + correct + '/></td><td width="50px" align="center"><input id="fixed_' + q + '" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" ' + fixed + '/></td><td width="80px"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td width="50px" align="left"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr></table>';
+				newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td width="260px" style="padding-right: 5px;"><input type="text" id="answer_' + q + '" name="answers[]" style="width: 100%; margin-right: 5px;" value=""/></td><input type="hidden" id="id_' + q + '" name="ids[]" value="' + data['ids'][q] + '"/><td width="50px" align="center"><input id="point_' + q + '" type="radio" name="points[]" style="margin: 0; padding: 0;"' + correct + '/></td><td width="50px" align="center"><input id="fixed_' + q + '" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" ' + fixed + '/></td><td width="80px"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td width="50px" align="left"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr></table>';
 				document.getElementById('answer_list').appendChild(newDiv);
+				//value wstawiam później bo innerHTML nie pozwalał na wstawianie znaków "<",">", """ itd...
+				$('#answer_' + q).val(stringDecode(data['answers'][q]));
 			}
 
 			if (0 < getObjectLength(data.ids)) {
@@ -116,7 +119,7 @@ var inlineChoiceDialog = {
 			
 			if(element.getAttribute('name') == 'answers[]') {
 				if(element.value != '') {
-					objData.answers.push(element.value);
+					objData.answers.push(stringEncode(element.value));
 				} else {
 					skip_point = 1;
 				}
@@ -177,7 +180,7 @@ var inlineChoiceDialog = {
 			for (i in objData.answers) {
 
 				if (1 == objData.points[i]) {
-					win.$('#answer'+rowNr).val(objData.answers[i]);
+					win.$('#answer'+rowNr).val(stringDecode(objData.answers[i]));
 				}
 			}
 			tinyMCEPopup.close();

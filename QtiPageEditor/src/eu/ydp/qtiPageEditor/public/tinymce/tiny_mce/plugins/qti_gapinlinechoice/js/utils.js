@@ -66,13 +66,6 @@ function feedback(obj) {
 	}
 }
 
-function stringEncode(text) {
-	return $('<div/>').text(text).html();
-}
-function stringDecode(text) {
-	return $('<div/>').html(text).text();
-}
-
 function assignSound(row) {
 	
 	tinyMCE.execCommand('mceAddFeedbackSound', false, {dest: row.previousSibling.previousSibling, src: row.previousSibling.previousSibling.value});
@@ -280,4 +273,12 @@ function getObjectLength(object) {
         }
 	}
 	return count;
+}
+
+function stringEncode(text) {
+	return $('<div/>').text(text).html().replace(/"/g, "&quot;").replace(/>/g, "&gt;").replace(/</g, "&lt;");
+}
+
+function stringDecode(text) {
+	return $('<div/>').html(text).text().replace(/&quot;/g, "\"");
 }
