@@ -168,10 +168,7 @@ var inlineChoiceDialog = {
 			}
 		}
 		
-		if(objData.answers.length < 1 || objData.answers.length != objData.points.length) {
-			return false;
-		}
-		
+		if (validateInlineChoiceExercise(objData)) {
 			var rowNr = tinyMCEPopup.getWindowArg("rowNumber");
 			var win = tinyMCEPopup.getWindowArg("win");
 			var jsonString = tinymce.util.JSON.serialize(objData);
@@ -179,14 +176,15 @@ var inlineChoiceDialog = {
 
 			//pokazanie w formularzu poprawnej odpowiedzi
 			for (i in objData.answers) {
-				
+
 				if (1 == objData.points[i]) {
 					win.$('#answer'+rowNr).val(objData.answers[i]);
 				}
 			}
-
-		tinyMCEPopup.close();
-		return true;
+			tinyMCEPopup.close();
+			return true;
+		}
+		return false;
 	}
 
 };

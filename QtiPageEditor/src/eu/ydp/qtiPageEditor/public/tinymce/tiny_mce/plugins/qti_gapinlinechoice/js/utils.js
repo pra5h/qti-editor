@@ -190,9 +190,81 @@ function remove_answer_row(row) {
 }
 
 function validateGapInlineChoiceExercise(object) {
-
+	var message = '';
+	
+	if ('' == object.question) {
+		message += '<li>Fill question field please.</li>';
+	}
+	
+	if ('' == object.content) {
+		message += '<li>Fill content field please.</li>';
+	}
+	
 	if (object.tags.length < object.inlineRows.length) {
-		$('#validator_errors').html('<ul><li>Verify "gaps" with exercise content please.</li></ul>');
+		var isDistractorFail = false;
+
+		for ( var i = 0; i < object.inlineRows.length; i++) {
+			
+			switch(object.inlineRows[i].type) {
+				
+				case "gap":
+
+					if ('' == object.inlineRows[i].answer) {
+						message += '<li>Fill answer fields please.</li>';
+						isDistractorFail = true;
+						break;
+					}
+					break;
+
+				case "inlineChoice":
+				
+					if ("undefined" == typeof(object.inlineRows[i].data)) {
+						message += '<li>Define distractors please.</li>';
+						isDistractorFail = true;
+						break;
+					}
+					break;
+			}
+
+		}
+	
+		if (!isDistractorFail) {
+			message += '<li>Verify distractors with exercise content please, probably one or more distractors isn\'t inserted in content.</li>';
+		}
+	}
+
+	if ('' != message) {
+		$('#validator_errors').html('<ul>'+message+'</ul>');
+		return false;
+	}
+	return true;
+}
+
+function validateInlineChoiceExercise(object) {
+	var message = '';
+
+	if (object.answers.length < 1) {
+		message += '<li>Define at least one answer please.</li>';
+	} else {
+
+		if (object.answers.length != object.points.length) {
+			message += '<li>Fill all defined answers please.</li>';
+		}
+
+		var isCorrectAnswer = false;
+		for ( var i = 0; i < object.points.length; i++) {
+			if (1 == object.points[i]) {
+				isCorrectAnswer = true;
+			}
+		}
+
+		if (!isCorrectAnswer) {
+			message += '<li>Set correct answer please.</li>'
+		}
+	}
+	
+	if ('' != message) {
+		$('#validator_errors').html('<ul>'+message+'</ul>');
 		return false;
 	}
 	
