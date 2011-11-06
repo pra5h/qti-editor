@@ -23,10 +23,9 @@ var inlineChoiceDialog = {
 			}
 		}
 		
+		if(data != undefined && getObjectLength(data.answers) > 0) {
 		
-		if(data != undefined && Object.keys(data['answers']).length > 0) {
-		
-			for(q=0; q<Object.keys(data['answers']).length;q++) {
+			for(q = 0; q < getObjectLength(data.answers); q++) {
 				var newDiv = document.createElement('div');
 				newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
 				if(data['points'][q] == 0) {
@@ -43,11 +42,11 @@ var inlineChoiceDialog = {
 				document.getElementById('answer_list').appendChild(newDiv);
 			}
 
-			if (0 < Object.keys(data.ids).length) {
+			if (0 < getObjectLength(data.ids)) {
 				tinyMCE.feedback = new Array();
 				tinyMCE.feedback[data.identifier] = {"sound": new Array(), text: new Array()};
 				
-				for (q=0; q<Object.keys(data.ids).length; q++) {
+				for (q = 0; q < getObjectLength(data.ids); q++) {
 					var inlChId = data.ids[q];
 					tinyMCE.feedback[data.identifier].text[inlChId] = data.feedbacks[data.ids[q]]; 
 				}
