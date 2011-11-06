@@ -5,14 +5,14 @@
 		init : function(ed, url) {
 			
 			ed.addCommand('mceAddVideo', function(ui, data) {
-				
+
 				var node = ed.selection.getNode();
 				if(node.nodeName != 'DIV') {
 					node = node.parentNode;
 				}
 				
 				var browseCallback = {
-				
+
 					onBrowseComplete : function(filePath, title) {
 						var node = ed.selection.getNode();
 						var paragraph = '';
@@ -68,7 +68,7 @@
 				}
 				
 				assetBrowser.browse(browseCallback, extensions);
-				
+				$('.gwt-TextBox').focus();
 			});
 			
 			ed.addButton('addvideo', {title : 'Add video / flash movie', cmd : 'mceAddVideo'});

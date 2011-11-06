@@ -54,6 +54,7 @@
 				}
 				
 				assetBrowser.browse(browseCallback, extensions);
+				$('.gwt-TextBox').focus();
 				
 			});
 			
