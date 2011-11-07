@@ -8,7 +8,7 @@ var pagetitleDialog = {
 		if ('' != title) {
 			$('#insert').val(tinyMCEPopup.getLang("pagetitle_dlg.modify"));
 		}
-		$('.focusedChoice').focus();
+		$('.focusedPageTitle').focus();
 	},
 
 	insertPageTitle: function(form) {
