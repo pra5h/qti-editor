@@ -185,24 +185,29 @@ function remove_answer_row(row) {
 	
 }
 
-function showError(elementId) {
-	$('#'+elementId).attr('style' , 'width: 100%; border: 2px solid red;');
-}
 function validateGapInlineChoiceExercise(object) {
 	var message = '';
+	$(".validateInputError").each(function(){
+		$(this).removeClass("validateInputError");
+	});
+	$(".validateTrError").each(function(){
+		$(this).removeClass("validateTrError");
+	});
 
 	if ('' == object.question) {
-		showError('question');
+		$('#question').addClass('validateInputError');
 		message += '<li>Fill question field please.</li>';
 	}
 
 	if ('' == object.content) {
-		showError('exercise_content');
+		$('#exercise_content').addClass('validateInputError');
 		message += '<li>Fill content field please.</li>';
 	}
 
-	var isDistractorFail = false;
-	var isGapFail = false;
+	var isDistractorDataFail = false;
+	var isGapDataFail = false;
+	var isDistractorInserted = true;
+	var isGapInserted = true;
 
 	for ( var i = 0; i < object.inlineRows.length; i++) {
 
@@ -211,43 +216,51 @@ function validateGapInlineChoiceExercise(object) {
 			case "gap":
 	
 				if ('' == object.inlineRows[i].answer) {
-	
-					if (!isGapFail) {
-						message += '<li>Fill answer fields please.</li>';
-						showError('answer'+object.inlineRows[i].id);
-					}
-					isGapFail = true;
-				}
+					$('#answer'+object.inlineRows[i].id).addClass('validateInputError');
+					isGapDataFail = true;
+
+				} else {
+					var gapRgx = new RegExp('\\[gap#'+object.inlineRows[i].id+'\\]','gi');
 				
-				if (!isGapFail && object.tags.length < object.inlineRows.length) {
-					message += '<li>Verify gaps with exercise content please, probably one or more gaps isn\'t inserted in content.</li>';
-					$('#'+object.inlineRows[i].id).attr('style' , 'background-color:red;');
+					if (object.tags.length < object.inlineRows.length && !object.content.match(gapRgx)) {
+						$('#'+object.inlineRows[i].id).addClass('validateTrError');
+						isGapInserted = false;
+					}
 				}
 				break;
 	
 			case "inlineChoice":
 	
 				if ("undefined" == typeof(object.inlineRows[i].data)) {
-	
-					if (!isDistractorFail) {
-						message += '<li>Define distractors please.</li>';
-						showError('distractor'+object.inlineRows[i].id);
+					$('#distractor'+object.inlineRows[i].id).addClass('validateInputError');
+					isDistractorDataFail = true;
+
+				} else {
+					var inChRgx = new RegExp('\\[inlineChoice#'+object.inlineRows[i].id+'\\]','gi');
+
+					if (object.tags.length < object.inlineRows.length && !object.content.match(inChRgx)) {
+						$('#'+object.inlineRows[i].id).addClass('validateTrError');
+						isDistractorInserted = false;
 					}
-					isDistractorFail = true;
-				}
-				
-				if (!isDistractorFail && object.tags.length < object.inlineRows.length) {
-					message += '<li>Verify distractors with exercise content please, probably one or more distractors isn\'t inserted in content.</li>';
-					$('#'+object.inlineRows[i].id).attr('style' , 'background-color:red;');
 				}
 				break;
 		}
 
 	}
 
-	
+	if (isGapDataFail) {
+		message += '<li>Fill answer fields please.</li>';
+	}
+	if (!isGapInserted) {
+		message += '<li>Verify gaps with exercise content please, probably one or more gaps isn\'t inserted in content.</li>';
+	}
+	if (isDistractorDataFail) {
+		message += '<li>Define distractors please.</li>';
+	}
+	if (!isDistractorInserted) {
+		message += '<li>Verify distractors with exercise content please, probably one or more distractors isn\'t inserted in content.</li>';
+	}
 
-	
 
 	if ('' != message) {
 		$('#validator_errors').html('<ul>'+message+'</ul>');
@@ -259,9 +272,14 @@ function validateGapInlineChoiceExercise(object) {
 
 function validateInlineChoiceExercise(object) {
 	var message = '';
-
+	
+	$(".validateInputError").each(function(){
+		$(this).removeClass("validateInputError");
+	});
+	
 	if (object.answers.length < 1 && object.points.length < 1) {
 		message += '<li>Define at least one answer please.</li>';
+	
 	} else {
 
 		if (object.answers.length != object.points.length) {
@@ -271,13 +289,14 @@ function validateInlineChoiceExercise(object) {
 			for ( var i in answers) {
 
 				if ('' == answers[i].value) {
-					showError(answers[i].id);
+					$('#'+answers[i].id).addClass('validateInputError');
 				}
 			} 
 		}
 
 		if (object.points.length > 0) {
 			var isCorrectAnswer = false;
+	
 			for ( var i = 0; i < object.points.length; i++) {
 
 				if (1 == object.points[i]) {
@@ -287,18 +306,18 @@ function validateInlineChoiceExercise(object) {
 
 			if (!isCorrectAnswer) {
 				message += '<li>Set correct answer please.</li>'
-				showError('div_points');
+				$('#div_points').addClass('validateInputError');
 			}
 		}
 
 	}
-	
+
 	if ('' != message) {
 		$('#validator_errors').html('<ul>'+message+'</ul>');
 		window.scrollTo($('#scroll').offset().left,$('#scroll').offset().top);
 		return false;
 	}
-	
+
 	return true;
 }
 
