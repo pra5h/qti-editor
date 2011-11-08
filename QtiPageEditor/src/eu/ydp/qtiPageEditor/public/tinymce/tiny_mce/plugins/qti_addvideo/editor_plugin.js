@@ -28,7 +28,7 @@
 							}
 						} else {
 							paragraph = '<p>&nbsp;</p>';
-							if (node.nodeName == 'P' && node.attributes.length == 0) {
+							if (node.nodeName == 'P' && node.attributes.length == 0 && node.innerHTML == '') {
 								node.parentNode.removeChild(node);
 							}
 						} 
