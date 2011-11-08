@@ -5,37 +5,52 @@
 		init : function(ed, url) {
 			
 			ed.addCommand('mceAppendImageToPage', function(ui, data) {
-				
+
 				var node = ed.selection.getNode();
 				if(node.nodeName == 'IMG') {
 					node = node.parentNode;
 				}
-				
+
 				var browseCallback = {
-				
-					onBrowseComplete : function(filePath, title) {
-						
-						var fromPath =tinyMCE.gwtProxy.getPageBasePath();
-						fromPath = fromPath.split('/');
-						fromPath.pop();
-						fromPath = fromPath.join('/');
-						filePath = getRelativeFromAbsoute(fromPath, filePath);
-						
-						if(data != undefined && data.src != undefined && data.src != '') {
-							node.parentNode.removeChild(node);
+
+						onBrowseComplete : function(filePath, title) {
+							var node = ed.selection.getNode();
+							var paragraph = '';
+							
+							var fromPath =tinyMCE.gwtProxy.getPageBasePath();
+							fromPath = fromPath.split('/');
+							fromPath.pop();
+							fromPath = fromPath.join('/');
+							filePath = getRelativeFromAbsoute(fromPath, filePath);
+
+							if(data != undefined && data.src != undefined && data.src != '') {
+
+								while(node.nodeName != 'FIELDSET') {
+									node = node.parentNode;
+								}
+
+								if (node.nodeName == 'FIELDSET' && node.id == 'runFileUploadLib') {
+									node.parentNode.removeChild(node);
+								}
+							} else {
+								paragraph = '<p>&nbsp;</p>';
+								
+								if (node.nodeName == 'P' && node.attributes.length == 0) {
+									node.parentNode.removeChild(node);
+								}
+							} 
+
+							var imgTag = paragraph+'<fieldset id="runFileUploadLib" class="mceNonEditable" style="font-size: 10px; font-color: #b0b0b0; color: #b0b0b0; border: 1px solid #d0d0d0;"><img src="' + fromPath + '/' + filePath + '" border="0" title="' + title + '" alt="' + title + '"/><br>' + title + '</fieldset>'+paragraph;
+							ed.selection.moveToBookmark(ed.selection.getBookmark());
+							tinyMCE.execCommand('mceInsertContent', false, imgTag);
+							return true;
+						},
+
+						onBrowseError : function(error) {
+							tinyMCE.activeEditor.windowManager.alert(error);
+							return false;
 						}
 
-						var imgTag = '<fieldset id="runFileUploadLib" class="mceNonEditable" style="font-size: 10px; font-color: #b0b0b0; color: #b0b0b0; border: 1px solid #d0d0d0;"><img src="' + fromPath + '/' + filePath + '" border="0" title="' + title + '" alt="' + title + '"/><br>' + title + '</fieldset>';
-						ed.selection.moveToBookmark(ed.selection.getBookmark());
-						tinyMCE.execCommand('mceInsertContent', false, imgTag);
-						return true;
-					},
-					
-					onBrowseError : function(error) {
-						tinyMCE.activeEditor.windowManager.alert(error);
-						return false;
-					}
-					
 				}
 				
 				var extensions = [".jpg",".jpeg", ".gif", ".bmp", ".png"];
