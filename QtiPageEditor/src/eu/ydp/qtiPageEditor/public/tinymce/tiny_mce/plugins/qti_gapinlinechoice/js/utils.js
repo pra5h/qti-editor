@@ -151,11 +151,13 @@ function changeRowType(checkboxElement) {
 		$('#distractor' + checkboxElement.id.replace('checkbox','')).attr('disabled', false);
 		$('#answer' + checkboxElement.id.replace('checkbox','')).attr('disabled', true);
 		$('#feedback' + checkboxElement.id.replace('checkbox','')).attr('disabled', true);
+		$('#exercise_content').val($('#exercise_content').val().replace('[gap#'+checkboxElement.id.replace('checkbox','')+']',''));
 
 	} else {
 		$('#distractor' + checkboxElement.id.replace('checkbox','')).attr('disabled', true);
 		$('#answer' + checkboxElement.id.replace('checkbox','')).attr('disabled', false);
 		$('#feedback' + checkboxElement.id.replace('checkbox','')).attr('disabled', false);
+		$('#exercise_content').val($('#exercise_content').val().replace('[inlineChoice#'+checkboxElement.id.replace('checkbox','')+']',''));
 	}
 	
 }
@@ -167,10 +169,11 @@ function add_answer_row() {
 	var rg = new RegExp('0.([0-9]*)',"gi");
 	exec = rg.exec(randid);
 	var id = 'id_' + exec[1];
-
+	var answers = $("input[name=answers[]]");
+	var ansId = answers.length;
 	var newDiv = document.createElement('div');
 	newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
-	newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td width="260px" style="padding-right: 5px;"><input type="text" id="" name="answers[]" style="width: 100%; margin-right: 5px;" /></td><input type="hidden" id="id_" name="ids[]" value="' + id + '"/><td width="50px" align="center"><input type="radio" name="points[]" style="margin: 0; padding: 0;" /></td><td width="50px" align="center"><input id="" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" /></td><td width="80px"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td width="50px" align="left"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr></table>';
+	newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td width="260px" style="padding-right: 5px;"><input type="text" id="answer_'+ansId+'" name="answers[]" style="width: 100%; margin-right: 5px;" /></td><input type="hidden" id="id_" name="ids[]" value="' + id + '"/><td width="50px" align="center"><input type="radio" name="points[]" style="margin: 0; padding: 0;" /></td><td width="50px" align="center"><input id="" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" /></td><td width="80px"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td width="50px" align="left"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr></table>';
 	document.getElementById('answer_list').appendChild(newDiv);
 	
 }
@@ -182,52 +185,73 @@ function remove_answer_row(row) {
 	
 }
 
+function showError(elementId) {
+	$('#'+elementId).attr('style' , 'width: 100%; border: 2px solid red;');
+}
 function validateGapInlineChoiceExercise(object) {
 	var message = '';
-	
+
 	if ('' == object.question) {
+		showError('question');
 		message += '<li>Fill question field please.</li>';
 	}
-	
+
 	if ('' == object.content) {
+		showError('exercise_content');
 		message += '<li>Fill content field please.</li>';
 	}
+
+	var isDistractorFail = false;
+	var isGapFail = false;
+
+	for ( var i = 0; i < object.inlineRows.length; i++) {
+
+		switch(object.inlineRows[i].type) {
+
+			case "gap":
 	
-	if (object.tags.length < object.inlineRows.length) {
-		var isDistractorFail = false;
-
-		for ( var i = 0; i < object.inlineRows.length; i++) {
-			
-			switch(object.inlineRows[i].type) {
-				
-				case "gap":
-
-					if ('' == object.inlineRows[i].answer) {
+				if ('' == object.inlineRows[i].answer) {
+	
+					if (!isGapFail) {
 						message += '<li>Fill answer fields please.</li>';
-						isDistractorFail = true;
-						break;
+						showError('answer'+object.inlineRows[i].id);
 					}
-					break;
-
-				case "inlineChoice":
+					isGapFail = true;
+				}
 				
-					if ("undefined" == typeof(object.inlineRows[i].data)) {
-						message += '<li>Define distractors please.</li>';
-						isDistractorFail = true;
-						break;
-					}
-					break;
-			}
-
-		}
+				if (!isGapFail && object.tags.length < object.inlineRows.length) {
+					message += '<li>Verify gaps with exercise content please, probably one or more gaps isn\'t inserted in content.</li>';
+					$('#'+object.inlineRows[i].id).attr('style' , 'background-color:red;');
+				}
+				break;
 	
-		if (!isDistractorFail) {
-			message += '<li>Verify distractors with exercise content please, probably one or more distractors isn\'t inserted in content.</li>';
+			case "inlineChoice":
+	
+				if ("undefined" == typeof(object.inlineRows[i].data)) {
+	
+					if (!isDistractorFail) {
+						message += '<li>Define distractors please.</li>';
+						showError('distractor'+object.inlineRows[i].id);
+					}
+					isDistractorFail = true;
+				}
+				
+				if (!isDistractorFail && object.tags.length < object.inlineRows.length) {
+					message += '<li>Verify distractors with exercise content please, probably one or more distractors isn\'t inserted in content.</li>';
+					$('#'+object.inlineRows[i].id).attr('style' , 'background-color:red;');
+				}
+				break;
 		}
+
 	}
+
+	
+
+	
 
 	if ('' != message) {
 		$('#validator_errors').html('<ul>'+message+'</ul>');
+		window.scrollTo($('#scroll').offset().left,$('#scroll').offset().top);
 		return false;
 	}
 	return true;
@@ -236,28 +260,42 @@ function validateGapInlineChoiceExercise(object) {
 function validateInlineChoiceExercise(object) {
 	var message = '';
 
-	if (object.answers.length < 1) {
+	if (object.answers.length < 1 && object.points.length < 1) {
 		message += '<li>Define at least one answer please.</li>';
 	} else {
 
 		if (object.answers.length != object.points.length) {
 			message += '<li>Fill all defined answers please.</li>';
+			var answers = $("input[name=answers[]]");
+
+			for ( var i in answers) {
+
+				if ('' == answers[i].value) {
+					showError(answers[i].id);
+				}
+			} 
 		}
 
-		var isCorrectAnswer = false;
-		for ( var i = 0; i < object.points.length; i++) {
-			if (1 == object.points[i]) {
-				isCorrectAnswer = true;
+		if (object.points.length > 0) {
+			var isCorrectAnswer = false;
+			for ( var i = 0; i < object.points.length; i++) {
+
+				if (1 == object.points[i]) {
+					isCorrectAnswer = true;
+				}
+			}
+
+			if (!isCorrectAnswer) {
+				message += '<li>Set correct answer please.</li>'
+				showError('div_points');
 			}
 		}
 
-		if (!isCorrectAnswer) {
-			message += '<li>Set correct answer please.</li>'
-		}
 	}
 	
 	if ('' != message) {
 		$('#validator_errors').html('<ul>'+message+'</ul>');
+		window.scrollTo($('#scroll').offset().left,$('#scroll').offset().top);
 		return false;
 	}
 	
