@@ -32,16 +32,22 @@
 								if (node.nodeName == 'FIELDSET' && node.id == 'runFileUploadLib') {
 									node.parentNode.removeChild(node);
 								}
+							
 							} else {
 								paragraph = '<p>&nbsp;</p>';
 								
-								if (node.nodeName == 'P' && node.attributes.length == 0 && node.innerHTML == '') {
+								if (node.nodeName == 'P' && node.attributes.length == 0 && node.textContent != '') {
+									var bm = ed.selection.getBookmark()
+									ed.execCommand('mceSelectNode', false, node.parentNode);
+									node.parentNode.innerHTML = node.innerHTML;
+									ed.selection.moveToBookmark(bm);
+								
+								} else {
 									node.parentNode.removeChild(node);
 								}
 							} 
 
 							var imgTag = paragraph+'<fieldset id="runFileUploadLib" class="mceNonEditable" style="font-size: 10px; font-color: #b0b0b0; color: #b0b0b0; border: 1px solid #d0d0d0;"><img src="' + fromPath + '/' + filePath + '" border="0" title="' + title + '" alt="' + title + '"/><br>' + title + '</fieldset>'+paragraph;
-							ed.selection.moveToBookmark(ed.selection.getBookmark());
 							tinyMCE.execCommand('mceInsertContent', false, imgTag);
 							return true;
 						},
