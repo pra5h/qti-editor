@@ -144,7 +144,7 @@ var choiceDialog = {
 					if(images == true) {
 						answers.push('<img src="' + element.value + '"/>');
 					} else {
-						answers.push(element.value);
+						answers.push(stringEncode(element.value));
 					}
 				} else {
 					skip_point = 1;
@@ -204,7 +204,7 @@ var choiceDialog = {
 				if(fixed[i] == 1) {
 					choiceSection += ' fixed="true" ';
 				}
-				choiceSection += '>' + stringEncode(answers[i]);
+				choiceSection += '>' + answers[i];
 				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].text[ids[i]] != undefined) {
 					choiceSection += '<feedbackInline ';
 					if(points[i] > 0) {
@@ -218,7 +218,7 @@ var choiceDialog = {
 				if(points[i] > 0) {
 					choiceSection += 'checked="checked" ';
 				}
-				choiceSection += 'name="simpleChoice" type="checkbox" />' + stringEncode(answers[i]);
+				choiceSection += 'name="simpleChoice" type="checkbox" />' + answers[i];
 				if(points[i] == 1) {
 					responseDeclaration += '<value>' + ids[i] + '</value>';
 				}
@@ -284,7 +284,7 @@ var choiceDialog = {
 				if(fixed[i] == 1) {
 					choiceSection += ' fixed="true" ';
 				}
-				choiceSection += '>' + stringEncode(answers[i]);
+				choiceSection += '>' + answers[i];
 				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].text[ids[i]] != undefined) {
 					choiceSection += '<feedbackInline ';
 					if(points[i] > 0) {
@@ -298,7 +298,7 @@ var choiceDialog = {
 				if(points[i] > 0) {
 					choiceSection += 'checked="checked" ';
 				}
-				choiceSection += 'name="simpleChoice" type="checkbox" />' + stringEncode(answers[i]);
+				choiceSection += 'name="simpleChoice" type="checkbox" />' + answers[i];
 				if(points[i] == 1) {
 					responseDeclaration += '<value>' + ids[i] + '</value>';
 				}
