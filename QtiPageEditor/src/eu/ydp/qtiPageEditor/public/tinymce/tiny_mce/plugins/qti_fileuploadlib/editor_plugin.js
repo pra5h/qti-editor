@@ -5,8 +5,8 @@
 		init : function(ed, url) {
 			
 			ed.addCommand('mceAppendImageToPage', function(ui, data) {
-
 				var node = ed.selection.getNode();
+
 				if(node.nodeName == 'IMG') {
 					node = node.parentNode;
 				}
@@ -34,12 +34,18 @@
 								}
 							
 							} else {
+
 								paragraph = '<p>&nbsp;</p>';
 								
-								if (node.nodeName == 'P' && node.attributes.length == 0 && node.textContent != '') {
+								if (node.nodeName == 'P' && node.attributes.length == 0 && $.trim(node.textContent) != '') {
+									
+									if (node.lastElementChild.nodeName == 'BR') {
+										node.removeChild(node.lastElementChild);
+									}
+									
 									var bm = ed.selection.getBookmark()
-									ed.execCommand('mceSelectNode', false, node.parentNode);
-									node.parentNode.innerHTML = node.innerHTML;
+									ed.execCommand('mceSelectNode', false, node);
+									ed.execCommand('mceReplaceContent',false,node.innerHTML);
 									ed.selection.moveToBookmark(bm);
 								
 								} else {
@@ -48,7 +54,14 @@
 							} 
 
 							var imgTag = paragraph+'<fieldset id="runFileUploadLib" class="mceNonEditable" style="font-size: 10px; font-color: #b0b0b0; color: #b0b0b0; border: 1px solid #d0d0d0;"><img src="' + fromPath + '/' + filePath + '" border="0" title="' + title + '" alt="' + title + '"/><br>' + title + '</fieldset>'+paragraph;
-							tinyMCE.execCommand('mceInsertContent', false, imgTag);
+							ed.execCommand('mceInsertContent', false, imgTag);
+							var selectedNode = ed.selection.getNode().lastElementChild;
+							ed.selection.select(selectedNode);
+							var range = ed.selection.getRng();
+							range.setStart(selectedNode, 0);
+							range.setEnd(selectedNode, 0);
+							ed.selection.setRng(range);
+							ed.selection.collapse(true);
 							return true;
 						},
 
