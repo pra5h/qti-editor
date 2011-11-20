@@ -16,32 +16,62 @@
 					onBrowseComplete : function(filePath, title) {
 						var node = ed.selection.getNode();
 						var paragraph = '';
-						
+
 						if(data != undefined && data.src != undefined && data.src != '') {
-							
+
 							while(node.nodeName != 'FIELDSET') {
 								node = node.parentNode;
 							}
-							
+
 							if (node.nodeName == 'FIELDSET' && node.id == 'runFileUploadLib') {
 								node.parentNode.removeChild(node);
 							}
+
 						} else {
 							paragraph = '<p>&nbsp;</p>';
 							
-							if (node.nodeName == 'P' && node.attributes.length == 0 && $.trim(node.textContent) != '') {
+							if (node.nodeName == 'P' && node.attributes.length == 0) {
+								var prefix = '';
 								
-								if (node.lastElementChild.nodeName == 'BR') {
+								if (null != node.lastElementChild && node.lastElementChild.nodeName == 'BR') {
 									node.removeChild(node.lastElementChild);
 								}
 								
-								var bm = ed.selection.getBookmark()
-								ed.execCommand('mceSelectNode', false, node);
-								ed.execCommand('mceReplaceContent',false,node.innerHTML);
-								ed.selection.moveToBookmark(bm);
-							
-							} else {
-								node.parentNode.removeChild(node);
+								if (null != node.previousElementSibling && node.previousElementSibling.nodeName == 'FIELDSET' && node.previousElementSibling.id == 'runFileUploadLib') {
+									prefix = '<p>&nbsp;</p>';
+								}
+								ed.execCommand('mceInsertContent',false,'<span id="__caret">_</span>');
+
+								var pNode = ed.selection.getNode();
+								
+								ed.dom.setOuterHTML(pNode, pNode.innerHTML);
+
+								var carretNode = ed.dom.get('__caret');
+								var node = carretNode.parentNode.firstChild;
+								var innerHtml = '';
+								pNode = carretNode.parentNode;
+								
+								while(null != node) {
+
+									if (node.nodeType == 3) {
+										
+										if ($.trim(node.nodeValue) != '' && node.nodeValue != '\n\n') {
+											innerHtml += prefix+'<p>'+node.textContent+'</p>';
+											prefix = '';
+										}
+
+									} else {
+										innerHtml += ed.dom.getOuterHTML(node);
+									}
+									node = node.nextSibling;
+								}
+								pNode.innerHTML = innerHtml;
+
+								var rng = ed.dom.createRng();
+
+								rng.setStartBefore(ed.dom.get('__caret'));
+								rng.setEndAfter(ed.dom.get('__caret'));
+								ed.selection.setRng(rng);
 							}
 						} 
 
@@ -51,15 +81,15 @@
 						fromPath.pop();
 						fromPath = fromPath.join('/');
 						filePath = getRelativeFromAbsoute(fromPath, filePath);
-						var videotag = paragraph+'<fieldset id="runFileUploadLib" class="mceNonEditable" style="font-size: 10px; font-color: #b0b0b0; color: #b0b0b0; border: 1px solid #d0d0d0;"><embed src="' + fromPath + '/' + filePath + '" href="' + fromPath + '/' + filePath + '" autostart="false" type="video/mp4" target="myself" scale="tofit"/><img id="mceVideo" src="' + prefix[1] + 'tools/qtitesteditor/tinymce/tiny_mce/plugins/qti_addvideo/img/movie.png" /><br>' + title + '</fieldset>'+paragraph;
+						var videotag = paragraph+'<fieldset id="runFileUploadLib" class="mceNonEditable" style="font-size: 10px; font-color: #b0b0b0; color: #b0b0b0; border: 1px solid #d0d0d0;"><embed src="' + fromPath + '/' + filePath + '" href="' + fromPath + '/' + filePath + '" autostart="false" type="video/mp4" target="myself" scale="tofit"/><img id="mceVideo" src="' + prefix[1] + 'tools/qtitesteditor/tinymce/tiny_mce/plugins/qti_addvideo/img/movie.png" /><br>' + title + '</fieldset><span id="focus">_</span>'+paragraph;
 						ed.execCommand('mceInsertContent', false, videotag);
-						var selectedNode = ed.selection.getNode().lastElementChild;
-						ed.selection.select(selectedNode);
-						var range = ed.selection.getRng();
-						range.setStart(selectedNode, 0);
-						range.setEnd(selectedNode, 0);
-						ed.selection.setRng(range);
-						ed.selection.collapse(true);
+
+						var toFocus = ed.dom.get('focus').nextElementSibling.firstChild;
+						rng = ed.dom.createRng();
+						rng.setStart(toFocus, toFocus.nodeValue.length);
+						rng.setEnd(toFocus, toFocus.nodeValue.length);
+						ed.selection.setRng(rng);
+						ed.dom.remove('focus')
 						return true;
 					},
 					
