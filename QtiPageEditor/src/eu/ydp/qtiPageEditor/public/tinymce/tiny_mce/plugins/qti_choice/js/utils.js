@@ -192,3 +192,9 @@ function stringEncode(text) {
 function stringDecode(text) {
 	return $('<div/>').html(text).text().replace(/&quot;/g, "\"");
 }
+function encodeIndex(text) {
+	return text.replace(/<([\/]?su[bp])>/gi,'&lt;$1&gt;');
+}
+function decodeIndex(text) {
+	return text.replace(/&lt;([\/]?su[bp])&gt;/gi,'<$1>');
+}

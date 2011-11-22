@@ -218,7 +218,7 @@ var choiceDialog = {
 				if(points[i] > 0) {
 					choiceSection += 'checked="checked" ';
 				}
-				choiceSection += 'name="simpleChoice" type="checkbox" />' + answers[i];
+				choiceSection += 'name="simpleChoice" type="checkbox" />' + decodeIndex(answers[i]);
 				if(points[i] == 1) {
 					responseDeclaration += '<value>' + ids[i] + '</value>';
 				}
@@ -298,7 +298,7 @@ var choiceDialog = {
 				if(points[i] > 0) {
 					choiceSection += 'checked="checked" ';
 				}
-				choiceSection += 'name="simpleChoice" type="checkbox" />' + answers[i];
+				choiceSection += 'name="simpleChoice" type="checkbox" />' + decodeIndex(answers[i]);
 				if(points[i] == 1) {
 					responseDeclaration += '<value>' + ids[i] + '</value>';
 				}

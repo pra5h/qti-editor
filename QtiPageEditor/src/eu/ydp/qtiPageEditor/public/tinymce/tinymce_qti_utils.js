@@ -253,20 +253,37 @@ function processQTI(h) {
 
 
 	//Choices support
-	h = h.replace(/(<choiceInteraction[^>]*>)(?! -->)/gi, '<!-- $1 --><div id="choiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">');
-	h = h.replace(/<prompt>([^<]*)<\/prompt>(?=\s*<simpleChoice)/gi, '<p id="choiceInteraction">$1</p>');
-	for(var i in answers) {
-		if(answers[i][1] != 'ordered') {
-			for(var j in answers[i][0]) {
-				var simpleChoice = new RegExp('(<simpleChoice identifier="' + answers[i][0][j] + '"[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice>)(?! -->)', "gi");
-				h = h.replace(simpleChoice, '<!-- $1 --><br /><input id="choiceInteraction" checked="checked" name="simpleChoice" type="checkbox" />$2');
+	var ciSectionReg = new RegExp('<choiceInteraction[^>]*>[.\\n\\s\\S]*?<\/choiceInteraction[^>]*>', 'gi');
+	var ciSection = null;
+	var xmlContent = '';
+	while (null != (ciSection = ciSectionReg.exec(h))) {
+		xmlContent = ciSection[0];
+		xmlContent = xmlContent.replace(/(<choiceInteraction[^>]*>)(?! -->)/gi, '<!-- $1 --><div id="choiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">');
+		xmlContent = xmlContent.replace(/<prompt>([^<]*)<\/prompt>(?=\s*<simpleChoice)/gi, '<p id="choiceInteraction">$1</p>');
+
+		for(var i in answers) {
+			if(answers[i][1] != 'ordered') {
+				for(var j in answers[i][0]) {
+					var simpleChoice = new RegExp('(<simpleChoice identifier="' + answers[i][0][j] + '"[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice>)(?! -->)', "gi");
+					var tmpObj = simpleChoice.exec(xmlContent);
+					xmlContent = xmlContent.replace(tmpObj[0], '<!-- '+tmpObj[1]+' --><br /><input id="choiceInteraction" checked="checked" name="simpleChoice" type="checkbox" />'+tmpObj[2].replace(/&lt;([\/]?su[bp])&gt;/gi,'<$1>'));
+				}
 			}
 		}
+		var sc = new RegExp('(<simpleChoice[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice>)(?! -->)', 'gi');
+		var tmpObj = sc.exec(xmlContent);
+		xmlContent = xmlContent.replace(tmpObj[0], '<!-- '+tmpObj[1]+' --><br /><input id="choiceInteraction" name="simpleChoice" type="checkbox" />'+tmpObj[2].replace(/&lt;([\/]?su[bp])&gt;/gi,'<$1>'));
+		xmlContent = xmlContent.replace(/<\/choiceInteraction>/gi, '</div><!-- end of choiceInteraction -->');
+		h = h.replace(ciSectionReg, xmlContent);
 	}
+	/*
 	var sc = new RegExp('(<simpleChoice[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice>)(?! -->)', 'gi');
 	h = h.replace(sc, '<!-- $1 --><br /><input id="choiceInteraction" name="simpleChoice" type="checkbox" />$2');
+	h = h.replace(/&lt;sub&gt;/gi,"<sub>");
+	h = h.replace(/&lt;\/sub&gt;/gi,"</sub>");
 	h = h.replace(/<\/choiceInteraction>/gi, '</div><!-- end of choiceInteraction -->');
-
+	*/
+	
 	//DragDrop support
 	h = h.replace(/(<dragDropInteraction[^>]*>)(?! -->)/gi, '<!-- $1 --><div id="dragDropInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">');
 	h = h.replace(/<contents>(.*)<\/contents>(?! -->)/gi, '<!-- <contents> --><p id="dragDropInteractionContents">$1</p><!-- </contents> -->');
@@ -434,6 +451,7 @@ function parseToQTI(h) {
 	//Choices support
 	h = h.replace(/(?:<p>)?<!-- (<choiceInteraction[^>]*>) -->(?:<\/p>)?<div id="choiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">/gi, '<qy:tag name="exercise">$1');
 	h = h.replace(/<p id="choiceInteraction">([^<]*)<\/p>/gi, '<prompt>$1</prompt>');
+	h = h.replace(/<([\/]?su[bp])>/gi,'&lt;$1&gt;');
 	h = h.replace(/<!-- (<simpleChoice[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice>) --><br \/><input id="choiceInteraction" [^>]*>(<img[^>]*>|[^<]*)/gi,'$1');
 	h = h.replace(/ mce_src="[^"]*"/gi,'');
 	h = h.replace(/<\/div><!-- end of choiceInteraction -->/gi,'</choiceInteraction></qy:tag>');
