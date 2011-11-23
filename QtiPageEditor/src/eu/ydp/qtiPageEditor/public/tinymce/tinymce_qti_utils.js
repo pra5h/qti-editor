@@ -149,6 +149,9 @@ function processQTI(h) {
 	h = h.replace(/<qy:tag[^>]*>/gi,'');
 	h = h.replace(/<\/qy:tag>/gi,'');
 
+	//najpierw musimy zenkodować wszystkie sup i sub, w przeciwnym wypadku parsowanie nie powiedzie się
+	h = h.replace(/<([\/]?su[bp])>/gi,'&lt;$1&gt;');
+	
 	//GapInlineChoice support
 	h = h.replace(/[\s]*(<textInteractionsGroup>[\s]*)<prompt>(.*)<\/prompt>(?! -->)[\s]*/gi, '<!-- $1 --><div id="gapInlineChoiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue;padding: 5px; background-color: rgb(240, 240, 240);" mce_style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;"><!-- <prompt> --><p id="gapInlineChoiceInteractionQuestion">$2</p><!-- </prompt> --><p id="gapInlineChoiceInteractionContent">');
 //	h = h.replace(/[\s]*(?! <!--)(<textInteractionsGroup[^>]*>)(?! -->)/gi, '<!-- $1 --><div id="gapInlineChoiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue;padding: 5px; background-color: rgb(240, 240, 240);" mce_style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">');
@@ -495,7 +498,8 @@ function parseToQTI(h) {
 
 	// Fix for bug #42087
 	h = h.replace(/(<img[^>]*[^\/])(>)/gi,'$1 /$2');
-
+	//żeby player poprawnie obsługiwał indexmy na koniec musimy wszystkie sup i sub zdekodować
+	h = h.replace(/&lt;([\/]?su[bp])&gt;/gi,'<$1>');
 	return h;
 
 }
