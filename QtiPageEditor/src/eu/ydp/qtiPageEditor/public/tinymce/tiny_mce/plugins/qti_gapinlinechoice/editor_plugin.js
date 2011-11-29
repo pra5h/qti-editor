@@ -170,7 +170,14 @@
 			});
 			
 			ed.addButton('insertgapinlinechoice', {title : 'Insert gapinlinechoice activity', cmd : 'mceGapInlineChoice'});
+			ed.onNodeChange.add(function(ed, cm, n) {
 
+				if ('BODY' == ed.selection.getNode().nodeName) {
+					cm.setDisabled('insertgapinlinechoice', true);
+				} else {
+					cm.setDisabled('insertgapinlinechoice', false);
+				}
+			});
 		},
 
 		/**

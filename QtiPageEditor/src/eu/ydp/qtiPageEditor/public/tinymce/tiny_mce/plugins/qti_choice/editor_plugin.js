@@ -95,7 +95,14 @@
 			});
 
 			ed.addButton('insertchoicesection', {title : 'Insert choice activity', cmd : 'mceChoice'});			
+			ed.onNodeChange.add(function(ed, cm, n) {
 
+				if ('BODY' == ed.selection.getNode().nodeName) {
+					cm.setDisabled('insertchoicesection', true);
+				} else {
+					cm.setDisabled('insertchoicesection', false);
+				}
+			});
 		},
 
 

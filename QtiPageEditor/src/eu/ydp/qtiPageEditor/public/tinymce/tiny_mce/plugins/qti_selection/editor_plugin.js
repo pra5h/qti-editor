@@ -117,8 +117,15 @@
 				
 			});
 
-			ed.addButton('insertselectionsection', {title : 'Insert selection activity', cmd : 'mceSelection'});			
-			
+			ed.addButton('insertselectionsection', {title : 'Insert selection activity', cmd : 'mceSelection'});
+			ed.onNodeChange.add(function(ed, cm, n) {
+
+				if ('BODY' == ed.selection.getNode().nodeName) {
+					cm.setDisabled('insertselectionsection', true);
+				} else {
+					cm.setDisabled('insertselectionsection', false);
+				}
+			});
 		},
 
 
