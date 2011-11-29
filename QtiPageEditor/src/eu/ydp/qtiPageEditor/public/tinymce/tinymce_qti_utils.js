@@ -256,16 +256,18 @@ function processQTI(h) {
 
 
 	//Choices support
-	var ciSectionReg = new RegExp('<choiceInteraction[^>]*>[.\\n\\s\\S]*?<\/choiceInteraction[^>]*>', 'gi');
+	var ciSectionReg = new RegExp('<choiceInteraction responseIdentifier="([^"]+)"[^>]*>[.\\n\\s\\S]*?<\/choiceInteraction[^>]*>', 'gi');
 	var ciSection = null;
 	var xmlContent = '';
+	
 	while (null != (ciSection = ciSectionReg.exec(h))) {
+		var identifier = ciSection[1];
 		xmlContent = ciSection[0];
 		xmlContent = xmlContent.replace(/(<choiceInteraction[^>]*>)(?! -->)/gi, '<!-- $1 --><div id="choiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">');
 		xmlContent = xmlContent.replace(/<prompt>([^<]*)<\/prompt>(?=\s*<simpleChoice)/gi, '<p id="choiceInteraction">$1</p>');
 
 		for(var i in answers) {
-			if(answers[i][1] != 'ordered') {
+			if(answers[i][1] != 'ordered' && i == identifier) {
 				for(var j in answers[i][0]) {
 					var simpleChoice = new RegExp('(<simpleChoice identifier="' + answers[i][0][j] + '"[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice>)(?! -->)', "gi");
 					var tmpObj = simpleChoice.exec(xmlContent);
@@ -273,9 +275,11 @@ function processQTI(h) {
 				}
 			}
 		}
+		
 		var sc = new RegExp('(<simpleChoice[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice>)(?! -->)', 'gi');
-		var tmpObj = sc.exec(xmlContent);
-		xmlContent = xmlContent.replace(tmpObj[0], '<!-- '+tmpObj[1]+' --><br /><input id="choiceInteraction" name="simpleChoice" type="checkbox" />'+tmpObj[2].replace(/&lt;([\/]?su[bp])&gt;/gi,'<$1>'));
+		while (null != (tmpObj = sc.exec(xmlContent))) {
+			xmlContent = xmlContent.replace(tmpObj[0], '<!-- '+tmpObj[1]+' --><br /><input id="choiceInteraction" name="simpleChoice" type="checkbox" />'+tmpObj[2].replace(/&lt;([\/]?su[bp])&gt;/gi,'<$1>'));
+		}
 		xmlContent = xmlContent.replace(/<\/choiceInteraction>/gi, '</div><!-- end of choiceInteraction -->');
 		h = h.replace(ciSectionReg, xmlContent);
 	}
