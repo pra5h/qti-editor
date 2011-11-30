@@ -87,7 +87,9 @@
 			});
 			
 
-			ed.addButton('insertcomment', {title : 'Insert comment', cmd : 'mceComment'});
+			/*
+			 ed.addButton('insertcomment', {title : 'Insert comment', cmd : 'mceComment'});
+			 */
 			ed.onNodeChange.add(function(ed, cm, n) {
 
 				if ('BODY' == ed.selection.getNode().nodeName) {
