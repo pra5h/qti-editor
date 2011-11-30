@@ -120,7 +120,14 @@
 			});
 			
 			ed.addButton('addvideo', {title : 'Add video / flash movie', cmd : 'mceAddVideo'});
-			
+			ed.onNodeChange.add(function(ed, cm, n) {
+
+				if ('BODY' == ed.selection.getNode().nodeName) {
+					cm.setDisabled('addvideo', true);
+				} else {
+					cm.setDisabled('addvideo', false);
+				}
+			});
 		},
 
 		getInfo : function() {

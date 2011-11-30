@@ -2,7 +2,7 @@
  * $Id: editor_plugin_src.js 1209 2009-08-20 12:35:10Z spocke $
  *
  * @author Moxiecode
- * @copyright Copyright © 2004-2008, Moxiecode Systems AB, All rights reserved.
+ * @copyright Copyright ï¿½ 2004-2008, Moxiecode Systems AB, All rights reserved.
  */
 
 (function() {
@@ -201,6 +201,13 @@
 				var p = ed.dom.getParent(n, 'td,th,caption');
 
 				cm.setActive('table', n.nodeName === 'TABLE' || !!p);
+				
+				if ('BODY' == ed.selection.getNode().nodeName) {
+					cm.setDisabled('table', true);
+				} else {
+					cm.setDisabled('table', false);
+				}
+				
 				if (p && p.nodeName === 'CAPTION')
 					p = null;
 

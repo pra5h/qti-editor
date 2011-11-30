@@ -249,7 +249,14 @@
 			});
 			
 			ed.addButton('fileuploadlib_image', {title : 'Upload / insert image', cmd : 'mceAppendImageToPage'});
-			
+			ed.onNodeChange.add(function(ed, cm, n) {
+
+				if ('BODY' == ed.selection.getNode().nodeName) {
+					cm.setDisabled('fileuploadlib_image', true);
+				} else {
+					cm.setDisabled('fileuploadlib_image', false);
+				}
+			});
 		},
 
 		getInfo : function() {
