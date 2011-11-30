@@ -94,10 +94,12 @@
 				
 			});
 
+			/*
 			ed.addButton('insertdraggablesection', {title : 'Insert drag&drop activity', cmd : 'mceDraggable'});
 			ed.onNodeChange.add(function(ed, cm, n) {
 				cm.setDisabled('insertdraggablesection', true);
 			});
+			*/
 		},
 
 

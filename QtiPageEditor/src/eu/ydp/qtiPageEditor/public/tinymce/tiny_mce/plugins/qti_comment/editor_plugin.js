@@ -86,7 +86,9 @@
 			
 			});
 			
+			/*
 			ed.addButton('insertcomment', {title : 'Insert comment', cmd : 'mceComment'});
+			*/
 
 		},
 

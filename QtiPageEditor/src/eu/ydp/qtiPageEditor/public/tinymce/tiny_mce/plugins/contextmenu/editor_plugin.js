@@ -209,6 +209,7 @@
 				qtimenu.add({title : 'Remove choice section', icon : 'removechoicesection', cmd : 'mceChoiceRemove'}).setDisabled(true);	
 			}
 			
+			/*
 			if(node != '') {
 				qtimenu.add({title : 'Insert order section', icon : 'insertordersection', cmd : 'mceOrder'}).setDisabled(true);
 			} else {
@@ -230,6 +231,7 @@
 			} else {
 				qtimenu.add({title : 'Remove match section', icon : 'removematchsection', cmd : 'mceMatchRemove'}).setDisabled(true);	
 			}
+			*/
 
 			if(node != '') {
 				qtimenu.add({title : 'Insert selection section', icon : 'insertselectionsection', cmd : 'mceSelection'}).setDisabled(true);
@@ -242,6 +244,7 @@
 				qtimenu.add({title : 'Remove selection section', icon : 'removeselectionsection', cmd : 'mceSelectionRemove'}).setDisabled(true);
 			}
 
+			/*
 			if(node != '') {
 				qtimenu.add({title : 'Insert drag&drop section', icon : 'insertdraggablesection', cmd : 'mceDraggable'}).setDisabled(true);
 			} else {
@@ -263,6 +266,7 @@
 			} else {
 				qtimenu.add({title : 'Remove identification section', icon : 'removeidentificationsection', cmd : 'mceIdentificationRemove'}).setDisabled(true);
 			}
+			*/
 		
 			//if(tinymce.plugins.applinkPlugin != undefined) {
 			//	
@@ -277,6 +281,7 @@
 			//	
 			//}
 			
+			/*
 			if(tinymce.plugins.commentPlugin != undefined) {
 				
 				m.addSeparator();
@@ -292,6 +297,7 @@
 				}
 				
 			}
+			*/
 			
 			m.addSeparator();
 				

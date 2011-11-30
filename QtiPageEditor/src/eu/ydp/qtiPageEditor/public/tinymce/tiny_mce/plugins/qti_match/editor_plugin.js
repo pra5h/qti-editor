@@ -79,10 +79,12 @@
 				
 			});
 			
+			/*
 			ed.addButton('insertmatchsection', {title : 'Insert match activity', cmd : 'mceMatch'});
 			ed.onNodeChange.add(function(ed, cm, n) {
 				cm.setDisabled('insertmatchsection', true);
 			});
+			*/
 		},
 
 
