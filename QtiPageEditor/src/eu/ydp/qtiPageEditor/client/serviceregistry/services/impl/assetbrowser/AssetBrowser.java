@@ -2,6 +2,7 @@ package eu.ydp.qtiPageEditor.client.serviceregistry.services.impl.assetbrowser;
 
 import java.util.Iterator;
 import java.util.List;
+import java.lang.String;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -18,6 +19,7 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -47,7 +49,9 @@ public class AssetBrowser extends DialogBox  implements IAssetBrowser, IResource
 	@UiField Button _cancelButton;
 	@UiField HorizontalPanel _hListPanel;
 	@UiField HorizontalPanel _hButtonPanel;			
-	@UiField TextBox _txtTitle;			
+	@UiField TextBox _txtTitle;		
+	@UiField Label _labelSize;		
+	@UiField Label _labelDate;		
 	
 	
 	
@@ -68,16 +72,18 @@ public class AssetBrowser extends DialogBox  implements IAssetBrowser, IResource
 	
 	@UiHandler("_listBox")
 	protected void onChange(ChangeEvent event){
-		String path = _listBox.getValue(_listBox.getSelectedIndex());
+		String path = getPathFromItemString(_listBox.getValue(_listBox.getSelectedIndex()));
 		_selectedFilePath = path;
 		setTitle("");
+		setSize(getSizeFromItemString(_listBox.getValue(_listBox.getSelectedIndex())));
+		setDate(getDateFromItemString(_listBox.getValue(_listBox.getSelectedIndex())));
 		showPreview(path);		
 	}
 	
 	@UiHandler("_okButton")
 	protected void onClickOk(ClickEvent event){
 		if(_listBox.getSelectedIndex() > -1){
-			String filePath = _listBox.getValue(_listBox.getSelectedIndex());
+			String filePath = getPathFromItemString(_listBox.getValue(_listBox.getSelectedIndex()));
 			_jsCallback.onBrowseComplete(filePath, getTitle());
 		}				
 		hide();		
@@ -86,6 +92,32 @@ public class AssetBrowser extends DialogBox  implements IAssetBrowser, IResource
 	@UiHandler("_cancelButton")
 	protected void onClickCancel(ClickEvent event){
 		hide();
+	}
+	
+	private String createItemString(IListDirItemDescriptor item)
+	{
+		String value = item.getAbsolutePath()+"##"
+		+(item.getSize()/1024)+"KB"+"##"
+		+item.getCreationDate();
+		return value;
+	}
+	
+	private String getPathFromItemString(String value)
+	{
+		String[] tab = value.split("##");
+		return tab[0];
+	}
+	
+	private String getSizeFromItemString(String value)
+	{
+		String[] tab = value.split("##");
+		return tab[1];
+	}
+	
+	private String getDateFromItemString(String value)
+	{
+		String[] tab = value.split("##");
+		return tab[2];
 	}
 	
 	private void showPreview(String path){
@@ -104,9 +136,9 @@ public class AssetBrowser extends DialogBox  implements IAssetBrowser, IResource
 		if(_listBox.getItemCount() > 0){
 			int i;
 			for(i = 0; i < _listBox.getItemCount(); i++ ){
-				if(_listBox.getValue(i).toLowerCase() == _selectedFilePath.toLowerCase()){
+				if(getPathFromItemString(_listBox.getValue(i)).toLowerCase() == _selectedFilePath.toLowerCase()){
 					_listBox.setSelectedIndex(i);
-					showPreview(_listBox.getValue(i));
+					showPreview(getPathFromItemString(_listBox.getValue(i)));
 					//_image.setUrl(_listBox.getValue(i));
 				}
 			}			
@@ -178,6 +210,14 @@ public class AssetBrowser extends DialogBox  implements IAssetBrowser, IResource
 		_txtTitle.setText(title);			
 	}
 	
+	public void setSize(String size){
+		_labelSize.setText("Size: "+size);	
+	}
+	
+	public void setDate(String date){
+		_labelDate.setText("Uploaded on: "+date);			
+	}
+	
 	@Override
 	public String getTitle(){
 		return _txtTitle.getText();
@@ -226,11 +266,14 @@ public class AssetBrowser extends DialogBox  implements IAssetBrowser, IResource
 				for(i = 0; i < _fileFilter.length; i++){
 					fileName = item.getFileName().toLowerCase();
 					if(fileName.indexOf(_fileFilter[i].toLowerCase()) == fileName.length() - _fileFilter[i].length())
-						_listBox.addItem(item.getFileName(), item.getAbsolutePath());	
+					{
+						_listBox.addItem(item.getFileName(), createItemString(item));
+					}
 				}
 			}
-			else
-				_listBox.addItem(item.getFileName(), item.getAbsolutePath());
+			else{
+				_listBox.addItem(item.getFileName(), createItemString(item));
+			}
 			
 		}
 		
