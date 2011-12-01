@@ -9,8 +9,16 @@ tinyMCE.init({
 	plugins : "safari,spellchecker,pagebreak,style,layer,table,save,advhr,advlink,emotions,iespell,inlinepopups,"
 		+"insertdatetime,qti_preview,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,"
 		+"visualchars,nonbreaking,xhtmlxtras,template,imagemanager,filemanager,noneditable,asciimath,asciimathcharmap,asciisvg,"
+		+"qti_pagetitle,qti_choice,qti_gapinlinechoice,qti_fileuploadlib,"
+		+"qti_addvideo,qti_copyqti,qti_selection",
+		
+	/*
+	plugins : "safari,spellchecker,pagebreak,style,layer,table,save,advhr,advlink,emotions,iespell,inlinepopups,"
+		+"insertdatetime,qti_preview,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,"
+		+"visualchars,nonbreaking,xhtmlxtras,template,imagemanager,filemanager,noneditable,asciimath,asciimathcharmap,asciisvg,"
 		+"qti_pagetitle,qti_choice,qti_gapinlinechoice,qti_order,qti_match,qti_fileuploadlib,qti_comment,"
 		+"qti_addvideo,qti_copyqti,qti_playpause,qti_selection,qti_draggable,qti_identification",
+	*/
 
 	theme_advanced_toolbar_location : "top",
 	theme_advanced_toolbar_align : "left",
