@@ -14,8 +14,8 @@
 				<g:cell width="225px">
 				<g:VerticalPanel>
 					<g:ListBox ui:field="_listBox" width="200px" visibleItemCount="10"></g:ListBox>
-					<g:Label styleName="small-label" ui:field="_labelDate" width="180px"></g:Label>
-					<g:Label styleName="small-label" ui:field="_labelSize" width="180px"></g:Label>
+					<g:Label styleName="small-label" ui:field="_labelDate" width="180px">Uploaded on: -</g:Label>
+					<g:Label styleName="small-label" ui:field="_labelSize" width="180px">Size: -</g:Label>
 				</g:VerticalPanel>
 				</g:cell>						
 				<g:Image ui:field="_image" pixelSize="220,180"></g:Image>
