@@ -84,7 +84,7 @@ public class AssetBrowser extends DialogBox  implements IAssetBrowser, IResource
 	protected void onClickOk(ClickEvent event){
 		if(_listBox.getSelectedIndex() > -1){
 			String filePath = getPathFromItemString(_listBox.getValue(_listBox.getSelectedIndex()));
-			_jsCallback.onBrowseComplete(filePath, getTitle());
+			_jsCallback.onBrowseComplete(filePath+"?"+String.valueOf(System.currentTimeMillis()), getTitle());
 		}				
 		hide();		
 	}
@@ -126,7 +126,7 @@ public class AssetBrowser extends DialogBox  implements IAssetBrowser, IResource
 		if(res != null)
 			_image.setResource(res);
 		else 
-			_image.setUrl(path);	
+			_image.setUrl(path+"?"+String.valueOf(System.currentTimeMillis()));	
 		
 		_image.setPixelSize(220, 180);
 	}
