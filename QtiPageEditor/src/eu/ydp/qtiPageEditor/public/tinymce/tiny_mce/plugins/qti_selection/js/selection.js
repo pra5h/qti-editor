@@ -192,7 +192,8 @@ var selectionDialog = {
 	},
 
 	insertSelectionSection : function(form) {
-
+		var ed = tinymce.EditorManager.activeEditor;
+		ed.execCommand('mceAddUndoLevel');
 		var dataobj = {};
 		dataobj.question = ''; 
 		dataobj.identifier = '';
@@ -306,7 +307,7 @@ var selectionDialog = {
 				if(tinyMCE.feedback != undefined && tinyMCE.feedback[dataobj.identifier] != undefined && tinyMCE.feedback[dataobj.identifier].text[dataobj.ids[i]] != undefined) {
 					if ('' != tinyMCE.feedback[dataobj.identifier].text[dataobj.ids[i]].onOk) {
 						selectionSection += '<feedbackInline ';
-						selectionSection += 'identifier="\\+' + dataobj.ids[i] + ' '+dataobj.options_ids[i]+'.*" ';
+						selectionSection += 'identifier="\\+' + dataobj.ids[i] + ' '+dataobj.points[dataobj.ids[i]]+'.*" ';
 						selectionSection += 'mark="CORRECT" ';
 						selectionSection += 'fadeEffect="300" ';
 						//selectionSection += 'senderIdentifier="^' + dataobj.identifier + '$" ';
@@ -316,7 +317,7 @@ var selectionDialog = {
 					
 					if ('' != tinyMCE.feedback[dataobj.identifier].text[dataobj.ids[i]].onWrong) {
 						selectionSection += '<feedbackInline ';
-						selectionSection += 'identifier="\\+' + dataobj.ids[i] + ' (?:(?!'+dataobj.options_ids[i]+').)*(;+?.*|$)" ';
+						selectionSection += 'identifier="\\+' + dataobj.ids[i] + ' (?:(?!'+dataobj.points[dataobj.ids[i]]+').)*(;+?.*|$)" ';
 						selectionSection += 'mark="WRONG" ';
 						selectionSection += 'fadeEffect="300" ';
 						//selectionSection += 'senderIdentifier="^' + dataobj.identifier + '$" ';
@@ -349,13 +350,11 @@ var selectionDialog = {
 			selectionSection += '</div><!-- end of selectionInteraction -->';
 			selectionSection += '<p>&nbsp;</p>';
 
-			var ed = tinyMCEPopup.editor;
+			//var ed = tinyMCEPopup.editor;
+			//var ed = tinymce.EditorManager.activeEditor;
 			var dom = ed.dom;
 			var patt = '';
-			
-			ed.execCommand('mceBeginUndoLevel');
-			var bm = ed.selection.getBookmark();
-			
+			//ed.execCommand('mceBeginUndoLevel');
 			ed.execCommand('mceInsertContent', false, '<br class="_mce_marker" />');
 
 			tinymce.each('h1,h2,h3,h4,h5,h6,p'.split(','), function(n) {
@@ -369,11 +368,8 @@ var selectionDialog = {
 			tinymce.each(dom.select(patt), function(n) {
 				ed.dom.split(ed.dom.getParent(n, 'h1,h2,h3,h4,h5,h6,p'), n);
 			});
-
 			dom.setOuterHTML(dom.select('._mce_marker')[0], selectionSection);
-			ed.selection.moveToBookmark(bm);
-			ed.execCommand('mceEndUndoLevel');
-			
+
 			body = ed.selection.getNode();
 			while(body.nodeName != 'BODY') {
 				body = body.parentNode;
@@ -381,13 +377,13 @@ var selectionDialog = {
 			regexp = new RegExp('(<!-- <itemBody> -->)','gi');
 			body.innerHTML = body.innerHTML.replace(regexp, responseDeclaration + '$1');
 			
-			ed.selection.moveToBookmark(bm);
+			//ed.execCommand('mceEndUndoLevel');
 
 		} else {
 
-			var ed = tinymce.EditorManager.activeEditor;
+			//var ed = tinymce.EditorManager.activeEditor;
+			//ed.execCommand('mceBeginUndoLevel');
 			var nd = tinyMCE.selectedNode;	
-			var bm = ed.selection.getBookmark();
 			
 			while(nd.nodeName != 'DIV') {
 				nd = nd.parentNode;
@@ -436,17 +432,17 @@ var selectionDialog = {
 				if(tinyMCE.feedback != undefined && tinyMCE.feedback[dataobj.identifier] != undefined && tinyMCE.feedback[dataobj.identifier].text[dataobj.ids[i]] != undefined) {
 					if ('' != tinyMCE.feedback[dataobj.identifier].text[dataobj.ids[i]].onOk) {
 						selectionSection += '<feedbackInline ';
-						selectionSection += 'identifier="\\+' + dataobj.ids[i] + ' '+dataobj.options_ids[i]+'.*" ';
+						selectionSection += 'identifier="\\+' + dataobj.ids[i] + ' '+dataobj.points[dataobj.ids[i]]+'.*" ';
 						selectionSection += 'mark="CORRECT" ';
 						selectionSection += 'fadeEffect="300" ';
 						//selectionSection += 'senderIdentifier="^' + dataobj.identifier + '$" ';
 						selectionSection += 'outcomeIdentifier="' + dataobj.identifier + '-LASTCHANGE" '; 
 						selectionSection += 'showHide="show">' + tinyMCE.feedback[dataobj.identifier].text[dataobj.ids[i]].onOk + '</feedbackInline>';
 					}
-					
+
 					if ('' != tinyMCE.feedback[dataobj.identifier].text[dataobj.ids[i]].onWrong) {
 						selectionSection += '<feedbackInline ';
-						selectionSection += 'identifier="\\+' + dataobj.ids[i] + ' (?:(?!'+dataobj.options_ids[i]+').)*(;+?.*|$)" ';
+						selectionSection += 'identifier="\\+' + dataobj.ids[i] + ' (?:(?!'+dataobj.points[dataobj.ids[i]]+').)*(;+?.*|$)" ';
 						selectionSection += 'mark="WRONG" ';
 						selectionSection += 'fadeEffect="300" ';
 						//selectionSection += 'senderIdentifier="^' + dataobj.identifier + '$" ';
@@ -475,7 +471,6 @@ var selectionDialog = {
 			for(i in dataobj.points) {
 				responseDeclaration += '<value>' + i + ' ' + dataobj.points[i] + '</value>';
 			}
-
 			nd.innerHTML = selectionSection;
 
 			var body = nd;
@@ -484,9 +479,6 @@ var selectionDialog = {
 			}
 			regexp = new RegExp('(<!-- <responseDeclaration identifier="' + dataobj.identifier + '"[^>]*>[^<]*<correctResponse>)(?:[^<]*<value>[^<]*<\/value>[^<]*)*(<\/correctResponse>[^>]*<\/responseDeclaration> -->)','gi');
 			body.innerHTML = body.innerHTML.replace(regexp, '$1' + responseDeclaration + '$2');
-			
-			ed.selection.moveToBookmark(bm);
-			
 		}
 		
 		// Remove illegal text before headins
@@ -523,6 +515,7 @@ var selectionDialog = {
 			
 		} 
 */
+		ed.execCommand('mceEndUndoLevel');
 		tinyMCEPopup.close();
 		return true;
 		
