@@ -281,7 +281,7 @@ function processQTI(h) {
 			xmlContent = xmlContent.replace(tmpObj[0], '<!-- '+tmpObj[1]+' --><br /><input id="choiceInteraction" name="simpleChoice" type="checkbox" />'+tmpObj[2].replace(/&lt;([\/]?su[bp])&gt;/gi,'<$1>'));
 		}
 		xmlContent = xmlContent.replace(/<\/choiceInteraction>/gi, '</div><!-- end of choiceInteraction -->');
-		h = h.replace(ciSectionReg, xmlContent);
+		h = h.replace(ciSection[0], xmlContent);
 	}
 	/*
 	var sc = new RegExp('(<simpleChoice[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice>)(?! -->)', 'gi');
