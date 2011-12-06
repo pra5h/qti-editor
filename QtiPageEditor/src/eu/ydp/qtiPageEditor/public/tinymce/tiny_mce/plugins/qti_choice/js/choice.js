@@ -117,6 +117,8 @@ var choiceDialog = {
 	},
 
 	insertChoiceSection : function(form) {
+		var ed = tinymce.EditorManager.activeEditor;
+		ed.execCommand('mceAddUndoLevel');
 		var question = '', identifier = '', responseDeclaration = '', shuffle = '', multiple = '', images = '', answers = new Array(), points = new Array(), ids = new Array(), fixed = new Array();
 		var elements = form.elements;
 		var i = 0;
@@ -212,7 +214,7 @@ var choiceDialog = {
 					} else {
 						choiceSection += 'mark="WRONG"';
 					}
-					choiceSection += ' fadeEffect="300" outcomeIdentifier="' + identifier + '" identifier="' + ids[i] + '" showHide="show">' + tinyMCE.feedback[identifier].text[ids[i]] + '</feedbackInline>';
+					choiceSection += ' fadeEffect="300" outcomeIdentifier="' + identifier + '-LASTCHANGE" identifier="\\+' + ids[i] + '.*" showHide="show">' + tinyMCE.feedback[identifier].text[ids[i]] + '</feedbackInline>';
 				} 
 				choiceSection += '</simpleChoice> --><br /><input id="choiceInteraction" ';
 				if(points[i] > 0) {
@@ -228,12 +230,11 @@ var choiceDialog = {
 			
 			choiceSection += '<p>&nbsp;</p>';
 			
-			var ed = tinyMCEPopup.editor;
 			var dom = ed.dom;
 			var patt = '';
 			
-			ed.execCommand('mceBeginUndoLevel');
-			var bm = ed.selection.getBookmark();
+	//		ed.execCommand('mceBeginUndoLevel');
+		//	var bm = ed.selection.getBookmark();
 			
 			ed.execCommand('mceInsertContent', false, '<br class="_mce_marker" />');
 
@@ -250,8 +251,8 @@ var choiceDialog = {
 			});
 
 			dom.setOuterHTML(dom.select('._mce_marker')[0], choiceSection);
-			ed.selection.moveToBookmark(bm);
-			ed.execCommand('mceEndUndoLevel');
+
+//			ed.execCommand('mceEndUndoLevel');
 			
 			body = ed.selection.getNode();
 			while(body.nodeName != 'BODY') {
@@ -260,13 +261,9 @@ var choiceDialog = {
 			regexp = new RegExp('(<!-- <itemBody> -->)','gi');
 			body.innerHTML = body.innerHTML.replace(regexp, responseDeclaration + '$1');
 			
-			ed.selection.moveToBookmark(bm);
-
 		} else {
 		
-			var ed = tinymce.EditorManager.activeEditor;
 			var nd = tinyMCE.selectedNode;	
-			var bm = ed.selection.getBookmark();
 			
 			while(nd.nodeName != 'DIV') {
 				nd = nd.parentNode;
@@ -292,7 +289,7 @@ var choiceDialog = {
 					} else {
 						choiceSection += 'mark="WRONG"';
 					}
-					choiceSection += ' fadeEffect="300"  outcomeIdentifier="' + identifier + '" identifier="' + ids[i] + '" showHide="show">' + tinyMCE.feedback[identifier].text[ids[i]] + '</feedbackInline>';
+					choiceSection += ' fadeEffect="300"  outcomeIdentifier="' + identifier + '-LASTCHANGE" identifier="\\+' + ids[i] + '.*" showHide="show">' + tinyMCE.feedback[identifier].text[ids[i]] + '</feedbackInline>';
 				} 
 				choiceSection += '</simpleChoice> --><br /><input id="choiceInteraction" ';
 				if(points[i] > 0) {
@@ -313,9 +310,6 @@ var choiceDialog = {
 			body.innerHTML = body.innerHTML.replace(regexp, '$1' + responseDeclaration + '$2');
 			regexp = new RegExp('(<!-- <responseDeclaration identifier="' + identifier + '" cardinality=")[^"]*("[^>]*>)','gi');
 			body.innerHTML = body.innerHTML.replace(regexp, '$1' + (multiple ? 'multiple' : 'single') + '$2');
-			
-			ed.selection.moveToBookmark(bm);
-			
 		}
 		
 		// Remove illegal text before headins
@@ -351,6 +345,7 @@ var choiceDialog = {
 			
 		} 
 		*/
+		ed.execCommand('mceEndUndoLevel');
 		tinyMCEPopup.close();
 		return true;
 		
