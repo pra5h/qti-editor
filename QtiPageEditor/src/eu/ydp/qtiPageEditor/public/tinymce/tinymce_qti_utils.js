@@ -197,63 +197,65 @@ function processQTI(h) {
 
 	//Selection support
 	var si = new RegExp('<selectionInteraction responseIdentifier="([^"]+)"[^>]*>[.\\n\\s\\S]*?<\/selectionInteraction>', 'gi');
-	var selectionSection = si.exec(h);
-	var selectionAnswers = new Array();
+	var selectionSection = null;
+	while (null != (selectionSection = si.exec(h))) {
+		var selectionAnswers = new Array();
 
-	if (null != selectionSection) {
-		var selectionTagId = selectionSection[1];
-		for ( var ansI in answers[selectionTagId][0]) {
-			var tmp = answers[selectionTagId][0][ansI].split(' ');
-			selectionAnswers[tmp[0]] = tmp[1];
-		} 
-		selectionSection = selectionSection[0];
-		selectionSection = selectionSection.replace(/(<selectionInteraction[^>]*>)(?! -->)/gi, '<!-- $1 --><div id="selectionInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">');
-		selectionSection = selectionSection.replace(/<prompt>([^<]*)<\/prompt>(?=\s*<simpleChoice)/gi, '<p id="choiceInteraction1">$1</p>');
-		
-		var sc = new RegExp('(<simpleChoice identifier="([^"]+)"[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice>)(?! -->)', 'gi');
-		var scSection = null;
-		var scData = new Array();
-		var htmlTableSection = '';
-		htmlTableSection += '<table class="selectionTable"><tbody>';
-		while (null != (scSection = sc.exec(selectionSection))) {
-			scData.push({code: scSection[1], id: scSection[2], name: scSection[3]});
-		}
+		if (null != selectionSection) {
+			var sectionToReplace = selectionSection[0];
+			var selectionTagId = selectionSection[1];
+			for ( var ansI in answers[selectionTagId][0]) {
+				var tmp = answers[selectionTagId][0][ansI].split(' ');
+				selectionAnswers[tmp[0]] = tmp[1];
+			} 
+			selectionSection = selectionSection[0];
+			selectionSection = selectionSection.replace(/(<selectionInteraction[^>]*>)(?! -->)/gi, '<!-- $1 --><div id="selectionInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">');
+			selectionSection = selectionSection.replace(/<prompt>([^<]*)<\/prompt>(?=\s*<simpleChoice)/gi, '<p id="choiceInteraction1">$1</p>');
 
-		if (0 < scData.length) {
-			htmlTableSection += '<tr>';
-			for (var i = 0; i < scData.length; i++) {
-				if (0 == i) {
-					htmlTableSection += '<td>&nbsp;</td>';
-				}
-				htmlTableSection += '<td><!-- '+scData[i]['code']+' -->'+scData[i]['name']+'</td>';
+			var sc = new RegExp('(<simpleChoice identifier="([^"]+)"[^>]*>([^<]*|[^<]*<img[^>]*>[^<]*)(<feedbackInline[^>]*>[^<]*<\/feedbackInline>)?<\/simpleChoice>)(?! -->)', 'gi');
+			var scSection = null;
+			var scData = new Array();
+			var htmlTableSection = '';
+			htmlTableSection += '<table class="selectionTable"><tbody>';
+			while (null != (scSection = sc.exec(selectionSection))) {
+				scData.push({code: scSection[1], id: scSection[2], name: scSection[3]});
 			}
-			htmlTableSection += '</tr>';
-		}
-		
-		var it = new RegExp('(<item identifier="([^"]+)"[^>]*>([^<]*)(?:<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/item>)[^<]*', 'gi');
-		var itSection = null;
-		var itData = new Array();
-		
-		while (null != (itSection = it.exec(selectionSection))) {
 
-			htmlTableSection += '<tr>';
-			htmlTableSection += '<td><!-- '+itSection[1]+' -->'+itSection[3]+'</td>';
-			var checked = '';
-			for ( var option in scData) {
-				if (selectionAnswers[itSection[2]] == scData[option]['id']) {
-					checked = 'checked="checked"';
+			if (0 < scData.length) {
+				htmlTableSection += '<tr>';
+				for (var i = 0; i < scData.length; i++) {
+					if (0 == i) {
+						htmlTableSection += '<td>&nbsp;</td>';
+					}
+					htmlTableSection += '<td><!-- '+scData[i]['code']+' -->'+scData[i]['name']+'</td>';
 				}
-				htmlTableSection += '<td><input id="choiceInteraction" name="simpleChoice" '+checked+' type="checkbox"/></td>';
-				checked = '';
+				htmlTableSection += '</tr>';
 			}
-			htmlTableSection += '</tr>';
+
+			var it = new RegExp('(<item identifier="([^"]+)"[^>]*>([^<]*)(?:<feedbackInline[^>]*>[^<]*<\/feedbackInline>)*[^<]*<\/item>)[^<]*', 'gi');
+			var itSection = null;
+			var itData = new Array();
+
+			while (null != (itSection = it.exec(selectionSection))) {
+
+				htmlTableSection += '<tr>';
+				htmlTableSection += '<td><!-- '+itSection[1]+' -->'+itSection[3]+'</td>';
+				var checked = '';
+				for ( var option in scData) {
+					if (selectionAnswers[itSection[2]] == scData[option]['id']) {
+						checked = 'checked="checked"';
+					}
+					htmlTableSection += '<td><input id="choiceInteraction" name="simpleChoice" '+checked+' type="checkbox"/></td>';
+					checked = '';
+				}
+				htmlTableSection += '</tr>';
+			}
+			htmlTableSection += '</tbody></table>';
+			selectionSection = selectionSection.replace(/(<p id="choiceInteraction">[^<]*<\/p>)[.\n\s\S]*?(<\/selectionInteraction>)/gi, '$1'+htmlTableSection+'$2');
+			selectionSection = selectionSection.replace(/<\/selectionInteraction>/gi, '</div><!-- end of selectionInteraction -->');
+			h = h.replace(sectionToReplace,selectionSection);
 		}
-		htmlTableSection += '</tbody></table>';
-		selectionSection = selectionSection.replace(/(<p id="choiceInteraction">[^<]*<\/p>)[.\n\s\S]*?(<\/selectionInteraction>)/gi, '$1'+htmlTableSection+'$2');
-		selectionSection = selectionSection.replace(/<\/selectionInteraction>/gi, '</div><!-- end of selectionInteraction -->');
-		h = h.replace(si,selectionSection);
 	}
-
 
 	//Choices support
 	var ciSectionReg = new RegExp('<choiceInteraction responseIdentifier="([^"]+)"[^>]*>[.\\n\\s\\S]*?<\/choiceInteraction[^>]*>', 'gi');
@@ -448,13 +450,22 @@ function parseToQTI(h) {
 	h = h.replace(/<\/p><\/div><!-- end of <\/textInteractionsGroup> -->/gi,'</textInteractionsGroup></qy:tag>');
 
 	//Selection support
-	h = h.replace(/(?:<p>)?<!-- (<selectionInteraction[^>]*>) -->(?:<\/p>)?<div id="selectionInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">/gi, '<qy:tag name="exercise">$1');
-	h = h.replace(/<prompt>([^<]*)<\/prompt>(?=\s*<simpleChoice)/gi, '<p id="choiceInteraction">$1</p>');
-	h = h.replace(/<table[^>]*>[^<]*<tbody>[^<]*([.\n\s\S]*)<\/tbody>[^<]*<\/table>/gi, '$1');
-	h = h.replace(/<td>(<!-- ([.\n\s\S]*?)[^-]-->)?[.\n\s\S]*?<\/td>/gi, '$2');//, '$1');
-	h = h.replace(/<tr>([.\n\s\S]*?)<\/tr>/gi, '$1');//, '$1');
-	h = h.replace(/<\/div><!-- end of selectionInteraction -->/gi, '</selectionInteraction></qy:tag>');
-
+	var si = new RegExp('<!-- <selectionInteraction responseIdentifier="([^"]+)"[^>]*> -->[.\\n\\s\\S]*?<!-- end of selectionInteraction -->', 'gi');
+	var section = null;
+	var content = h;
+	var contentSection = '';
+	while (null != (section = si.exec(content))) {
+		console.dir(section);
+		contentSection = section[0];
+		contentSection = contentSection.replace(/(?:<p>)?<!-- (<selectionInteraction[^>]*>) -->(?:<\/p>)?<div id="selectionInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">/gi, '<qy:tag name="exercise">$1');
+		contentSection = contentSection.replace(/<p id="choiceInteraction">([^<]*)<\/p>(?=[\s]*<simpleChoice)/gi, '<prompt>$1</prompt>');
+		contentSection = contentSection.replace(/<table[^>]*>[^<]*<tbody>[^<]*([.\n\s\S]*)<\/tbody>[^<]*<\/table>/gi, '$1');
+		contentSection = contentSection.replace(/<td>(<!-- ([.\n\s\S]*?)[^-]-->)?[.\n\s\S]*?<\/td>/gi, '$2');//, '$1');
+		contentSection = contentSection.replace(/<tr>([.\n\s\S]*?)<\/tr>/gi, '$1');//, '$1');
+		contentSection = contentSection.replace(/<\/div><!-- end of selectionInteraction -->/gi, '</selectionInteraction></qy:tag>');
+		h = h.replace(section[0], contentSection);
+	}
+	
 	//Choices support
 	h = h.replace(/(?:<p>)?<!-- (<choiceInteraction[^>]*>) -->(?:<\/p>)?<div id="choiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">/gi, '<qy:tag name="exercise">$1');
 	h = h.replace(/<p id="choiceInteraction">([^<]*)<\/p>/gi, '<prompt>$1</prompt>');
