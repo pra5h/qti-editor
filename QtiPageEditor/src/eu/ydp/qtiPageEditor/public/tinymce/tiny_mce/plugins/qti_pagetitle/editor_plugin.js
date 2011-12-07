@@ -12,6 +12,28 @@
 		 * @param {string} url Absolute URL to where the plugin is located.
 		 */
 		init : function(ed, url) {
+			
+			ed.onPreProcess.add(function(ed, o) {
+				
+				if ("undefined" == typeof $('#pageTitleInput', parent.window.document).get(0)) {
+					var reg = new RegExp(/<assessmentItem.*title="([^"]*)".*>/gi);
+					var pageTitle = ed.dom.decode(reg.exec(o.content)[1]);
+					var input = document.createElement('input');
+					input.setAttribute('id', 'pageTitleInput');
+					input.setAttribute('value', pageTitle);
+					input.setAttribute('type', 'text');
+					input.setAttribute('size', '30');
+					input.onkeyup = function(){tinyMCE.execCommand('mceRefreshPageTitle', false)};
+					$('#choose_template', parent.window.document).parent().append(input);
+				}
+		    });
+
+			ed.addCommand('mceRefreshPageTitle', function(ui,data) {
+				pageTitle = $('#pageTitleInput', parent.window.document).val();
+				ed.dom.doc.body.innerHTML = ed.dom.doc.body.innerHTML.replace(/(<assessmentItem.*title=")([^"]*)(".*>)/gi,'$1'+ed.dom.encode(pageTitle)+'$3');
+				$('#pageTitleInput', parent.window.document).focus();
+			});
+			
 			// Register the command so that it can be invoked by using tinyMCE.activeEditor.execCommand('mceExample');
 			ed.addCommand('mcePageTitle', function(ui,data) {
 				var reg = new RegExp(/<assessmentItem.*title="([^"]*)".*>/gi);
