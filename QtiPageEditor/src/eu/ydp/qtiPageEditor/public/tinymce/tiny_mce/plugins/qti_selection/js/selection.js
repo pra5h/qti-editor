@@ -111,7 +111,7 @@ var selectionDialog = {
 			newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
 			newDiv.innerHTML = '<strong>1.</strong>&nbsp;\n\
 				<input type="hidden" name="choices_ids[]" value="' + id_2 + '">\n\
-				<input type="text" name="choices[]" value="" id="choice_0">&nbsp;\n\
+				<input type="text" name="choices[]" value="" id="choice_0">\n\
 				<input type="button" id="remove_option" name="remove_option" value="Remove" onclick="remove_option_row(this);" />';
 			document.getElementById('option_list').appendChild(newDiv);
 
@@ -119,7 +119,7 @@ var selectionDialog = {
 			newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
 			newDiv.innerHTML = '<strong>2.</strong>&nbsp;\n\
 				<input type="hidden" name="choices_ids[]" value="' + id_3 + '">\n\
-				<input type="text" name="choices[]" value="" id="choice_1">&nbsp;\n\
+				<input type="text" name="choices[]" value="" id="choice_1">\n\
 				<input type="button" id="remove_option" name="remove_option" value="Remove" onclick="remove_option_row(this);" />';
 			document.getElementById('option_list').appendChild(newDiv);
 

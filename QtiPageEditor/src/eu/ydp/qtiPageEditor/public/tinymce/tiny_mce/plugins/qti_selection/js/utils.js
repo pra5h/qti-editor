@@ -87,7 +87,7 @@ function add_option_row(form) {
 		newSpan.setAttribute('class','optionSpan');
 		newSpan.setAttribute('style','margin-left: 10px; margin-right: 10px;');
 		newSpan.innerHTML = '<strong>' + next + '.</strong>&nbsp;\n'
-							+'<input id="point_' + last + '" type="radio" value="' + ids[i] + '" name="points[' + i + ']" style="margin: 0; padding: 0;" />';
+							+'<input id="point_' + last + '" type="radio" value="' + ids[i] + '" name="points[' + i + ']" style="margin: 0; padding: 0;" />&nbsp;';
 		els[i].parentNode.appendChild(newSpan);
 	}
 }
