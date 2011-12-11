@@ -18,13 +18,21 @@
 				if ("undefined" == typeof $('#pageTitleInput', parent.window.document).get(0)) {
 					var reg = new RegExp(/<assessmentItem.*title="([^"]*)".*>/gi);
 					var pageTitle = ed.dom.decode(reg.exec(o.content)[1]);
+					var span = document.createElement('span');
+					span.setAttribute('id', 'pageTitleSpan');
+					span.setAttribute('style', 'float: right; margin-top: 2px');
+					var label = document.createElement('label');
+					label.setAttribute('for', 'pageTitleInput');
+					label.innerHTML = 'Page title:';
 					var input = document.createElement('input');
 					input.setAttribute('id', 'pageTitleInput');
 					input.setAttribute('value', pageTitle);
 					input.setAttribute('type', 'text');
-					input.setAttribute('size', '30');
+					input.setAttribute('size', '50');
 					input.onkeyup = function(){tinyMCE.execCommand('mceRefreshPageTitle', false)};
-					$('#choose_template', parent.window.document).parent().append(input);
+					span.appendChild(label);
+					span.appendChild(input);
+					$('#choose_template', parent.window.document).parent().append(span);
 				}
 		    });
 
@@ -55,7 +63,7 @@
 				return true;
 			});
 			
-			ed.addButton('pagetitle', {title : 'Insert QTI Page title', cmd : 'mcePageTitle'});
+			//ed.addButton('pagetitle', {title : 'Insert QTI Page title', cmd : 'mcePageTitle'});
 		},
 
 		/**
