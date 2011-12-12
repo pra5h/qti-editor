@@ -3,6 +3,7 @@ tinyMCEPopup.requireLangPack();
 var feedbackDialog = {
 	
 	init : function(ed) {
+		this.layerId = hidePopup(tinyMCEPopup.id);
 		
 		var data = tinyMCEPopup.getWindowArg("data");
 		document.getElementById('identifier').setAttribute('value',data.identifier);
@@ -52,11 +53,14 @@ var feedbackDialog = {
 		tinyMCE.feedback[exerciseid].text[identifier] = stringEncode(feedback);
 		tinyMCE.feedback[exerciseid].sound[identifier] = feedback_sound;
 		
-		tinyMCEPopup.close();
+		this.close();
 		return true;
 		
+	},
+	close: function() {
+		removeLayer(this.layerId);
+		tinyMCEPopup.close();
 	}
-
 };
 
 tinyMCEPopup.onInit.add(feedbackDialog.init, feedbackDialog);

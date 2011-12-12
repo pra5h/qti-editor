@@ -198,3 +198,14 @@ function encodeIndex(text) {
 function decodeIndex(text) {
 	return text.replace(/&lt;([\/]?su[bp])&gt;/gi,'<$1>');
 }
+function hidePopup(id) {
+	var div = $('#'+id, window.parent.document);
+	var zIndex = div.css("z-index");
+	$('<div id="mcePopupLayer'+id+'" style="background-color: gray;height: 100%;opacity: 0.3;position: fixed;top: 0;width: 100%;z-index: '+zIndex+';">&nbsp;</div>').insertBefore($('#'+id, window.parent.document));
+	return 'mcePopupLayer'+id;
+}
+function removeLayer(id) {
+	console.dir($('#'+id, window.parent.document));
+	var layer = $('#'+id, window.parent.document);
+	layer.remove();
+}

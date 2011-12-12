@@ -2,6 +2,7 @@ tinyMCEPopup.requireLangPack();
 
 var choiceDialog = {
 	init : function(ed) {
+		this.layerId = hidePopup(tinyMCEPopup.id);
 		
 		var ed = ed;
 		var f = document.forms[0]; 
@@ -346,11 +347,15 @@ var choiceDialog = {
 		} 
 		*/
 		ed.execCommand('mceEndUndoLevel');
-		tinyMCEPopup.close();
+		this.close();
 		return true;
 		
+	}, 
+	
+	close: function() {
+		removeLayer(this.layerId);
+		tinyMCEPopup.close();
 	}
-
 };
 
 tinyMCEPopup.onInit.add(choiceDialog.init, choiceDialog);
