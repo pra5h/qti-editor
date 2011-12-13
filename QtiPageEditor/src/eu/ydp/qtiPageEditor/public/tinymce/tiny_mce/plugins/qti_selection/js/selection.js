@@ -57,7 +57,7 @@ var selectionDialog = {
 				}
 				var odp = data.answers[q];
 
-				var newInnerHTML = '<table cellpadding=0 cellspacing=0><tr>\n\
+				var newInnerHTML = '<table class="answer" cellpadding=0 cellspacing=0><tr>\n\
 					<td width="260px" style="padding-right: 5px;">\n\
 					<input type="text" id="answer_0" name="answers[]" style="width: 100%; margin-right: 5px;" value="' + odp + '"/>\n\
 					</td>\n\
@@ -65,13 +65,16 @@ var selectionDialog = {
 					<td width="400px" id="optionsSpans">';
 				for(p=0; p<data.choices.length;p++) {
 					var ct = p+1;
-					newInnerHTML += '<span class="optionSpan" style="margin-left: 10px; margin-right: 10px;">\n\
-						<strong>' + ct + '.</strong>&nbsp;\n\
-						<input id="point_' + p + '" type="radio" value="' + data.ids_ch[p] + '" name="points[' + data.ids_ans[q] + ']" style="margin: 0; padding: 0;"';
+					//if (ct%4 == 1 && ct != 1 )
+						//newInnerHTML += '<hr/>';
+					newInnerHTML += '<span class="optionSpan" >\n\
+						<strong>' + ct + '.</strong>\n\
+						<input id="point_' + p + '" type="radio" value="' + data.ids_ch[p] + '" name="points[' + data.ids_ans[q] + ']" ';
 					if(data.points[data.ids_ans[q]] == data.ids_ch[p]) {
 						newInnerHTML += ' checked="checked" ';
 					}
 					newInnerHTML += '/></span>';
+					
 				}
 				newInnerHTML += '</td>\n\
 					<td width="50px"><input id="fixed_0" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" ' + fixed + '/></td>\n\
@@ -137,21 +140,19 @@ var selectionDialog = {
 			
 			var newDiv = document.createElement('div');
 			newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
-			newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr>\n\
+			newDiv.innerHTML = '<table class="answer" cellpadding=0 cellspacing=0><tr>\n\
 				<td width="260px" style="padding-right: 5px;">\n\
 				<input type="text" id="answer_0" name="answers[]" style="width: 100%; margin-right: 5px;" value=""/>\n\
 				</td>\n\
 				<input type="hidden" id="id_0" name="ids[]" value="' + id_0 + '"/>\n\
 				<td width="400px" id="optionsSpans">\n\
-				<span class="optionSpan" style="margin-left: 10px; margin-right: 10px;">\n\
-				<strong>1.</strong>&nbsp;\n\
-				<input id="point_0" type="radio" value="' + id_2 + '" name="points[' + id_0 + ']" style="margin: 0; padding: 0;"/>\n\
+				<span class="optionSpan" >\n\
+				<strong>1.</strong>\n\
+				<input id="point_0" type="radio" value="' + id_2 + '" name="points[' + id_0 + ']" />\n\
 				</span>\n\
-				<span class="optionSpan" style="margin-left: 10px; margin-right: 10px;">\n\
-				<strong>2.</strong>&nbsp;\n\
-				<input id="point_0" type="radio" value="' + id_3 + '" name="points[' + id_0 + ']" style="margin: 0; padding: 0;"/>\n\
-				</span>\n\
-				</td>\n\
+				<span class="optionSpan" >\n\
+				<strong>2.</strong>\n\
+				<input id="point_0" type="radio" value="' + id_3 + '" name="points[' + id_0 + ']" /></span></td>\n\
 				<td width="50px"><input id="fixed_0" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" /></td>\n\
 				<td width="80px"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td>\n\
 				<td width="50px"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr>\n\
@@ -160,21 +161,19 @@ var selectionDialog = {
 			
 			var newDiv = document.createElement('div');
 			newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
-			newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr>\n\
+			newDiv.innerHTML = '<table class="answer" cellpadding=0 cellspacing=0><tr>\n\
 				<td width="260px" style="padding-right: 5px;">\n\
 				<input type="text" id="answer_1" name="answers[]" style="width: 100%; margin-right: 5px;" value=""/>\n\
 				</td>\n\
 				<input type="hidden" id="id_1" name="ids[]" value="' + id_1 + '"/>\n\
 				<td width="400px" id="optionsSpans">\n\
-				<span class="optionSpan" style="margin-left: 10px; margin-right: 10px;">\n\
-				<strong>1.</strong>&nbsp;\n\
-				<input id="point_1" type="radio" value="' + id_2 + '" name="points[' + id_1 + ']" style="margin: 0; padding: 0;"/>\n\
+				<span class="optionSpan">\n\
+				<strong>1.</strong>\n\
+				<input id="point_1" type="radio" value="' + id_2 + '" name="points[' + id_1 + ']" />\n\
 				</span>\n\
-				<span class="optionSpan" style="margin-left: 10px; margin-right: 10px;">\n\
-				<strong>2.</strong>&nbsp;\n\
-				<input id="point_1" type="radio" value="' + id_3 + '" name="points[' + id_1 + ']" style="margin: 0; padding: 0;"/>\n\
-				</span>\n\
-				</td>\n\
+				<span class="optionSpan">\n\
+				<strong>2.</strong>\n\
+				<input id="point_1" type="radio" value="' + id_3 + '" name="points[' + id_1 + ']" /></span></td>\n\
 				<td width="50px"><input id="fixed_1" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" /></td>\n\
 				<td width="80px"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td>\n\
 				<td width="50px"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr>\n\

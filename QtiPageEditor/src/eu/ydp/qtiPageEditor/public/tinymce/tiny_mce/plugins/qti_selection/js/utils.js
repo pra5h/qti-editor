@@ -20,7 +20,7 @@ function add_answer_row(form) {
 
 	var newDiv = document.createElement('div');
 	newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
-	var newInnerHTML = '<table cellpadding=0 cellspacing=0><tr>\n'
+	var newInnerHTML = '<table class="answer" cellpadding=0 cellspacing=0><tr>\n'
 		+'<td width="260px" style="padding-right: 5px;">\n'
 		+'<input type="text" id="answer_0" name="answers[]" style="width: 100%; margin-right: 5px;" value=""/>\n'
 		+'</td>\n'
@@ -28,10 +28,11 @@ function add_answer_row(form) {
 		+'<td width="400px" id="optionsSpans">';
 	for(var i in optionList) {
 		var lp = parseInt(i) + 1;
-		newInnerHTML += '<span class="optionSpan" style="margin-left: 10px; margin-right: 10px;">\n'
-			+'<strong>' + lp + '.</strong>&nbsp;\n'
-			+'<input id="point_' + i + '" type="radio" value="' + optionList[i] + '" name="points[' + id + ']" style="margin: 0; padding: 0;"/>\n'
-			+'</span>\n';
+		//if (lp%4 == 1 && lp!=1)
+			//newInnerHTML += '<hr/>';
+		newInnerHTML += '<span class="optionSpan">\n\
+			<strong>' + lp + '.</strong>\n\
+			<input id="point_' + i + '" type="radio" value="' + optionList[i] + '" name="points[' + id + ']" /></span>';
 	}
 		newInnerHTML += '</td>\n'
 			+'<td width="50px"><input id="fixed_0" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" /></td>\n'
@@ -83,11 +84,16 @@ function add_option_row(form) {
 	}
 
 	for(i in els) {
+		//if (next%4 == 1 && next != 1)
+		//{
+			//els[i].parentNode.appendChild(document.createElement('hr'));
+		//}
 		var newSpan = document.createElement('span');
+		
 		newSpan.setAttribute('class','optionSpan');
-		newSpan.setAttribute('style','margin-left: 10px; margin-right: 10px;');
-		newSpan.innerHTML = '<strong>' + next + '.</strong>&nbsp;\n'
-							+'<input id="point_' + last + '" type="radio" value="' + ids[i] + '" name="points[' + i + ']" style="margin: 0; padding: 0;" />&nbsp;';
+		newSpan.innerHTML = '<strong>' + next + '.</strong>\n'
+							+'<input id="point_' + last + '" type="radio" value="' + ids[i] + '" name="points[' + i + ']" />';
+		
 		els[i].parentNode.appendChild(newSpan);
 	}
 }
