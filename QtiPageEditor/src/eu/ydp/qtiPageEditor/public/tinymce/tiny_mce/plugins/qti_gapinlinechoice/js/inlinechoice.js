@@ -1,7 +1,11 @@
 tinyMCEPopup.requireLangPack();
 
 var inlineChoiceDialog = {
+	windowId : null,
+		
 	init : function(ed) {
+		document.body.setAttribute('onUnload',"tinymce.DOM.remove('mcePopupLayer_'+inlineChoiceDialog.windowId);");
+		document.body.setAttribute('onLoad',"inlineChoiceDialog.windowId = lock(tinyMCEPopup.id);");
 		var ed = ed;
 		var f = document.forms[0]; 
 		var jsonData = tinyMCEPopup.getWindowArg("inlineChoiceData");

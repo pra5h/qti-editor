@@ -1,9 +1,11 @@
 tinyMCEPopup.requireLangPack();
 
 var feedbackDialog = {
-
+		windowId : null,
+		
 		init : function(ed) {
-
+			document.body.setAttribute('onUnload',"tinymce.DOM.remove('mcePopupLayer_'+feedbackDialog.windowId);");
+			document.body.setAttribute('onLoad',"feedbackDialog.windowId = lock(tinyMCEPopup.id);");
 			var data = tinyMCEPopup.getWindowArg("data");
 
 			if ('gap' == data.type) {

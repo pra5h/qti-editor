@@ -1,8 +1,11 @@
 tinyMCEPopup.requireLangPack();
 
 var selectionDialog = {
+	windowId : null,
+	
 	init : function(ed) {
-		
+		document.body.setAttribute('onUnload',"tinymce.DOM.remove('mcePopupLayer_'+selectionDialog.windowId);");
+		document.body.setAttribute('onLoad',"selectionDialog.windowId = lock(tinyMCEPopup.id);");	
 		var ed = ed;
 		var f = document.forms[0]; 
 		var data = tinyMCEPopup.getWindowArg("selectiondata");
