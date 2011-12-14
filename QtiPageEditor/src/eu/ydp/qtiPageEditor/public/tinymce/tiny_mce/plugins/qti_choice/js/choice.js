@@ -1,13 +1,16 @@
 tinyMCEPopup.requireLangPack();
 
 var choiceDialog = {
+	windowId : null,
+	
 	init : function(ed) {
-		this.layerId = hidePopup(tinyMCEPopup.id);
-		
+		document.body.setAttribute('onUnload',"tinymce.DOM.remove('mcePopupLayer_'+choiceDialog.windowId);");
+		document.body.setAttribute('onLoad',"choiceDialog.windowId = lock(tinyMCEPopup.id);");
+
 		var ed = ed;
 		var f = document.forms[0]; 
 		var data = tinyMCEPopup.getWindowArg("choicedata");
-
+		
 		if(data != undefined && data[0] != undefined) {
 			f.question.value = stringDecode(data[0]);
 		}
@@ -347,14 +350,9 @@ var choiceDialog = {
 		} 
 		*/
 		ed.execCommand('mceEndUndoLevel');
-		this.close();
+		tinyMCEPopup.close();
 		return true;
 		
-	}, 
-	
-	close: function() {
-		removeLayer(this.layerId);
-		tinyMCEPopup.close();
 	}
 };
 
