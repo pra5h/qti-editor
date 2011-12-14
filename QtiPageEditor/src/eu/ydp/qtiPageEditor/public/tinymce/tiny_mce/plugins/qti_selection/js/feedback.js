@@ -26,6 +26,7 @@ var feedbackDialog = {
 			$('#fdb_sound_onwrong').attr('value',tinyMCE.feedback[data.identifier].onwrong_sound);
 			*/
 		//}
+		$('#feedback_onok').focus();
 	},
 
 	prepareFeedback : function(form) {
