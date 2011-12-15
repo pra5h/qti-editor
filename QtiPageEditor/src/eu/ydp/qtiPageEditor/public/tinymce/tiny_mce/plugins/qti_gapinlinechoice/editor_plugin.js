@@ -100,29 +100,35 @@
 			});
 			
 			ed.addCommand('mceFeedbackGap', function(ui,data) {
-				ed.windowManager.open({
-					file : url + '/gapfeedback.htm',
-					width : 400,
-					height : 140,
-					inline : 1
-				}, {
-					plugin_url : url, // Plugin absolute URL
-					data: {identifier: data.identifier, feedback: data.feedback, type: 'gap'}
-				});
+				
+				if ("undefined" == typeof ed.windowManager.isFeedbackOpened) {
+					ed.windowManager.isFeedbackOpened = true;
+					ed.windowManager.open({
+						file : url + '/gapfeedback.htm',
+						width : 400,
+						height : 140,
+						inline : 1
+					}, {
+						plugin_url : url, // Plugin absolute URL
+						data: {identifier: data.identifier, feedback: data.feedback, type: 'gap'}
+					});
+				}
 			});
 
 			ed.addCommand('mceFeedbackInlinechoice', function(ui,data) {
 
-				ed.windowManager.open({
-					file : url + '/inlinechoicefeedback.htm',
-					width : 400,
-					height : 100,
-					inline : 1
-				}, {
-					plugin_url : url, // Plugin absolute URL
-					data: {identifier: data.identifier, feedback: data.feedback, feedback_sound: data.feedback_sound, exerciseid: data.exerciseid, type: 'inlineChoice'}
-				});
-
+				if ("undefined" == typeof ed.windowManager.isFeedbackOpened) {
+					ed.windowManager.isFeedbackOpened = true;
+					ed.windowManager.open({
+						file : url + '/inlinechoicefeedback.htm',
+						width : 400,
+						height : 100,
+						inline : 1
+					}, {
+						plugin_url : url, // Plugin absolute URL
+						data: {identifier: data.identifier, feedback: data.feedback, feedback_sound: data.feedback_sound, exerciseid: data.exerciseid, type: 'inlineChoice'}
+					});
+				}
 			});
 			ed.addCommand('mceFeedbackGapRemove', function(ui,data) {
 				

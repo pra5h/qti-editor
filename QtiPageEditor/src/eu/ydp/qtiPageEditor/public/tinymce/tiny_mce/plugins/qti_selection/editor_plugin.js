@@ -75,19 +75,21 @@
 				return true;
 				
 			});
-			
+
 			ed.addCommand('mceFeedbackSelection', function(ui,data) {
-				
-				ed.windowManager.open({
-					file : url + '/feedback.htm',
-					width : 400,
-					height : 120,
-					inline : 1
-				}, {
-					plugin_url : url, // Plugin absolute URL
-					data: {exerciseid: data.exerciseid, identifier: data.identifier, feedback: data.feedback, feedback_sound: data.feedback_sound}
-				});
-				
+
+				if ("undefined" == typeof ed.windowManager.isFeedbackOpened) {
+					ed.windowManager.isFeedbackOpened = true;
+					ed.windowManager.open({
+						file : url + '/feedback.htm',
+						width : 400,
+						height : 120,
+						inline : 1
+					}, {
+						plugin_url : url, // Plugin absolute URL
+						data: {exerciseid: data.exerciseid, identifier: data.identifier, feedback: data.feedback, feedback_sound: data.feedback_sound}
+					});
+				}
 			});
 			
 			ed.addCommand('mceFeedbackSelectionRemove', function(ui,data) {
