@@ -66,8 +66,7 @@ public class AssetBrowser extends DialogBox  implements IAssetBrowser, IResource
 		super(false, true);		
 		setText("Upload / insert media for qti");
 		setGlassEnabled(true);		
-		setWidget(uiBinder.createAndBindUi(this));	
-		
+		setWidget(uiBinder.createAndBindUi(this));
 	}
 	
 	@UiHandler("_listBox")
@@ -131,13 +130,22 @@ public class AssetBrowser extends DialogBox  implements IAssetBrowser, IResource
 		_image.setPixelSize(220, 180);
 	}
 	
+	private String cleanPath(String pathToClean){	
+		String cleanedPath = pathToClean.replaceAll("//", "/");
+		cleanedPath = cleanedPath.replaceAll("\\?.*", "");
+		return cleanedPath;
+	}
 	
-	private void showSelectedFilePath(){		
+	private void showSelectedFilePath(){	
+		
+		
 		if(_listBox.getItemCount() > 0){
 			int i;
 			for(i = 0; i < _listBox.getItemCount(); i++ ){
-				if(getPathFromItemString(_listBox.getValue(i)).toLowerCase() == _selectedFilePath.toLowerCase()){
+				if(getPathFromItemString(_listBox.getValue(i)).toLowerCase() == cleanPath(_selectedFilePath).toLowerCase()){
 					_listBox.setSelectedIndex(i);
+					setSize(getSizeFromItemString(_listBox.getValue(_listBox.getSelectedIndex())));
+					setDate(getDateFromItemString(_listBox.getValue(_listBox.getSelectedIndex())));
 					showPreview(getPathFromItemString(_listBox.getValue(i)));
 					//_image.setUrl(_listBox.getValue(i));
 				}
