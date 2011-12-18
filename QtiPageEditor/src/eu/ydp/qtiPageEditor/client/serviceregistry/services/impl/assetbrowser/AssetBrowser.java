@@ -83,6 +83,7 @@ public class AssetBrowser extends DialogBox  implements IAssetBrowser, IResource
 	protected void onClickOk(ClickEvent event){
 		if(_listBox.getSelectedIndex() > -1){
 			String filePath = getPathFromItemString(_listBox.getValue(_listBox.getSelectedIndex()));
+			filePath = cleanPath(filePath);
 			_jsCallback.onBrowseComplete(filePath+"?"+String.valueOf(System.currentTimeMillis()), getTitle());
 		}				
 		hide();		
