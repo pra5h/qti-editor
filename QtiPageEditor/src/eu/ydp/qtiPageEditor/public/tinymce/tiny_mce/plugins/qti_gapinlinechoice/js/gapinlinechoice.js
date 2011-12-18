@@ -77,7 +77,7 @@ var gapInlineChoiceDialog = {
 
 				if('undefined' != typeof feedbackObj) {
 
-					if ('undefined' != typeof feedbackObj.onOk) {
+					if ('undefined' != typeof feedbackObj.onOk && feedbackObj.onOk != '') {
 						gapTag += '<feedbackInline ';
 						gapTag += 'mark="CORRECT"';
 						gapTag += ' fadeEffect="300" ';
@@ -86,7 +86,7 @@ var gapInlineChoiceDialog = {
 						gapTag += 'identifier="' + row.answer + '" showHide="show">' + feedbackObj.onOk + '</feedbackInline>'
 					}
 
-					if ('undefined' != typeof feedbackObj.onWrong) {
+					if ('undefined' != typeof feedbackObj.onWrong && feedbackObj.onWrong != '') {
 						gapTag += '<feedbackInline ';
 						gapTag += 'mark="WRONG"';
 						gapTag += ' fadeEffect="300" ';
@@ -126,7 +126,7 @@ var gapInlineChoiceDialog = {
 				}
 				choiceSection += '>' + row.data.answers[i];
 
-				if(row.data.feedbacks != undefined && row.data.feedbacks[row.data.ids[i]] != undefined) {
+				if(row.data.feedbacks != undefined && row.data.feedbacks[row.data.ids[i]] != undefined && row.data.feedbacks[row.data.ids[i]] != '') {
 					choiceSection += '<feedbackInline ';
 					if(row.data.points[i] == 1) { 
 						choiceSection += 'mark="CORRECT"';

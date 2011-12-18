@@ -211,7 +211,7 @@ var choiceDialog = {
 					choiceSection += ' fixed="true" ';
 				}
 				choiceSection += '>' + answers[i];
-				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].text[ids[i]] != undefined) {
+				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].text[ids[i]] != undefined && tinyMCE.feedback[identifier].text[ids[i]] != '') {
 					choiceSection += '<feedbackInline ';
 					if(points[i] > 0) {
 						choiceSection += 'mark="CORRECT"';
@@ -286,7 +286,7 @@ var choiceDialog = {
 					choiceSection += ' fixed="true" ';
 				}
 				choiceSection += '>' + answers[i];
-				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].text[ids[i]] != undefined) {
+				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].text[ids[i]] != undefined && tinyMCE.feedback[identifier].text[ids[i]] != '') {
 					choiceSection += '<feedbackInline ';
 					if(points[i] > 0) {
 						choiceSection += 'mark="CORRECT"';

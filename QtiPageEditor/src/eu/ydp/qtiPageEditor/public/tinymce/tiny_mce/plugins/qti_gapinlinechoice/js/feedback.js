@@ -11,8 +11,8 @@ var feedbackDialog = {
 			if ('gap' == data.type) {
 				document.getElementById('identifier').setAttribute('value',data.identifier);
 				if(data.feedback != undefined && data.feedback != '') {
-					document.getElementById('feedback_onok').setAttribute('value',stringDecode(data.feedback.onOk));
-					document.getElementById('feedback_onwrong').setAttribute('value',stringDecode(data.feedback.onWrong));
+					$('#feedback_onok').attr('value',data.feedback.onOk);
+					$('#feedback_onwrong').attr('value',data.feedback.onWrong);
 					document.getElementById('fdb_sound_onok').setAttribute('value',data.feedback.onok_sound);
 					document.getElementById('fdb_sound_onwrong').setAttribute('value',data.feedback.onwrong_sound);
 				} else if(tinyMCE.feedback != undefined && tinyMCE.feedback[data.identifier] != undefined) {
