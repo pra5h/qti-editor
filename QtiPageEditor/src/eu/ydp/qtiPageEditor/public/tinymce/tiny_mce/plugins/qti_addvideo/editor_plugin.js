@@ -7,7 +7,7 @@
 			ed.addCommand('mceAddVideo', function(ui, data) {
 
 				var node = ed.selection.getNode();
-				if(node.nodeName != 'DIV') {
+				if(node.nodeName == 'IMG' || node.nodeName == 'EMBED') {
 					node = node.parentNode;
 				}
 				
@@ -20,7 +20,12 @@
 						if(data != undefined && data.src != undefined && data.src != '') {
 
 							while(node.nodeName != 'FIELDSET') {
-								node = node.parentNode;
+								if (null != node.nextElementSibling && node.nextElementSibling.nodeName == 'FIELDSET' && node.nextElementSibling.id == 'runFileUploadLib') {
+									node = node.nextElementSibling;
+								}else
+								{
+									node = node.parentNode;
+								}
 							}
 
 							if (node.nodeName == 'FIELDSET' && node.id == 'runFileUploadLib') {
@@ -86,8 +91,8 @@
 
 						var toFocus = ed.dom.get('focus').nextElementSibling.firstChild;
 						rng = ed.dom.createRng();
-						rng.setStart(toFocus, toFocus.nodeValue.length);
-						rng.setEnd(toFocus, toFocus.nodeValue.length);
+						rng.setStart(toFocus, 0);
+						rng.setEnd(toFocus, 0);
 						ed.selection.setRng(rng);
 						ed.dom.remove('focus')
 						return true;
