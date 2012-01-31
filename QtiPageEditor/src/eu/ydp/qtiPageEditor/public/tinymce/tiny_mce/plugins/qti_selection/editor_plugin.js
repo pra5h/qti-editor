@@ -69,8 +69,9 @@
 				node.parentNode.removeChild(node.nextSibling);
 				node.parentNode.removeChild(node);
 				
-				var rg = new RegExp('<!--[^<]*<responseDeclaration identifier="' + responseId[1] + '"[^>]*>[^<]*<correctResponse>[^<]*(?:<value>[^<]*<\/value>[^<]*)*<\/correctResponse>[^<]*<\/responseDeclaration>[^-]*-->', 'gi');
-				body.innerHTML = body.innerHTML.replace(rg,'');
+				var xh = ed.XmlHelper;
+				var correctResponseNode = xh.getCorrectResponseNodeId(body, responseId[1]);
+				correctResponseNode.parentNode.removeChild(correctResponseNode);
 				
 				return true;
 				

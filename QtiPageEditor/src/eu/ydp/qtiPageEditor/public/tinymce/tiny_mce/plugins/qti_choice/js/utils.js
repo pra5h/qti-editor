@@ -107,9 +107,10 @@ function feedback(row) {
 			break;
 		}
 	}
+
 	if(identifier != undefined && exerciseId != undefined) {
-		if(tinyMCE.feedback != undefined && tinyMCE.feedback[exerciseId] != undefined) {
-			tinyMCE.execCommand('mceFeedbackChoice', false, {exerciseid: exerciseId, identifier: identifier, feedback: tinyMCE.feedback[exerciseId].text[identifier], feedback_sound:  tinyMCE.feedback[exerciseId].sound[identifier]});
+		if(tinyMCE.feedback != undefined && tinyMCE.feedback[exerciseId] != undefined && tinyMCE.feedback[exerciseId][identifier] != undefined) {
+			tinyMCE.execCommand('mceFeedbackChoice', false, {exerciseid: exerciseId, identifier: identifier, feedback: tinyMCE.feedback[exerciseId][identifier].text, feedback_sound:  tinyMCE.feedback[exerciseId][identifier].sound});
 		} else {
 			tinyMCE.execCommand('mceFeedbackChoice', false, {exerciseid: exerciseId, identifier: identifier});
 		}

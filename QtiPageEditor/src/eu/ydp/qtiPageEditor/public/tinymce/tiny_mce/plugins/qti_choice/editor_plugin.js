@@ -14,16 +14,16 @@
 		init : function(ed, url) {
 			// Register the command so that it can be invoked by using tinyMCE.activeEditor.execCommand('mceExample');
 			ed.addCommand('mceChoice', function(ui, data) {
-				
+
 				if(data != undefined) {
 					tinyMCE.feedback = new Array;
 					tinyMCE.feedback[data[4]] = {text: new Array, sound: new Array}
 					if(data[8] != undefined ) {
-						tinyMCE.feedback[data[4]].text = data[8];
+						tinyMCE.feedback[data[4]] = data[8][data[4]];
 					}
-					if(data[9] != undefined ) {
+					/*if(data[9] != undefined ) {
 						tinyMCE.feedback[data[4]].sound = data[9];
-					}
+					}*/
 				}
 				
 				ed.windowManager.open({
@@ -49,14 +49,14 @@
 				while(body.nodeName != 'BODY') {
 					body = body.parentNode;
 				}
-				
-				var responseId = node.previousSibling.data.match(/responseIdentifier="([^"]*)"/);
+				var responseId = node.previousSibling.data.match(/responseIdentifier="([^"]*)"/i);
 				node.parentNode.removeChild(node.previousSibling);
 				node.parentNode.removeChild(node.nextSibling);
 				node.parentNode.removeChild(node);
 				
-				var rg = new RegExp('<!--[^<]*<responseDeclaration identifier="' + responseId[1] + '"[^>]*>[^<]*<correctResponse>[^<]*(?:<value>[^<]*<\/value>[^<]*)*<\/correctResponse>[^<]*<\/responseDeclaration>[^-]*-->', 'gi');
-				body.innerHTML = body.innerHTML.replace(rg,'');
+				var xh = ed.XmlHelper;
+				var correctResponseNode = xh.getCorrectResponseNodeId(body, responseId[1]);
+				correctResponseNode.parentNode.removeChild(correctResponseNode);
 				
 				return true;
 				
@@ -84,16 +84,16 @@
 				while(form.nodeName != 'FORM') {
 					form = form.parentNode;
 				}
-				if(tinyMCE.feedback != undefined) {
+
+				if(tinyMCE.feedback != undefined && tinyMCE.feedback[form.exerciseid.value] != undefined) {
 					var tempArr = new Array;
-					for(i in tinyMCE.feedback) {
+					for(i in tinyMCE.feedback[form.exerciseid.value]) {
 						if(i != form.identifier.value) {
-							tempArr[i] = tinyMCE.feedback[i];
+							tempArr[i] = tinyMCE.feedback[form.exerciseid.value][i];
 						}
 					}
-					tinyMCE.feedback = tempArr;
+					tinyMCE.feedback[form.exerciseid.value] = tempArr;
 				}
-				
 			});
 
 			ed.addButton('insertchoicesection', {title : 'Insert choice activity', cmd : 'mceChoice'});			

@@ -10,7 +10,7 @@ var choiceDialog = {
 		var ed = ed;
 		var f = document.forms[0]; 
 		var data = tinyMCEPopup.getWindowArg("choicedata");
-		
+
 		if(data != undefined && data[0] != undefined) {
 			f.question.value = stringDecode(data[0]);
 		}
@@ -46,7 +46,7 @@ var choiceDialog = {
 				if(data[2][q] == 0) {
 					correct = '';
 				} else {
-					correct = ' checked ';
+					correct = ' checked="checked" ';
 				}
 				if(data[6][q] == 'true') {
 					fixed = ' checked';
@@ -66,20 +66,28 @@ var choiceDialog = {
 					newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td class="answer"><input type="text" id="answer_' + q + '" name="answers[]" style="width: 100%; margin-right: 5px;" value="' + odp + '"/></td><input type="hidden" id="id_' + q + '" name="ids[]" value="' + data[3][q] + '"/><td class="correct"><input id="point_' + q + '" type="' + type + '" name="points[]" style="margin: 0; padding: 0;"' + correct + '/></td><td class="fixed"><input id="fixed_' + q + '" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" ' + fixed + '/></td><td class="remove"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td class="feedback"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr></table>';
 				}
 				document.getElementById('answer_list').appendChild(newDiv);
-				
+				/*
 				if(tinyMCE.feedback == undefined) {
-					tinyMCE.feedback = new Array;
+					tinyMCE.feedback = new Array();
 				}
+				if(tinyMCE.feedback[data[4]] == undefined) {
+					tinyMCE.feedback[data[4]] = data[8][data[4]];
+				}
+				*/
+				/*
 				if(tinyMCE.feedback[data[3][q]] == undefined) {
 					tinyMCE.feedback[data[3][q]] = {text: new Array, sound: new Array};
 				}				
 				if(data[8][q] != undefined) {
-					tinyMCE.feedback[data[3][q]].text = data[8][q];
+					//tinyMCE.feedback[data[3][q]].text = data[8][q];
+					tinyMCE.feedback[data[3][q]].text = data[8];
 				}
 				if(data[9][q] != undefined) {
-					tinyMCE.feedback[data[3][q]].sound = data[9][q];
+					//tinyMCE.feedback[data[3][q]].sound = data[9][q];
+					tinyMCE.feedback[data[3][q]].sound = data[9];
 				}
 				
+				*/
 			}
 		
 		} else {
@@ -211,14 +219,14 @@ var choiceDialog = {
 					choiceSection += ' fixed="true" ';
 				}
 				choiceSection += '>' + answers[i];
-				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].text[ids[i]] != undefined && tinyMCE.feedback[identifier].text[ids[i]] != '') {
+				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier][ids[i]] != undefined && tinyMCE.feedback[identifier][ids[i]].text != '') {
 					choiceSection += '<feedbackInline ';
 					if(points[i] > 0) {
 						choiceSection += 'mark="CORRECT"';
 					} else {
 						choiceSection += 'mark="WRONG"';
 					}
-					choiceSection += ' fadeEffect="300" outcomeIdentifier="' + identifier + '-LASTCHANGE" identifier="\\+' + ids[i] + '.*" showHide="show">' + tinyMCE.feedback[identifier].text[ids[i]] + '</feedbackInline>';
+					choiceSection += ' fadeEffect="300" outcomeIdentifier="' + identifier + '-LASTCHANGE" identifier="\\+' + ids[i] + '.*" showHide="show">' + tinyMCE.feedback[identifier][ids[i]].text + '</feedbackInline>';
 				} 
 				choiceSection += '</simpleChoice> --><br /><input id="choiceInteraction" ';
 				if(points[i] > 0) {
@@ -230,7 +238,7 @@ var choiceDialog = {
 				}
 			}
 			responseDeclaration += '</correctResponse></responseDeclaration> -->';
-			choiceSection += '</div><!-- end of choiceInteraction -->';
+			choiceSection += '</div><!-- </choiceInteraction> -->';
 			
 			choiceSection += '<p>&nbsp;</p>';
 			
@@ -272,13 +280,14 @@ var choiceDialog = {
 			while(nd.nodeName != 'DIV') {
 				nd = nd.parentNode;
 			}
-			if(nd.previousSibling.nodeName == "P") {
+			nd.previousSibling.nodeValue = ' <choiceInteraction responseIdentifier="' + identifier + '" shuffle="' + String(shuffle) + '" maxChoices="' + String(maxChoices) + '"> ';
+			/*if(nd.previousSibling.nodeName == "P") {
 				var regexp = new RegExp('<!-- <choiceInteraction responseIdentifier="' + identifier + '" shuffle="[^"]*" maxChoices="[^"]*"([^>]*)> -->','gi');
 				nd.previousSibling.innerHTML = nd.previousSibling.innerHTML.replace(regexp, '<!-- <choiceInteraction responseIdentifier="' + identifier + '" shuffle="' + String(shuffle) + '" maxChoices="' + String(maxChoices) + '"$1> -->');
 			} else {
-				var regexp = new RegExp(' <choiceInteraction responseIdentifier="' + identifier + '" shuffle="[^"]*" maxChoices="[^"]*"([^>]*)> ','gi');
-				nd.previousSibling.data = nd.previousSibling.data.replace(regexp, ' <choiceInteraction responseIdentifier="' + identifier + '" shuffle="' + String(shuffle) + '" maxChoices="' + String(maxChoices) + '"$1> ');
-			}
+				//var regexp = new RegExp(' <choiceInteraction responseIdentifier="' + identifier + '" shuffle="[^"]*" maxChoices="[^"]*"([^>]*)> ','gi');
+				nd.previousSibling.nodeValue = ' <choiceInteraction responseIdentifier="' + identifier + '" shuffle="' + String(shuffle) + '" maxChoices="' + String(maxChoices) + '"> ');
+			}*/
 			choiceSection = '<p id="choiceInteraction">' + stringEncode(question) + '</p>';
 			for(i in answers) {
 				choiceSection += '<!-- <simpleChoice identifier="' + ids[i] + '"';
@@ -286,14 +295,14 @@ var choiceDialog = {
 					choiceSection += ' fixed="true" ';
 				}
 				choiceSection += '>' + answers[i];
-				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier].text[ids[i]] != undefined && tinyMCE.feedback[identifier].text[ids[i]] != '') {
+				if(tinyMCE.feedback != undefined && tinyMCE.feedback[identifier] != undefined && tinyMCE.feedback[identifier][ids[i]] != undefined && tinyMCE.feedback[identifier][ids[i]].text != '') {
 					choiceSection += '<feedbackInline ';
 					if(points[i] > 0) {
 						choiceSection += 'mark="CORRECT"';
 					} else {
 						choiceSection += 'mark="WRONG"';
 					}
-					choiceSection += ' fadeEffect="300"  outcomeIdentifier="' + identifier + '-LASTCHANGE" identifier="\\+' + ids[i] + '.*" showHide="show">' + tinyMCE.feedback[identifier].text[ids[i]] + '</feedbackInline>';
+					choiceSection += ' fadeEffect="300"  outcomeIdentifier="' + identifier + '-LASTCHANGE" identifier="\\+' + ids[i] + '.*" showHide="show">' + tinyMCE.feedback[identifier][ids[i]].text + '</feedbackInline>';
 				} 
 				choiceSection += '</simpleChoice> --><br /><input id="choiceInteraction" ';
 				if(points[i] > 0) {
@@ -310,10 +319,12 @@ var choiceDialog = {
 			while(body.nodeName != 'BODY') {
 				body = body.parentNode;
 			}
-			regexp = new RegExp('(<!-- <responseDeclaration identifier="' + identifier + '"[^>]*>[^<]*<correctResponse>)(?:[^<]*<value>[^<]*<\/value>[^<]*)*(<\/correctResponse>[^>]*<\/responseDeclaration> -->)','gi');
-			body.innerHTML = body.innerHTML.replace(regexp, '$1' + responseDeclaration + '$2');
-			regexp = new RegExp('(<!-- <responseDeclaration identifier="' + identifier + '" cardinality=")[^"]*("[^>]*>)','gi');
-			body.innerHTML = body.innerHTML.replace(regexp, '$1' + (multiple ? 'multiple' : 'single') + '$2');
+			
+			var xh = ed.XmlHelper;
+			var correctResponseNode = xh.getCorrectResponseNodeId(body, identifier);
+			regexp = new RegExp('(<responseDeclaration[^>]*>[^<]*<correctResponse>)(?:[^<]*<value>[^<]*<\/value>[^<]*)*(<\/correctResponse>[^>]*<\/responseDeclaration>)','gi');
+			correctResponseNode.nodeValue = correctResponseNode.nodeValue.replace(regexp, '$1' + responseDeclaration + '$2');
+			correctResponseNode.nodeValue = correctResponseNode.nodeValue.replace(/cardinality="[^"]+"/, 'cardinality="' + (multiple ? 'multiple' : 'single') + '"');
 		}
 		
 		// Remove illegal text before headins

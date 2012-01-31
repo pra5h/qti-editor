@@ -281,7 +281,7 @@ var selectionDialog = {
 
 		if(adding == 1) {
 			var selectionSection = '<p>&nbsp;</p><!-- <selectionInteraction responseIdentifier="' + dataobj.identifier + '" shuffle="' + String(dataobj.shuffle) + '"> --><div id="selectionInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">';
-			selectionSection += '<p id="choiceInteraction">' + dataobj.question + '</p>';
+			selectionSection += '<p id="selectionInteraction">' + dataobj.question + '</p>';
 			responseDeclaration = '<!-- <responseDeclaration identifier="' + dataobj.identifier + '" cardinality="multiple" baseType="integer"><correctResponse>';
 
 			if (dataobj.options.length > 0) {
@@ -334,7 +334,7 @@ var selectionDialog = {
 					if (dataobj.points[dataobj.ids[i]] == dataobj.options_ids[opi]) {
 						checked = 'checked="checked"';
 					}
-					selectionSection += '<td><input id="choiceInteraction" name="simpleChoice" type="checkbox" '+checked+'/></td>';
+					selectionSection += '<td><input id="selectionInteraction" name="simpleChoice" type="checkbox" '+checked+'/></td>';
 					checked = '';
 				}
 				selectionSection += '</tr>';
@@ -390,15 +390,15 @@ var selectionDialog = {
 			while(nd.nodeName != 'DIV') {
 				nd = nd.parentNode;
 			}
-
-			if(nd.previousSibling.nodeName == "P") {
+			nd.previousSibling.nodeValue = ' <selectionInteraction responseIdentifier="' + dataobj.identifier + '" shuffle="' + String(dataobj.shuffle) + '"> ';
+			/*if(nd.previousSibling.nodeName == "P") {
 				var regexp = new RegExp('<!-- <selectionInteraction responseIdentifier="' + dataobj.identifier + '" shuffle="[^"]*"([^>]*)> -->','gi');
 				nd.previousSibling.innerHTML = nd.previousSibling.innerHTML.replace(regexp, '<!-- <selectionInteraction responseIdentifier="' + dataobj.identifier + '" shuffle="' + String(dataobj.shuffle) + '"$1> -->');
 			} else {
 				var regexp = new RegExp(' <selectionInteraction responseIdentifier="' + dataobj.identifier + '" shuffle="[^"]*"([^>]*)> ','gi');
 				nd.previousSibling.data = nd.previousSibling.data.replace(regexp, ' <selectionInteraction responseIdentifier="' + dataobj.identifier + '" shuffle="' + String(dataobj.shuffle) + '"$1> ');
-			}
-			selectionSection = '<p id="choiceInteraction">' + dataobj.question + '</p>';
+			}*/
+			selectionSection = '<p id="selectionInteraction">' + dataobj.question + '</p>';
 
 			if (dataobj.options.length > 0) {
 				selectionSection += '<table class="selectionTable"><tr><td></td>';
@@ -461,7 +461,7 @@ var selectionDialog = {
 					if (dataobj.points[dataobj.ids[i]] == dataobj.options_ids[opi]) {
 						checked = 'checked="checked"';
 					}
-					selectionSection += '<td><input id="choiceInteraction" name="simpleChoice" type="checkbox" '+checked+'/></td>';
+					selectionSection += '<td><input id="selectionInteraction" name="simpleChoice" type="checkbox" '+checked+'/></td>';
 					checked = '';
 				}
 				selectionSection += '</tr>';
@@ -479,8 +479,11 @@ var selectionDialog = {
 			while(body.nodeName != 'BODY') {
 				body = body.parentNode;
 			}
-			regexp = new RegExp('(<!-- <responseDeclaration identifier="' + dataobj.identifier + '"[^>]*>[^<]*<correctResponse>)(?:[^<]*<value>[^<]*<\/value>[^<]*)*(<\/correctResponse>[^>]*<\/responseDeclaration> -->)','gi');
-			body.innerHTML = body.innerHTML.replace(regexp, '$1' + responseDeclaration + '$2');
+			
+			var xh = ed.XmlHelper;
+			var correctResponseNode = xh.getCorrectResponseNodeId(body, dataobj.identifier);
+			regexp = new RegExp('(<responseDeclaration[^>]*>[^<]*<correctResponse>)(?:[^<]*<value>[^<]*<\/value>[^<]*)*(<\/correctResponse>[^>]*<\/responseDeclaration>)','gi');
+			correctResponseNode.nodeValue = correctResponseNode.nodeValue.replace(regexp, '$1' + responseDeclaration + '$2');
 		}
 		
 		// Remove illegal text before headins

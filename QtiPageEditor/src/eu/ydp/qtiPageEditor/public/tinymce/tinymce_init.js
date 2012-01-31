@@ -43,7 +43,7 @@ tinyMCE.init({
 	removeformat_selector : 'b,strong,em,i,ins',
 	noneditable_leave_contenteditable : true,
 	remove_linebreaks : false,
-	apply_source_formatting : true,
+	apply_source_formatting : false,
 	entity_encoding : "numeric",
 	dialog_type : "modal",
 	height:"100%",
@@ -98,12 +98,16 @@ tinyMCE.init({
 
 		// Parse QTI to HTML (on editor first load)
 		ed.onBeforeSetContent.add(function(ed, o){
-			o.content = QTI2HTML(o.content);
+			if ('html' == o.format) {
+				o.content = QTI2HTML(o.content);
+			}
 		});
 		
 		// Parse QTI to HTML (on page load)
 		ed.onSetContent.add(function(ed, o){
-			o.content = QTI2HTML(o.content);
+			if ('html' == o.format) {
+				o.content = QTI2HTML(o.content);
+			}
 		});
 
 		// Parse HTML to QTI (on page save)
@@ -112,7 +116,111 @@ tinyMCE.init({
 				o.content = HTML2QTI(o.content);
             }
         });
+		
+		ed.XmlHelper = {
+				rootNode: {attributes: new Array(), node: null},
+				actualNode: {attributes: new Array(), node: null},
+				correctResponses: new Array(),
 
+				loadXML: function(xml) {
+					//this.rootNode.node = $(xml.replace(/\<\?xml[^>]+>[^<]*/, '')).get(0).parentNode;
+					this.actualNode.node = $(xml.replace(/\<\?xml[^>]+>[^<]*/, '')).get(0).parentNode;
+					
+					if (this.actualNode.node.nodeType == 11) {
+						this.actualNode.node = this.actualNode.node.firstChild;
+					}
+					this._prepareCorrectResponses();
+				},
+				
+				getCorrectResponseByIdentifier: function(id) {
+
+					if ("undefined" != typeof this.correctResponses[id]) {
+						return this.correctResponses[id];
+					}
+					return null;
+				},
+				
+				_prepareCorrectResponses: function() {
+
+					if ('ASSESSMENTITEM' == this.actualNode.node.nodeName) {
+						var res = this.actualNode.node.getElementsByTagName('responseDeclaration');
+
+						for (var i = 0; i < res.length; i++ ) {
+							var values = res[i].getElementsByTagName('value');
+							if (1 == values.length) {
+								this.correctResponses[res[i].getAttribute('identifier')] = values[0].innerHTML;
+							} else if (1 < values.length) {
+								var arr = new Array();
+
+								for (var j = 0; j < values.length; j++) {
+									arr.push(values[j].innerHTML);
+								}
+								this.correctResponses[res[i].getAttribute('identifier')] = arr;
+							} 
+						}
+					}
+				},
+				
+				getCorrectResponseById: function(node, id) {
+					
+					var n = null;
+					var correctResponses = new Array();
+					for (var i = 0; i < node.childNodes.length; i++ ) {
+						n = node.childNodes[i];
+						
+						if (n.nodeType == 8) {
+							if (null != n.nodeValue.match(/responseDeclaration/i)) {
+								var res = $(n.nodeValue).get(0);
+								
+								if (id == res.getAttribute('identifier')) {
+									var values = res.getElementsByTagName('value');
+									for (var v = 0; v < values.length; v++) {
+										correctResponses.push(values[v].innerHTML);
+									}
+									return correctResponses;
+								}
+							}
+						}
+					}
+					return correctResponses;
+				},
+				
+				getCorrectResponseNodeId: function(node, id) {
+					
+					var n = null;
+					var correctResponses = new Array();
+					for (var i = 0; i < node.childNodes.length; i++ ) {
+						n = node.childNodes[i];
+						
+						if (n.nodeType == 8) {
+							if (null != n.nodeValue.match(/responseDeclaration/i)) {
+								var res = $(n.nodeValue).get(0);
+								
+								if (id == res.getAttribute('identifier')) {
+									return n;
+								}
+							}
+						}
+					}
+					return null;
+				},
+				
+				prepareAttributes: function(node) {
+					var attr = new Array();
+					var text = '';
+					if (null != node && null != node.attributes) {
+						var tmpAttr = new Array();
+						for ( var index = 0; index < node.attributes.length; index++) {
+							tmpAttr.push(node.attributes[index].name);
+						}
+						tmpAttr.sort();
+
+						for (var a = 0; a < tmpAttr.length; a++) {
+							text += ' '+tmpAttr[a]+'="'+$(node).attr(tmpAttr[a])+'"';
+						}
+					}
+					return text;
+				}
+		};
 	}
-
 });

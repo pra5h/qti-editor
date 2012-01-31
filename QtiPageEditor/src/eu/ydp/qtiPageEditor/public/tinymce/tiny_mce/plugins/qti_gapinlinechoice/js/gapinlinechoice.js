@@ -274,7 +274,8 @@ var gapInlineChoiceDialog = {
 
 						var identifier = '';
 						var resp = '';
-
+						var xh = ed.XmlHelper;
+						
 						for (i in obj.inlineRows) {
 							resp = obj.inlineRows[i];
 
@@ -284,8 +285,9 @@ var gapInlineChoiceDialog = {
 							} else if ('gap' == resp.type) {
 								identifier = resp.identifier;
 							}
-							var respOldRgx = new RegExp('<!-- <responseDeclaration identifier="'+identifier+'"[^>]*>[^<]*<correctResponse>[^<]*<value>[^<]*<\/value>[^<]*<\/correctResponse>[^<]*<\/responseDeclaration> -->', 'gi');
-							var respNewRgx = new RegExp('<!-- <responseDeclaration identifier="'+identifier+'"[^>]*>[^<]*<correctResponse>[^<]*<value>[^<]*<\/value>[^<]*<\/correctResponse>[^<]*<\/responseDeclaration> -->', 'gi');
+														
+							//var respOldRgx = new RegExp('<!-- <responseDeclaration identifier="'+identifier+'"[^>]*>[^<]*<correctResponse>[^<]*<value>[^<]*<\/value>[^<]*<\/correctResponse>[^<]*<\/responseDeclaration> -->', 'gi');
+							var respNewRgx = new RegExp(' <responseDeclaration identifier="'+identifier+'"[^>]*>[^<]*<correctResponse>[^<]*<value>[^<]*<\/value>[^<]*<\/correctResponse>[^<]*<\/responseDeclaration> ', 'gi');
 							var newRespRgxRes = respNewRgx.exec(sourcesList.responses);
 
 							var newRespSection = '';
@@ -294,8 +296,11 @@ var gapInlineChoiceDialog = {
 								newRespSection = newRespRgxRes[0]; 
 							}
 
-							if (null != respOldRgx.exec(body.innerHTML)) {
-								body.innerHTML = body.innerHTML.replace(respOldRgx, newRespSection);
+							var correctResponseNode = xh.getCorrectResponseNodeId(body, identifier);
+							
+							if (null != correctResponseNode) {
+								regexp = new RegExp('(<responseDeclaration[^>]*>[^<]*<correctResponse>)(?:[^<]*<value>[^<]*<\/value>[^<]*)*(<\/correctResponse>[^>]*<\/responseDeclaration>)','gi');
+								correctResponseNode.nodeValue = correctResponseNode.nodeValue.replace(regexp, newRespSection);
 							} else {
 								regexp = new RegExp('(<!-- <itemBody> -->)','gi');
 								body.innerHTML = body.innerHTML.replace(regexp, newRespSection + '$1');
