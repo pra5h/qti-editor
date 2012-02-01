@@ -22,14 +22,17 @@ function qti2htmlParse(tree) {
 			text += choiceInteractionToHTML(tree);
 		} else if ('SELECTIONINTERACTION' == tree.tagName) {
 			text += selectionInteractionToHTML(tree);
-		} else if ('TEXTINTERACTIONSGROUP' == tree.tagName) {
+		} else if ('TEXTINTERACTION' == tree.tagName) {
 			text += textInteractionsGroupToHTML(tree);
-		} else if (-1 != baseTags.indexOf(tree.tagName.toLowerCase())) {
-			if ('p' == tree.tagName.toLowerCase() && tree.textContent == '') {
-				text +='<p><br>';
-			} else {
-				text += '<'+tree.tagName.toLowerCase()+xh.prepareAttributes(tree)+'>';
+		} else if ('SIMPLETEXT' == tree.tagName) {
+			text +='<p>';
+			if ($.trim(tree.textContent) == ''){
+				text += '<br/>';
 			}
+		} else if ('GROUP' == tree.tagName) {
+			text += '<div'+xh.prepareAttributes(tree)+'>';
+		} else if (-1 != baseTags.indexOf(tree.tagName.toLowerCase())) {
+				text += '<'+tree.tagName.toLowerCase()+xh.prepareAttributes(tree)+'>';
 		}
 	}
 	if(tree.hasChildNodes()) {
@@ -57,8 +60,12 @@ function qti2htmlParse(tree) {
 			text += '</'+tree.tagName.toLowerCase()+'>';
 		} else if ('ITEMBODY' == tree.tagName) {
 			text += '<!-- </itemBody> -->';
+		} else if ('SIMPLETEXT' == tree.tagName) {
+			text += '</p>';
+		} else if ('GROUP' == tree.tagName) {
+			text += '</div>';
 		} else if (-1 != baseTags.indexOf(tree.tagName.toLowerCase())) {
-			text += '</'+tree.tagName.toLowerCase()+'>';
+				text += '</'+tree.tagName.toLowerCase()+'>';
 		}
 	}
 	return text;
@@ -81,12 +88,12 @@ function html2qtiParse(tree) {
                     text += '<'+tree.tagName.toLowerCase()+'>';
             } else if ('ITEMBODY' == tree.tagName) {
                     text += '<itemBody>';
+            } else if ('DIV' == tree.tagName) {
+                text += '<group'+xh.prepareAttributes(tree)+'>';
+            } else if ('P' == tree.tagName) {
+                text += '<simpleText'+xh.prepareAttributes(tree)+'>';
             } else if (-1 != baseTags.indexOf(tree.tagName.toLowerCase())) {
-                    if ('p' == tree.tagName.toLowerCase() && $.trim(tree.textContent) == '') {
-                            text +='<qy:tag name="text"><p>';
-                    } else {
-                            text += '<'+tree.tagName.toLowerCase()+xh.prepareAttributes(tree)+'>';
-                    }
+            	text += '<'+tree.tagName.toLowerCase()+xh.prepareAttributes(tree)+'>';
             }
     }
     
@@ -139,12 +146,12 @@ function html2qtiParse(tree) {
     		text += '</correctResponse>';
     	} else if ('VALUE' == tree.tagName) {
     		text += '</'+tree.tagName.toLowerCase()+'>';
+    	} else if ('DIV' == tree.tagName) {
+            text += '</group>';
+        } else if ('P' == tree.tagName) {
+            text += '</simpleText>';
     	} else if (-1 != baseTags.indexOf(tree.tagName.toLowerCase())) {
-    		if ('p' == tree.tagName.toLowerCase() && $.trim(tree.textContent) == '') {
-                text +='</p></qy:tag>';
-    		} else {
     			text += '</'+tree.tagName.toLowerCase()+'>';
-        	}
     	}
     } 
 
@@ -153,7 +160,7 @@ function html2qtiParse(tree) {
 
 function textInteractionsGroupToQTI(tig) {
 	var text = '';
-	text += '<qy:tag name="exercise"><textInteractionsGroup>';
+	text += '<textInteraction>';
 	var gic = tig.nextSibling;
 	text += '<prompt>'+gic.firstElementChild.innerHTML+'</prompt>';
 	var content = gic.firstElementChild.nextElementSibling;
@@ -191,7 +198,7 @@ function textInteractionsGroupToQTI(tig) {
 			}
 		}
 	}
-	text += '</textInteractionsGroup></qy:tag>';
+	text += '</textInteraction>';
 	//gic.parentNode.removeChild(gic.previousElementSibling);
 	//gic.parentNode.removeChild(gic.nextElementSibling);
 	//gic.parentNode.removeChild(gic);
@@ -287,7 +294,7 @@ function selectionInteractionToQTI (si) {
 	var text = '';
 	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
 	var sINode = si.nextSibling;
-	text += '<qy:tag name="exercise"><selectionInteraction'+xh.prepareAttributes($(si.nodeValue).get(0))+'>';
+	text += '<selectionInteraction'+xh.prepareAttributes($(si.nodeValue).get(0))+'>';
 	text += '<prompt>'+sINode.firstElementChild.innerHTML+'</prompt>';
 	var table = sINode.firstElementChild.nextElementSibling;
 	var tr = null;
@@ -302,7 +309,7 @@ function selectionInteractionToQTI (si) {
 				}
 			}
 	}
-	text += '</selectionInteraction></qy:tag>';
+	text += '</selectionInteraction>';
 	
 	//sINode.parentNode.removeChild(si);
 	//sINode.parentNode.removeChild(sINode.nextSibling);
@@ -314,14 +321,14 @@ function choiceInteractionToQTI(ci) {
 	var text = '';
 	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
 	var cINode = ci.nextSibling;
-	text += '<qy:tag name="exercise"><choiceInteraction'+xh.prepareAttributes($(ci.nodeValue).get(0))+'>';
+	text += '<choiceInteraction'+xh.prepareAttributes($(ci.nodeValue).get(0))+'>';
 	text += '<prompt>'+cINode.firstElementChild.innerHTML+'</prompt>';
 	for (var i = 0; i < cINode.childNodes.length; i++) {
 		if (8 == cINode.childNodes[i].nodeType) {
 			text += cINode.childNodes[i].nodeValue;
 		}
 	}
-	text += '</choiceInteraction></qy:tag>';
+	text += '</choiceInteraction>';
 	
 	//obejscie po to aby rekurencja nie poszla w wezly nalezace do tego cwiczenia, bo one juz byly sparsowane
 	//zamkniecie choiceInteraction ustawiam jako puste - to jest wezel typu komentarz
@@ -476,7 +483,6 @@ function textInteractionsGroupToHTML(ti) {
 }
 
 function QTI2HTML(h) {
-	
 	//remove formatting
 	h = h.replace(/(\r\n|\n|\r)/gm,'');
 	h = h.replace(/(>[ ]+<)/gm,'><');
@@ -563,18 +569,18 @@ function applyFormatting(h) {
 
 	// TEMPLATE FORMATING
 	//before begin
-	h = h.replace(/<(qy:tag|assessmentItem)([^>]*)>/gi, '\n<$1$2>');
+	h = h.replace(/<(simpleText|assessmentItem)([^>]*)>/gi, '\n<$1$2>');
 	
 	//after begin
-	h = h.replace(/<(qy:tag|assessmentItem|styleDeclaration|itemBody|link|responseDeclaration|correctResponse)([^>]*)>/gi, '<$1$2>\n');
+	h = h.replace(/<(assessmentItem|styleDeclaration|itemBody|link|responseDeclaration|correctResponse)([^>]*)>/gi, '<$1$2>\n');
 	
 	//after end
-	h = h.replace(/<\/(qy:tag|styleDeclaration|value|correctResponse|responseDeclaration|itemBody)([^>]*)>/gi, '</$1$2>\n');
+	h = h.replace(/<\/(simpleText|styleDeclaration|value|correctResponse|responseDeclaration|itemBody)([^>]*)>/gi, '</$1$2>\n');
 	
 	//before end
-	h = h.replace(/<\/(qy:tag|itemBody)([^>]*)>/gi, '\n</$1$2>');
-	h = h.replace(/<(div class="[^"]+")([^>]*)>/gi, '\n<$1$2>');
-	h = h.replace(/<\/(div)>/gi, '</$1>\n');
+	h = h.replace(/<\/(itemBody)([^>]*)>/gi, '\n</$1$2>');
+	h = h.replace(/<(group class="[^"]+")([^>]*)>/gi, '\n<$1$2>');
+	h = h.replace(/<\/(group)>/gi, '</$1>\n');
 	
 	
 	//PLUGIN FORMATING
