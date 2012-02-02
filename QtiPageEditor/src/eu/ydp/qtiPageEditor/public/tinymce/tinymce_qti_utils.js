@@ -5,19 +5,19 @@ function qti2htmlParse(tree) {
 	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
 	if (tree.nodeType == 1) {
 		if ('ASSESSMENTITEM' == tree.tagName) {
-			text += '<!-- <assessmentItem'+xh.prepareAttributes(tree)+'> -->';
+			text += '<!-- '+xh.prepareNodeBegin(tree)+' -->';
 		} else if ('STYLEDECLARATION' == tree.tagName) {
-			text += '<!-- <styleDeclaration>';
+			text += '<!-- '+xh.prepareNodeBegin(tree);
 		} else if ('LINK' == tree.tagName) {
-			text += '<link'+xh.prepareAttributes(tree)+' />';
+			text += xh.prepareEmptyNode(tree);
 		} else if ('RESPONSEDECLARATION' == tree.tagName) {
-			text += '<!-- <responseDeclaration'+xh.prepareAttributes(tree)+'>';
+			text += '<!-- '+xh.prepareNodeBegin(tree);
 		} else if ('CORRECTRESPONSE' == tree.tagName) {
-			text += '<correctResponse>';
+			text += xh.prepareNodeBegin(tree);
 		} else if ('VALUE' == tree.tagName) {
-			text += '<'+tree.tagName.toLowerCase()+'>';
+			text += xh.prepareNodeBegin(tree);
 		} else if ('ITEMBODY' == tree.tagName) {
-			text += '<!-- <itemBody> -->';
+			text += '<!-- '+xh.prepareNodeBegin(tree)+' -->';
 		} else if ('CHOICEINTERACTION' == tree.tagName) {
 			text += choiceInteractionToHTML(tree);
 		} else if ('SELECTIONINTERACTION' == tree.tagName) {
@@ -25,12 +25,12 @@ function qti2htmlParse(tree) {
 		} else if ('TEXTINTERACTION' == tree.tagName) {
 			text += textInteractionsGroupToHTML(tree);
 		} else if ('SIMPLETEXT' == tree.tagName) {
-			text +='<p>';
+			text += xh.prepareNodeBegin(tree);
 			if ($.trim(tree.textContent) == ''){
 				text += '<br/>';
 			}
 		} else if ('GROUP' == tree.tagName) {
-			text += '<div'+xh.prepareAttributes(tree)+'>';
+			text += xh.prepareNodeBegin(tree);
 		} else if (-1 != baseTags.indexOf(tree.tagName.toLowerCase())) {
 				text += '<'+tree.tagName.toLowerCase()+xh.prepareAttributes(tree)+'>';
 		}
@@ -49,21 +49,21 @@ function qti2htmlParse(tree) {
 	}
 	if (tree.nodeType == 1) {
 		if ('ASSESSMENTITEM' == tree.tagName) {
-			text += '<!-- </assessmentItem> -->';
+			text += '<!-- '+xh.prepareNodeEnd(tree)+' -->';
 		} else if ('STYLEDECLARATION' == tree.tagName) {
-			text += '</styleDeclaration> -->';
+			text += xh.prepareNodeEnd(tree)+' -->';
 		} else if ('RESPONSEDECLARATION' == tree.tagName) {
-			text += '</responseDeclaration> -->';
+			text += xh.prepareNodeEnd(tree)+' -->';
 		} else if ('CORRECTRESPONSE' == tree.tagName) {
-			text += '</correctResponse>';
+			text += xh.prepareNodeEnd(tree);
 		} else if ('VALUE' == tree.tagName) {
-			text += '</'+tree.tagName.toLowerCase()+'>';
+			text += xh.prepareNodeEnd(tree);
 		} else if ('ITEMBODY' == tree.tagName) {
-			text += '<!-- </itemBody> -->';
+			text += '<!-- '+xh.prepareNodeEnd(tree)+' -->';
 		} else if ('SIMPLETEXT' == tree.tagName) {
-			text += '</p>';
+			text += xh.prepareNodeEnd(tree);
 		} else if ('GROUP' == tree.tagName) {
-			text += '</div>';
+			text += xh.prepareNodeEnd(tree);
 		} else if (-1 != baseTags.indexOf(tree.tagName.toLowerCase())) {
 				text += '</'+tree.tagName.toLowerCase()+'>';
 		}
@@ -75,23 +75,23 @@ function html2qtiParse(tree) {
    var xh = tinymce.EditorManager.activeEditor.XmlHelper;
     if (tree.nodeType == 1) {
             if ('ASSESSMENTITEM' == tree.tagName) {
-                    text += '<assessmentItem'+xh.prepareAttributes(tree)+'>';
+                    text += xh.prepareNodeBegin(tree);
             } else if ('STYLEDECLARATION' == tree.tagName) {
-                    text += '<styleDeclaration>';
+                    text += xh.prepareNodeBegin(tree);
             } else if ('LINK' == tree.tagName) {
-                    text += '<link'+xh.prepareAttributes(tree)+' />';
+                    text += xh.prepareEmptyNode(tree);
             } else if ('RESPONSEDECLARATION' == tree.tagName) {
-                    text += '<responseDeclaration'+xh.prepareAttributes(tree)+'>';
+                    text += xh.prepareNodeBegin(tree);
             } else if ('CORRECTRESPONSE' == tree.tagName) {
-                    text += '<correctResponse>';
+                    text += xh.prepareNodeBegin(tree);
             } else if ('VALUE' == tree.tagName) {
-                    text += '<'+tree.tagName.toLowerCase()+'>';
+                    text += xh.prepareNodeBegin(tree);
             } else if ('ITEMBODY' == tree.tagName) {
-                    text += '<itemBody>';
+                    text += xh.prepareNodeBegin(tree);
             } else if ('DIV' == tree.tagName) {
-                text += '<group'+xh.prepareAttributes(tree)+'>';
+                text += xh.prepareNodeBegin(tree);
             } else if ('P' == tree.tagName) {
-                text += '<simpleText'+xh.prepareAttributes(tree)+'>';
+                text += '<section name="text">'+xh.prepareNodeBegin(tree);
             } else if (-1 != baseTags.indexOf(tree.tagName.toLowerCase())) {
             	text += '<'+tree.tagName.toLowerCase()+xh.prepareAttributes(tree)+'>';
             }
@@ -139,17 +139,17 @@ function html2qtiParse(tree) {
     
     if (tree.nodeType == 1) {
     	if ('STYLEDECLARATION' == tree.tagName) {
-    		text += '</styleDeclaration>';
+    		text += xh.prepareNodeEnd(tree);
     	} else if ('RESPONSEDECLARATION' == tree.tagName) {
-    		text += '</responseDeclaration>';
+    		text += xh.prepareNodeEnd(tree);
     	} else if ('CORRECTRESPONSE' == tree.tagName) {
-    		text += '</correctResponse>';
+    		text += xh.prepareNodeEnd(tree);
     	} else if ('VALUE' == tree.tagName) {
-    		text += '</'+tree.tagName.toLowerCase()+'>';
+    		text += xh.prepareNodeEnd(tree);
     	} else if ('DIV' == tree.tagName) {
-            text += '</group>';
+            text += xh.prepareNodeEnd(tree);
         } else if ('P' == tree.tagName) {
-            text += '</simpleText>';
+            text += xh.prepareNodeEnd(tree)+'</section>';
     	} else if (-1 != baseTags.indexOf(tree.tagName.toLowerCase())) {
     			text += '</'+tree.tagName.toLowerCase()+'>';
     	}
@@ -199,9 +199,6 @@ function textInteractionsGroupToQTI(tig) {
 		}
 	}
 	text += '</textInteraction>';
-	//gic.parentNode.removeChild(gic.previousElementSibling);
-	//gic.parentNode.removeChild(gic.nextElementSibling);
-	//gic.parentNode.removeChild(gic);
 	return text;
 }
 
@@ -210,7 +207,7 @@ function choiceInteractionToHTML(ci) {
 	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
 	var correctResponses = xh.getCorrectResponseByIdentifier(ci.getAttribute('responseIdentifier'));
 	var text = '';
-	text += '<!-- <choiceInteraction'+xh.prepareAttributes(ci)+'> -->';
+	text += '<!-- '+xh.prepareNodeBegin(ci)+' -->';
 	text += '<div id="choiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;" mce_style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">';
 	var checked = '';
 	
@@ -219,27 +216,34 @@ function choiceInteractionToHTML(ci) {
 			if ('PROMPT' == ci.childNodes[k].tagName) {
 				text += '<p id="choiceInteraction">'+ci.childNodes[k].innerHTML+'</p>';
 			} else if ('SIMPLECHOICE' == ci.childNodes[k].tagName) {
-				text += '<!-- <simpleChoice'+xh.prepareAttributes(ci.childNodes[k])+'>';
+				text += '<!-- '+xh.prepareNodeBegin(ci.childNodes[k]);
 				var innerHtml = '';
 				for (var i = 0; i < ci.childNodes[k].childNodes.length; i++) {
 					var scChild = ci.childNodes[k].childNodes[i];
 					
 					if (1 == scChild.nodeType) {
 						if ('FEEDBACKINLINE' == scChild.tagName) {
-							text += '<feedbackInline'+xh.prepareAttributes(scChild)+'>'+scChild.innerHTML+'</feedbackInline>';
+							text += xh.prepareNodeBegin(scChild)+scChild.innerHTML+xh.prepareNodeEnd(scChild);
 						} else if ('IMG' == scChild.tagName) {
-							text += '<img'+xh.prepareAttributes(scChild)+' />';
-							innerHtml = '<img'+xh.prepareAttributes(scChild)+' />';
+							text += xh.prepareEmptyNode(scChild);
+							innerHtml = xh.prepareEmptyNode(scChild);
 						} else {
-							text += scChild.nodeValue;
-							innerHtml = scChild.nodeValue;
+							text += xh.prepareNode(scChild);
+							//text += '<'+scChild.tagName.toLowerCase()+xh.prepareAttributes(scChild)+'>';
+							//text += scChild.innerHTML;
+							//text += '</'+scChild.tagName.toLowerCase()+'>';
+							innerHtml += xh.prepareNode(scChild);
+							//innerHtml += '<'+scChild.tagName.toLowerCase()+xh.prepareAttributes(scChild)+'>';
+							//innerHtml += scChild.innerHTML;
+							//innerHtml += '</'+scChild.tagName.toLowerCase()+'>';
+							
 						}
 					} else {
 						text += scChild.nodeValue;
 						innerHtml = scChild.nodeValue;
 					}
 				}
-				text += '</simpleChoice> -->';
+				text += xh.prepareNodeEnd(ci.childNodes[k])+' -->';
 				text += '<br/>'
 				if (-1 != correctResponses.indexOf(ci.childNodes[k].getAttribute('identifier'))) {
 					checked = 'checked="checked" ';
@@ -250,39 +254,7 @@ function choiceInteractionToHTML(ci) {
 			}
 		}
 	}
-	/*
-	var prompts = ci.getElementsByTagName('prompt');
-	text += '<p id="choiceInteraction">'+prompts[0].innerHTML+'</p>';
-	var simpleChoices = ci.getElementsByTagName('simpleChoice');
-	var feedback = null;
-	var feedbackText = '';
-	var sc = null;
-	var checked = '';
-*/
-	/*
-	for (var i = 0; i < simpleChoices.length; i++) {
-		sc = simpleChoices[i];
-		text += '<!-- <simpleChoice'+xh.prepareAttributes(sc)+'>';
-		feedback = sc.firstElementChild;
-
-		if (null != feedback) {
-			feedbackText += '<feedbackInline'+xh.prepareAttributes(feedback)+'>'+feedback.innerHTML+'</feedbackInline>';
-			sc.removeChild(feedback);
-		}
-		text += sc.innerHTML;
-		text += feedbackText;
-		text += '</simpleChoice> -->';
-		text += '<br/>'
-			
-		if (-1 != correctResponses.indexOf(sc.getAttribute('identifier'))) {
-			checked = 'checked="checked" ';
-		}
-		text += '<input id="choiceInteraction" '+checked+'name="simpleChoice" type="checkbox">'+sc.innerHTML;
-		checked = '';
-		feedback = null;
-		feedbackText = '';
-	}*/
-	text += '</div><!-- </choiceInteraction> -->';
+	text += '</div><!-- '+xh.prepareNodeEnd(ci)+' -->';
 	//usuniecie childeow zeby rekurencja juz tam nie wpadla
 	while(ci.hasChildNodes()){
 		ci.removeChild(ci.lastChild);
@@ -321,19 +293,15 @@ function choiceInteractionToQTI(ci) {
 	var text = '';
 	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
 	var cINode = ci.nextSibling;
-	text += '<choiceInteraction'+xh.prepareAttributes($(ci.nodeValue).get(0))+'>';
+	
+	text += xh.prepareNodeBegin($(ci.nodeValue).get(0));
 	text += '<prompt>'+cINode.firstElementChild.innerHTML+'</prompt>';
 	for (var i = 0; i < cINode.childNodes.length; i++) {
 		if (8 == cINode.childNodes[i].nodeType) {
 			text += cINode.childNodes[i].nodeValue;
 		}
 	}
-	text += '</choiceInteraction>';
-	
-	//obejscie po to aby rekurencja nie poszla w wezly nalezace do tego cwiczenia, bo one juz byly sparsowane
-	//zamkniecie choiceInteraction ustawiam jako puste - to jest wezel typu komentarz
-	//cINode.nextSibling.nodeValue = '';
-//	cINode.parentNode.removeChild(cINode);
+	text += xh.prepareNodeEnd($(ci.nodeValue).get(0));
 	return text;
 }
 
@@ -569,18 +537,20 @@ function applyFormatting(h) {
 
 	// TEMPLATE FORMATING
 	//before begin
-	h = h.replace(/<(simpleText|assessmentItem)([^>]*)>/gi, '\n<$1$2>');
+	h = h.replace(/<(group class="[^"]+"|simpleText|assessmentItem)([^>]*)>/gi, '\n<$1$2>');
 	
 	//after begin
-	h = h.replace(/<(assessmentItem|styleDeclaration|itemBody|link|responseDeclaration|correctResponse)([^>]*)>/gi, '<$1$2>\n');
-	
-	//after end
-	h = h.replace(/<\/(simpleText|styleDeclaration|value|correctResponse|responseDeclaration|itemBody)([^>]*)>/gi, '</$1$2>\n');
+	h = h.replace(/<(group class="[^"]+"|assessmentItem|styleDeclaration|itemBody|link|responseDeclaration|correctResponse)([^>]*)>/gi, '<$1$2>\n');
 	
 	//before end
 	h = h.replace(/<\/(itemBody)([^>]*)>/gi, '\n</$1$2>');
-	h = h.replace(/<(group class="[^"]+")([^>]*)>/gi, '\n<$1$2>');
-	h = h.replace(/<\/(group)>/gi, '</$1>\n');
+	
+	//after end
+	h = h.replace(/<\/(group|section|simpleText|styleDeclaration|value|correctResponse|responseDeclaration|itemBody)([^>]*)>/gi, '</$1$2>\n');
+	
+	
+	//h = h.replace(/<(group class="[^"]+")([^>]*)>/gi, '\n<$1$2>');
+	//h = h.replace(/<\/(group)>/gi, '</$1>\n');
 	
 	
 	//PLUGIN FORMATING
@@ -589,7 +559,7 @@ function applyFormatting(h) {
 	//before end
 	h = h.replace(/<\/(choiceInteraction)>/gi, '\n</$1>');
 	//after end
-	h = h.replace(/<\/(prompt)>/gi, '</$1>\n');
+	h = h.replace(/<\/(choiceInteraction|prompt)>/gi, '</$1>\n');
 	return h;
 }
 
@@ -968,6 +938,7 @@ function runGapInlineChoiceInteraction(selectedNode) {
 
 //choiceInteraction DblClick
 function runChoiceInteraction(selectedNode) {
+	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
 	var sectionDiv = selectedNode;
 	while(sectionDiv.nodeName != 'DIV') {
 		sectionDiv = sectionDiv.parentNode;
@@ -1003,22 +974,27 @@ function runChoiceInteraction(selectedNode) {
 				points.push('0');
 			}
 			smCh = sectionDiv.childNodes[i].nodeValue;
-			
-			if ($(smCh).get(0).firstChild.tagName == 'IMG') {
-				answers.push('<img src="'+$(smCh).get(0).firstChild.getAttribute('src')+'"/>');
-			} else {
-				answers.push($(smCh).get(0).firstChild.nodeValue);
-			}
-			
-			//feedback = $(':last', smCh).get(0);
-			feedback = $(smCh).get(0).lastElementChild;
 			ids.push($(smCh).attr('identifier'));
 			fixed.push($(smCh).attr('fixed'));
-
-			if (null != feedback && feedback.tagName == 'FEEDBACKINLINE') {
-				//fdb[identifier] = new Array()[$(smCh).attr('identifier')] = $(':first', smCh).html();
-				feedbacks[$(smCh).attr('identifier')] = {text: feedback.innerHTML, sound: null};
+			var simpleCh = $(smCh).get(0);
+			var ansText = '';
+			for (var j = 0; j < simpleCh.childNodes.length; j++) {
+				if (1 == simpleCh.childNodes[j].nodeType) {
+					if ('IMG' == simpleCh.childNodes[j].tagName) {
+						ansText += '<img src="'+simpleCh.childNodes[j].getAttribute('src')+'"/>'
+					} else if ('FEEDBACKINLINE' == simpleCh.childNodes[j].tagName) {
+						feedbacks[$(smCh).attr('identifier')] = {text: simpleCh.childNodes[j].innerHTML, sound: null};
+					} else {
+						ansText += xh.prepareNode(simpleCh.childNodes[j]);
+						//ansText += '<'+simpleCh.childNodes[j].tagName.toLowerCase()+xh.prepareAttributes(simpleCh.childNodes[j])+'>';
+						//ansText += simpleCh.childNodes[j].innerHTML;
+						//ansText += '</'+simpleCh.childNodes[j].tagName.toLowerCase()+'>';
+					}
+				} else {
+					ansText += simpleCh.childNodes[j].nodeValue;
+				}
 			}
+			answers.push(ansText);
 		}
 	}
 	fdb[identifier] = feedbacks;
@@ -1176,4 +1152,10 @@ function cutQTI(content) {
 	
 	return content;
 	
+}
+function stringDecode(text) {
+	return $('<div/>').html(text).text().replace(/&quot;/g, "\"");
+}
+function stringEncode(text) {
+	return $('<div/>').text(text).html().replace(/"/g, "&quot;").replace(/>/g, "&gt;").replace(/</g, "&lt;");
 }

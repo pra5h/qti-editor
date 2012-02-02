@@ -10,10 +10,10 @@ var feedbackDialog = {
 		document.getElementById('identifier').setAttribute('value',data.identifier);
 		document.getElementById('exerciseid').setAttribute('value',data.exerciseid);
 		if(data.feedback != undefined && data.feedback != '') {
-			document.getElementById('feedback').setAttribute('value',stringDecode(data.feedback));
+			document.getElementById('feedback').setAttribute('value',data.feedback);
 			document.getElementById('fdb_sound').setAttribute('value',data.feedback_sound);
 		} else if(tinyMCE.feedback != undefined && tinyMCE.feedback[data.identifier] != undefined) {
-			document.getElementById('feedback').setAttribute('value',stringDecode(tinyMCE.feedback[data.identifier].text));
+			document.getElementById('feedback').setAttribute('value',tinyMCE.feedback[data.identifier].text);
 			document.getElementById('fdb_sound').setAttribute('value',tinyMCE.feedback[data.identifier].sound);
 		}
 		$('#feedback').focus();
@@ -48,10 +48,13 @@ var feedbackDialog = {
 			}
 		}
 		
+		if (tinyMCE.feedback[exerciseid] == undefined) {
+			tinyMCE.feedback[exerciseid] = new Array();
+		}
 		if(tinyMCE.feedback[exerciseid][identifier] == undefined) {
 			tinyMCE.feedback[exerciseid][identifier] = {text: new Array, sound: new Array};
 		}
-		tinyMCE.feedback[exerciseid][identifier].text = stringEncode(feedback);
+		tinyMCE.feedback[exerciseid][identifier].text = feedback;
 		tinyMCE.feedback[exerciseid][identifier].sound = feedback_sound;
 		
 		tinyMCEPopup.close();

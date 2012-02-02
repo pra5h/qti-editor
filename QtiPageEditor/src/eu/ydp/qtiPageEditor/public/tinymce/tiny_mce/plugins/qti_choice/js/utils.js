@@ -187,18 +187,7 @@ function validateExercise(form) {
 	return selected_answers && question && (answers_contents.length == 0);
 	
 }
-function stringEncode(text) {
-	return $('<div/>').text(text).html().replace(/"/g, "&quot;").replace(/>/g, "&gt;").replace(/</g, "&lt;");
-}
-function stringDecode(text) {
-	return $('<div/>').html(text).text().replace(/&quot;/g, "\"");
-}
-function encodeIndex(text) {
-	return text.replace(/<([\/]?su[bp])>/gi,'&lt;$1&gt;');
-}
-function decodeIndex(text) {
-	return text.replace(/&lt;([\/]?su[bp])&gt;/gi,'<$1>');
-}
+
 function lock(id) {
 	var ed = tinymce.EditorManager.activeEditor;
 	var zIndex = ed.windowManager.zIndex;

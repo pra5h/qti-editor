@@ -12,7 +12,7 @@ var choiceDialog = {
 		var data = tinyMCEPopup.getWindowArg("choicedata");
 
 		if(data != undefined && data[0] != undefined) {
-			f.question.value = stringDecode(data[0]);
+			f.question.value = data[0];
 		}
 		if(data != undefined && data[4] != undefined) {
 			f.identifier.value = data[4];
@@ -158,7 +158,7 @@ var choiceDialog = {
 					if(images == true) {
 						answers.push('<img src="' + element.value + '"/>');
 					} else {
-						answers.push(stringEncode(element.value));
+						answers.push(element.value);
 					}
 				} else {
 					skip_point = 1;
@@ -211,7 +211,7 @@ var choiceDialog = {
 		
 		if(adding == 1) {
 			var choiceSection = '<p>&nbsp;</p><!-- <choiceInteraction responseIdentifier="' + identifier + '" shuffle="' + String(shuffle) + '" maxChoices="' + String(maxChoices) + '"> --><div id="choiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">';
-			choiceSection += '<p id="choiceInteraction">' + stringEncode(question) + '</p>';
+			choiceSection += '<p id="choiceInteraction">' + question + '</p>';
 			responseDeclaration = '<!-- <responseDeclaration identifier="' + identifier + '" cardinality="' + (multiple ? 'multiple' : 'single') + '" baseType="identifier"><correctResponse>';
 			for(i in answers) {
 				choiceSection += '<!-- <simpleChoice identifier="' + ids[i] + '"';
@@ -226,13 +226,13 @@ var choiceDialog = {
 					} else {
 						choiceSection += 'mark="WRONG"';
 					}
-					choiceSection += ' fadeEffect="300" outcomeIdentifier="' + identifier + '-LASTCHANGE" identifier="\\+' + ids[i] + '.*" showHide="show">' + tinyMCE.feedback[identifier][ids[i]].text + '</feedbackInline>';
+					choiceSection += ' fadeEffect="300" variableIdentifier="' + identifier + '-LASTCHANGE" value="\\+' + ids[i] + '.*" showHide="show">' + tinyMCE.feedback[identifier][ids[i]].text + '</feedbackInline>';
 				} 
 				choiceSection += '</simpleChoice> --><br /><input id="choiceInteraction" ';
 				if(points[i] > 0) {
 					choiceSection += 'checked="checked" ';
 				}
-				choiceSection += 'name="simpleChoice" type="checkbox" />' + decodeIndex(answers[i]);
+				choiceSection += 'name="simpleChoice" type="checkbox" />' + answers[i];
 				if(points[i] == 1) {
 					responseDeclaration += '<value>' + ids[i] + '</value>';
 				}
@@ -288,7 +288,7 @@ var choiceDialog = {
 				//var regexp = new RegExp(' <choiceInteraction responseIdentifier="' + identifier + '" shuffle="[^"]*" maxChoices="[^"]*"([^>]*)> ','gi');
 				nd.previousSibling.nodeValue = ' <choiceInteraction responseIdentifier="' + identifier + '" shuffle="' + String(shuffle) + '" maxChoices="' + String(maxChoices) + '"> ');
 			}*/
-			choiceSection = '<p id="choiceInteraction">' + stringEncode(question) + '</p>';
+			choiceSection = '<p id="choiceInteraction">' + question + '</p>';
 			for(i in answers) {
 				choiceSection += '<!-- <simpleChoice identifier="' + ids[i] + '"';
 				if(fixed[i] == 1) {
@@ -302,13 +302,13 @@ var choiceDialog = {
 					} else {
 						choiceSection += 'mark="WRONG"';
 					}
-					choiceSection += ' fadeEffect="300"  outcomeIdentifier="' + identifier + '-LASTCHANGE" identifier="\\+' + ids[i] + '.*" showHide="show">' + tinyMCE.feedback[identifier][ids[i]].text + '</feedbackInline>';
+					choiceSection += ' fadeEffect="300"  variableIdentifier="' + identifier + '-LASTCHANGE" value="\\+' + ids[i] + '.*" showHide="show">' + tinyMCE.feedback[identifier][ids[i]].text + '</feedbackInline>';
 				} 
 				choiceSection += '</simpleChoice> --><br /><input id="choiceInteraction" ';
 				if(points[i] > 0) {
 					choiceSection += 'checked="checked" ';
 				}
-				choiceSection += 'name="simpleChoice" type="checkbox" />' + decodeIndex(answers[i]);
+				choiceSection += 'name="simpleChoice" type="checkbox" />' + answers[i];
 				if(points[i] == 1) {
 					responseDeclaration += '<value>' + ids[i] + '</value>';
 				}

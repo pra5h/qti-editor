@@ -121,6 +121,29 @@ tinyMCE.init({
 				rootNode: {attributes: new Array(), node: null},
 				actualNode: {attributes: new Array(), node: null},
 				correctResponses: new Array(),
+				attributesMapper: {
+					'useragent': 'userAgent',
+					'basetype': 'baseType',
+					'responseidentifier': 'responseIdentifier',
+					'variableidentifier': 'variableIdentifier',
+					'maxchoices': 'maxChoices',
+					'fadeeffect': 'fadeEffect',
+					'showhide': 'showHide'
+				},
+				
+				nodesMapper: {
+					'assessmentitem': 'assessmentItem',
+					'styledeclaration': 'styleDeclaration',
+					'responsedeclaration': 'responseDeclaration',
+					'correctresponse': 'correctResponse',
+					'itembody': 'itemBody',
+					'simpletext': 'p',
+					'group': 'div',
+					'div': 'group',
+					'p': 'simpleText',
+					'choiceinteraction': 'choiceInteraction'
+				},
+				
 
 				loadXML: function(xml) {
 					//this.rootNode.node = $(xml.replace(/\<\?xml[^>]+>[^<]*/, '')).get(0).parentNode;
@@ -208,6 +231,7 @@ tinyMCE.init({
 				prepareAttributes: function(node) {
 					var attr = new Array();
 					var text = '';
+
 					if (null != node && null != node.attributes) {
 						var tmpAttr = new Array();
 						for ( var index = 0; index < node.attributes.length; index++) {
@@ -216,8 +240,65 @@ tinyMCE.init({
 						tmpAttr.sort();
 
 						for (var a = 0; a < tmpAttr.length; a++) {
-							text += ' '+tmpAttr[a]+'="'+$(node).attr(tmpAttr[a])+'"';
+							if (undefined != this.attributesMapper[tmpAttr[a]]) {
+								text += ' '+this.attributesMapper[tmpAttr[a]]+'="'+$(node).attr(tmpAttr[a])+'"';
+							} else {
+								text += ' '+tmpAttr[a]+'="'+$(node).attr(tmpAttr[a])+'"';
+							}
+							
+							
 						}
+					}
+					return text;
+				},
+				
+				prepareNodeBegin: function(node) {
+					var text = '';
+					
+					if (1 == node.nodeType) {
+						if (undefined != this.nodesMapper[node.tagName.toLowerCase()]) {
+							text += '<'+this.nodesMapper[node.tagName.toLowerCase()];
+						} else {
+							text += '<'+node.tagName.toLowerCase();
+						}
+						text += this.prepareAttributes(node)+'>';
+					}
+					return text;
+				},
+				
+				prepareNodeEnd: function(node) {
+					var text = '';
+					
+					if (1 == node.nodeType) {
+						if (undefined != this.nodesMapper[node.tagName.toLowerCase()]) {
+							text += '</'+this.nodesMapper[node.tagName.toLowerCase()]+'>';
+						} else {
+							text += '</'+node.tagName.toLowerCase()+'>';
+						}
+					}
+					return text;
+				},
+				
+				prepareEmptyNode: function(node) {
+					var text = '';
+					
+					if (1 == node.nodeType) {
+						if (undefined != this.nodesMapper[node.tagName.toLowerCase()]) {
+							text += '<'+this.nodesMapper[node.tagName.toLowerCase()];
+						} else {
+							text += '<'+node.tagName.toLowerCase();
+						}
+						text += this.prepareAttributes(node)+' />';
+					}
+					return text;
+				},
+				
+				prepareNode: function(node) {
+					var text = '';
+					if (1 == node.nodeType) {
+						text += this.prepareNodeBegin(node);
+						text += node.innerHTML;
+						text += this.prepareNodeEnd;
 					}
 					return text;
 				}
