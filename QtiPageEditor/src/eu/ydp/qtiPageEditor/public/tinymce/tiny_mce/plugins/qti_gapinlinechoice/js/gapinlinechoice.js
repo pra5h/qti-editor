@@ -82,8 +82,8 @@ var gapInlineChoiceDialog = {
 						gapTag += 'mark="CORRECT"';
 						gapTag += ' fadeEffect="300" ';
 						gapTag += 'senderIdentifier="^' + row.identifier + '$" ';
-						gapTag += 'outcomeIdentifier="' + row.identifier + '" '; 
-						gapTag += 'identifier="' + row.answer + '" showHide="show">' + feedbackObj.onOk + '</feedbackInline>'
+						gapTag += 'variableIdentifier="' + row.identifier + '" '; 
+						gapTag += 'value="' + row.answer + '" showHide="show">' + feedbackObj.onOk + '</feedbackInline>'
 					}
 
 					if ('undefined' != typeof feedbackObj.onWrong && feedbackObj.onWrong != '') {
@@ -91,8 +91,8 @@ var gapInlineChoiceDialog = {
 						gapTag += 'mark="WRONG"';
 						gapTag += ' fadeEffect="300" ';
 						gapTag += 'senderIdentifier="^' + row.identifier + '$" ';
-						gapTag += 'outcomeIdentifier="' + row.identifier + '" ';
-						gapTag += 'identifier="' + row.answer + '" showHide="hide">' + feedbackObj.onWrong + '</feedbackInline>'
+						gapTag += 'variableIdentifier="' + row.identifier + '" ';
+						gapTag += 'value="' + row.answer + '" showHide="hide">' + feedbackObj.onWrong + '</feedbackInline>'
 					}
 				}
 			}
@@ -100,9 +100,7 @@ var gapInlineChoiceDialog = {
 			gapTag += '<span id="gap" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">';
 			gapTag += row.answer;
 			gapTag += '</span>';
-			//console.log(content);
 			newData.content = newData.content.replace(pattern, gapTag);
-			//console.log(content);
 			//sourcesList.content += gapTag;
 			var responseDeclaration = '<!-- <responseDeclaration identifier="' + row.identifier + '" cardinality="single" baseType="string">';
 			responseDeclaration += '<correctResponse>';
@@ -139,7 +137,7 @@ var gapInlineChoiceDialog = {
 					var rg = new RegExp('0.([0-9]*)',"gi");
 					exec = rg.exec(randid);
 					var fId = 'id_' + exec[1];
-					choiceSection += ' fadeEffect="300" senderIdentifier="' + row.data.identifier + '" outcomeIdentifier="' + row.data.identifier + '" identifier="' + row.data.ids[i] + '" showHide="show">' + row.data.feedbacks[row.data.ids[i]] + '</feedbackInline>'
+					choiceSection += ' fadeEffect="300" senderIdentifier="' + row.data.identifier + '" variableIdentifier="' + row.data.identifier + '" value="' + row.data.ids[i] + '" showHide="show">' + row.data.feedbacks[row.data.ids[i]] + '</feedbackInline>'
 				} 
 
 				choiceSection += '</inlineChoice> -->';
@@ -151,7 +149,7 @@ var gapInlineChoiceDialog = {
 				}
 			}
 			responseDeclaration += '</correctResponse></responseDeclaration> -->';
-			choiceSection += '</span><!-- end of inlineChoiceInteraction -->';
+			choiceSection += '</span><!-- </inlineChoiceInteraction> -->';
 
 			newData.content = newData.content.replace(pattern, choiceSection);
 			//sourcesList.content += choiceSection;
@@ -188,7 +186,7 @@ var gapInlineChoiceDialog = {
 
 				obj.inlineRows.push(row);
 			});
-			
+
 			if (validateGapInlineChoiceExercise(obj)) {
 				
 				if (obj.question != undefined && obj.question != '') {
@@ -201,7 +199,7 @@ var gapInlineChoiceDialog = {
 					newData.content = '';
 
 					if(form.addnew != undefined && form.addnew.getAttribute('value') == '1') {
-						newData.content = '<p>&nbsp;</p><!-- <textInteractionsGroup> -->';
+						newData.content = '<p>&nbsp;</p><!-- <textInteraction> -->';
 						newData.content += '<div id="gapInlineChoiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue;padding: 5px; background-color: rgb(240, 240, 240);">';
 					}
 					newData.content += '<!-- <prompt> --><p id="gapInlineChoiceInteractionQuestion">'+obj.question+'</p><!-- </prompt> -->';
@@ -231,7 +229,7 @@ var gapInlineChoiceDialog = {
 					var bm = ed.selection.getBookmark();
 
 					if(form.addnew != undefined && form.addnew.getAttribute('value') == '1') {
-						newData.content += '</div><!-- end of </textInteractionsGroup> --><p>&nbsp;</p>';
+						newData.content += '</div><!-- </textInteraction> --><p>&nbsp;</p>';
 
 						var dom = ed.dom;
 						var patt = '';

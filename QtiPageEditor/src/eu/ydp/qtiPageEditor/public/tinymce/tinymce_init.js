@@ -128,7 +128,9 @@ tinyMCE.init({
 					'variableidentifier': 'variableIdentifier',
 					'maxchoices': 'maxChoices',
 					'fadeeffect': 'fadeEffect',
-					'showhide': 'showHide'
+					'showhide': 'showHide',
+					'expectedlength': 'expectedLength',
+					'senderidentifier': 'senderIdentifier'
 				},
 				
 				nodesMapper: {
@@ -141,7 +143,14 @@ tinyMCE.init({
 					'group': 'div',
 					'div': 'group',
 					'p': 'simpleText',
-					'choiceinteraction': 'choiceInteraction'
+					'choiceinteraction': 'choiceInteraction',
+					'selectioninteraction': 'selectionInteraction',
+					'simplechoice': 'simpleChoice',
+					'textinteraction': 'textInteraction',
+					'textentryinteraction': 'textEntryInteraction',
+					'inlinechoiceinteraction': 'inlineChoiceInteraction',
+					'inlinechoice': 'inlineChoice',
+					'feedbackinline': 'feedbackInline'
 				},
 				
 
@@ -298,7 +307,7 @@ tinyMCE.init({
 					if (1 == node.nodeType) {
 						text += this.prepareNodeBegin(node);
 						text += node.innerHTML;
-						text += this.prepareNodeEnd;
+						text += this.prepareNodeEnd(node);
 					}
 					return text;
 				}

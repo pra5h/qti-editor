@@ -102,7 +102,7 @@ function html2qtiParse(tree) {
             for(var i=0; i<tree.childNodes.length; i++) {
             	if (8 == tree.childNodes[i].nodeType) {
 
-            		if ('<textInteractionsGroup>' == $.trim(tree.childNodes[i].nodeValue)) {
+            		if ('<textInteraction>' == $.trim(tree.childNodes[i].nodeValue)) {
             			text += textInteractionsGroupToQTI(tree.childNodes[i]);
             			i += 2;
             		} else if ('<selectionInteraction' == $.trim(tree.childNodes[i].nodeValue).substr(0, 21)){
@@ -159,8 +159,9 @@ function html2qtiParse(tree) {
 }
 
 function textInteractionsGroupToQTI(tig) {
+	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
 	var text = '';
-	text += '<textInteraction>';
+	text += xh.prepareNodeBegin($(tig.nodeValue).get(0));
 	var gic = tig.nextSibling;
 	text += '<prompt>'+gic.firstElementChild.innerHTML+'</prompt>';
 	var content = gic.firstElementChild.nextElementSibling;
@@ -185,7 +186,8 @@ function textInteractionsGroupToQTI(tig) {
 						}
 					}
 				}
-				text += '</inlineChoiceInteraction>';
+				text += xh.prepareNodeEnd($(n.nodeValue).get(0));
+				//text += '</inlineChoiceInteraction>';
 				//content.removeChild(content.childNodes[i]);
 			}
 			
@@ -198,7 +200,7 @@ function textInteractionsGroupToQTI(tig) {
 			}
 		}
 	}
-	text += '</textInteraction>';
+	text += xh.prepareNodeEnd($(tig.nodeValue).get(0));
 	return text;
 }
 
@@ -266,7 +268,7 @@ function selectionInteractionToQTI (si) {
 	var text = '';
 	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
 	var sINode = si.nextSibling;
-	text += '<selectionInteraction'+xh.prepareAttributes($(si.nodeValue).get(0))+'>';
+	text += xh.prepareNodeBegin($(si.nodeValue).get(0));
 	text += '<prompt>'+sINode.firstElementChild.innerHTML+'</prompt>';
 	var table = sINode.firstElementChild.nextElementSibling;
 	var tr = null;
@@ -281,7 +283,7 @@ function selectionInteractionToQTI (si) {
 				}
 			}
 	}
-	text += '</selectionInteraction>';
+	text += xh.prepareNodeEnd($(si.nodeValue).get(0));
 	
 	//sINode.parentNode.removeChild(si);
 	//sINode.parentNode.removeChild(sINode.nextSibling);
@@ -309,7 +311,7 @@ function selectionInteractionToHTML(si) {
 	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
 	var correctResponses = xh.getCorrectResponseByIdentifier(si.getAttribute('responseIdentifier'));
 	var text = '';
-	text += '<!-- <selectionInteraction'+xh.prepareAttributes(si)+'> -->';
+	text += '<!-- '+xh.prepareNodeBegin(si)+' -->';
 	text += '<div id="selectionInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;" mce_style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">';
 
 	var prompts = si.getElementsByTagName('prompt');
@@ -318,7 +320,7 @@ function selectionInteractionToHTML(si) {
 	
 	text += '<table class="selectionTable"><tbody><tr><td>&nbsp;</td>';
 	for (var i = 0; i < options.length; i++) {
-		text += '<td><!-- <simpleChoice identifier="'+options[i].getAttribute('identifier')+'">'+options[i].innerHTML+'</simpleChoice> -->'+options[i].innerHTML+'</td>';
+		text += '<td><!-- '+xh.prepareNode(options[i])+' -->'+options[i].innerHTML+'</td>';
 	}
 	text += '</tr>';
 	
@@ -330,19 +332,19 @@ function selectionInteractionToHTML(si) {
 
 	for (var i = 0; i < items.length; i++) {
 		item = items[i];
-		text += '<tr><td><!-- <item'+xh.prepareAttributes(item)+'>';
+		text += '<tr><td><!-- '+xh.prepareNodeBegin(item);
 
 		for (var j = item.childNodes.length-1; j > 0; j--) {
 
 			if (item.childNodes[j].tagName == 'FEEDBACKINLINE') {
 				feedback = item.childNodes[j];
-				feedbacksText += '<feedbackInline'+xh.prepareAttributes(feedback)+'>'+feedback.innerHTML+'</feedbackInline>';
+				feedbacksText += xh.prepareNodeBegin(feedback);
 				item.removeChild(feedback);
 			}
 		}
 		text += item.innerHTML;
 		text += feedbacksText;
-		text += '</item> -->'+item.innerHTML+'</td>';
+		text += xh.prepareNodeEnd(item)+' -->'+item.innerHTML+'</td>';
 		feedbacksText = '';
 		
 		for (var j = 0; j < options.length; j++) {
@@ -356,7 +358,7 @@ function selectionInteractionToHTML(si) {
 		}
 		text += '</tr>';
 	}
-	text += '</tbody></table></div><!-- end of selectionInteraction -->';
+	text += '</tbody></table></div><!-- '+xh.prepareNodeEnd(si)+' -->';
 	//usuniecie childeow zeby rekurencja juz tam nie wpadla
 	while(si.hasChildNodes()){
 		si.removeChild(si.lastChild);
@@ -367,7 +369,7 @@ function selectionInteractionToHTML(si) {
 function textInteractionsGroupToHTML(ti) {
 	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
 	var text = '';
-	text += '<!-- <textInteractionsGroup> -->';
+	text += '<!-- '+xh.prepareNodeBegin(ti)+' -->';
 	text += '<div id="gapInlineChoiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;" mce_style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">';
 	
 	for (var i = 0; i < ti.childNodes.length; i++) {
@@ -375,32 +377,31 @@ function textInteractionsGroupToHTML(ti) {
 		if (3 == ti.childNodes[i].nodeType) {
 			text += ti.childNodes[i].nodeValue;
 		} else {
-			
+			var feedbacksText = '';
 			if ('PROMPT' == ti.childNodes[i].tagName) {
 				text += '<!-- <prompt> --><p id="gapInlineChoiceInteractionQuestion">'+ti.childNodes[i].innerHTML+'</p><!-- </prompt> -->';
 				text += '<p id="gapInlineChoiceInteractionContent">';
 			} else if ('TEXTENTRYINTERACTION' == ti.childNodes[i].tagName) {
-				text += '<!-- <textEntryInteraction'+xh.prepareAttributes(ti.childNodes[i])+'>';
+				text += '<!-- '+xh.prepareNodeBegin(ti.childNodes[i]);
 				
 				if (null != ti.childNodes[i].childNodes) {
-					var feedbacksText = '';
 					
 					for (var j = ti.childNodes[i].childNodes.length-1; j >= 0; j--) {
 
 						if (ti.childNodes[i].childNodes[j].tagName == 'FEEDBACKINLINE') {
 							var feedback = ti.childNodes[i].childNodes[j];
-							feedbacksText = '<feedbackInline'+xh.prepareAttributes(feedback)+'>'+feedback.innerHTML+'</feedbackInline>' + feedbacksText;
+							feedbacksText = xh.prepareNode(feedback) + feedbacksText;
 							ti.childNodes[i].removeChild(feedback);
 						}
 					}
 					text += feedbacksText;
 				}
-				text += '</textEntryInteraction> -->';
+				text += xh.prepareNodeEnd(ti.childNodes[i])+' -->';
 				var correctResponses = xh.getCorrectResponseByIdentifier(ti.childNodes[i].getAttribute('responseIdentifier'));
 				text += '<span id="gap" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;" mce_style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">'+correctResponses+'</span>';
-			
+				feedbacksText = '';
 			} else if ('INLINECHOICEINTERACTION' == ti.childNodes[i].tagName) {
-				text += '<!-- <inlineChoiceInteraction'+xh.prepareAttributes(ti.childNodes[i])+'> -->';
+				text += '<!-- '+xh.prepareNodeBegin(ti.childNodes[i])+' -->';
 				text += '<span mce_style="border: 1px solid blue; color: blue; background-color: #f0f0f0;" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;" class="mceNonEditable" id="inlineChoiceInteraction">';
 				
 				if (null != ti.childNodes[i].childNodes) {
@@ -410,7 +411,7 @@ function textInteractionsGroupToHTML(ti) {
 						
 						if (ti.childNodes[i].childNodes[j].tagName == 'INLINECHOICE') {
 							var ic = ti.childNodes[i].childNodes[j];
-							iCText += '<!-- <inlineChoice'+xh.prepareAttributes(ic)+'>';
+							iCText += '<!-- '+xh.prepareNodeBegin(ic);
 							
 							if (null != ic.childNodes) {
 								var feedbacksText = '';
@@ -419,30 +420,31 @@ function textInteractionsGroupToHTML(ti) {
 
 									if (ic.childNodes[k].tagName == 'FEEDBACKINLINE') {
 										var feedback = ic.childNodes[k];
-										feedbacksText += '<feedbackInline'+xh.prepareAttributes(feedback)+'>'+feedback.innerHTML+'</feedbackInline>';
+										feedbacksText += xh.prepareNode(feedback);
 										ic.removeChild(feedback);
 									}
 								}
 							}
 							iCText += ic.innerHTML;
 							iCText += feedbacksText;
-							iCText += '</inlineChoice> -->';
+							iCText += xh.prepareNodeEnd(ic)+' -->';
 							var correctResponses = xh.getCorrectResponseByIdentifier(ti.childNodes[i].getAttribute('responseIdentifier'));
 							if (correctResponses == ic.getAttribute('identifier')) {
 								iCText += '<span id="inlineChoiceAnswer" style="border: none; color: blue; background-color: #f0f0f0;" mce_style="border: none; color: blue; background-color: #f0f0f0;">'+ic.innerHTML+'<span style="color: green; font-weight: bold;" mce_style="color: green; font-weight: bold;"> »</span></span>';
 							} else {
 								iCText += '<span id="inlineChoiceAnswer" style="display: none;" mce_style="display: none;">'+ic.innerHTML+'</span>';
 							}
+							feedbacksText = '';
 						}
 						text += iCText;
 					}
 				}
-				text += '</span><!-- </inlineChoiceInteraction> -->';
+				text += '</span><!-- '+xh.prepareNodeEnd(ti.childNodes[i])+' -->';
 			}
 		}
 	}
 
-	text += '</p></div><!-- </textInteractionsGroup> -->';
+	text += '</p></div><!-- '+xh.prepareNodeEnd(ti)+' -->';
 	//usuniecie childeow zeby rekurencja juz tam nie wpadla
 	while(ti.hasChildNodes()){
 		ti.removeChild(ti.lastChild);
@@ -735,7 +737,8 @@ function actionOnQTI(e) {
 				
 				// QY Comments
 				if (selectedNode.nodeName == 'DIV' && selectedNode.getAttribute('class') == 'mceNonEditable qy_comment') {
-					runComment(selectedNode);
+					//runComment(selectedNode);
+					alert('Not implemented yet');
 					break;
 				}
 
@@ -748,13 +751,15 @@ function actionOnQTI(e) {
 				
 				// PlayPause
 				if (selectedNode.nodeName == 'IMG' && selectedNode.attributes != undefined && selectedNode.getAttribute('id') == 'mcePlayPause') {
-					runPlayPause(selectedNode);
+					//runPlayPause(selectedNode);
+					alert('Not implemented yet');
 					break;
 				}
 				
 				// MediaLib
 				if(selectedNode.nodeName == 'IMG' || (selectedNode.nodeName == 'FIELDSET' && selectedNode.id == 'runFileUploadLib')) {
-					runMediaLib(selectedNode);
+					//runMediaLib(selectedNode);
+					alert('Not implemented yet');
 					break;
 				}
 				
@@ -766,7 +771,8 @@ function actionOnQTI(e) {
 
 				// Drag and Drop
 				if ((selectedNode.nodeName == 'P' && selectedNode.id == 'dragDropInteractionContents') || (selectedNode.nodeName == 'DIV' && selectedNode.id == 'dragDropInteraction')) {
-					runDraggable(selectedNode);
+					//runDraggable(selectedNode);
+					alert('Not implemented yet');
 					break;
 				}
 
@@ -778,19 +784,22 @@ function actionOnQTI(e) {
 				
 				// Order
 				if (selectedNode.id == 'orderOption' || (selectedNode.id == 'choiceInteraction' && selectedNode.parentNode.id == 'orderInteraction')) {
-					runOrder(selectedNode);
+					//runOrder(selectedNode);
+					alert('Not implemented yet');
 					break;
 				}
 				
 				// Match
 				if (selectedNode.id != undefined && (selectedNode.id == 'matchInteraction' || selectedNode.id.match(/canvas_/))) {
-					runMatch(selectedNode);
+					//runMatch(selectedNode);
+					alert('Not implemented yet');
 					break;
 				}
 
 				// Identification
 				if (selectedNode.id == 'identificationInteraction' || selectedNode.id == 'identificationAnswer' || selectedNode.parentNode.id == 'identificationAnswer') {
-					runIdentification(selectedNode);
+					//runIdentification(selectedNode);
+					alert('Not implemented yet');
 					break;
 				}
 
@@ -820,9 +829,8 @@ function runGapInlineChoiceInteraction(selectedNode) {
 	var nodeCounter = 0;
 
 	for(var i = 0; i < contentElement.childNodes.length; i++) {
-//	for ( var i in contentElement.childNodes) {
 		var node = contentElement.childNodes[i];
-		//console.log(node.nodeValue+' '+node.nodeType);
+
 		if (3 == node.nodeType) { //text node
 			contentText += node.nodeValue;
 		} else if (1 == node.nodeType) { //zwykly html node
