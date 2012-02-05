@@ -24,6 +24,8 @@ function qti2htmlParse(tree) {
 			text += selectionInteractionToHTML(tree);
 		} else if ('TEXTINTERACTION' == tree.tagName) {
 			text += textInteractionsGroupToHTML(tree);
+		} else if ('IMG' == tree.tagName || 'OBJECT' == tree.tagName) {
+			text += mediaInteractionsToHTML(tree);
 		} else if ('SIMPLETEXT' == tree.tagName) {
 			text += xh.prepareNodeBegin(tree);
 			if ($.trim(tree.textContent) == ''){
@@ -88,6 +90,9 @@ function html2qtiParse(tree) {
                     text += xh.prepareNodeBegin(tree);
             } else if ('ITEMBODY' == tree.tagName) {
                     text += xh.prepareNodeBegin(tree);
+            } else if ('FIELDSET' == tree.tagName && tree.getAttribute('id') == 'runFileUploadLib') {
+                text += mediaInteractionToQTI(tree);
+                return text;
             } else if ('DIV' == tree.tagName) {
                 text += xh.prepareNodeBegin(tree);
             } else if ('P' == tree.tagName) {
@@ -307,6 +312,35 @@ function choiceInteractionToQTI(ci) {
 	return text;
 }
 
+function mediaInteractionToQTI(mi) {
+	var text = '';
+	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
+	var mediaNode = mi.firstChild;
+	if ('IMG' == mediaNode.tagName) {
+		text += xh.prepareEmptyNode(mediaNode);
+	} else {
+		text += xh.prepareEmptyNode(mediaNode);
+	}
+	return text;
+}
+
+function mediaInteractionsToHTML(mi) {
+	var text = '';
+	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
+	text += '<fieldset id="runFileUploadLib" class="mceNonEditable" style="font-size: 10px; font-color: #b0b0b0; color: #b0b0b0; border: 1px solid #d0d0d0;" mce_style="font-size: 10px; font-color: #b0b0b0; color: #b0b0b0; border: 1px solid #d0d0d0;">';	
+	if ('IMG' == mi.tagName) {
+		text += xh.prepareEmptyNode(mi);
+	} else { // if video object
+		text += xh.prepareNode(mi);
+		text += '<img id="mceVideo" src="/res/skins/default/qtipageeditor/tinymce/tiny_mce/plugins/qti_addvideo/img/movie.png" mce_src="/res/skins/default/qtipageeditor/tinymce/tiny_mce/plugins/qti_addvideo/img/movie.png"/>';
+	}
+	text += '<br/>';
+	var titleMatch = text.match(/title="([^"]+)"/);
+	text += titleMatch[1];
+	text += '</fieldset>';
+	return text;
+}
+
 function selectionInteractionToHTML(si) {
 	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
 	var correctResponses = xh.getCorrectResponseByIdentifier(si.getAttribute('responseIdentifier'));
@@ -507,7 +541,7 @@ function processQTI(h) {
 
 function HTML2QTI(h) {
 	h = parseToQTI(h);
-	
+
 	basePagePath = tinyMCE.gwtProxy.getPageBasePath();
 	if(basePagePath != undefined && basePagePath != '') {
 
@@ -519,7 +553,6 @@ function HTML2QTI(h) {
 		h = h.replace(rg, 'src="$2"');
 		var rg = new RegExp('href="(' + basePagePath + ')*([^"]*)"', 'gi');
 		h = h.replace(rg, 'href="$2"');
-
 	}
 	h = applyFormatting(h);
 	return h;
@@ -539,10 +572,10 @@ function applyFormatting(h) {
 
 	// TEMPLATE FORMATING
 	//before begin
-	h = h.replace(/<(group class="[^"]+"|simpleText|assessmentItem)([^>]*)>/gi, '\n<$1$2>');
+	h = h.replace(/<(section|group class="[^"]+"|simpleText|assessmentItem)([^>]*)>/gi, '\n<$1$2>');
 	
 	//after begin
-	h = h.replace(/<(group class="[^"]+"|assessmentItem|styleDeclaration|itemBody|link|responseDeclaration|correctResponse)([^>]*)>/gi, '<$1$2>\n');
+	h = h.replace(/<(assessmentItem|styleDeclaration|itemBody|link|responseDeclaration|correctResponse)([^>]*)>/gi, '<$1$2>\n');
 	
 	//before end
 	h = h.replace(/<\/(itemBody)([^>]*)>/gi, '\n</$1$2>');
@@ -758,8 +791,7 @@ function actionOnQTI(e) {
 				
 				// MediaLib
 				if(selectedNode.nodeName == 'IMG' || (selectedNode.nodeName == 'FIELDSET' && selectedNode.id == 'runFileUploadLib')) {
-					//runMediaLib(selectedNode);
-					alert('Not implemented yet');
+					runMediaLib(selectedNode);
 					break;
 				}
 				
@@ -1119,6 +1151,35 @@ function runSelectionInteraction(selectedNode) {
 	tinyMCE.execCommand('mceSelection', false, data);
 }
 
+//mediaLib DblClick
+function runMediaLib(selectedNode) {
+
+	var ed = tinymce.EditorManager.activeEditor;
+	if(selectedNode.nodeName == 'IMG') {
+		var node = selectedNode;
+	} else {
+		var node = selectedNode.getElementsByTagName('img')[0];
+	}
+	
+	if(node.getAttribute('id') == 'mceVideo') {
+		var src = node.previousSibling.getAttribute('data');
+		var title = '';
+		
+		if (null != node.nextSibling.nextSibling) {
+			title = node.nextSibling.nextSibling.nodeValue;
+		}
+		tinyMCE.execCommand('mceAddVideo', false, {src: src, title: title});
+	} else {
+		var src = node.attributes['src'].value;
+		if(node.attributes['title'] != undefined) {
+			var title = node.attributes['title'].value;
+		} else {
+			var title = '';
+		}
+		var data = {src: src, title: title};
+		tinyMCE.execCommand('mceAppendImageToPage', false, data);
+	}
+}
 function cutQTI(content) {
 	
 	content = content.replace(/<!-- \?(xml[^\?]*)\? -->/gi,'');
@@ -1160,10 +1221,4 @@ function cutQTI(content) {
 	
 	return content;
 	
-}
-function stringDecode(text) {
-	return $('<div/>').html(text).text().replace(/&quot;/g, "\"");
-}
-function stringEncode(text) {
-	return $('<div/>').text(text).html().replace(/"/g, "&quot;").replace(/>/g, "&gt;").replace(/</g, "&lt;");
 }

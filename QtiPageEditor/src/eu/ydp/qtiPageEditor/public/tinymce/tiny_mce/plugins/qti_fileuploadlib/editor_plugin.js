@@ -7,7 +7,7 @@
 			ed.addCommand('mceAppendImageToPage', function(ui, data) {
 				var node = ed.selection.getNode();
 
-				if(node.nodeName == 'IMG' || node.nodeName == 'EMBED') {
+				if(node.nodeName == 'IMG') {
 					node = node.parentNode;
 				}
 
@@ -81,7 +81,7 @@
 								}
 							} 
 
-							var imgTag = paragraph+'<fieldset id="runFileUploadLib" class="mceNonEditable" style="font-size: 10px; font-color: #b0b0b0; color: #b0b0b0; border: 1px solid #d0d0d0;"><img src="' + fromPath + '/' + filePath + '" border="0" title="' + title + '" alt="' + title + '"/><br>' + title + '</fieldset><span id="focus">_</span>'+paragraph;
+							var imgTag = paragraph+'<fieldset id="runFileUploadLib" class="mceNonEditable" style="font-size: 10px; font-color: #b0b0b0; color: #b0b0b0; border: 1px solid #d0d0d0;"><img src="' + fromPath + '/' + filePath + '" title="' + title + '" alt="' + title + '"/><br>' + title + '</fieldset><span id="focus">_</span>'+paragraph;
 							ed.execCommand('mceInsertContent', false, imgTag);
 
 							var toFocus = ed.dom.get('focus').nextElementSibling.firstChild;

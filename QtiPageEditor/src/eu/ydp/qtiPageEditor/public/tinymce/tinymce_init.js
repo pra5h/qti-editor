@@ -152,7 +152,6 @@ tinyMCE.init({
 					'inlinechoice': 'inlineChoice',
 					'feedbackinline': 'feedbackInline'
 				},
-				
 
 				loadXML: function(xml) {
 					//this.rootNode.node = $(xml.replace(/\<\?xml[^>]+>[^<]*/, '')).get(0).parentNode;
@@ -252,10 +251,8 @@ tinyMCE.init({
 							if (undefined != this.attributesMapper[tmpAttr[a]]) {
 								text += ' '+this.attributesMapper[tmpAttr[a]]+'="'+$(node).attr(tmpAttr[a])+'"';
 							} else {
-								text += ' '+tmpAttr[a]+'="'+$(node).attr(tmpAttr[a])+'"';
+								text += ' '+tmpAttr[a]+'="'+node.getAttribute(tmpAttr[a])+'"';
 							}
-							
-							
 						}
 					}
 					return text;
