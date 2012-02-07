@@ -98,16 +98,12 @@ tinyMCE.init({
 
 		// Parse QTI to HTML (on editor first load)
 		ed.onBeforeSetContent.add(function(ed, o){
-			if ('html' == o.format) {
-				o.content = QTI2HTML(o.content);
-			}
+			o.content = QTI2HTML(o.content);
 		});
 		
 		// Parse QTI to HTML (on page load)
 		ed.onSetContent.add(function(ed, o){
-			if ('html' == o.format) {
-				o.content = QTI2HTML(o.content);
-			}
+			o.content = QTI2HTML(o.content);
 		});
 
 		// Parse HTML to QTI (on page save)
