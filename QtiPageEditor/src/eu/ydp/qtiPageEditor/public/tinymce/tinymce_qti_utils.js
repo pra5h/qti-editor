@@ -1,4 +1,4 @@
-var baseTags = new Array('p','div');
+var baseTags = new Array('p','div','table','tbody','td','tr','th');
 baseTags.sort();
 function qti2htmlParse(tree) {
 	var text = '';
