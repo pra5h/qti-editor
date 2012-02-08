@@ -890,8 +890,7 @@ function runGapInlineChoiceInteraction(selectedNode) {
 							id: nodeCounter,
 							identifier: child.getAttribute('responseIdentifier'),
 							type: 'gap'
-			}
-				);
+				});
 				
 				nodeCounter++;
 			} else if ('INLINECHOICEINTERACTION' == child.tagName) {
@@ -956,16 +955,12 @@ function runGapInlineChoiceInteraction(selectedNode) {
 				
 				var tmpNode = node;
 
-				while (null != tmpNode.nextSibling) {
-					
-					tmpNode = tmpNode.nextSibling;
-					
-					if (8 == tmpNode.nodeType && tmpNode.nodeValue == '</inlineChoiceInteraction>') {
+				for(;i < contentElement.childNodes.length; i++) {
+				
+					if (8 == contentElement.childNodes[i].nodeType && $.trim(contentElement.childNodes[i].nodeValue) == '</inlineChoiceInteraction>') {
 						break;
 					}
-					i++;
 				}
-				i--; // cofam o 1 bo petla for(var i) zrobi jeszcze i++
 				nodeCounter++;
 			}
 		}
