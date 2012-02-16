@@ -5,6 +5,7 @@ function add_answer_row(form) {
 	var rg = new RegExp('0.([0-9]*)',"gi");
 	exec = rg.exec(randid);
 	var id = 'id_' + exec[1];
+	var last = $('#answer_list').children().length-1;
 
 	while(form.nodeName != 'FORM') {
 		form = form.parentNode;
@@ -22,7 +23,7 @@ function add_answer_row(form) {
 	newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
 	var newInnerHTML = '<table class="answer" cellpadding=0 cellspacing=0><tr>\n'
 		+'<td width="260px" style="padding-right: 5px;">\n'
-		+'<input type="text" id="answer_0" name="answers[]" style="width: 100%; margin-right: 5px;" value=""/>\n'
+		+'<input type="text" id="answer_'+last+'" name="answers[]" style="width: 100%; margin-right: 5px;" value=""/>\n'
 		+'</td>\n'
 		+'<input type="hidden" id="id_0" name="ids[]" value="' + id + '"/>\n'
 		+'<td width="400px" id="optionsSpans">';
@@ -41,6 +42,7 @@ function add_answer_row(form) {
 			+'</table>';
 	newDiv.innerHTML = newInnerHTML;
 	document.getElementById('answer_list').appendChild(newDiv);
+	tagInsert.init('answer_' + last);
 }
 
 function add_option_row(form) {
@@ -56,7 +58,7 @@ function add_option_row(form) {
 	}
 
 	var newDiv = document.createElement('div');
-	var last = document.getElementById('option_list').lastChild.firstChild.innerHTML;
+	var last = document.getElementById('option_list').lastChild.childNodes[1].innerHTML;
 	last = parseInt(last.replace('.',''));
 	var next = last + 1;
 	newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
@@ -65,6 +67,7 @@ function add_option_row(form) {
 		+'<input type="text" name="choices[]" value="" id="choice_' + last + '">&nbsp;\n'
 		+'<input type="button" id="remove_option" name="remove_option" value="Remove" onclick="remove_option_row(this);" />';
 	document.getElementById('option_list').appendChild(newDiv);
+	tagInsert.init('choice_' + last);
 
 	var optionSpans = document.getElementsByClassName('optionSpan');
 	var ids = new Array();

@@ -9,6 +9,8 @@ var selectionDialog = {
 		var ed = ed;
 		var f = document.forms[0]; 
 		var data = tinyMCEPopup.getWindowArg("selectiondata");
+		
+		tagInsert.init(f.question.id);
 
 		if(data != undefined && data.question != undefined) {
 			f.question.value = data.question;
@@ -43,9 +45,10 @@ var selectionDialog = {
 				var ct = q+1;
 				newDiv.innerHTML = '<strong>' + ct + '.</strong>&nbsp;\n\
 					<input type="hidden" name="choices_ids[]" value="' + data.ids_ch[q] + '">\n\
-					<input type="text" name="choices[]" value="' + data.choices[q] + '" id="choice_0">&nbsp;\n\
+					<input type="text" name="choices[]" value="' + data.choices[q] + '" id="choice_'+q+'">&nbsp;\n\
 					<input type="button" id="remove_option" name="remove_option" value="Remove" onclick="remove_option_row(this);" />';
 				document.getElementById('option_list').appendChild(newDiv);
+				tagInsert.init("choice_"+q);
 				
 			}
 
@@ -62,7 +65,7 @@ var selectionDialog = {
 
 				var newInnerHTML = '<table class="answer" cellpadding=0 cellspacing=0><tr>\n\
 					<td width="260px" style="padding-right: 5px;">\n\
-					<input type="text" id="answer_0" name="answers[]" style="width: 100%; margin-right: 5px;" value="' + odp + '"/>\n\
+					<input type="text" id="answer_'+q+'" name="answers[]" style="width: 100%; margin-right: 5px;" value="' + odp + '"/>\n\
 					</td>\n\
 					<input type="hidden" id="id_0" name="ids[]" value="' + data.ids_ans[q] + '"/>\n\
 					<td width="400px" id="optionsSpans">';
@@ -88,6 +91,7 @@ var selectionDialog = {
 				newDiv.innerHTML = newInnerHTML;
 
 				document.getElementById('answer_list').appendChild(newDiv);
+				tagInsert.init("answer_"+q);
 
 				if(tinyMCE.feedback == undefined) {
 					tinyMCE.feedback = new Array;
@@ -120,6 +124,7 @@ var selectionDialog = {
 				<input type="text" name="choices[]" value="" id="choice_0">\n\
 				<input type="button" id="remove_option" name="remove_option" value="Remove" onclick="remove_option_row(this);" />';
 			document.getElementById('option_list').appendChild(newDiv);
+			tagInsert.init("choice_0");
 
 			var newDiv = document.createElement('div');
 			newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
@@ -128,6 +133,7 @@ var selectionDialog = {
 				<input type="text" name="choices[]" value="" id="choice_1">\n\
 				<input type="button" id="remove_option" name="remove_option" value="Remove" onclick="remove_option_row(this);" />';
 			document.getElementById('option_list').appendChild(newDiv);
+			tagInsert.init("choice_1");
 
 			var randid = Math.random();
 			randid = String(randid);
@@ -161,6 +167,7 @@ var selectionDialog = {
 				<td width="50px"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr>\n\
 				</table>';
 			document.getElementById('answer_list').appendChild(newDiv);
+			tagInsert.init("answer_0");
 			
 			var newDiv = document.createElement('div');
 			newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
@@ -182,6 +189,7 @@ var selectionDialog = {
 				<td width="50px"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr>\n\
 				</table>';
 			document.getElementById('answer_list').appendChild(newDiv);
+			tagInsert.init("answer_1");
 			
 			var removeButton = document.getElementById('remove_button');
 			removeButton.parentNode.removeChild(removeButton);

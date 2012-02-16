@@ -43,7 +43,7 @@
 				ed.windowManager.open({
 					file : url + '/selection.htm',
 					width : 550,
-					height : 430,
+					height : 530,
 					inline : 1
 				}, {
 					plugin_url : url, // Plugin absolute URL
@@ -84,7 +84,7 @@
 					ed.windowManager.open({
 						file : url + '/feedback.htm',
 						width : 400,
-						height : 120,
+						height : 160,
 						inline : 1
 					}, {
 						plugin_url : url, // Plugin absolute URL

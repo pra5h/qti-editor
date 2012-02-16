@@ -1103,11 +1103,12 @@ function runSelectionInteraction(selectedNode) {
 
 			if ('CORRECT' == items[i].childNodes[j].getAttribute('mark')) {
 				onOk = items[i].childNodes[j].innerHTML; 
+				items[i].removeChild(items[i].childNodes[j]);
 
-			} else {
+			} else if ('WRONG' == items[i].childNodes[j].getAttribute('mark')){
 				onWrong = items[i].childNodes[j].innerHTML;
+				items[i].removeChild(items[i].childNodes[j]);
 			}
-			items[i].removeChild(items[i].childNodes[j]);
 		}
 		fixed_ans.push(items[i].getAttribute('fixed'));
 		ids_ans.push(items[i].getAttribute('identifier'));

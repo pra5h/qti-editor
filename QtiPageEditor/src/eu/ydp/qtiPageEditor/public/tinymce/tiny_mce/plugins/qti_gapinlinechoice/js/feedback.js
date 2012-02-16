@@ -21,6 +21,8 @@ var feedbackDialog = {
 					document.getElementById('fdb_sound_onok').setAttribute('value',tinyMCE.feedback[data.identifier].onok_sound);
 					document.getElementById('fdb_sound_onwrong').setAttribute('value',tinyMCE.feedback[data.identifier].onwrong_sound);
 				}
+				tagInsert.init("feedback_onok");
+				tagInsert.init("feedback_onwrong");
 				$('#feedback_onok').focus();
 			} 
 
@@ -35,6 +37,7 @@ var feedbackDialog = {
 					document.getElementById('feedback').setAttribute('value',stringDecode(tinyMCE.feedback[data.exerciseid].text[data.identifier]));
 					document.getElementById('fdb_sound').setAttribute('value',tinyMCE.feedback[data.exerciseid].sound[data.identifier]);
 				}
+				tagInsert.init("feedback");
 				$('#feedback').focus();
 			}
 

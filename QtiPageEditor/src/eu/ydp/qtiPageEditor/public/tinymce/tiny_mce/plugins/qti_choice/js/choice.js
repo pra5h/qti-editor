@@ -1,5 +1,7 @@
 tinyMCEPopup.requireLangPack();
-
+function stringEncode(text) {
+	return $('<div/>').text(text).html().replace(/"/g, "&quot;").replace(/>/g, "&gt;").replace(/</g, "&lt;");
+}
 var choiceDialog = {
 	windowId : null,
 	
@@ -11,6 +13,8 @@ var choiceDialog = {
 		var f = document.forms[0]; 
 		var data = tinyMCEPopup.getWindowArg("choicedata");
 
+		tagInsert.init(f.question.id);
+		
 		if(data != undefined && data[0] != undefined) {
 			f.question.value = data[0];
 		}
@@ -66,6 +70,7 @@ var choiceDialog = {
 					newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td class="answer"><input type="text" id="answer_' + q + '" name="answers[]" style="width: 100%; margin-right: 5px;" value="' + odp + '"/></td><input type="hidden" id="id_' + q + '" name="ids[]" value="' + data[3][q] + '"/><td class="correct"><input id="point_' + q + '" type="' + type + '" name="points[]" style="margin: 0; padding: 0;"' + correct + '/></td><td class="fixed"><input id="fixed_' + q + '" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" ' + fixed + '/></td><td class="remove"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td class="feedback"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr></table>';
 				}
 				document.getElementById('answer_list').appendChild(newDiv);
+				tagInsert.init("answer_"+q);
 				/*
 				if(tinyMCE.feedback == undefined) {
 					tinyMCE.feedback = new Array();
@@ -112,11 +117,13 @@ var choiceDialog = {
 			newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
 			newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td class="answer"><input type="text" id="answer_0" name="answers[]" style="width: 100%; margin-right: 5px;" value=""/></td><input type="hidden" id="id_0" name="ids[]" value="' + id_0 + '"/><td class="correct"><input id="point_0" type="radio" name="points[]" style="margin: 0; padding: 0;"/></td><td class="fixed"><input id="fixed_0" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" /></td><td class="remove"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td class="feedback"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr></table>';
 			document.getElementById('answer_list').appendChild(newDiv);
+			tagInsert.init("answer_0");
 			
 			var newDiv = document.createElement('div');
 			newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
 			newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td class="answer"><input type="text" id="answer_1" name="answers[]" style="width: 100%; margin-right: 5px;" value=""/></td><input type="hidden" id="id_1" name="ids[]" value="' + id_1 + '"/><td class="correct"><input id="point_1" type="radio" name="points[]" style="margin: 0; padding: 0;"/></td><td class="fixed"><input id="fixed_1" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" /></td><td class="remove"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td class="feedback"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr></table>';
 			document.getElementById('answer_list').appendChild(newDiv);
+			tagInsert.init("answer_1");
 			
 			var removeButton = document.getElementById('remove_button');
 			removeButton.parentNode.removeChild(removeButton);

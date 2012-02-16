@@ -1,0 +1,13 @@
+.taginsert_menu{
+	width:100%;
+}
+
+.taginsert_sub{ width:20px; height:20px; background-image:url(icons.gif); background-position:-600px 0px; float:left; }
+
+.taginsert_sup{ width:20px; height:20px; background-image:url(icons.gif); background-position:-620px 0px; float:left; }
+
+.taginsert_bold{ width:20px; height:20px; background-image:url(icons.gif); background-position:-0px 0px; float:left; }
+
+.taginsert_italic{ width:20px; height:20px; background-image:url(icons.gif); background-position:-60px 0px; float:left; }
+
+.taginsert_underline{ width:20px; height:20px; background-image:url(icons.gif); background-position:-140px 0px; float:left; }

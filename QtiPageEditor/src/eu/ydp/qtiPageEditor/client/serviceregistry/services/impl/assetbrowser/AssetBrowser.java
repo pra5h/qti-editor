@@ -7,6 +7,8 @@ import java.lang.String;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.resources.client.ImageResource;
@@ -68,6 +70,18 @@ public class AssetBrowser extends DialogBox  implements IAssetBrowser, IResource
 		setGlassEnabled(true);		
 		setWidget(uiBinder.createAndBindUi(this));
 	}
+	
+	@Override 
+	public void onLoad(){
+		super.onLoad();
+		String id = Document.get().createUniqueId();
+		_txtTitle.getElement().setId(id);
+		initTagInsert(id);
+	}
+	
+	private native void initTagInsert(String id)/*-{
+		$wnd.tagInsert.init(id);
+	}-*/;
 	
 	@UiHandler("_listBox")
 	protected void onChange(ChangeEvent event){

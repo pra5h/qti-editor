@@ -26,6 +26,8 @@ var feedbackDialog = {
 			$('#fdb_sound_onwrong').attr('value',tinyMCE.feedback[data.identifier].onwrong_sound);
 			*/
 		//}
+		tagInsert.init("feedback_onok");
+		tagInsert.init("feedback_onwrong");
 		$('#feedback_onok').focus();
 	},
 

@@ -21,9 +21,10 @@ function add_answer_row(form) {
 	if(form.images.checked == true) {
 		newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td class="answer"><input type="hidden" id="" name="answers[]" style="width: 100%; margin-right: 5px;" /><div style="width: 80px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;" onclick="tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:null,div:this});"><img style="max-height: 40px; max-width: 80px;" src=""/></div></td><input type="hidden" id="id_" name="ids[]" value="' + id + '"/><td class="correct"><input type="' + type + '" name="points[]" style="margin: 0; padding: 0;" /></td><td class="fixed"><input id="" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" /></td><td class="remove"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td class="feedback"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr></table>';
 	} else {
-		newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td class="answer"><input type="text" id="" name="answers[]" style="width: 100%; margin-right: 5px;" /></td><input type="hidden" id="id_" name="ids[]" value="' + id + '"/><td class="correct"><input type="' + type + '" name="points[]" style="margin: 0; padding: 0;" /></td><td class="fixed"><input id="" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" /></td><td class="remove"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td class="feedback"><img src="img/feedback.png" onclick="feedback(this);"/></td></tr></table>';
+		newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td class="answer"><input type="text" id="'+id+'" name="answers[]" style="width: 100%; margin-right: 5px;" /></td><input type="hidden" id="id_" name="ids[]" value="' + id + '"/><td class="correct"><input type="' + type + '" name="points[]" style="margin: 0; padding: 0;" /></td><td class="fixed"><input id="" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" /></td><td class="remove"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td class="feedback"><img src="img/feedback.png" onclick="feedback(this);"/></td></tr></table>';
 	}
 	document.getElementById('answer_list').appendChild(newDiv);
+	tagInsert.init(id);
 	
 }
 
@@ -69,6 +70,7 @@ function switch_text_images(checkbox) {
 		for (i in inputs) {
 			if(inputs[i].type != undefined) {
 				inputs[i].type = 'hidden';
+				document.getElementById("taginsert_menu_"+inputs[i].id).style.display = 'none';
 				src = inputs[i].value.split('/');
 				src = src[src.length - 1];
 				var div = document.createElement('div');
@@ -84,6 +86,7 @@ function switch_text_images(checkbox) {
 			if(inputs[i].type != undefined) {
 				inputs[i].type = 'text';
 				inputs[i].parentNode.removeChild(inputs[i].nextSibling);
+				document.getElementById("taginsert_menu_"+inputs[i].id).style.display = 'block';
 			}
 		}
 	}

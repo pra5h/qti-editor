@@ -55,7 +55,7 @@
 				ed.windowManager.open({
 					file : url + '/gapinlinechoice.htm',
 					width : 470,
-					height : 450,
+					height : 500,
 					inline : 1
 				}, {
 					plugin_url : url, // Plugin absolute URL
@@ -106,7 +106,7 @@
 					ed.windowManager.open({
 						file : url + '/gapfeedback.htm',
 						width : 400,
-						height : 140,
+						height : 180,
 						inline : 1
 					}, {
 						plugin_url : url, // Plugin absolute URL
@@ -122,7 +122,7 @@
 					ed.windowManager.open({
 						file : url + '/inlinechoicefeedback.htm',
 						width : 400,
-						height : 100,
+						height : 120,
 						inline : 1
 					}, {
 						plugin_url : url, // Plugin absolute URL

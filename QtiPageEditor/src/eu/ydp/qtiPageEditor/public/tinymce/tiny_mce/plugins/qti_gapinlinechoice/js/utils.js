@@ -175,6 +175,7 @@ function add_answer_row() {
 	newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
 	newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td width="260px" style="padding-right: 5px;"><input type="text" id="answer_'+ansId+'" name="answers[]" style="width: 100%; margin-right: 5px;" /></td><input type="hidden" id="id_" name="ids[]" value="' + id + '"/><td width="50px" align="center"><input type="radio" name="points[]" style="margin: 0; padding: 0;" /></td><td width="50px" align="center"><input id="" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" /></td><td width="80px"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td width="50px" align="left"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr></table>';
 	document.getElementById('answer_list').appendChild(newDiv);
+	tagInsert.init('answer_'+ansId);
 	
 }
 
@@ -333,11 +334,11 @@ function getObjectLength(object) {
 }
 
 function stringEncode(text) {
-	return $('<div/>').text(text).html().replace(/"/g, "&quot;").replace(/>/g, "&gt;").replace(/</g, "&lt;");
+	return text.replace(/"/g, "&quot;");
 }
 
 function stringDecode(text) {
-	return $('<div/>').html(text).text().replace(/&quot;/g, "\"");
+	return text.replace(/&quot;/g, "\"");
 }
 function lock(id) {
 	var ed = tinymce.EditorManager.activeEditor;

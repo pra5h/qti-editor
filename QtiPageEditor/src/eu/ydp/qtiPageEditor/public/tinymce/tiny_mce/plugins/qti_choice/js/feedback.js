@@ -16,6 +16,7 @@ var feedbackDialog = {
 			document.getElementById('feedback').setAttribute('value',tinyMCE.feedback[data.identifier].text);
 			document.getElementById('fdb_sound').setAttribute('value',tinyMCE.feedback[data.identifier].sound);
 		}
+		tagInsert.init("feedback");
 		$('#feedback').focus();
 	},
 
