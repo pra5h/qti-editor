@@ -372,7 +372,7 @@ function selectionInteractionToHTML(si) {
 
 			if (item.childNodes[j].tagName == 'FEEDBACKINLINE') {
 				feedback = item.childNodes[j];
-				feedbacksText += xh.prepareNodeBegin(feedback);
+				feedbacksText += xh.prepareNode(feedback);
 				item.removeChild(feedback);
 			}
 		}
@@ -1102,7 +1102,7 @@ function runSelectionInteraction(selectedNode) {
 		for (var j = items[i].childNodes.length-1; j > 0; j--) {
 
 			if ('CORRECT' == items[i].childNodes[j].getAttribute('mark')) {
-				onOk = items[i].childNodes[j].innerHTML; 
+				onOk = items[i].childNodes[j].innerHTML;
 				items[i].removeChild(items[i].childNodes[j]);
 
 			} else if ('WRONG' == items[i].childNodes[j].getAttribute('mark')){
