@@ -71,6 +71,9 @@ var choiceDialog = {
 				}
 				document.getElementById('answer_list').appendChild(newDiv);
 				tagInsert.init("answer_"+q);
+				if (f.images.checked){
+					document.getElementById("taginsert_menu_answer_"+q).style.display = 'none';
+				}
 				/*
 				if(tinyMCE.feedback == undefined) {
 					tinyMCE.feedback = new Array();
