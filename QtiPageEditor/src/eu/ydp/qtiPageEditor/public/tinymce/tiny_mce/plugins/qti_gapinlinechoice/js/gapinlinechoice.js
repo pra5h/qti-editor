@@ -304,7 +304,7 @@ var gapInlineChoiceDialog = {
 								correctResponseNode.nodeValue = correctResponseNode.nodeValue.replace(regexp, newRespSection);
 							} else {
 								regexp = new RegExp('(<!-- <itemBody> -->)','gi');
-								body.innerHTML = body.innerHTML.replace(regexp, newRespSection + '$1');
+								body.innerHTML = body.innerHTML.replace(regexp, '<!-- '+newRespSection + ' -->$1');
 							}
 						}
 					}

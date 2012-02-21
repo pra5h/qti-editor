@@ -92,10 +92,13 @@
 				node.parentNode.removeChild(node.nextSibling);
 				node.parentNode.removeChild(node);
 
+				var correctResponseNode = null;
+				var xh = ed.XmlHelper;
 				for (i in ids) {
-					var rg = new RegExp('<!--[^<]*<responseDeclaration identifier="' + ids[i] + '"[^>]*>[^<]*<correctResponse>[^<]*(?:<value>[^<]*<\/value>[^<]*)*<\/correctResponse>[^<]*<\/responseDeclaration>[^-]*-->', 'gi');
-					body.innerHTML = body.innerHTML.replace(rg,'');
+					correctResponseNode = xh.getCorrectResponseNodeId(body, ids[i]);
+					correctResponseNode.parentNode.removeChild(correctResponseNode);
 				}
+			
 				return true;
 			});
 			
