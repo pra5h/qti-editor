@@ -33,6 +33,8 @@ function qti2htmlParse(tree) {
 			}
 		} else if ('GROUP' == tree.tagName) {
 			text += xh.prepareNodeBegin(tree);
+		} else if ('BR' == tree.tagName && 1 == tree.getAttribute('mce_bogus')) {
+			text += xh.prepareEmptyNode(tree);
 		} else if (-1 != baseTags.indexOf(tree.tagName.toLowerCase())) {
 				text += '<'+tree.tagName.toLowerCase()+xh.prepareAttributes(tree)+'>';
 		}
@@ -528,13 +530,16 @@ function QTI2HTML(h) {
 function processQTI(h) {
 	// Prepare QTI base template if file is empty
 	if(h == '<br mce_bogus="1" />' || h == '') {
-		h = '<?xml version="1.0" encoding="UTF-8" standalone="no"?><assessmentItem xmlns="http://www.imsglobal.org/xsd/imsqti_v2p1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqti_v2p1 imsqti_v2p1.xsd"  identifier="" title="" adaptive="false" timeDependent="false"> <itemBody>' + h + '</itemBody></assessmentItem>';
+		h = '<?xml version="1.0" encoding="UTF-8" standalone="no"?><assessmentItem title="" xmlns="http://www.ydp.eu/empiria"><itemBody>' + h + '</itemBody></assessmentItem>';
 	}
-
-	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
-	xh.loadXML(h);
-	var text = '<!-- ?xml version="1.0" encoding="UTF-8" standalone="no"? -->';
-	text += qti2htmlParse(xh.actualNode.node);
+	text = h;
+	
+	if ('<!-- ?xml' != h.substr(0,9)) {
+		var xh = tinymce.EditorManager.activeEditor.XmlHelper;
+		xh.loadXML(h);
+		var text = '<!-- ?xml version="1.0" encoding="UTF-8" standalone="no"? -->';
+		text += qti2htmlParse(xh.actualNode.node);
+	}
 	return text;
 }
 
