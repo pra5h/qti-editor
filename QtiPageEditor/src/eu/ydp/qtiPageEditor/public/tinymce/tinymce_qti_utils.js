@@ -170,14 +170,14 @@ function textInteractionsGroupToQTI(tig) {
 	var text = '';
 	text += xh.prepareNodeBegin($(tig.nodeValue).get(0));
 	var gic = tig.nextSibling;
-	text += '<prompt>'+gic.firstElementChild.innerHTML+'</prompt>';
+	text += '<prompt>'+subsup2mathml(gic.firstElementChild.innerHTML)+'</prompt>';
 	var content = gic.firstElementChild.nextElementSibling;
 	var n = null;
 	for (var i = 0; i < content.childNodes.length; i++) {
 		
 		n = content.childNodes[i];
 		if (3 == n.nodeType) {
-			text += n.nodeValue;
+			text += subsup2mathml(n.nodeValue);
 		} else if (8 == n.nodeType) {
 
 			if ('textEntryInteraction' == $.trim(n.nodeValue).substr(1, 20)) {
@@ -188,7 +188,7 @@ function textInteractionsGroupToQTI(tig) {
 					var ic = n.nextSibling.childNodes[j];
 					if (8 == ic.nodeType) {
 						if ('inlineChoice' == $.trim(ic.nodeValue).substr(1, 12)) {
-							text += $.trim(ic.nodeValue);
+							text += subsup2mathml($.trim(ic.nodeValue));
 							n.nextSibling.removeChild(n.nextSibling.childNodes[j]);
 						}
 					}
@@ -223,7 +223,7 @@ function choiceInteractionToHTML(ci) {
 	for (var k = 0; k < ci.childNodes.length; k++) {
 		if (1 == ci.childNodes[k].nodeType) {
 			if ('PROMPT' == ci.childNodes[k].tagName) {
-				text += '<p id="choiceInteraction">'+ci.childNodes[k].innerHTML+'</p>';
+				text += '<p id="choiceInteraction">'+mathml2subsup(ci.childNodes[k].innerHTML)+'</p>';
 			} else if ('SIMPLECHOICE' == ci.childNodes[k].tagName) {
 				text += '<!-- '+xh.prepareNodeBegin(ci.childNodes[k]);
 				var innerHtml = '';
@@ -237,11 +237,11 @@ function choiceInteractionToHTML(ci) {
 							text += xh.prepareEmptyNode(scChild);
 							innerHtml = xh.prepareEmptyNode(scChild);
 						} else {
-							text += xh.prepareNode(scChild);
+							text += mathml2subsup(xh.prepareNode(scChild));
 							//text += '<'+scChild.tagName.toLowerCase()+xh.prepareAttributes(scChild)+'>';
 							//text += scChild.innerHTML;
 							//text += '</'+scChild.tagName.toLowerCase()+'>';
-							innerHtml += xh.prepareNode(scChild);
+							innerHtml += mathml2subsup(xh.prepareNode(scChild));
 							//innerHtml += '<'+scChild.tagName.toLowerCase()+xh.prepareAttributes(scChild)+'>';
 							//innerHtml += scChild.innerHTML;
 							//innerHtml += '</'+scChild.tagName.toLowerCase()+'>';
@@ -276,7 +276,7 @@ function selectionInteractionToQTI (si) {
 	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
 	var sINode = si.nextSibling;
 	text += xh.prepareNodeBegin($(si.nodeValue).get(0));
-	text += '<prompt>'+sINode.firstElementChild.innerHTML+'</prompt>';
+	text += '<prompt>'+subsup2mathml(sINode.firstElementChild.innerHTML)+'</prompt>';
 	var table = sINode.firstElementChild.nextElementSibling;
 	var tr = null;
 	
@@ -285,7 +285,7 @@ function selectionInteractionToQTI (si) {
 			for (var j = 0; j < tr.childNodes.length; j++) { // for tr
 				for (var k = 0; k < tr.childNodes[j].childNodes.length; k++) { //for td
 					if (8 == tr.childNodes[j].childNodes[k].nodeType) {
-						text += $.trim(tr.childNodes[j].childNodes[k].nodeValue);
+						text += subsup2mathml($.trim(tr.childNodes[j].childNodes[k].nodeValue));
 					}
 				}
 			}
@@ -304,10 +304,10 @@ function choiceInteractionToQTI(ci) {
 	var cINode = ci.nextSibling;
 	
 	text += xh.prepareNodeBegin($(ci.nodeValue).get(0));
-	text += '<prompt>'+cINode.firstElementChild.innerHTML+'</prompt>';
+	text += '<prompt>'+subsup2mathml(cINode.firstElementChild.innerHTML)+'</prompt>';
 	for (var i = 0; i < cINode.childNodes.length; i++) {
 		if (8 == cINode.childNodes[i].nodeType) {
-			text += cINode.childNodes[i].nodeValue;
+			text += subsup2mathml(cINode.childNodes[i].nodeValue);
 		}
 	}
 	text += xh.prepareNodeEnd($(ci.nodeValue).get(0));
@@ -351,12 +351,12 @@ function selectionInteractionToHTML(si) {
 	text += '<div id="selectionInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;" mce_style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">';
 
 	var prompts = si.getElementsByTagName('prompt');
-	text += '<p id="selectionInteraction">'+prompts[0].innerHTML+'</p>';
+	text += '<p id="selectionInteraction">'+mathml2subsup(prompts[0].innerHTML)+'</p>';
 	var options = si.getElementsByTagName('simpleChoice');
 	
 	text += '<table class="selectionTable"><tbody><tr><td>&nbsp;</td>';
 	for (var i = 0; i < options.length; i++) {
-		text += '<td><!-- '+xh.prepareNode(options[i])+' -->'+options[i].innerHTML+'</td>';
+		text += '<td><!-- '+mathml2subsup(xh.prepareNode(options[i]))+' -->'+mathml2subsup(options[i].innerHTML)+'</td>';
 	}
 	text += '</tr>';
 	
@@ -378,9 +378,9 @@ function selectionInteractionToHTML(si) {
 				item.removeChild(feedback);
 			}
 		}
-		text += item.innerHTML;
+		text += mathml2subsup(item.innerHTML);
 		text += feedbacksText;
-		text += xh.prepareNodeEnd(item)+' -->'+item.innerHTML+'</td>';
+		text += mathml2subsup(xh.prepareNodeEnd(item))+' -->'+mathml2subsup(item.innerHTML)+'</td>';
 		feedbacksText = '';
 		
 		for (var j = 0; j < options.length; j++) {
@@ -411,11 +411,11 @@ function textInteractionsGroupToHTML(ti) {
 	for (var i = 0; i < ti.childNodes.length; i++) {
 		
 		if (3 == ti.childNodes[i].nodeType) {
-			text += ti.childNodes[i].nodeValue;
+			text += mathml2subsup(ti.childNodes[i].nodeValue);
 		} else {
 			var feedbacksText = '';
 			if ('PROMPT' == ti.childNodes[i].tagName) {
-				text += '<!-- <prompt> --><p id="gapInlineChoiceInteractionQuestion">'+ti.childNodes[i].innerHTML+'</p><!-- </prompt> -->';
+				text += '<!-- <prompt> --><p id="gapInlineChoiceInteractionQuestion">'+mathml2subsup(ti.childNodes[i].innerHTML)+'</p><!-- </prompt> -->';
 				text += '<p id="gapInlineChoiceInteractionContent">';
 			} else if ('TEXTENTRYINTERACTION' == ti.childNodes[i].tagName) {
 				text += '<!-- '+xh.prepareNodeBegin(ti.childNodes[i]);
@@ -472,7 +472,7 @@ function textInteractionsGroupToHTML(ti) {
 							}
 							feedbacksText = '';
 						}
-						text += iCText;
+						text += mathml2subsup(iCText);
 					}
 				}
 				text += '</span><!-- '+xh.prepareNodeEnd(ti.childNodes[i])+' -->';
@@ -1222,3 +1222,72 @@ function cutQTI(content) {
 	return content;
 	
 }
+
+function subsup2mathml(text){
+	var firstTag;
+	var secondTag;
+	var junctionPos;
+	while (text.indexOf("</sub><sup>") != -1 || text.indexOf("</sup><sub>") != -1){
+		if (text.indexOf("</sub><sup>") != -1){
+			juctionPos = text.indexOf("</sub><sup>");
+			firstTag = "sub";
+			secondTag = "sup";
+		} else if (text.indexOf("</sup><sub>") != -1){
+			juctionPos = text.indexOf("</sup><sub>");
+			firstTag = "sup";
+			secondTag = "sub";
+		}
+		var firstOpenPos = text.lastIndexOf("<"+firstTag+">", juctionPos);
+		var secondClosePos = text.indexOf("</"+secondTag+">", juctionPos);
+		var leadingSpacePos = text.lastIndexOf(" ", firstOpenPos);
+		if (firstOpenPos > 0  &&  secondClosePos != -1){
+			var baseValue = text.substring(leadingSpacePos+1, firstOpenPos);
+			var firstValue = text.substring(firstOpenPos+5, juctionPos);
+			var secondValue = text.substring(juctionPos+11, secondClosePos);
+			var mathml = "<mathText><mrow><msubsup><mrow>";
+			mathml += "<ms>" + baseValue + "</ms>";
+			mathml += "</mrow><mrow>";
+			if (firstTag == "sub"){
+				mathml += "<ms>" + firstValue + "</ms>";
+			} else {
+				mathml += "<ms>" + secondValue + "</ms>";
+			}
+			mathml += "</mrow><mrow>";
+			if (firstTag == "sub"){
+				mathml += "<ms>" + secondValue + "</ms>";
+			} else {
+				mathml += "<ms>" + firstValue + "</ms>";
+			}
+			mathml += "</mrow></msubsup></mrow></mathText>";
+			
+			text = text.substring(0, leadingSpacePos+1) + mathml + text.substring(secondClosePos+6);
+		}
+	}
+	return text
+}
+
+function mathml2subsup(text){
+	while (text.toLowerCase().indexOf("<mathtext>") != -1){
+		var mathTextOpenPos = text.toLowerCase().indexOf("<mathtext>");
+		var mathTextClosePos = text.toLowerCase().indexOf("</mathtext>");
+		var firstMsOpenPos = text.indexOf("<ms>", mathTextOpenPos);
+		var firstMsClosePos = text.indexOf("</ms>", mathTextOpenPos);
+		var secondMsOpenPos = text.indexOf("<ms>", firstMsOpenPos+1);
+		var secondMsClosePos = text.indexOf("</ms>", firstMsClosePos+1);
+		var thirdMsOpenPos = text.indexOf("<ms>", secondMsOpenPos+1);
+		var thirdMsClosePos = text.indexOf("</ms>", secondMsClosePos+1);
+		if (firstMsOpenPos != -1  &&  firstMsClosePos != -1  &&
+			secondMsOpenPos != -1  &&  secondMsClosePos != -1  &&
+			thirdMsOpenPos != -1  &&  thirdMsClosePos != -1  &&
+			thirdMsClosePos < mathTextClosePos){
+			var firstValue = text.substring(firstMsOpenPos+4, firstMsClosePos);
+			var secondValue = text.substring(secondMsOpenPos+4, secondMsClosePos);
+			var thirdValue = text.substring(thirdMsOpenPos+4, thirdMsClosePos);
+			text = text.substring(0, mathTextOpenPos) + 
+				firstValue + "<sub>" + secondValue + "</sub><sup>" + thirdValue + "</sup>" +
+				text.substring(mathTextClosePos+11); 
+		}			
+	}
+	return text;
+}
+
