@@ -1,4 +1,4 @@
-var baseTags = new Array('p','div','table','tbody','td','tr','th');
+var baseTags = new Array('p','div','table','tbody','td','tr','th', 'sub', 'sup');
 baseTags.sort();
 function qti2htmlParse(tree) {
 	var text = '';
@@ -1240,6 +1240,9 @@ function subsup2mathml(text){
 		var firstOpenPos = text.lastIndexOf("<"+firstTag+">", juctionPos);
 		var secondClosePos = text.indexOf("</"+secondTag+">", juctionPos);
 		var leadingSpacePos = text.lastIndexOf(" ", firstOpenPos);
+		var leadingCloseTagPos = text.lastIndexOf(">", firstOpenPos);
+		if (leadingCloseTagPos > leadingSpacePos)
+			leadingSpacePos = leadingCloseTagPos;
 		if (firstOpenPos > 0  &&  secondClosePos != -1){
 			var baseValue = text.substring(leadingSpacePos+1, firstOpenPos);
 			var firstValue = text.substring(firstOpenPos+5, juctionPos);
