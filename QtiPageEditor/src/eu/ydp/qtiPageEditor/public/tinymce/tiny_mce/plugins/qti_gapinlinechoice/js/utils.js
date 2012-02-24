@@ -143,6 +143,15 @@ function removeExternalRowData(removeElement) {
 		contentValue = contentValue.replace(pattern, '');
 	}
 	contentNode.val(contentValue);
+	var ed = tinymce.EditorManager.activeEditor;
+	var xh = ed.XmlHelper;
+	var identifier = $('#identifier'+id).val();
+	var c = xh.getCorrectResponseNodeId(ed.dom.doc.body, identifier);
+
+	if (c != null) {
+		c.parentNode.removeChild(c);
+	}
+	
 	tr.parentNode.removeChild(tr);
 }
 
