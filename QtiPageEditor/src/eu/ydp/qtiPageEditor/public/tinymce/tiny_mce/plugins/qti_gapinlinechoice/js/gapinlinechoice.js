@@ -24,11 +24,7 @@ var gapInlineChoiceDialog = {
 			if(data != undefined && data.identifier != undefined) {
 				f.identifier.value = data.identifier;
 			} else {
-				var randid = Math.random();
-				randid = String(randid);
-				var rg = new RegExp('0.([0-9]*)',"gi");
-				exec = rg.exec(randid);
-				f.identifier.value = 'id_' + exec[1];
+				f.identifier.value = this.regenerateIdentifier();
 			}
 
 			if (data == undefined) {
@@ -72,91 +68,110 @@ var gapInlineChoiceDialog = {
 		},
 
 		insertGapActivityRow: function(row, sourcesList, newData) {
+			var gapMatch = newData.content.match('\\[gap#'+row.id+'\\]', 'gi');
+			var count = 0;
+			if (null != gapMatch) {
+				count = gapMatch.length;
+			}
 			
-			var pattern = new RegExp('\\[gap#'+row.id+'\\]', 'gi');
-			var gapTag = '<!-- <textEntryInteraction responseIdentifier="' + row.identifier + '" expectedLength="100">';
-			if ('undefined' != typeof tinyMCE.feedback) {
-				var feedbackObj = tinyMCE.feedback[row.identifier];//new tinymce.util.JSON.parse(row.feedback);
+			var pattern = new RegExp('\\[gap#'+row.id+'\\]', 'i');
+			for(var i = 0; i < count; i++) {
+				var gapTag = '<!-- <textEntryInteraction responseIdentifier="' + row.identifier + '" expectedLength="100">';
+				if ('undefined' != typeof tinyMCE.feedback) {
+					var feedbackObj = tinyMCE.feedback[row.identifier];//new tinymce.util.JSON.parse(row.feedback);
 
-				if('undefined' != typeof feedbackObj) {
+					if('undefined' != typeof feedbackObj) {
 
-					if ('undefined' != typeof feedbackObj.onOk && feedbackObj.onOk != '') {
-						gapTag += '<feedbackInline ';
-						gapTag += 'mark="CORRECT"';
-						gapTag += ' fadeEffect="300" ';
-						gapTag += 'senderIdentifier="^' + row.identifier + '$" ';
-						gapTag += 'variableIdentifier="' + row.identifier + '" '; 
-						gapTag += 'value="' + row.answer + '" showHide="show">' + feedbackObj.onOk + '</feedbackInline>'
-					}
+						if ('undefined' != typeof feedbackObj.onOk && feedbackObj.onOk != '') {
+							gapTag += '<feedbackInline ';
+							gapTag += 'mark="CORRECT"';
+							gapTag += ' fadeEffect="300" ';
+							gapTag += 'senderIdentifier="^' + row.identifier + '$" ';
+							gapTag += 'variableIdentifier="' + row.identifier + '" '; 
+							gapTag += 'value="' + row.answer + '" showHide="show">' + feedbackObj.onOk + '</feedbackInline>'
+						}
 
-					if ('undefined' != typeof feedbackObj.onWrong && feedbackObj.onWrong != '') {
-						gapTag += '<feedbackInline ';
-						gapTag += 'mark="WRONG"';
-						gapTag += ' fadeEffect="300" ';
-						gapTag += 'senderIdentifier="^' + row.identifier + '$" ';
-						gapTag += 'variableIdentifier="' + row.identifier + '" ';
-						gapTag += 'value="' + row.answer + '" showHide="hide">' + feedbackObj.onWrong + '</feedbackInline>'
+						if ('undefined' != typeof feedbackObj.onWrong && feedbackObj.onWrong != '') {
+							gapTag += '<feedbackInline ';
+							gapTag += 'mark="WRONG"';
+							gapTag += ' fadeEffect="300" ';
+							gapTag += 'senderIdentifier="^' + row.identifier + '$" ';
+							gapTag += 'variableIdentifier="' + row.identifier + '" ';
+							gapTag += 'value="' + row.answer + '" showHide="hide">' + feedbackObj.onWrong + '</feedbackInline>'
+						}
 					}
 				}
-			}
-			gapTag += '</textEntryInteraction> -->';
-			gapTag += '<span id="gap" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">';
-			gapTag += row.answer;
-			gapTag += '</span>';
-			newData.content = newData.content.replace(pattern, gapTag);
-			//sourcesList.content += gapTag;
-			var responseDeclaration = '<!-- <responseDeclaration identifier="' + row.identifier + '" cardinality="single" baseType="string">';
-			responseDeclaration += '<correctResponse>';
-			responseDeclaration += '<value>' + row.answer + '</value>';
-			responseDeclaration += '</correctResponse>';
-			responseDeclaration += '</responseDeclaration> -->';
+				gapTag += '</textEntryInteraction> -->';
+				gapTag += '<span id="gap" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">';
+				gapTag += row.answer;
+				gapTag += '</span>';
+				newData.content = newData.content.replace(pattern, gapTag);
+				//sourcesList.content += gapTag;
+				var responseDeclaration = '<!-- <responseDeclaration identifier="' + row.identifier + '" cardinality="single" baseType="string">';
+				responseDeclaration += '<correctResponse>';
+				responseDeclaration += '<value>' + row.answer + '</value>';
+				responseDeclaration += '</correctResponse>';
+				responseDeclaration += '</responseDeclaration> -->';
 
-			sourcesList.responses += responseDeclaration;
+				sourcesList.responses += responseDeclaration;
+				if (count > 1) {
+					row.identifier = this.regenerateIdentifier();
+				}
+			}
 		},
 
 		insertInlineChoiceActivityRow: function(row, sourcesList, newData) {
+			var inlineChoiceMatch = newData.content.match('\\[inlineChoice#'+row.id+'\\]', 'gi');
+			var count = 0;
+			if (null != inlineChoiceMatch) {
+				count = inlineChoiceMatch.length;
+			}
 
-			var pattern = new RegExp('\\[inlineChoice#'+row.id+'\\]', 'gi');
-			var choiceSection = '<!-- <inlineChoiceInteraction responseIdentifier="' + row.data.identifier + '" shuffle="' + String(row.data.shuffle) + '"> --><span id="inlineChoiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">';
-			responseDeclaration = '<!-- <responseDeclaration identifier="' + row.data.identifier + '" cardinality="single" baseType="identifier"><correctResponse>';
+			var pattern = new RegExp('\\[inlineChoice#'+row.id+'\\]', 'i');
+			for(var j = 0; j < count; j++) {
+				var choiceSection = '<!-- <inlineChoiceInteraction responseIdentifier="' + row.data.identifier + '" shuffle="' + String(row.data.shuffle) + '"> --><span id="inlineChoiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">';
+				responseDeclaration = '<!-- <responseDeclaration identifier="' + row.data.identifier + '" cardinality="single" baseType="identifier"><correctResponse>';
 
-			for(i in row.data.answers) {
-				choiceSection += '<!-- <inlineChoice identifier="' + row.data.ids[i] + '"';
-				if(row.data.fixed[i] == 1) {
-					choiceSection += ' fixed="true" ';
-				}
-				choiceSection += '>' + row.data.answers[i];
-
-				if(row.data.feedbacks != undefined && row.data.feedbacks[row.data.ids[i]] != undefined && row.data.feedbacks[row.data.ids[i]] != '') {
-					choiceSection += '<feedbackInline ';
-					if(row.data.points[i] == 1) { 
-						choiceSection += 'mark="CORRECT"';
-					} else {
-						choiceSection += 'mark="WRONG"';
+				for(i in row.data.answers) {
+					choiceSection += '<!-- <inlineChoice identifier="' + row.data.ids[i] + '"';
+					if(row.data.fixed[i] == 1) {
+						choiceSection += ' fixed="true" ';
 					}
-					//row.data.ids[i]
-					var randid = Math.random();
-					randid = String(randid);
-					var rg = new RegExp('0.([0-9]*)',"gi");
-					exec = rg.exec(randid);
-					var fId = 'id_' + exec[1];
-					choiceSection += ' fadeEffect="300" senderIdentifier="' + row.data.identifier + '" variableIdentifier="' + row.data.identifier + '" value="' + row.data.ids[i] + '" showHide="show">' + row.data.feedbacks[row.data.ids[i]] + '</feedbackInline>'
-				} 
+					choiceSection += '>' + row.data.answers[i];
 
-				choiceSection += '</inlineChoice> -->';
-				if(row.data.points[i] == 1) {
-					responseDeclaration += '<value>' + row.data.ids[i] + '</value>';
-					choiceSection += '<span id="inlineChoiceAnswer" style="border: none; color: blue; background-color: #f0f0f0;">' + row.data.answers[i] + '<span style="color: green; font-weight: bold;"> &raquo;</span></span>';
-				} else {
-					choiceSection += '<span id="inlineChoiceAnswer" style="display: none;">' + row.data.answers[i] + '</span>';
+					if(row.data.feedbacks != undefined && row.data.feedbacks[row.data.ids[i]] != undefined && row.data.feedbacks[row.data.ids[i]] != '') {
+						choiceSection += '<feedbackInline ';
+						if(row.data.points[i] == 1) { 
+							choiceSection += 'mark="CORRECT"';
+						} else {
+							choiceSection += 'mark="WRONG"';
+						}
+						//row.data.ids[i]
+						var fId = this.regenerateIdentifier();
+						choiceSection += ' fadeEffect="300" senderIdentifier="' + row.data.identifier + '" variableIdentifier="' + row.data.identifier + '" value="' + row.data.ids[i] + '" showHide="show">' + row.data.feedbacks[row.data.ids[i]] + '</feedbackInline>'
+					} 
+
+					choiceSection += '</inlineChoice> -->';
+					if(row.data.points[i] == 1) {
+						responseDeclaration += '<value>' + row.data.ids[i] + '</value>';
+						choiceSection += '<span id="inlineChoiceAnswer" style="border: none; color: blue; background-color: #f0f0f0;">' + row.data.answers[i] + '<span style="color: green; font-weight: bold;"> &raquo;</span></span>';
+					} else {
+						choiceSection += '<span id="inlineChoiceAnswer" style="display: none;">' + row.data.answers[i] + '</span>';
+					}
+				}
+				responseDeclaration += '</correctResponse></responseDeclaration> -->';
+				choiceSection += '</span><!-- </inlineChoiceInteraction> -->';
+
+				newData.content = newData.content.replace(pattern, choiceSection);
+				//sourcesList.content += choiceSection;
+				sourcesList.responses += responseDeclaration;
+				if (count > 1) {
+					row.data.identifier = this.regenerateIdentifier();
+					for(x in row.data.answers) {
+						row.data.ids[x] = this.regenerateIdentifier();
+					}
 				}
 			}
-			responseDeclaration += '</correctResponse></responseDeclaration> -->';
-			choiceSection += '</span><!-- </inlineChoiceInteraction> -->';
-
-			newData.content = newData.content.replace(pattern, choiceSection);
-			//sourcesList.content += choiceSection;
-			sourcesList.responses += responseDeclaration;
 		},
 
 		insertGapInlineChoiceSection : function(form) {
@@ -287,7 +302,20 @@ var gapInlineChoiceDialog = {
 								identifier = resp.identifier;
 							}
 														
-							//var respOldRgx = new RegExp('<!-- <responseDeclaration identifier="'+identifier+'"[^>]*>[^<]*<correctResponse>[^<]*<value>[^<]*<\/value>[^<]*<\/correctResponse>[^<]*<\/responseDeclaration> -->', 'gi');
+							var newRespDeclarIdsRgx = new RegExp('identifier="([^"]+)"', 'gi');
+							var newIds = new Array();
+							while( null != (newCorrectResponsesIds = newRespDeclarIdsRgx.exec(sourcesList.responses))) {
+								newIds.push(newCorrectResponsesIds[1]);
+							}
+							var actualResponseNode = null;
+							//usuniecie wszystkich correct response zdefiniowanych w ramach tego gapa
+							for (var j in newIds) {
+								actualResponseNode = xh.getCorrectResponseNodeId(body, newIds[j]);
+								if (null != actualResponseNode) {
+									actualResponseNode.parentNode.removeChild(actualResponseNode);
+								}
+							}
+							/*
 							var respNewRgx = new RegExp(' <responseDeclaration identifier="'+identifier+'"[^>]*>[^<]*<correctResponse>[^<]*<value>[^<]*<\/value>[^<]*<\/correctResponse>[^<]*<\/responseDeclaration> ', 'gi');
 							var newRespRgxRes = respNewRgx.exec(sourcesList.responses);
 
@@ -305,7 +333,10 @@ var gapInlineChoiceDialog = {
 							} else {
 								regexp = new RegExp('(<!-- <itemBody> -->)','gi');
 								body.innerHTML = body.innerHTML.replace(regexp, '<!-- '+newRespSection + ' -->$1');
-							}
+							}*/
+							//wstawienie nowych correct response
+							regexp = new RegExp('(<!-- <itemBody> -->)','gi');
+							body.innerHTML = body.innerHTML.replace(regexp, sourcesList.responses + '$1');
 						}
 					}
 					ed.selection.moveToBookmark(bm);
@@ -366,6 +397,14 @@ var gapInlineChoiceDialog = {
 			*/
 			
 			return false;
+		},
+		
+		regenerateIdentifier: function() {
+			var randid = Math.random();
+			randid = String(randid);
+			var rg = new RegExp('0.([0-9]*)',"gi");
+			exec = rg.exec(randid);
+			return 'id_' + exec[1];
 		},
 
 		openInlineChoice: function(rowNr) {

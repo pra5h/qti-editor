@@ -130,23 +130,28 @@ function applyExternalRowData(identifier) {
 
 function removeExternalRowData(removeElement) {
 	
+	var ed = tinymce.EditorManager.activeEditor;
+	var xh = ed.XmlHelper;
 	var tr = removeElement.parentNode.parentNode;
 	var id = tr.id;
 	var ch = $('#checkbox'+id);
 	var contentNode = $('#exercise_content');
 	var contentValue = contentNode.val();
+	var c = null;
+	
 	if (true == ch.attr('checked')) {
 		var pattern = new RegExp('\\[inlineChoice#'+id+'\\]', 'gi');
 		contentValue = contentValue.replace(pattern, '');
+		var distractorData = tinymce.util.JSON.parse($('#distractorData'+id).val());
+		var identifier = distractorData['identifier'];
+		c = xh.getCorrectResponseNodeId(ed.dom.doc.body, identifier);
 	} else if (false == ch.attr('checked')) {
 		var pattern = new RegExp('\\[gap#'+id+'\\]', 'gi');
 		contentValue = contentValue.replace(pattern, '');
+		var identifier = $('#identifier'+id).val();
+		c = xh.getCorrectResponseNodeId(ed.dom.doc.body, identifier);
 	}
 	contentNode.val(contentValue);
-	var ed = tinymce.EditorManager.activeEditor;
-	var xh = ed.XmlHelper;
-	var identifier = $('#identifier'+id).val();
-	var c = xh.getCorrectResponseNodeId(ed.dom.doc.body, identifier);
 
 	if (c != null) {
 		c.parentNode.removeChild(c);

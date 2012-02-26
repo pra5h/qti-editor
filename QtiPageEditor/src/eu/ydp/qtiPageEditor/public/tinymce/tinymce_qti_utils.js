@@ -851,9 +851,9 @@ function actionOnQTI(e) {
 function runGapInlineChoiceInteraction(selectedNode) {
 	
 	var body = selectedNode;
-        while(body.nodeName != 'BODY') {
-                body = body.parentNode;
-        }
+	while(body.nodeName != 'BODY') {
+		body = body.parentNode;
+	}
 	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
 
 	var data = new Array();
@@ -863,7 +863,8 @@ function runGapInlineChoiceInteraction(selectedNode) {
 	var contentElement = selectedNode.children[1];
 	var contentText = '';
 	var nodeCounter = 0;
-
+	var tmpResponses = new Array();
+	
 	for(var i = 0; i < contentElement.childNodes.length; i++) {
 		var node = contentElement.childNodes[i];
 
@@ -875,31 +876,38 @@ function runGapInlineChoiceInteraction(selectedNode) {
 			var child = $(node.nodeValue).get(0);
 			
 			if ('TEXTENTRYINTERACTION' == child.tagName) {
-				contentText += '[gap#'+nodeCounter+']';
-				var feedback = new Array();
-					feedback['onOk'] = '';
-					feedback['onWrong'] = '';
+				if (-1 == tmpResponses.indexOf(contentElement.childNodes[i].nextSibling.innerHTML)) {
+					tmpResponses.push(contentElement.childNodes[i].nextSibling.innerHTML);
+					contentText += '[gap#'+nodeCounter+']';
+					var feedback = new Array();
+						feedback['onOk'] = '';
+						feedback['onWrong'] = '';
 				
-				for (k = 0; k < child.childNodes.length; k++) {
-					if ('CORRECT' == child.childNodes[k].getAttribute('mark')) {
-						feedback['onOk'] = child.childNodes[k].innerHTML;
-					} 
-					if ('WRONG' == child.childNodes[k].getAttribute('mark')) {
-						feedback['onWrong'] = child.childNodes[k].innerHTML;
-					} 
-				}
+					for (k = 0; k < child.childNodes.length; k++) {
+						if ('CORRECT' == child.childNodes[k].getAttribute('mark')) {
+							feedback['onOk'] = child.childNodes[k].innerHTML;
+						} 
+						if ('WRONG' == child.childNodes[k].getAttribute('mark')) {
+							feedback['onWrong'] = child.childNodes[k].innerHTML;
+						} 
+					}
 				
-				data['inlineRows'].push({
+					data['inlineRows'].push({
 							answer: contentElement.childNodes[i].nextSibling.innerHTML,
 							feedback: feedback,
 							id: nodeCounter,
 							identifier: child.getAttribute('responseIdentifier'),
 							type: 'gap'
-				});
-				
-				nodeCounter++;
+					});
+					nodeCounter++;
+				} else {
+					var cResp = xh.getCorrectResponseNodeId(body, child.getAttribute('responseIdentifier'));
+					if (null != cResp) {
+						cResp.parentNode.removeChild(cResp);
+					}
+					contentText += '[gap#'+tmpResponses.indexOf(contentElement.childNodes[i].nextSibling.innerHTML)+']';
+				}
 			} else if ('INLINECHOICEINTERACTION' == child.tagName) {
-				contentText += '[inlineChoice#'+nodeCounter+']';
 				
 				var span = contentElement.childNodes[i].nextSibling;
 				var n = null;
@@ -915,13 +923,13 @@ function runGapInlineChoiceInteraction(selectedNode) {
 				if ("true" == child.getAttribute('shuffle')) {
 					shuffle = true;
 				}
-
+				var tmpAnswers = '';
 				for (var j = 0; j < span.childNodes.length; j++) {
 					n = span.childNodes[j];
 
 					if (8 == n.nodeType) {
 						comment = $(n.nodeValue).get(0);
-					
+						
 						if ('INLINECHOICE' == comment.tagName) {
     							var correctResponse = xh.getCorrectResponseById(body, child.getAttribute('responseIdentifier'));
 
@@ -941,23 +949,33 @@ function runGapInlineChoiceInteraction(selectedNode) {
 								feedbacks[comment.getAttribute('identifier')] = comment.lastChild.innerHTML;
 								comment.removeChild(comment.lastChild);
 							}
+							tmpAnswers += comment.innerHTML;
 							answers.push(comment.innerHTML);
 						}
 					}
 				}
-				
-				data['inlineRows'].push({
-					answers: answers,
-					feedbacks: feedbacks,
-					fixed: fixed,
-					id: nodeCounter,
-					identifier: child.getAttribute('responseIdentifier'),
-					ids: ids,
-					points: points,
-					shuffle: shuffle,
-					type: 'inlineChoice'
-				});
-				
+				if (-1 == tmpResponses.indexOf(tmpAnswers)) {
+					contentText += '[inlineChoice#'+nodeCounter+']';
+					tmpResponses.push(tmpAnswers);
+					data['inlineRows'].push({
+						answers: answers,
+						feedbacks: feedbacks,
+						fixed: fixed,
+						id: nodeCounter,
+						identifier: child.getAttribute('responseIdentifier'),
+						ids: ids,
+						points: points,
+						shuffle: shuffle,
+						type: 'inlineChoice'
+					});
+					nodeCounter++;
+				} else {
+					var cResp = xh.getCorrectResponseNodeId(body, child.getAttribute('responseIdentifier'));
+					if (null != cResp) {
+						cResp.parentNode.removeChild(cResp);
+					}
+					contentText += '[inlineChoice#'+tmpResponses.indexOf(tmpAnswers)+']';
+				}
 				var tmpNode = node;
 
 				for(;i < contentElement.childNodes.length; i++) {
@@ -966,7 +984,7 @@ function runGapInlineChoiceInteraction(selectedNode) {
 						break;
 					}
 				}
-				nodeCounter++;
+				
 			}
 		}
 	}
