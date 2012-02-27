@@ -191,6 +191,7 @@ function textInteractionsGroupToQTI(tig) {
 	for (var i = 0; i < content.childNodes.length; i++) {
 		
 		n = content.childNodes[i];
+
 		if (3 == n.nodeType) {
 			text += n.nodeValue;
 		} else if (8 == n.nodeType) {
@@ -216,9 +217,7 @@ function textInteractionsGroupToQTI(tig) {
 		} else {
 			if ('SPAN' != n.tagName) {
 				var xh = tinymce.EditorManager.activeEditor.XmlHelper;
-				text += '<'+n.tagName.toLowerCase()+xh.prepareAttributes(n)+'>'
-				text += n.innerHTML;
-				text += '</'+n.tagName.toLowerCase()+'>';
+				text += xh.prepareNode(n);
 			}
 		}
 	}
@@ -424,7 +423,7 @@ function textInteractionsGroupToHTML(ti) {
 	text += '<div id="gapInlineChoiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;" mce_style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">';
 	
 	for (var i = 0; i < ti.childNodes.length; i++) {
-		
+
 		if (3 == ti.childNodes[i].nodeType) {
 			text += ti.childNodes[i].nodeValue;
 		} else {
@@ -491,6 +490,8 @@ function textInteractionsGroupToHTML(ti) {
 					}
 				}
 				text += '</span><!-- '+xh.prepareNodeEnd(ti.childNodes[i])+' -->';
+			} else {
+				text += xh.prepareNode(ti.childNodes[i]);
 			}
 		}
 	}
@@ -506,7 +507,7 @@ function textInteractionsGroupToHTML(ti) {
 function QTI2HTML(h) {
 	//remove formatting
 	h = h.replace(/(\r\n|\n|\r)/gm,'');
-	h = h.replace(/(>[ ]+<)/gm,'><');
+	//h = h.replace(/(>[ ]+<)/gm,'><');
 	
 	if(h.match(/<assessmentItem [^>]*>/gi)) {
 		basePagePath = tinyMCE.gwtProxy.getPageBasePath();
@@ -587,7 +588,7 @@ function parseToQTI(h) {
 function applyFormatting(h) {
 
 	h = h.replace(/(\r\n|\n|\r)/gm,'');
-	h = h.replace(/(>[ ]+<)/gm,'><');
+	//h = h.replace(/(>[ ]+<)/gm,'><');
 
 	// TEMPLATE FORMATING
 	//before begin
@@ -886,7 +887,10 @@ function runGapInlineChoiceInteraction(selectedNode) {
 		if (3 == node.nodeType) { //text node
 			contentText += node.nodeValue;
 		} else if (1 == node.nodeType) { //zwykly html node
-			//node.parentNode.removeChild(node);
+			
+			if ('SPAN' != node.tagName) {
+				contentText += xh.prepareNode(node);//node.nodeValue;
+			}
 		} else if (8 == node.nodeType) { //comment node
 			var child = $(node.nodeValue).get(0);
 			
