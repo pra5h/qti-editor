@@ -1143,13 +1143,16 @@ function runSelectionInteraction(selectedNode) {
 
 		for (var j = items[i].childNodes.length-1; j > 0; j--) {
 
-			if ('CORRECT' == items[i].childNodes[j].getAttribute('mark')) {
-				onOk = items[i].childNodes[j].innerHTML;
-				items[i].removeChild(items[i].childNodes[j]);
+			if ('FEEDBACKINLINE' == items[i].childNodes[j].tagName) {
+			
+				if ('CORRECT' == items[i].childNodes[j].getAttribute('mark')) {
+					onOk = items[i].childNodes[j].innerHTML;
+					items[i].removeChild(items[i].childNodes[j]);
 
-			} else if ('WRONG' == items[i].childNodes[j].getAttribute('mark')){
-				onWrong = items[i].childNodes[j].innerHTML;
-				items[i].removeChild(items[i].childNodes[j]);
+				} else if ('WRONG' == items[i].childNodes[j].getAttribute('mark')){
+					onWrong = items[i].childNodes[j].innerHTML;
+					items[i].removeChild(items[i].childNodes[j]);
+				}
 			}
 		}
 		fixed_ans.push(items[i].getAttribute('fixed'));
