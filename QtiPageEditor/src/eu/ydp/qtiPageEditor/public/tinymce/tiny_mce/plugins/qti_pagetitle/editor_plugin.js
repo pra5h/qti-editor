@@ -14,9 +14,9 @@
 		init : function(ed, url) {
 			
 			ed.onPreProcess.add(function(ed, o) {
-				
+
 				if ("undefined" == typeof $('#pageTitleInput', parent.window.document).get(0)) {
-					var reg = new RegExp(/<assessmentItem.*title="([^"]*)".*>/gi);
+					var reg = new RegExp(/<assessmentItem[^>]*title="([^"]*)"[^>]*>/gi);
 					var pageTitle = ed.dom.decode(reg.exec(o.content)[1]);
 					var span = document.createElement('span');
 					span.setAttribute('id', 'pageTitleSpan');
@@ -38,13 +38,13 @@
 
 			ed.addCommand('mceRefreshPageTitle', function(ui,data) {
 				pageTitle = $('#pageTitleInput', parent.window.document).val();
-				ed.dom.doc.body.innerHTML = ed.dom.doc.body.innerHTML.replace(/(<assessmentItem.*title=")([^"]*)(".*>)/gi,'$1'+ed.dom.encode(pageTitle)+'$3');
+				ed.dom.doc.body.innerHTML = ed.dom.doc.body.innerHTML.replace(/(<assessmentItem[^>]*title=")([^"]*)("[^>]*>)/gi,'$1'+ed.dom.encode(pageTitle)+'$3');
 				$('#pageTitleInput', parent.window.document).focus();
 			});
 			
 			// Register the command so that it can be invoked by using tinyMCE.activeEditor.execCommand('mceExample');
 			ed.addCommand('mcePageTitle', function(ui,data) {
-				var reg = new RegExp(/<assessmentItem.*title="([^"]*)".*>/gi);
+				var reg = new RegExp(/<assessmentItem[^>]*title="([^"]*)"[^>]*>/gi);
 				var pagetitle = reg.exec(ed.dom.doc.body.innerHTML)[1];
 				ed.windowManager.open({
 					file : url + '/pagetitle.htm',
@@ -59,7 +59,7 @@
 			});
 			
 			ed.addCommand('mcePageTitleRemove', function(ui, data) {
-				ed.dom.doc.body.innerHTML = ed.dom.doc.body.innerHTML.replace(/(<assessmentItem.*title=")([^"]*)(">)/gi,"$1$3");
+				ed.dom.doc.body.innerHTML = ed.dom.doc.body.innerHTML.replace(/(<assessmentItem[^>]*title=")([^"]*)("[^>]*>)/gi,"$1$3");
 				return true;
 			});
 			
