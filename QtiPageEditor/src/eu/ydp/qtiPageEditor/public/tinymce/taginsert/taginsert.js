@@ -147,7 +147,7 @@ function tagInsertClass(){
 			}
 		}
 		// remove dead entries
-		for (var a = 0 ; a < specialAreas.length-1 ; a ++){
+		for (var a = 0 ; a < specialAreas.length ; a ++){
 			if (specialAreas[a] != null){
 				specialAreas2.push(specialAreas[a]);
 			}
@@ -162,7 +162,7 @@ function tagInsertClass(){
 				var openTagPos = text.indexOf(currOpenTag, startSearchFrom);
 				var closeTagPos = text.indexOf(currCloseTag, startSearchFrom);
 				for (var s = 0 ; s < specialAreas2.length ; s ++){
-					if (specialAreas2[s].from > openTagPos  &&  specialAreas2[s].to < closeTagPos){
+					if (specialAreas2[s].from > openTagPos  &&  specialAreas2[s].to <= closeTagPos){
 						text = text.substring(0, openTagPos) + 
 							text.substring(openTagPos+currOpenTag.length,closeTagPos) +
 							text.substring(closeTagPos+currCloseTag.length);
