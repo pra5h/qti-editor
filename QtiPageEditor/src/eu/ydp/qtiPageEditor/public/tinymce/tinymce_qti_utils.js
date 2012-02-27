@@ -1,8 +1,14 @@
 var baseTags = new Array('p','div','table','tbody','td','tr','th', 'sub', 'sup');
 baseTags.sort();
 function qti2htmlParse(tree) {
+	var text = qti2htmlParseProcess(tree);
+	text = mathml2subsup(text);
+	return text;
+}
+function qti2htmlParseProcess(tree) {
 	var text = '';
 	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
+	var processAsText = false;
 	if (tree.nodeType == 1) {
 		if ('ASSESSMENTITEM' == tree.tagName) {
 			text += '<!-- '+xh.prepareNodeBegin(tree)+' -->';
@@ -33,22 +39,26 @@ function qti2htmlParse(tree) {
 			}
 		} else if ('GROUP' == tree.tagName) {
 			text += xh.prepareNodeBegin(tree);
+		} else if ('MATHTEXT' == tree.tagName) {
+			processAsText = true;
 		} else if ('BR' == tree.tagName && 1 == tree.getAttribute('mce_bogus')) {
 			text += xh.prepareEmptyNode(tree);
 		} else if (-1 != baseTags.indexOf(tree.tagName.toLowerCase())) {
 				text += '<'+tree.tagName.toLowerCase()+xh.prepareAttributes(tree)+'>';
 		}
 	}
-	if(tree.hasChildNodes()) {
+	if(tree.hasChildNodes()  &&  !processAsText) {
 		var nodes=tree.childNodes.length;
 		for(var i=0; i<tree.childNodes.length; i++) {
-			text += qti2htmlParse(tree.childNodes[i]);
+			text += qti2htmlParseProcess(tree.childNodes[i]);
 		}
 
 	} else {
 
 		if (tree.nodeType == 3) {
 			text += tree.nodeValue;
+		} else if (processAsText){
+			text += "<"+tree.tagName+">"+tree.innerHTML+"</"+tree.tagName+">";
 		}
 	}
 	if (tree.nodeType == 1) {
@@ -75,6 +85,11 @@ function qti2htmlParse(tree) {
 	return text;
 }
 function html2qtiParse(tree) {
+	var text = html2qtiParseProcess(tree);
+	text = subsup2mathml(text);
+	return text
+}
+function html2qtiParseProcess(tree) {
     var text = '';
    var xh = tinymce.EditorManager.activeEditor.XmlHelper;
     if (tree.nodeType == 1) {
@@ -122,7 +137,7 @@ function html2qtiParse(tree) {
             			var node = $(tree.childNodes[i].nodeValue).get(0);
 
             			if (null != node) {
-            				text += html2qtiParse(node);
+            				text += html2qtiParseProcess(node);
             			} else {
 
             				if (tree.childNodes[i].nodeValue.match(/\?(xml[^\?]*)\?/gi)) {
@@ -133,7 +148,7 @@ function html2qtiParse(tree) {
             			}
             		}
             	} else {
-            		text += html2qtiParse(tree.childNodes[i]);
+            		text += html2qtiParseProcess(tree.childNodes[i]);
             	}
             }
 
@@ -170,14 +185,14 @@ function textInteractionsGroupToQTI(tig) {
 	var text = '';
 	text += xh.prepareNodeBegin($(tig.nodeValue).get(0));
 	var gic = tig.nextSibling;
-	text += '<prompt>'+subsup2mathml(gic.firstElementChild.innerHTML)+'</prompt>';
+	text += '<prompt>'+gic.firstElementChild.innerHTML+'</prompt>';
 	var content = gic.firstElementChild.nextElementSibling;
 	var n = null;
 	for (var i = 0; i < content.childNodes.length; i++) {
 		
 		n = content.childNodes[i];
 		if (3 == n.nodeType) {
-			text += subsup2mathml(n.nodeValue);
+			text += n.nodeValue;
 		} else if (8 == n.nodeType) {
 
 			if ('textEntryInteraction' == $.trim(n.nodeValue).substr(1, 20)) {
@@ -188,7 +203,7 @@ function textInteractionsGroupToQTI(tig) {
 					var ic = n.nextSibling.childNodes[j];
 					if (8 == ic.nodeType) {
 						if ('inlineChoice' == $.trim(ic.nodeValue).substr(1, 12)) {
-							text += subsup2mathml($.trim(ic.nodeValue));
+							text += $.trim(ic.nodeValue);
 							n.nextSibling.removeChild(n.nextSibling.childNodes[j]);
 						}
 					}
@@ -223,7 +238,7 @@ function choiceInteractionToHTML(ci) {
 	for (var k = 0; k < ci.childNodes.length; k++) {
 		if (1 == ci.childNodes[k].nodeType) {
 			if ('PROMPT' == ci.childNodes[k].tagName) {
-				text += '<p id="choiceInteraction">'+mathml2subsup(ci.childNodes[k].innerHTML)+'</p>';
+				text += '<p id="choiceInteraction">'+ci.childNodes[k].innerHTML+'</p>';
 			} else if ('SIMPLECHOICE' == ci.childNodes[k].tagName) {
 				text += '<!-- '+xh.prepareNodeBegin(ci.childNodes[k]);
 				var innerHtml = '';
@@ -237,11 +252,11 @@ function choiceInteractionToHTML(ci) {
 							text += xh.prepareEmptyNode(scChild);
 							innerHtml = xh.prepareEmptyNode(scChild);
 						} else {
-							text += mathml2subsup(xh.prepareNode(scChild));
+							text += xh.prepareNode(scChild);
 							//text += '<'+scChild.tagName.toLowerCase()+xh.prepareAttributes(scChild)+'>';
 							//text += scChild.innerHTML;
 							//text += '</'+scChild.tagName.toLowerCase()+'>';
-							innerHtml += mathml2subsup(xh.prepareNode(scChild));
+							innerHtml += xh.prepareNode(scChild);
 							//innerHtml += '<'+scChild.tagName.toLowerCase()+xh.prepareAttributes(scChild)+'>';
 							//innerHtml += scChild.innerHTML;
 							//innerHtml += '</'+scChild.tagName.toLowerCase()+'>';
@@ -276,7 +291,7 @@ function selectionInteractionToQTI (si) {
 	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
 	var sINode = si.nextSibling;
 	text += xh.prepareNodeBegin($(si.nodeValue).get(0));
-	text += '<prompt>'+subsup2mathml(sINode.firstElementChild.innerHTML)+'</prompt>';
+	text += '<prompt>'+sINode.firstElementChild.innerHTML+'</prompt>';
 	var table = sINode.firstElementChild.nextElementSibling;
 	var tr = null;
 	
@@ -285,7 +300,7 @@ function selectionInteractionToQTI (si) {
 			for (var j = 0; j < tr.childNodes.length; j++) { // for tr
 				for (var k = 0; k < tr.childNodes[j].childNodes.length; k++) { //for td
 					if (8 == tr.childNodes[j].childNodes[k].nodeType) {
-						text += subsup2mathml($.trim(tr.childNodes[j].childNodes[k].nodeValue));
+						text += $.trim(tr.childNodes[j].childNodes[k].nodeValue);
 					}
 				}
 			}
@@ -304,10 +319,10 @@ function choiceInteractionToQTI(ci) {
 	var cINode = ci.nextSibling;
 	
 	text += xh.prepareNodeBegin($(ci.nodeValue).get(0));
-	text += '<prompt>'+subsup2mathml(cINode.firstElementChild.innerHTML)+'</prompt>';
+	text += '<prompt>'+cINode.firstElementChild.innerHTML+'</prompt>';
 	for (var i = 0; i < cINode.childNodes.length; i++) {
 		if (8 == cINode.childNodes[i].nodeType) {
-			text += subsup2mathml(cINode.childNodes[i].nodeValue);
+			text += cINode.childNodes[i].nodeValue;
 		}
 	}
 	text += xh.prepareNodeEnd($(ci.nodeValue).get(0));
@@ -351,12 +366,12 @@ function selectionInteractionToHTML(si) {
 	text += '<div id="selectionInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;" mce_style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">';
 
 	var prompts = si.getElementsByTagName('prompt');
-	text += '<p id="selectionInteraction">'+mathml2subsup(prompts[0].innerHTML)+'</p>';
+	text += '<p id="selectionInteraction">'+prompts[0].innerHTML+'</p>';
 	var options = si.getElementsByTagName('simpleChoice');
 	
 	text += '<table class="selectionTable"><tbody><tr><td>&nbsp;</td>';
 	for (var i = 0; i < options.length; i++) {
-		text += '<td><!-- '+mathml2subsup(xh.prepareNode(options[i]))+' -->'+mathml2subsup(options[i].innerHTML)+'</td>';
+		text += '<td><!-- '+xh.prepareNode(options[i])+' -->'+options[i].innerHTML+'</td>';
 	}
 	text += '</tr>';
 	
@@ -378,9 +393,9 @@ function selectionInteractionToHTML(si) {
 				item.removeChild(feedback);
 			}
 		}
-		text += mathml2subsup(item.innerHTML);
+		text += item.innerHTML;
 		text += feedbacksText;
-		text += mathml2subsup(xh.prepareNodeEnd(item))+' -->'+mathml2subsup(item.innerHTML)+'</td>';
+		text += xh.prepareNodeEnd(item)+' -->'+item.innerHTML+'</td>';
 		feedbacksText = '';
 		
 		for (var j = 0; j < options.length; j++) {
@@ -411,11 +426,11 @@ function textInteractionsGroupToHTML(ti) {
 	for (var i = 0; i < ti.childNodes.length; i++) {
 		
 		if (3 == ti.childNodes[i].nodeType) {
-			text += mathml2subsup(ti.childNodes[i].nodeValue);
+			text += ti.childNodes[i].nodeValue;
 		} else {
 			var feedbacksText = '';
 			if ('PROMPT' == ti.childNodes[i].tagName) {
-				text += '<!-- <prompt> --><p id="gapInlineChoiceInteractionQuestion">'+mathml2subsup(ti.childNodes[i].innerHTML)+'</p><!-- </prompt> -->';
+				text += '<!-- <prompt> --><p id="gapInlineChoiceInteractionQuestion">'+ti.childNodes[i].innerHTML+'</p><!-- </prompt> -->';
 				text += '<p id="gapInlineChoiceInteractionContent">';
 			} else if ('TEXTENTRYINTERACTION' == ti.childNodes[i].tagName) {
 				text += '<!-- '+xh.prepareNodeBegin(ti.childNodes[i]);
@@ -472,7 +487,7 @@ function textInteractionsGroupToHTML(ti) {
 							}
 							feedbacksText = '';
 						}
-						text += mathml2subsup(iCText);
+						text += iCText;
 					}
 				}
 				text += '</span><!-- '+xh.prepareNodeEnd(ti.childNodes[i])+' -->';
@@ -1263,8 +1278,11 @@ function subsup2mathml(text){
 			leadingSpacePos = leadingCloseTagPos;
 		if (firstOpenPos > 0  &&  secondClosePos != -1){
 			var baseValue = text.substring(leadingSpacePos+1, firstOpenPos);
+			baseValue = baseValue.replace(new RegExp(/<[^>]+>/g), "");
 			var firstValue = text.substring(firstOpenPos+5, juctionPos);
+			firstValue = firstValue.replace(new RegExp(/<[^>]+>/g), "");
 			var secondValue = text.substring(juctionPos+11, secondClosePos);
+			secondValue = secondValue.replace(new RegExp(/<[^>]+>/g), "");
 			var mathml = "<mathText><mrow><msubsup><mrow>";
 			mathml += "<ms>" + baseValue + "</ms>";
 			mathml += "</mrow><mrow>";

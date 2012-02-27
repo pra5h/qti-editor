@@ -74,14 +74,106 @@ function tagInsertClass(){
 	this.replaceSelection = function(id, tag){
 		if (getInternetExplorerVersion() != -1){
 			var ieSelection = document.selection.createRange();
-			ieSelection.text = "<"+tag+">" + ieSelection.text + "</"+tag+">";
+			var selectionText = this.processSelection(ieSelection.text, tag);
+			ieSelection.text = selectionText ;
 		} else {
 			var el = document.getElementById(id);
 			var s = el.selectionStart;
 			var e = el.selectionEnd;
-			el.value = el.value.substr(0, s) + "<"+tag+">" + el.value.substr(s,e-s) + "</"+tag+">" + el.value.substr(e);
+			var selectionText = this.processSelection(el.value.substr(s,e-s), tag);
+			el.value = el.value.substr(0, s) + selectionText +  el.value.substr(e);
 		}
+		this.removeTagsFromSubSup(id);
+		this.removeSubSupFromParentTags(id);
 	};
+	
+	this.processSelection = function(text, tag){
+		if (text.indexOf("<sub>") == -1  &&  text.indexOf("<sup>") == -1  &&
+			text.indexOf("</sub>") == -1  &&  text.indexOf("</sup>") == -1)
+			return "<" + tag + ">" + text + "</" + tag + ">";
+		return text;
+	};
+	
+	this.removeTagsFromSubSup = function(id){
+		var el = document.getElementById(id);
+		var text = el.value;		
+		var specialTags = ["sub", "sup"];
+		for (var t = 0 ; t < specialTags.length ; t ++){
+			var startSearchFrom = 0;
+			var currOpenTag = "<"+specialTags[t]+">";
+			var currCloseTag = "</"+specialTags[t]+">";
+			while (text.indexOf(currOpenTag, startSearchFrom) != -1){
+				var openTagPos = text.indexOf(currOpenTag, startSearchFrom);
+				var closeTagPos = text.indexOf(currCloseTag, startSearchFrom);
+				var secondOpenTagPos = text.indexOf(currOpenTag, openTagPos+1);
+				if (secondOpenTagPos != -1  &&  secondOpenTagPos < closeTagPos){
+					closeTagPos = text.indexOf(currCloseTag, closeTagPos+1);
+				}
+				var value = text.substring(openTagPos+currOpenTag.length, closeTagPos);
+				value = value.replace(new RegExp(/<[^>]+>/g), "");
+				text = text.substring(0, openTagPos+currOpenTag.length) + 
+					value + 
+					text.substring(closeTagPos);
+				startSearchFrom = closeTagPos+currCloseTag.length;
+			}
+		}
+		el.value = text;
+	}
+		
+	this.removeSubSupFromParentTags = function(id){
+		var el = document.getElementById(id);
+		var text = el.value;
+		var specialTags = ["sub", "sup"];
+		var allowedTags = ["b", "u", "i"];
+		var specialAreas = [];
+		var specialAreas2 = [];
+		for (var t = 0 ; t < specialTags.length ; t ++){
+			var currOpenTag = "<"+specialTags[t]+">";
+			var currCloseTag = "</"+specialTags[t]+">";
+			var startSearchFrom = 0;
+			while (text.indexOf(currOpenTag, startSearchFrom) != -1){
+				var openTagPos = text.indexOf(currOpenTag, startSearchFrom);
+				var closeTagPos = text.indexOf(currCloseTag, startSearchFrom);
+				var currArea = {from: openTagPos, to:closeTagPos+currCloseTag.length};
+				specialAreas.push(currArea);
+				startSearchFrom = closeTagPos;
+			}
+		}
+		// merge areas
+		for (var a = 0 ; a < specialAreas.length-1 ; a ++){
+			if (specialAreas[a].to == specialAreas[a+1].from){
+				specialAreas[a].to = specialAreas[a+1].to;
+				specialAreas[a+1] = null;
+			}
+		}
+		// remove dead entries
+		for (var a = 0 ; a < specialAreas.length-1 ; a ++){
+			if (specialAreas[a] != null){
+				specialAreas2.push(specialAreas[a]);
+			}
+		}
+		
+		for (var a = 0 ; a < allowedTags.length ; a ++ ){
+			var currTag = allowedTags[a];
+			var currOpenTag = "<"+currTag+">";
+			var currCloseTag = "</"+currTag+">";
+			var startSearchFrom = 0;
+			while (text.indexOf(currOpenTag, startSearchFrom) != -1){
+				var openTagPos = text.indexOf(currOpenTag, startSearchFrom);
+				var closeTagPos = text.indexOf(currCloseTag, startSearchFrom);
+				for (var s = 0 ; s < specialAreas2.length ; s ++){
+					if (specialAreas2[s].from > openTagPos  &&  specialAreas2[s].to < closeTagPos){
+						text = text.substring(0, openTagPos) + 
+							text.substring(openTagPos+currOpenTag.length,closeTagPos) +
+							text.substring(closeTagPos+currCloseTag.length);
+						break;
+					}
+				}
+				startSearchFrom = closeTagPos;
+			}
+		}
+		el.value = text;		
+	}
 	
 	this.getSelection = function(id){
 		if (getInternetExplorerVersion() != -1){
