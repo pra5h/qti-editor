@@ -193,7 +193,7 @@ function textInteractionsGroupToQTI(tig) {
 		n = content.childNodes[i];
 
 		if (3 == n.nodeType) {
-			text += n.nodeValue;
+			text += '<span>'+n.nodeValue+'</span>';
 		} else if (8 == n.nodeType) {
 
 			if ('textEntryInteraction' == $.trim(n.nodeValue).substr(1, 20)) {
@@ -491,7 +491,12 @@ function textInteractionsGroupToHTML(ti) {
 				}
 				text += '</span><!-- '+xh.prepareNodeEnd(ti.childNodes[i])+' -->';
 			} else {
-				text += xh.prepareNode(ti.childNodes[i]);
+				//wszystkie node typu tekst opakowane są w spany
+				if ('SPAN' == ti.childNodes[i].tagName) {
+					text += ti.childNodes[i].innerHTML;
+				} else {
+					text += xh.prepareNode(ti.childNodes[i]);
+				}
 			}
 		}
 	}
