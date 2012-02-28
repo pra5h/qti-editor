@@ -5,18 +5,17 @@ function add_answer_row(form) {
 	var rg = new RegExp('0.([0-9]*)',"gi");
 	exec = rg.exec(randid);
 	var id = 'id_' + exec[1];
-	var last = $('#answer_list').children().length-1;
-
+	var last = $('table.answer').length;
+	
 	while(form.nodeName != 'FORM') {
 		form = form.parentNode;
 	}
 
 	var optionList = new Array();
-	var optionsDiv = document.getElementById('option_list');
-	for(var i in optionsDiv.children) {
-		if(optionsDiv.children[i] != undefined && optionsDiv.children[i].nodeName == 'DIV') {
-			optionList.push(optionsDiv.children[i].children[1].value);
-		}
+	var htmlOptionsList = $("input[name=choices_ids[]]");
+
+	for(var i = 0; i < htmlOptionsList.length; i++) {
+		optionList.push(htmlOptionsList.get(i).value);
 	}
 
 	var newDiv = document.createElement('div');
@@ -25,12 +24,11 @@ function add_answer_row(form) {
 		+'<td width="260px" style="padding-right: 5px;">\n'
 		+'<input type="text" id="answer_'+last+'" name="answers[]" style="width: 100%; margin-right: 5px;" value=""/>\n'
 		+'</td>\n'
-		+'<input type="hidden" id="id_0" name="ids[]" value="' + id + '"/>\n'
+		+'<input type="hidden" id="id_'+last+'" name="ids[]" value="' + id + '"/>\n'
 		+'<td width="400px" id="optionsSpans">';
+
 	for(var i in optionList) {
 		var lp = parseInt(i) + 1;
-		//if (lp%4 == 1 && lp!=1)
-			//newInnerHTML += '<hr/>';
 		newInnerHTML += '<span class="optionSpan">\n\
 			<strong>' + lp + '.</strong>\n\
 			<input id="point_' + i + '" type="radio" value="' + optionList[i] + '" name="points[' + id + ']" /></span>';
@@ -40,10 +38,12 @@ function add_answer_row(form) {
 			+'<td width="80px"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td>\n'
 			+'<td width="50px"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr>\n'
 			+'</table>';
+
 	newDiv.innerHTML = newInnerHTML;
 	document.getElementById('answer_list').appendChild(newDiv);
 	tagInsert.init('answer_' + last);
 }
+
 
 function add_option_row(form) {
 
@@ -112,8 +112,7 @@ function remove_answer_row(row) {
 function remove_option_row(row) {
 	var i = 0;
 	var fieldset = $(row).parent().parent();
-
-	$("div", fieldset).each(function(a,b){
+	fieldset.children('div').each(function(a,b){
 		i++;
 	});
 
