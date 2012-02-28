@@ -1,4 +1,4 @@
-var baseTags = new Array('p','div','table','tbody','td','tr','th', 'sub', 'sup');
+var baseTags = new Array('p','div','table','tbody','td','tr','th', 'sub', 'sup', 'span', 'strong', 'em');
 baseTags.sort();
 function qti2htmlParse(tree) {
 	var text = qti2htmlParseProcess(tree);
@@ -44,7 +44,7 @@ function qti2htmlParseProcess(tree) {
 		} else if ('BR' == tree.tagName && 1 == tree.getAttribute('mce_bogus')) {
 			text += xh.prepareEmptyNode(tree);
 		} else if (-1 != baseTags.indexOf(tree.tagName.toLowerCase())) {
-				text += '<'+tree.tagName.toLowerCase()+xh.prepareAttributes(tree)+'>';
+				text += xh.prepareNodeBegin(tree); //'<'+tree.tagName.toLowerCase()+xh.prepareAttributes(tree)+'>';
 		}
 	}
 	if(tree.hasChildNodes()  &&  !processAsText) {
@@ -154,9 +154,9 @@ function html2qtiParseProcess(tree) {
 
     } else {
 
-            if (tree.nodeType == 3) {
-                    text += tree.nodeValue;
-            }
+    	if (tree.nodeType == 3) {
+    		text += tree.nodeValue;
+    	}
     }
     
     if (tree.nodeType == 1) {
