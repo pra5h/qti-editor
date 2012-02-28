@@ -94,7 +94,7 @@ function html2qtiParseProcess(tree) {
    var xh = tinymce.EditorManager.activeEditor.XmlHelper;
     if (tree.nodeType == 1) {
             if ('ASSESSMENTITEM' == tree.tagName) {
-                    text += xh.prepareNodeBegin(tree);
+            	text += xh.prepareNodeBegin(tree);
             } else if ('STYLEDECLARATION' == tree.tagName) {
                     text += xh.prepareNodeBegin(tree);
             } else if ('LINK' == tree.tagName) {

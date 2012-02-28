@@ -245,9 +245,9 @@ tinyMCE.init({
 
 						for (var a = 0; a < tmpAttr.length; a++) {
 							if (undefined != this.attributesMapper[tmpAttr[a]]) {
-								text += ' '+this.attributesMapper[tmpAttr[a]]+'="'+$(node).attr(tmpAttr[a])+'"';
+								text += ' '+this.attributesMapper[tmpAttr[a]]+'="'+tinymce.EditorManager.activeEditor.dom.encode($(node).attr(tmpAttr[a]))+'"';
 							} else {
-								text += ' '+tmpAttr[a]+'="'+node.getAttribute(tmpAttr[a])+'"';
+								text += ' '+tmpAttr[a]+'="'+tinymce.EditorManager.activeEditor.dom.encode(node.getAttribute(tmpAttr[a]))+'"';
 							}
 						}
 					}
