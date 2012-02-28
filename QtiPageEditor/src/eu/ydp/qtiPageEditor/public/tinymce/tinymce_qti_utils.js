@@ -217,7 +217,12 @@ function textInteractionsGroupToQTI(tig) {
 		} else {
 			if ('SPAN' != n.tagName) {
 				var xh = tinymce.EditorManager.activeEditor.XmlHelper;
-				text += xh.prepareNode(n);
+				
+				if ('BR' == n.tagName) {
+					text += '<span>'+xh.prepareEmptyNode(n)+'</span>';
+				} else {
+					text += '<span>'+xh.prepareNode(n)+'</span>';
+				}
 			}
 		}
 	}
@@ -495,7 +500,11 @@ function textInteractionsGroupToHTML(ti) {
 				if ('SPAN' == ti.childNodes[i].tagName) {
 					text += ti.childNodes[i].innerHTML;
 				} else {
-					text += xh.prepareNode(ti.childNodes[i]);
+					if ('BR' == ti.childNodes[i].tagName) {
+						text += xh.prepareEmptyNode(ti.childNodes[i]);
+					} else {
+						text += xh.prepareNode(ti.childNodes[i]);
+					}
 				}
 			}
 		}
@@ -894,7 +903,12 @@ function runGapInlineChoiceInteraction(selectedNode) {
 		} else if (1 == node.nodeType) { //zwykly html node
 			
 			if ('SPAN' != node.tagName) {
-				contentText += xh.prepareNode(node);//node.nodeValue;
+				
+				if ('BR' == node.tagName) {
+					contentText += xh.prepareEmptyNode(node);
+				} else {
+					contentText += xh.prepareNode(node);
+				}
 			}
 		} else if (8 == node.nodeType) { //comment node
 			var child = $(node.nodeValue).get(0);
