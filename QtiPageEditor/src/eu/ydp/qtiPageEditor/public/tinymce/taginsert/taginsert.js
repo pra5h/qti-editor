@@ -104,7 +104,9 @@ function tagInsertClass(){
 			var currCloseTag = "</"+specialTags[t]+">";
 			while (text.indexOf(currOpenTag, startSearchFrom) != -1){
 				var openTagPos = text.indexOf(currOpenTag, startSearchFrom);
-				var closeTagPos = text.indexOf(currCloseTag, startSearchFrom);
+				var closeTagPos = text.indexOf(currCloseTag, openTagPos);
+				if (closeTagPos == -1)
+					break;
 				var secondOpenTagPos = text.indexOf(currOpenTag, openTagPos+1);
 				if (secondOpenTagPos != -1  &&  secondOpenTagPos < closeTagPos){
 					closeTagPos = text.indexOf(currCloseTag, closeTagPos+1);
@@ -133,7 +135,9 @@ function tagInsertClass(){
 			var startSearchFrom = 0;
 			while (text.indexOf(currOpenTag, startSearchFrom) != -1){
 				var openTagPos = text.indexOf(currOpenTag, startSearchFrom);
-				var closeTagPos = text.indexOf(currCloseTag, startSearchFrom);
+				var closeTagPos = text.indexOf(currCloseTag, openTagPos);
+				if (closeTagPos == -1)
+					break;
 				var currArea = {from: openTagPos, to:closeTagPos+currCloseTag.length};
 				specialAreas.push(currArea);
 				startSearchFrom = closeTagPos;
@@ -160,7 +164,9 @@ function tagInsertClass(){
 			var startSearchFrom = 0;
 			while (text.indexOf(currOpenTag, startSearchFrom) != -1){
 				var openTagPos = text.indexOf(currOpenTag, startSearchFrom);
-				var closeTagPos = text.indexOf(currCloseTag, startSearchFrom);
+				var closeTagPos = text.indexOf(currCloseTag, openTagPos);
+				if (closeTagPos == -1)
+					break;
 				for (var s = 0 ; s < specialAreas2.length ; s ++){
 					if (specialAreas2[s].from > openTagPos  &&  specialAreas2[s].to <= closeTagPos){
 						text = text.substring(0, openTagPos) + 
