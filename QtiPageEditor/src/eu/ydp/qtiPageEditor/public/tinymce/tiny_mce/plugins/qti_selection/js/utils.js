@@ -119,8 +119,7 @@ function remove_option_row(row) {
 	if (i > 1) {
 		var div = row.parentNode;
 		div.parentNode.removeChild(div);
-
-		var removedId = div.children[1].getAttribute('value');
+		var removedId = $("input[name=choices_ids[]]", div).val(); 
 
 		var optionSpans = document.getElementsByClassName('optionSpan');
 		for(i in optionSpans) {
