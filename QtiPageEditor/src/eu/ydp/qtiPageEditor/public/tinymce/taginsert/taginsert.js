@@ -65,8 +65,10 @@ function tagInsertClass(){
 		if (elem[0] === document.activeElement){
 			var txtCurrent = this.getSelection(id);
 			if (txtCurrent != undefined  &&  txtCurrent != ""){
+				var scrollTop = document.activeElement.scrollTop;
 				this.replaceSelection(id, tag);
 				this.opacityTo(id, 0.3);
+				document.activeElement.scrollTop = scrollTop;
 			}
 		}
 	};
@@ -109,7 +111,10 @@ function tagInsertClass(){
 					break;
 				var secondOpenTagPos = text.indexOf(currOpenTag, openTagPos+1);
 				if (secondOpenTagPos != -1  &&  secondOpenTagPos < closeTagPos){
-					closeTagPos = text.indexOf(currCloseTag, closeTagPos+1);
+					secondCloseTagPos = text.indexOf(currCloseTag, closeTagPos+1);
+					if (secondCloseTagPos != -1){
+						closeTagPos = secondCloseTagPos;
+					}
 				}
 				var value = text.substring(openTagPos+currOpenTag.length, closeTagPos);
 				value = value.replace(new RegExp(/<[^>]+>/g), "");
