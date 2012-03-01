@@ -47,6 +47,7 @@ var inlineChoiceDialog = {
 				document.getElementById('answer_list').appendChild(newDiv);
 				//value wstawiam później bo innerHTML nie pozwalał na wstawianie znaków "<",">", """ itd...
 				$('#answer_' + q).val(stringDecode(data['answers'][q]));
+				tagInsert.init('answer_' + q);
 			}
 
 			if (0 < getObjectLength(data.ids)) {
