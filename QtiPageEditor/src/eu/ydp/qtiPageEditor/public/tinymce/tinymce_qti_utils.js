@@ -356,8 +356,8 @@ function mediaInteractionsToHTML(mi) {
 		text += '<img id="mceVideo" src="/res/skins/default/qtipageeditor/tinymce/tiny_mce/plugins/qti_addvideo/img/movie.png" mce_src="/res/skins/default/qtipageeditor/tinymce/tiny_mce/plugins/qti_addvideo/img/movie.png"/>';
 	}
 	text += '<br/>';
-	var titleMatch = text.match(/title="([^"]+)"/);
-	text += titleMatch[1];
+	var titleMatch = text.match(/alt="([^"]+)"/);
+	text += tinyMCE.activeEditor.dom.decode(titleMatch[1]);
 	text += '</fieldset>';
 	return text;
 }
@@ -1224,14 +1224,15 @@ function runMediaLib(selectedNode) {
 		var src = node.previousSibling.getAttribute('data');
 		var title = '';
 		
-		if (null != node.nextSibling.nextSibling) {
+		title = node.previousSibling.getAttribute('alt');
+		/*if (null != node.nextSibling.nextSibling) {
 			title = node.nextSibling.nextSibling.nodeValue;
-		}
+		}*/
 		tinyMCE.execCommand('mceAddVideo', false, {src: src, title: title});
 	} else {
 		var src = node.attributes['src'].value;
-		if(node.attributes['title'] != undefined) {
-			var title = node.attributes['title'].value;
+		if(node.attributes['alt'] != undefined) {
+			var title = node.attributes['alt'].value;
 		} else {
 			var title = '';
 		}
