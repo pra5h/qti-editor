@@ -150,9 +150,11 @@ function tagInsertClass(){
 		}
 		// merge areas
 		for (var a = 0 ; a < specialAreas.length-1 ; a ++){
-			if (specialAreas[a].to == specialAreas[a+1].from){
-				specialAreas[a].to = specialAreas[a+1].to;
-				specialAreas[a+1] = null;
+			for (var b = a+1 ; b < specialAreas.length ; b ++){
+				if (specialAreas[a] != null  &&  specialAreas[b] != null  &&  specialAreas[a].to == specialAreas[b].from){
+					specialAreas[a].to = specialAreas[b].to;
+					specialAreas[b] = null;
+				}
 			}
 		}
 		// remove dead entries
