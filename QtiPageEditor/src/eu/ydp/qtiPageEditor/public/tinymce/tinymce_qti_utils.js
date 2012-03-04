@@ -44,7 +44,15 @@ function qti2htmlParseProcess(tree) {
 		} else if ('BR' == tree.tagName && 1 == tree.getAttribute('mce_bogus')) {
 			text += xh.prepareEmptyNode(tree);
 		} else if (-1 != baseTags.indexOf(tree.tagName.toLowerCase())) {
-				text += xh.prepareNodeBegin(tree); //'<'+tree.tagName.toLowerCase()+xh.prepareAttributes(tree)+'>';
+        	
+			if ('TD' == tree.tagName) {
+
+				if ('SIMPLETEXT' == tree.firstElementChild.tagName) {
+					tree.innerHTML = tree.firstElementChild.innerHTML;
+				}
+        	}
+			
+			text += xh.prepareNodeBegin(tree); //'<'+tree.tagName.toLowerCase()+xh.prepareAttributes(tree)+'>';
 		}
 	}
 	if(tree.hasChildNodes()  &&  !processAsText) {
@@ -79,7 +87,7 @@ function qti2htmlParseProcess(tree) {
 		} else if ('GROUP' == tree.tagName) {
 			text += xh.prepareNodeEnd(tree);
 		} else if (-1 != baseTags.indexOf(tree.tagName.toLowerCase())) {
-				text += '</'+tree.tagName.toLowerCase()+'>';
+			text += '</'+tree.tagName.toLowerCase()+'>';
 		}
 	}
 	return text;
@@ -116,6 +124,10 @@ function html2qtiParseProcess(tree) {
                 text += '<section name="text">'+xh.prepareNodeBegin(tree);
             } else if (-1 != baseTags.indexOf(tree.tagName.toLowerCase())) {
             	text += '<'+tree.tagName.toLowerCase()+xh.prepareAttributes(tree)+'>';
+            	
+            	if ('TD' == tree.tagName) {
+            		text += '<simpleText>';
+            	}
             }
     }
     
@@ -173,7 +185,10 @@ function html2qtiParseProcess(tree) {
         } else if ('P' == tree.tagName) {
             text += xh.prepareNodeEnd(tree)+'</section>';
     	} else if (-1 != baseTags.indexOf(tree.tagName.toLowerCase())) {
-    			text += '</'+tree.tagName.toLowerCase()+'>';
+    		if ('TD' == tree.tagName) {
+        		text += '</simpleText>';
+        	}
+   			text += '</'+tree.tagName.toLowerCase()+'>';
     	}
     } 
 
