@@ -9,7 +9,7 @@
 				ed.windowManager.open({
 					file : url + '/preview.htm',
 					width : 500,
-					height : 250,
+					height : 450,
 					inline : 1
 				}, {
 					plugin_url : url // Plugin absolute URL
