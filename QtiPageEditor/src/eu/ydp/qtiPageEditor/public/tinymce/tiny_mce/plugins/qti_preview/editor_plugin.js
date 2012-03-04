@@ -1,26 +1,27 @@
-/**
- * $Id: editor_plugin_src.js 1056 2009-03-13 12:47:03Z spocke $
- *
- * @author Moxiecode
- * @copyright Copyright � 2004-2008, Moxiecode Systems AB, All rights reserved.
- */
-
 (function() {
-	tinymce.create('tinymce.plugins.Preview', {
+	// Load plugin specific language pack
+	tinymce.PluginManager.requireLangPack('empiriapreview');
+	
+	tinymce.create('tinymce.plugins.empiriapreviewPlugin', {
 		init : function(ed, url) {
 
-			ed.addCommand('mcePreview', function() {
-				
-				tinyMCE.gwtProxy.showPreview();
-				
+			ed.addCommand('mceEmpiriaPreview', function() {
+				ed.windowManager.open({
+					file : url + '/preview.htm',
+					width : 500,
+					height : 250,
+					inline : 1
+				}, {
+					plugin_url : url // Plugin absolute URL
+				});
 			});
 
-			ed.addButton('preview', {title : 'preview.preview_desc', cmd : 'mcePreview'});
+			ed.addButton('empiriapreview', {title : 'Quick preview with Empiria', cmd : 'mceEmpiriaPreview'});
 		},
 
 		getInfo : function() {
 			return {
-				longname : 'Preview with QTI Player',
+				longname : 'Preview with Empiria Player',
 				author : '<a target="_blank" href="http://tinymce.moxiecode.com">Moxiecode Systems AB</a> / <a target="_blank" href="http://www.ydp.eu">Young Digital Planet</a>',
 				authorurl : '',
 				infourl : '',
@@ -30,5 +31,5 @@
 	});
 
 	// Register plugin
-	tinymce.PluginManager.add('qti_preview', tinymce.plugins.Preview);
+	tinymce.PluginManager.add('qti_empiriapreview', tinymce.plugins.empiriapreviewPlugin);
 })();
