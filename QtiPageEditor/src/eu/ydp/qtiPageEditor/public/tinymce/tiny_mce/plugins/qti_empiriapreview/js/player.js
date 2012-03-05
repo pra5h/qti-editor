@@ -15,15 +15,15 @@ var OPSExtension = new AssessmentCentreEditorOnPageSwitchExtension();
 
 function empiriaPlayerAppLoaded() {
 	player = empiriaCreatePlayer('player');
-	if(tv == 0) {
+//	if(tv == 0) {
 		player.importFlowOptions = function(){
-			return {showToC: true, showSummary: false, itemsDisplayMode: "ONE", showCheck: false};
+			return {showToC: false, showSummary: false, itemsDisplayMode: "ONE", showCheck: false};
 		}
-	} else {
+	/*} else {
 		player.importFlowOptions = function(){
 			return {showToC: false, showSummary: false, itemsDisplayMode: "ALL", showCheck: false};
 		}
-	}
+	}*/
 	player.loadExtension("DefaultAssessmentHeaderViewExtension");
 	player.loadExtension("DefaultAssessmentFooterViewExtension");
 	player.loadExtension("DefaultSoundProcessorExtension");
