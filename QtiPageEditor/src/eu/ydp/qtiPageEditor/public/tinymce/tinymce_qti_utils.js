@@ -7,7 +7,8 @@ function qti2htmlParse(tree) {
 }
 function qti2htmlParseProcess(tree) {
 	var text = '';
-	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
+	var ed = tinymce.EditorManager.activeEditor;
+	var xh = ed.XmlHelper;
 	var processAsText = false;
 	if (tree.nodeType == 1) {
 		if ('ASSESSMENTITEM' == tree.tagName) {
@@ -64,7 +65,7 @@ function qti2htmlParseProcess(tree) {
 	} else {
 
 		if (tree.nodeType == 3) {
-			text += tree.nodeValue;
+			text += ed.dom.encode(tree.nodeValue);
 		} else if (processAsText){
 			text += "<"+tree.tagName+">"+tree.innerHTML+"</"+tree.tagName+">";
 		}
@@ -99,7 +100,8 @@ function html2qtiParse(tree) {
 }
 function html2qtiParseProcess(tree) {
     var text = '';
-   var xh = tinymce.EditorManager.activeEditor.XmlHelper;
+    var ed = tinymce.EditorManager.activeEditor;
+   var xh = ed.XmlHelper;
     if (tree.nodeType == 1) {
             if ('ASSESSMENTITEM' == tree.tagName) {
             	text += xh.prepareNodeBegin(tree);
@@ -155,7 +157,7 @@ function html2qtiParseProcess(tree) {
             				if (tree.childNodes[i].nodeValue.match(/\?(xml[^\?]*)\?/gi)) {
             					text += tree.childNodes[i].nodeValue.replace(/\?(xml[^\?]*)\?/gi,'<?$1?>');
             				} else {
-            					text += tree.childNodes[i].nodeValue;
+            					text += $.trim(tree.childNodes[i].nodeValue);
             				}
             			}
             		}
@@ -167,10 +169,10 @@ function html2qtiParseProcess(tree) {
     } else {
 
     	if (tree.nodeType == 3) {
-    		text += tree.nodeValue;
+    		text += ed.dom.encode(tree.nodeValue);
     	}
     }
-    
+
     if (tree.nodeType == 1) {
     	if ('STYLEDECLARATION' == tree.tagName) {
     		text += xh.prepareNodeEnd(tree);
@@ -602,9 +604,11 @@ function processQTI(h) {
 	
 	if ('<!-- ?xml' != h.substr(0,9)) {
 		var xh = tinymce.EditorManager.activeEditor.XmlHelper;
-		xh.loadXML(h);
+		//xh.loadXML(h);
+		var node = document.createElement('root');
+		node.innerHTML = h;
 		var text = '<!-- ?xml version="1.0" encoding="UTF-8" standalone="no"? -->';
-		text += qti2htmlParse(xh.actualNode.node);
+		text += qti2htmlParse(node);//xh.actualNode.node
 	}
 	return text;
 }
