@@ -203,13 +203,25 @@ function textInteractionsGroupToQTI(tig) {
 	text += '<prompt>'+gic.firstElementChild.innerHTML+'</prompt>';
 	var content = gic.firstElementChild.nextElementSibling;
 	var n = null;
+	var spanBegun = false;
 	for (var i = 0; i < content.childNodes.length; i++) {
 		
 		n = content.childNodes[i];
 
 		if (3 == n.nodeType) {
-			text += '<span>'+n.nodeValue+'</span>';
+		
+			if (!spanBegun){
+				text += '<span>';
+				spanBegun = true;
+			}
+			text += n.nodeValue;
+			
 		} else if (8 == n.nodeType) {
+		
+			if (spanBegun){
+				text += '</span>';
+				spanBegun = false;
+			}
 
 			if ('textEntryInteraction' == $.trim(n.nodeValue).substr(1, 20)) {
 				text += $.trim(n.nodeValue);
@@ -233,13 +245,22 @@ function textInteractionsGroupToQTI(tig) {
 			if ('SPAN' != n.tagName) {
 				var xh = tinymce.EditorManager.activeEditor.XmlHelper;
 				
+				if (!spanBegun){
+					text += '<span>';
+					spanBegun = true;
+				}
+				
 				if ('BR' == n.tagName) {
-					text += '<span>'+xh.prepareEmptyNode(n)+'</span>';
+					text += xh.prepareEmptyNode(n);
 				} else {
-					text += '<span>'+xh.prepareNode(n)+'</span>';
+					text += xh.prepareNode(n);
 				}
 			}
 		}
+	}	
+	if (spanBegun){
+		text += '</span>';
+		spanBegun = false;
 	}
 	text += xh.prepareNodeEnd($(tig.nodeValue).get(0));
 	return text;
