@@ -10,7 +10,8 @@
 					file : url + '/preview.htm',
 					width : 500,
 					height : 450,
-					inline : 1
+					inline : 1,
+					popup_css : false
 				}, {
 					plugin_url : url // Plugin absolute URL
 				});
