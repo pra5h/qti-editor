@@ -65,7 +65,8 @@ function qti2htmlParseProcess(tree) {
 	} else {
 
 		if (tree.nodeType == 3) {
-			text += ed.dom.encode(tree.nodeValue);
+			//text += ed.dom.encode(tree.nodeValue);
+			text += tree.nodeValue;
 		} else if (processAsText){
 			text += "<"+tree.tagName+">"+tree.innerHTML+"</"+tree.tagName+">";
 		}
@@ -169,7 +170,8 @@ function html2qtiParseProcess(tree) {
     } else {
 
     	if (tree.nodeType == 3) {
-    		text += ed.dom.encode(tree.nodeValue);
+    		//text += ed.dom.encode(tree.nodeValue);
+    		text += tree.nodeValue;
     	}
     }
 
@@ -376,7 +378,10 @@ function mediaInteractionToQTI(mi) {
 	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
 	var mediaNode = mi.firstChild;
 	if ('IMG' == mediaNode.tagName) {
-		text += xh.prepareEmptyNode(mediaNode);
+		var src = mediaNode.getAttribute('src');
+		var title = mediaNode.getAttribute('alt');
+		text += '<img src="'+src+'"><title>'+title+'</title><description></description></img>';
+//		text += xh.prepareEmptyNode(mediaNode);
 	} else {
 		text += xh.prepareEmptyNode(mediaNode);
 	}
@@ -388,7 +393,10 @@ function mediaInteractionsToHTML(mi) {
 	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
 	text += '<fieldset id="runFileUploadLib" class="mceNonEditable" style="font-size: 10px; font-color: #b0b0b0; color: #b0b0b0; border: 1px solid #d0d0d0;" mce_style="font-size: 10px; font-color: #b0b0b0; color: #b0b0b0; border: 1px solid #d0d0d0;">';	
 	if ('IMG' == mi.tagName) {
-		text += xh.prepareEmptyNode(mi);
+		var src = mi.getAttribute('src');
+		var title = mi.nextElementSibling.innerHTML;
+		//text += xh.prepareEmptyNode(mi);
+		text += '<img alt="'+title+'" src="'+src+'" />';
 	} else { // if video object
 		text += xh.prepareNode(mi);
 		text += '<img id="mceVideo" src="/res/skins/default/qtipageeditor/tinymce/tiny_mce/plugins/qti_addvideo/img/movie.png" mce_src="/res/skins/default/qtipageeditor/tinymce/tiny_mce/plugins/qti_addvideo/img/movie.png"/>';
@@ -397,6 +405,8 @@ function mediaInteractionsToHTML(mi) {
 	var titleMatch = text.match(/alt="([^"]+)"/);
 	text += tinyMCE.activeEditor.dom.decode(titleMatch[1]);
 	text += '</fieldset>';
+	mi.parentNode.removeChild(mi.nextElementSibling.nextElementSibling); //description
+	mi.parentNode.removeChild(mi.nextElementSibling); //title
 	return text;
 }
 
