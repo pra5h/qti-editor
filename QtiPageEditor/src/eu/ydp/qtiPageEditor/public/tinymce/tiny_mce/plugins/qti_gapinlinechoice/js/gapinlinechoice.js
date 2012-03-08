@@ -115,7 +115,9 @@ var gapInlineChoiceDialog = {
 
 				sourcesList.responses += responseDeclaration;
 				if (count > 1) {
-					row.identifier = this.regenerateIdentifier();
+					var id = this.regenerateIdentifier();
+					tinyMCE.feedback[id] = tinyMCE.feedback[row.identifier];
+					row.identifier = id;
 				}
 			}
 		},
@@ -175,6 +177,7 @@ var gapInlineChoiceDialog = {
 		},
 
 		insertGapInlineChoiceSection : function(form) {
+			var ed = tinymce.EditorManager.activeEditor;
 			var obj = new Object();
 			obj.identifier = $('#identifier').val();
 			obj.question = stringEncode($('[name=question]').val());
@@ -208,7 +211,6 @@ var gapInlineChoiceDialog = {
 			if (validateGapInlineChoiceExercise(obj)) {
 				
 				if (obj.question != undefined && obj.question != '') {
-					var ed = tinymce.EditorManager.activeEditor;
 					var bm = ed.selection.getBookmark();
 //					ed.selection.moveToBookmark(bm);
 

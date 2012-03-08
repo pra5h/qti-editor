@@ -614,11 +614,11 @@ function processQTI(h) {
 	
 	if ('<!-- ?xml' != h.substr(0,9)) {
 		var xh = tinymce.EditorManager.activeEditor.XmlHelper;
-		//xh.loadXML(h);
-		var node = document.createElement('root');
-		node.innerHTML = h;
+		xh.loadXML(h);
+		//var node = document.createElement('root');
+		//node.innerHTML = h;
 		var text = '<!-- ?xml version="1.0" encoding="UTF-8" standalone="no"? -->';
-		text += qti2htmlParse(node);//xh.actualNode.node
+		text += qti2htmlParse(xh.actualNode.node);
 	}
 	return text;
 }
