@@ -34,7 +34,7 @@ tinyMCE.addI18n('en.inlinechoice_dlg',{
 });
 
 tinyMCE.addI18n('en.feedback_dlg',{
-    window_title:"Insert / modify choice feedback",
+    window_title:"Insert / modify gap feedback",
     modify:"Save",
     insert:"Insert",
     remove:"Remove",
