@@ -377,13 +377,21 @@ function mediaInteractionToQTI(mi) {
 	var text = '';
 	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
 	var mediaNode = mi.firstChild;
+
 	if ('IMG' == mediaNode.tagName) {
 		var src = mediaNode.getAttribute('src');
 		var title = mediaNode.getAttribute('alt');
 		text += '<img src="'+src+'"><title>'+title+'</title><description></description></img>';
-//		text += xh.prepareEmptyNode(mediaNode);
+
 	} else {
-		text += xh.prepareEmptyNode(mediaNode);
+		var title = mediaNode.getAttribute('alt');
+		var data = mediaNode.getAttribute('data');
+		var type = mediaNode.getAttribute('type');
+		
+		if (null == title) {
+			title = '';
+		}
+		text += '<object data="'+data+'" type="'+type+'"><title>'+title+'</title><description></description></object>';
 	}
 	return text;
 }
@@ -392,21 +400,31 @@ function mediaInteractionsToHTML(mi) {
 	var text = '';
 	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
 	text += '<fieldset id="runFileUploadLib" class="mceNonEditable" style="font-size: 10px; font-color: #b0b0b0; color: #b0b0b0; border: 1px solid #d0d0d0;" mce_style="font-size: 10px; font-color: #b0b0b0; color: #b0b0b0; border: 1px solid #d0d0d0;">';	
+
 	if ('IMG' == mi.tagName) {
 		var src = mi.getAttribute('src');
 		var title = mi.nextElementSibling.innerHTML;
-		//text += xh.prepareEmptyNode(mi);
 		text += '<img alt="'+title+'" src="'+src+'" />';
+		mi.parentNode.removeChild(mi.nextElementSibling.nextElementSibling); //description
+		mi.parentNode.removeChild(mi.nextElementSibling); //title
+	
 	} else { // if video object
-		text += xh.prepareNode(mi);
+		var data = mi.getAttribute('data');
+		var type = mi.getAttribute('type');
+		var title = mi.firstElementChild.innerHTML;
+		text += '<object alt="'+title+'" data="'+data+'" type="'+type+'"></object>'
 		text += '<img id="mceVideo" src="/res/skins/default/qtipageeditor/tinymce/tiny_mce/plugins/qti_addvideo/img/movie.png" mce_src="/res/skins/default/qtipageeditor/tinymce/tiny_mce/plugins/qti_addvideo/img/movie.png"/>';
+
+		for ( var i = mi.childNodes.length-1; i >= 0; i--) {
+			mi.removeChild(mi.childNodes[i]);
+		}
 	}
 	text += '<br/>';
 	var titleMatch = text.match(/alt="([^"]+)"/);
-	text += tinyMCE.activeEditor.dom.decode(titleMatch[1]);
+	if (null != titleMatch) {
+		text += tinyMCE.activeEditor.dom.decode(titleMatch[1]);
+	}
 	text += '</fieldset>';
-	mi.parentNode.removeChild(mi.nextElementSibling.nextElementSibling); //description
-	mi.parentNode.removeChild(mi.nextElementSibling); //title
 	return text;
 }
 
