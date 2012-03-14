@@ -5,7 +5,8 @@ function add_answer_row(form) {
 	var rg = new RegExp('0.([0-9]*)',"gi");
 	exec = rg.exec(randid);
 	var id = 'id_' + exec[1];
-
+	var list = document.getElementById('answer_list');
+	var no = $("td.remove",list).length;
 	while(form.nodeName != 'FORM') {
 		form = form.parentNode;
 	}
@@ -18,14 +19,17 @@ function add_answer_row(form) {
 	
 	var newDiv = document.createElement('div');
 	newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
-	if(form.images.checked == true) {
-		newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td class="answer"><input type="hidden" id="" name="answers[]" style="width: 100%; margin-right: 5px;" /><div style="width: 80px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;" onclick="tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:null,div:this});"><img style="max-height: 40px; max-width: 80px;" src=""/></div></td><input type="hidden" id="id_" name="ids[]" value="' + id + '"/><td class="correct"><input type="' + type + '" name="points[]" style="margin: 0; padding: 0;" /></td><td class="fixed"><input id="" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" /></td><td class="remove"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td class="feedback"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr></table>';
-	} else {
-		newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td class="answer"><input type="text" id="'+id+'" name="answers[]" style="width: 100%; margin-right: 5px;" /></td><input type="hidden" id="id_" name="ids[]" value="' + id + '"/><td class="correct"><input type="' + type + '" name="points[]" style="margin: 0; padding: 0;" /></td><td class="fixed"><input id="" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" /></td><td class="remove"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td class="feedback"><img src="img/feedback.png" onclick="feedback(this);"/></td></tr></table>';
-	}
-	document.getElementById('answer_list').appendChild(newDiv);
-	tagInsert.init(id);
+	var html = '';
 	
+	if(form.images.checked == true) {
+		html = '<table cellpadding=0 cellspacing=0><tr><td class="answer"><input type="hidden" id="" name="answers[]" style="width: 100%; margin-right: 5px;" /><div style="width: 80px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;" onclick="tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:null,div:this});"><img style="max-height: 40px; max-width: 80px;" src=""/></div></td><input type="hidden" id="id_" name="ids[]" value="' + id + '"/><td class="correct"><input type="' + type + '" name="points[]" style="margin: 0; padding: 0;" /></td><td class="fixed"><input id="" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" /></td><td class="remove"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td class="feedback"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr></table>';
+	} else {
+		html = '<table cellpadding=0 cellspacing=0><tr><td class="answer"><input type="text" id="'+no+'" name="answers[]" style="width: 100%; margin-right: 5px;" /><input type="hidden" id="id_'+no+'" name="ids[]" value="' + id + '"/></td><td class="correct"><input type="' + type + '" name="points[]" style="margin: 0; padding: 0;" /></td><td class="fixed"><input id="" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" /></td><td class="remove"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td class="feedback"><img src="img/feedback.png" onclick="feedback(this);" /></td></tr></table>';
+	}
+	
+	newDiv.innerHTML = html;
+	list.appendChild(newDiv);
+	tagInsert.init(no);
 }
 
 function remove_answer_row(row) {
@@ -104,9 +108,10 @@ function feedback(row) {
 	var exerciseId = tr.identifier.value;
 	var tr = row.parentNode.parentNode;
 	var inputs = tr.getElementsByTagName('input');
+
 	for(i in inputs) {
 		if(inputs[i].attributes != undefined && inputs[i].getAttribute('id').match(/^id_/i)) {
-			var identifier = inputs[i].getAttribute('value');
+			var identifier = inputs[i].value;
 			break;
 		}
 	}
