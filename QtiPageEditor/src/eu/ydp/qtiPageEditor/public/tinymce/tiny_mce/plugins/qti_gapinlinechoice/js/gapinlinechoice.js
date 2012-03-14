@@ -116,7 +116,10 @@ var gapInlineChoiceDialog = {
 				sourcesList.responses += responseDeclaration;
 				if (count > 1) {
 					var id = this.regenerateIdentifier();
-					tinyMCE.feedback[id] = tinyMCE.feedback[row.identifier];
+					
+					if ('undefined' != typeof tinyMCE.feedback) {
+						tinyMCE.feedback[id] = tinyMCE.feedback[row.identifier];
+					}
 					row.identifier = id;
 				}
 			}
