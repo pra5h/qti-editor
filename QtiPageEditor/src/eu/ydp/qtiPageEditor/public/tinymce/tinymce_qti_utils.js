@@ -47,8 +47,8 @@ function qti2htmlParseProcess(tree) {
 		} else if (-1 != baseTags.indexOf(tree.tagName.toLowerCase())) {
         	
 			if ('TD' == tree.tagName) {
-
-				if ('SIMPLETEXT' == tree.firstElementChild.tagName) {
+				
+				if ('SIMPLETEXT' == tree.firstElementChild.tagName || 'DIV' == tree.firstElementChild.tagName) {
 					tree.innerHTML = tree.firstElementChild.innerHTML;
 				}
         	}
@@ -129,7 +129,11 @@ function html2qtiParseProcess(tree) {
             	text += '<'+tree.tagName.toLowerCase()+xh.prepareAttributes(tree)+'>';
             	
             	if ('TD' == tree.tagName) {
-            		text += '<simpleText>';
+            		if (null != tree.innerHTML.match(/<fieldset id="runFileUploadLib"/)) {
+            			text += '<div>';
+            		} else {
+            			text += '<simpleText>';
+            		}
             	}
             }
     }
@@ -190,8 +194,15 @@ function html2qtiParseProcess(tree) {
             text += xh.prepareNodeEnd(tree)+'</section>';
     	} else if (-1 != baseTags.indexOf(tree.tagName.toLowerCase())) {
     		if ('TD' == tree.tagName) {
+	    		if (null != tree.innerHTML.match(/<fieldset id="runFileUploadLib"/)) {
+	    			text += '</div>';
+	    		} else {
+	    			text += '</simpleText>';
+	    		}
+    		}
+    		/*if ('TD' == tree.tagName) {
         		text += '</simpleText>';
-        	}
+        	}*/
    			text += '</'+tree.tagName.toLowerCase()+'>';
     	}
     } 
