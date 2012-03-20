@@ -1,5 +1,6 @@
 var baseTags = new Array('p','div','table','tbody','td','tr','th', 'sub', 'sup', 'span', 'strong', 'em', 'ul', 'li');
 baseTags.sort();
+
 function qti2htmlParse(tree) {
 	var text = qti2htmlParseProcess(tree);
 	text = mathml2subsup(text);
