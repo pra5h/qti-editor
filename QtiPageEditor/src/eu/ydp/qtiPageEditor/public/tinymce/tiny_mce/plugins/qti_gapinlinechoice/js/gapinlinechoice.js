@@ -184,7 +184,12 @@ var gapInlineChoiceDialog = {
 			var obj = new Object();
 			obj.identifier = $('#identifier').val();
 			obj.question = stringEncode($('[name=question]').val());
-			obj.content = stringEncode($('[name=exercise_content]').val()).replace(/\n/g,'<br/>').replace(/[ ]/gi,'&#32;');
+			//obj.content = stringEncode($('[name=exercise_content]').val()).replace(/\n/g,'<br/>').replace(/[ ]/gi,'&#32;');
+			var ec = $('[name=exercise_content]').val();
+			if (!validateHtml(ec)) {
+				return false;
+			} 
+			obj.content = stringEncode(ec).replace(/\n/g,'<br/>').replace(/[ ]/gi,'&#32;');
 			obj.tags = new Array();
 			var reg = new RegExp(/(?:\[(?:(?:gap#|inlineChoice#)[0-9]+)*?\])+/gi);
 			

@@ -365,3 +365,15 @@ function lock(id) {
 	//$(tinymce.DOM.get(id)).css("z-index", zIndex);
 	return id;
 }
+
+function validateHtml(text) {
+
+	var div = $('<div/>');
+	div.html(text);
+	
+	if (text != div.html()) {
+		tinymce.EditorManager.activeEditor.windowManager.alert('Correct exercise content field please.');
+		return false;
+	}
+	return true;
+}

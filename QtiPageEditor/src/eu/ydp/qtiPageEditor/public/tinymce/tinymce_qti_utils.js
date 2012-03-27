@@ -230,7 +230,10 @@ function textInteractionsGroupToQTI(tig) {
 				text += '<span>';
 				spanBegun = true;
 			}
-			text += n.nodeValue;
+			var tn = $('<div/>');
+			tn.text(n.nodeValue);
+			text += tn.html();
+			//text += n.nodeValue;
 			
 		} else if (8 == n.nodeType) {
 		
@@ -979,7 +982,10 @@ function runGapInlineChoiceInteraction(selectedNode) {
 		var node = contentElement.childNodes[i];
 
 		if (3 == node.nodeType) { //text node
-			contentText += node.nodeValue;
+			var tn = $('<div/>');
+			tn.text(node.nodeValue);
+			contentText += tn.html();
+			//contentText += node.nodeValue;
 		} else if (1 == node.nodeType) { //zwykly html node
 			
 			if ('SPAN' != node.tagName) {
