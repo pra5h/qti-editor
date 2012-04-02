@@ -26,9 +26,11 @@ tinyMCE.init({
 	theme_advanced_statusbar_location : "bottom",
 	theme_advanced_resizing : true,
 	//,formatselect   ,anchor,|
-	theme_advanced_buttons1 : "save,newdocument,print,empiriapreview,|,fontselect,fontsizeselect,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,help",
+	//,justifyleft,justifycenter,justifyright,justifyfull,|
+	theme_advanced_buttons1 : "save,newdocument,print,empiriapreview,|,fontselect,fontsizeselect,|,bold,italic,underline,strikethrough,|,help",
 	//pastetext,pasteword,    ,spellchecker  ,asciimath,asciimathcharmap,|   |,outdent,indent,|,link,unlink,
-	theme_advanced_buttons2 : "undo,redo,|,cut,copy,|,paste,|,search,replace,|,forecolor,backcolor,|,bullist,numlist,|,sub,sup,|,charmap",
+	//,bullist,numlist,|
+	theme_advanced_buttons2 : "undo,redo,|,cut,copy,|,paste,|,search,replace,|,forecolor,backcolor,|,sub,sup,|,charmap",
 	theme_advanced_buttons3 : "pagetitle,insertgapinlinechoice,insertchoicesection,insertordersection,insertmatchsection,insertselectionsection,insertdraggablesection,insertidentificationsection,|,fileuploadlib_image,addvideo,playpause,|,insertcomment,|,tablecontrols,|,code",
 
 	extended_valid_elements : "simpleText,group,canvas[id|style|width|height],gap[identifier],choiceInteraction[shuffle|maxChoices|responseIdentifier],"
