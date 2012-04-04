@@ -92,11 +92,11 @@
 			}
 
 			m.addSeparator();
-			am = m.addMenu({title : 'contextmenu.align'});
-			am.add({title : 'contextmenu.left', icon : 'justifyleft', cmd : 'JustifyLeft'});
-			am.add({title : 'contextmenu.center', icon : 'justifycenter', cmd : 'JustifyCenter'});
-			am.add({title : 'contextmenu.right', icon : 'justifyright', cmd : 'JustifyRight'});
-			am.add({title : 'contextmenu.full', icon : 'justifyfull', cmd : 'JustifyFull'});
+			//am = m.addMenu({title : 'contextmenu.align'});
+			//am.add({title : 'contextmenu.left', icon : 'justifyleft', cmd : 'JustifyLeft'});
+			//am.add({title : 'contextmenu.center', icon : 'justifycenter', cmd : 'JustifyCenter'});
+			//am.add({title : 'contextmenu.right', icon : 'justifyright', cmd : 'JustifyRight'});
+			//am.add({title : 'contextmenu.full', icon : 'justifyfull', cmd : 'JustifyFull'});
 						
 			m.addSeparator();
 			
