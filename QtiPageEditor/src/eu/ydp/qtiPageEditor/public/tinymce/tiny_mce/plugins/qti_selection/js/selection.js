@@ -224,6 +224,9 @@ var selectionDialog = {
 		while(elements[i] != undefined) {
 			var element = elements[i];
 			if(element.getAttribute('name') == 'question') {
+				if (!ed.validateHtml(element.value, 'question')) {
+					return false;
+				}
 				dataobj.question = element.value;
 			}
 			if(element.getAttribute('name') == 'identifier') {
@@ -234,6 +237,9 @@ var selectionDialog = {
 			}
 			if(element.getAttribute('name') == 'answers[]') {
 				if(element.value != '') {
+					if (!ed.validateHtml(element.value, 'answer')) {
+						return false;
+					}
 					dataobj.answers.push(element.value);
 				} else {
 					skip_point = 1;
@@ -241,6 +247,9 @@ var selectionDialog = {
 			}
 			if(element.getAttribute('name') == 'choices[]') {
 				if(element.value != '') {
+					if (!ed.validateHtml(element.value, 'option')) {
+						return false;
+					}
 					dataobj.options.push(element.value);
 				} else {
 					skip_point = 1;

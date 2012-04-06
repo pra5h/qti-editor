@@ -21,7 +21,7 @@ var feedbackDialog = {
 	},
 
 	prepareFeedback : function(form) {
-		
+		var ed = tinymce.EditorManager.activeEditor;
 		var formElements = form.elements;
 		var identifier = '';
 		var exerciseid = '';
@@ -41,6 +41,9 @@ var feedbackDialog = {
 					exerciseid = formElements[i].getAttribute('value');
 				}
 				if(formElements[i].getAttribute('name') == 'feedback') {
+					if (!ed.validateHtml(formElements[i].value, 'feedback')) {
+						return false;
+					}
 					feedback = formElements[i].value;
 				}
 				if(formElements[i].getAttribute('name') == 'fdb_sound') {

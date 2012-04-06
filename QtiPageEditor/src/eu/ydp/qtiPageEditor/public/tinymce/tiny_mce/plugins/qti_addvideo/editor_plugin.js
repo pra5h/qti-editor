@@ -14,6 +14,10 @@
 				var browseCallback = {
 
 					onBrowseComplete : function(filePath, title) {
+						if (!ed.validateHtml(title, 'title')) {
+							return false;
+						}
+						
 						var node = ed.selection.getNode();
 						var paragraph = '';
 

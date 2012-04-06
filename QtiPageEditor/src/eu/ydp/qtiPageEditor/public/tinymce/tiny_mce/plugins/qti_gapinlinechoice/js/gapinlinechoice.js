@@ -183,10 +183,16 @@ var gapInlineChoiceDialog = {
 			var ed = tinymce.EditorManager.activeEditor;
 			var obj = new Object();
 			obj.identifier = $('#identifier').val();
+			
+			if (!ed.validateHtml($('[name=question]').val(), 'content')) {
+				return false;
+			}
+			
 			obj.question = stringEncode($('[name=question]').val());
+			
 			//obj.content = stringEncode($('[name=exercise_content]').val()).replace(/\n/g,'<br/>').replace(/[ ]/gi,'&#32;');
 			var ec = $('[name=exercise_content]').val();
-			if (!validateHtml(ec)) {
+			if (!ed.validateHtml(ec, 'exercise content')) {
 				return false;
 			} 
 			obj.content = stringEncode(ec).replace(/\n/g,'<br/>').replace(/[ ]/gi,'&#32;');
@@ -197,13 +203,17 @@ var gapInlineChoiceDialog = {
 				obj.tags.push(t[0]);
 			}
 			obj.inlineRows = new Array();
-
+			var validateHtmlFlag = true;
+			
 			$('#gaps tbody tr').each(function() {
 				$tr = $(this);
 				var row = new Object();
 				row.id = $tr.attr('id');
 				if (false == $('#checkbox' + row.id).attr('checked')) {
 					row.identifier = $tr.find('#identifier'+row.id).val();
+					if (!ed.validateHtml($tr.find('#answer'+row.id).val(), 'correct answer')) {
+						validateHtmlFlag = false;
+					} 
 					row.answer = stringEncode($tr.find('#answer'+row.id).val());
 					row.checkboks = $tr.find('#checkbox'+row.id).attr('checked');
 					//row.feedback = $tr.find('#feedback'+row.id).val();
@@ -216,6 +226,10 @@ var gapInlineChoiceDialog = {
 				obj.inlineRows.push(row);
 			});
 
+			if (!validateHtmlFlag) {
+				return false;
+			}
+			
 			if (validateGapInlineChoiceExercise(obj)) {
 				
 				if (obj.question != undefined && obj.question != '') {

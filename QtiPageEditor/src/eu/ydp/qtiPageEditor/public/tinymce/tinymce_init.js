@@ -120,6 +120,19 @@ tinyMCE.init({
             }
         });
 		
+		//sprawdza czy redaktor podomykał tagi htmlowe podczas wpisywania kontentu
+		//w formularze edycyjne w naszych pluginach
+		ed.validateHtml = function (text, fieldName) {
+				var div = $('<div/>');
+				div.html(text);
+				
+				if (text != div.html()) {
+					tinymce.EditorManager.activeEditor.windowManager.alert('Correct '+fieldName+' field please.');
+					return false;
+				}
+				return true;
+		};
+		
 		ed.XmlHelper = {
 				rootNode: {attributes: new Array(), node: null},
 				actualNode: {attributes: new Array(), node: null},

@@ -45,6 +45,7 @@ var feedbackDialog = {
 
 		prepareGapFeedback : function(form) {
 
+			var ed = tinymce.EditorManager.activeEditor;
 			var formElements = form.elements;
 			var identifier = '';
 			var feedback_onok = '';
@@ -75,6 +76,14 @@ var feedbackDialog = {
 					}
 				}
 			}
+			
+			if (!ed.validateHtml(feedback_onok, 'OnOk feedback')) {
+				return false;
+			}
+			
+			if (!ed.validateHtml(feedback_onwrong, 'OnWrong feedback')) {
+				return false;
+			}
 			tinyMCE.feedback[identifier] = {};
 			tinyMCE.feedback[identifier].onOk = stringEncode(feedback_onok);
 			tinyMCE.feedback[identifier].sound_onOk = fdb_sound_onok;
@@ -88,6 +97,7 @@ var feedbackDialog = {
 
 		prepareInlineChoiceFeedback : function(form) {
 
+			var ed = tinymce.EditorManager.activeEditor;
 			var formElements = form.elements;
 			var identifier = '';
 			var exerciseid = '';
@@ -111,6 +121,10 @@ var feedbackDialog = {
 						feedback_sound = formElements[i].value;
 					}
 				}
+			}
+			
+			if (!ed.validateHtml(feedback, 'feedback')) {
+				return false;
 			}
 
 			if(tinyMCE.feedback[exerciseid] == undefined) {

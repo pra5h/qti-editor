@@ -32,7 +32,7 @@ var feedbackDialog = {
 	},
 
 	prepareFeedback : function(form) {
-		
+		var ed = tinymce.EditorManager.activeEditor;
 		var formElements = form.elements;
 		var identifier = '';
 		var exerciseid = '';
@@ -54,12 +54,18 @@ var feedbackDialog = {
 					exerciseid = formElements[i].getAttribute('value');
 				}
 				if(formElements[i].getAttribute('name') == 'feedback_onok') {
+					if (!ed.validateHtml(formElements[i].value, 'OnOk feedback')) {
+						return false;
+					}
 					feedback_onok = formElements[i].value;
 				}
 				if(formElements[i].getAttribute('name') == 'fdb_sound_onok') {
 					fdb_sound_onok = formElements[i].value;
 				}
 				if(formElements[i].getAttribute('name') == 'feedback_onwrong') {
+					if (!ed.validateHtml(formElements[i].value, 'OnWrong feedback')) {
+						return false;
+					}
 					feedback_onwrong = formElements[i].value;
 				}
 				if(formElements[i].getAttribute('name') == 'fdb_sound_onwrong') {
