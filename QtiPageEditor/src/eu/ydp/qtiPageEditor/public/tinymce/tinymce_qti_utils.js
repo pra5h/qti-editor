@@ -885,12 +885,18 @@ function actionOnQTI(e) {
 		while(selectedNode.nodeName != 'BODY') {
 			if(selectedNode.attributes != undefined) {
 				
+				// MathML
+				if (selectedNode.nodeName == 'DIV' && selectedNode.id == 'mathML') {
+					runMathMLInteraction(selectedNode);
+					break;
+				}
+				
 				// QY Comments
-				if (selectedNode.nodeName == 'DIV' && selectedNode.getAttribute('class') == 'mceNonEditable qy_comment') {
+				/*if (selectedNode.nodeName == 'DIV' && selectedNode.getAttribute('class') == 'mceNonEditable qy_comment') {
 					//runComment(selectedNode);
 					alert('Not implemented yet');
 					break;
-				}
+				}*/
 
 				// Gap InlineChoice
 				if (selectedNode.nodeName == 'DIV' && selectedNode.id == 'gapInlineChoiceInteraction') {
@@ -900,11 +906,11 @@ function actionOnQTI(e) {
 				}
 				
 				// PlayPause
-				if (selectedNode.nodeName == 'IMG' && selectedNode.attributes != undefined && selectedNode.getAttribute('id') == 'mcePlayPause') {
+				/*if (selectedNode.nodeName == 'IMG' && selectedNode.attributes != undefined && selectedNode.getAttribute('id') == 'mcePlayPause') {
 					//runPlayPause(selectedNode);
 					alert('Not implemented yet');
 					break;
-				}
+				}*/
 				
 				// MediaLib
 				if(selectedNode.nodeName == 'IMG' || (selectedNode.nodeName == 'FIELDSET' && selectedNode.id == 'runFileUploadLib')) {
@@ -919,11 +925,11 @@ function actionOnQTI(e) {
 				}
 
 				// Drag and Drop
-				if ((selectedNode.nodeName == 'P' && selectedNode.id == 'dragDropInteractionContents') || (selectedNode.nodeName == 'DIV' && selectedNode.id == 'dragDropInteraction')) {
+				/*if ((selectedNode.nodeName == 'P' && selectedNode.id == 'dragDropInteractionContents') || (selectedNode.nodeName == 'DIV' && selectedNode.id == 'dragDropInteraction')) {
 					//runDraggable(selectedNode);
 					alert('Not implemented yet');
 					break;
-				}
+				}*/
 
 				// Selection
 				if (selectedNode.nodeName == 'DIV' && selectedNode.id == 'selectionInteraction') {
@@ -932,25 +938,25 @@ function actionOnQTI(e) {
 				}
 				
 				// Order
-				if (selectedNode.id == 'orderOption' || (selectedNode.id == 'choiceInteraction' && selectedNode.parentNode.id == 'orderInteraction')) {
+				/*if (selectedNode.id == 'orderOption' || (selectedNode.id == 'choiceInteraction' && selectedNode.parentNode.id == 'orderInteraction')) {
 					//runOrder(selectedNode);
 					alert('Not implemented yet');
 					break;
-				}
+				}*/
 				
 				// Match
-				if (selectedNode.id != undefined && (selectedNode.id == 'matchInteraction' || selectedNode.id.match(/canvas_/))) {
+				/*if (selectedNode.id != undefined && (selectedNode.id == 'matchInteraction' || selectedNode.id.match(/canvas_/))) {
 					//runMatch(selectedNode);
 					alert('Not implemented yet');
 					break;
-				}
+				}*/
 
 				// Identification
-				if (selectedNode.id == 'identificationInteraction' || selectedNode.id == 'identificationAnswer' || selectedNode.parentNode.id == 'identificationAnswer') {
+				/*if (selectedNode.id == 'identificationInteraction' || selectedNode.id == 'identificationAnswer' || selectedNode.parentNode.id == 'identificationAnswer') {
 					//runIdentification(selectedNode);
 					alert('Not implemented yet');
 					break;
-				}
+				}*/
 
 			}
 			selectedNode = selectedNode.parentNode;
@@ -959,6 +965,14 @@ function actionOnQTI(e) {
 	}
 	return true;
 	
+}
+
+function runMathMLInteraction(selectedNode) {
+	math = selectedNode.innerHTML;
+	math = math.replace(/<math[^>]+>/,'');
+	math = math.replace(/<\/math>/,'');
+	tinyMCE.selectedNode = selectedNode;
+	tinyMCE.execCommand('mceScience', false, math);
 }
 
 function runGapInlineChoiceInteraction(selectedNode) {

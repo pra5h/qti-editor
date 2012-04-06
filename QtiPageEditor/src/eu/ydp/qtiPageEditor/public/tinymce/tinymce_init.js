@@ -7,9 +7,10 @@ tinyMCE.init({
 	elements : "content",
 	skin : "o2k7",
 	//spellchecker, asciimath,asciimathcharmap,
-	plugins : "safari,pagebreak,style,layer,table,save,advhr,advlink,emotions,iespell,inlinepopups,"
+	//qti_science,
+	plugins : "safari,pagebreak,layer,table,save,advhr,advlink,emotions,iespell,inlinepopups,"
 		+"insertdatetime,qti_empiriapreview,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,"
-		+"visualchars,nonbreaking,xhtmlxtras,template,imagemanager,filemanager,noneditable,asciisvg,"
+		+"visualchars,nonbreaking,xhtmlxtras,template,imagemanager,filemanager,asciisvg,"
 		+"qti_pagetitle,qti_choice,qti_gapinlinechoice,qti_fileuploadlib,"
 		+"qti_addvideo,qti_copyqti,qti_selection",
 		
@@ -30,6 +31,7 @@ tinyMCE.init({
 	theme_advanced_buttons1 : "save,newdocument,print,empiriapreview,|,fontselect,fontsizeselect,|,bold,italic,underline,strikethrough,|,help",
 	//pastetext,pasteword,    ,spellchecker  ,asciimath,asciimathcharmap,|   |,outdent,indent,|,link,unlink,
 	//,bullist,numlist,|
+	//,science
 	theme_advanced_buttons2 : "undo,redo,|,cut,copy,|,paste,|,search,replace,|,forecolor,backcolor,|,sub,sup,|,charmap",
 	theme_advanced_buttons3 : "pagetitle,insertgapinlinechoice,insertchoicesection,insertordersection,insertmatchsection,insertselectionsection,insertdraggablesection,insertidentificationsection,|,fileuploadlib_image,addvideo,playpause,|,insertcomment,|,tablecontrols,|,code",
 
