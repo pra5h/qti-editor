@@ -36,6 +36,7 @@ var gapInlineChoiceDialog = {
 				for (r in data.inlineRows) {
 
 					if ('gap' == data.inlineRows[r].type) {
+						data.inlineRows[r].answer = $('<div/>').html(data.inlineRows[r].answer).text();
 						addNewRow(data.inlineRows[r]);
 					} else {
 						addNewRow(null);
@@ -211,9 +212,9 @@ var gapInlineChoiceDialog = {
 				row.id = $tr.attr('id');
 				if (false == $('#checkbox' + row.id).attr('checked')) {
 					row.identifier = $tr.find('#identifier'+row.id).val();
-					if (!ed.validateHtml($tr.find('#answer'+row.id).val(), 'correct answer')) {
-						validateHtmlFlag = false;
-					} 
+					//if (!ed.validateHtml($tr.find('#answer'+row.id).val(), 'correct answer')) {
+						//validateHtmlFlag = false;
+					//} 
 					row.answer = stringEncode($tr.find('#answer'+row.id).val());
 					row.checkboks = $tr.find('#checkbox'+row.id).attr('checked');
 					//row.feedback = $tr.find('#feedback'+row.id).val();

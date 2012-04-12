@@ -127,7 +127,7 @@ tinyMCE.init({
 				div.html(text);
 				
 				if (text != div.html()) {
-					tinymce.EditorManager.activeEditor.windowManager.alert('Correct '+fieldName+' field please.');
+					tinymce.EditorManager.activeEditor.windowManager.alert('The '+fieldName+' field contains illegal HTML elements.');
 					return false;
 				}
 				return true;

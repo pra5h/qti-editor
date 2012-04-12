@@ -77,11 +77,11 @@ var feedbackDialog = {
 				}
 			}
 			
-			if (!ed.validateHtml(feedback_onok, 'OnOk feedback')) {
+			if (!ed.validateHtml(feedback_onok, 'feedback')) {
 				return false;
 			}
 			
-			if (!ed.validateHtml(feedback_onwrong, 'OnWrong feedback')) {
+			if (!ed.validateHtml(feedback_onwrong, 'feedback')) {
 				return false;
 			}
 			tinyMCE.feedback[identifier] = {};

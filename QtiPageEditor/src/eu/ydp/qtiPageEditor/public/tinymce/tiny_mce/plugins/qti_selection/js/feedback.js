@@ -54,7 +54,7 @@ var feedbackDialog = {
 					exerciseid = formElements[i].getAttribute('value');
 				}
 				if(formElements[i].getAttribute('name') == 'feedback_onok') {
-					if (!ed.validateHtml(formElements[i].value, 'OnOk feedback')) {
+					if (!ed.validateHtml(formElements[i].value, 'feedback')) {
 						return false;
 					}
 					feedback_onok = formElements[i].value;
@@ -63,7 +63,7 @@ var feedbackDialog = {
 					fdb_sound_onok = formElements[i].value;
 				}
 				if(formElements[i].getAttribute('name') == 'feedback_onwrong') {
-					if (!ed.validateHtml(formElements[i].value, 'OnWrong feedback')) {
+					if (!ed.validateHtml(formElements[i].value, 'feedback')) {
 						return false;
 					}
 					feedback_onwrong = formElements[i].value;
