@@ -274,7 +274,7 @@ var gapInlineChoiceDialog = {
 					var bm = ed.selection.getBookmark();
 
 					if(form.addnew != undefined && form.addnew.getAttribute('value') == '1') {
-						newData.content += '</div><!-- </textInteraction> --><p>&nbsp;</p>';
+						newData.content += '</div><!-- </textInteraction> --><p>&nbsp;</p><span id="focus">_</span>';
 
 						var dom = ed.dom;
 						var patt = '';
@@ -302,13 +302,15 @@ var gapInlineChoiceDialog = {
 						}
 						regexp = new RegExp('(<!-- <itemBody> -->)','gi');
 						body.innerHTML = body.innerHTML.replace(regexp, sourcesList.responses + '$1');
-
+						ed.focusAfterInsert('focus');
+						
 					} else {
 						var nd = tinyMCE.selectedNode;
 
 						while(nd.id != 'gapInlineChoiceInteraction') {
 							nd = nd.parentNode;
 						}
+
 						nd.innerHTML = newData.content;
 						body = nd;
 						while(body.nodeName != 'BODY') {
@@ -365,8 +367,12 @@ var gapInlineChoiceDialog = {
 							regexp = new RegExp('(<!-- <itemBody> -->)','gi');
 							body.innerHTML = body.innerHTML.replace(regexp, sourcesList.responses + '$1');
 						}
+						
+						nd = ed.dom.get('gapInlineChoiceInteraction');
+						ed.focusAfterModify(nd);
 					}
-					ed.selection.moveToBookmark(bm);
+					//ed.focusAfterInsert('focus');
+					//ed.selection.moveToBookmark(bm);
 
 					// Remove illegal text before headins
 					var beforeHeadings = ed.selection.dom.doc.body.innerHTML.match(/(.*?)(?=<!-- \?xml)/);
@@ -377,6 +383,7 @@ var gapInlineChoiceDialog = {
 						ed.selection.dom.doc.body.innerHTML = ed.selection.dom.doc.body.innerHTML.replace(/<itemBody> -->/,'<itemBody> -->' + beforeHeadings[1]);
 					}
 				}
+				//ed.execCommand('mceEndUndoLevel');
 				tinyMCEPopup.close();
 				return true;
 			}

@@ -120,6 +120,19 @@ tinyMCE.init({
             }
         });
 		
+		ed.focusAfterInsert = function(id) {
+			var toFocus = ed.dom.get(id).previousElementSibling;	
+			ed.selection.select(toFocus, true);
+			ed.selection.collapse(false);
+			ed.dom.remove(id);
+		},
+		
+		ed.focusAfterModify = function(n) {
+			var toFocus = n.nextElementSibling;
+			ed.selection.select(toFocus, true);
+			ed.focus();
+		},
+		
 		//sprawdza czy redaktor podomykał tagi htmlowe podczas wpisywania kontentu
 		//w formularze edycyjne w naszych pluginach
 		ed.validateHtml = function (text, fieldName) {
