@@ -103,7 +103,7 @@ function html2qtiParse(tree) {
 function html2qtiParseProcess(tree) {
     var text = '';
     var ed = tinymce.EditorManager.activeEditor;
-   var xh = ed.XmlHelper;
+    var xh = ed.XmlHelper;
     if (tree.nodeType == 1) {
             if ('ASSESSMENTITEM' == tree.tagName) {
             	text += xh.prepareNodeBegin(tree);
@@ -176,7 +176,14 @@ function html2qtiParseProcess(tree) {
 
     	if (tree.nodeType == 3) {
     		//text += ed.dom.encode(tree.nodeValue);
-    		text += tree.nodeValue;
+    		
+    		if (undefined != tree.parentNode) {
+    			if (tree.parentNode.nodeName == 'VALUE') {
+    				text += ed.dom.encode(tree.nodeValue);
+    			}
+    		} else {
+    			text += tree.nodeValue;
+    		}
     	}
     }
 

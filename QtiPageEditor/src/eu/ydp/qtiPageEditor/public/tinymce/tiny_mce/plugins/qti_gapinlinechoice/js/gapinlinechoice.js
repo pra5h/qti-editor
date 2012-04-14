@@ -215,7 +215,9 @@ var gapInlineChoiceDialog = {
 					//if (!ed.validateHtml($tr.find('#answer'+row.id).val(), 'correct answer')) {
 						//validateHtmlFlag = false;
 					//} 
-					row.answer = stringEncode($tr.find('#answer'+row.id).val());
+					row.answer = stringEncode($('<div/>').text($tr.find('#answer'+row.id).val()).html());
+					//row.answer = $("<div/>").text($tr.find('#answer'+row.id).val()).html();
+					//console.log(row.answer);
 					row.checkboks = $tr.find('#checkbox'+row.id).attr('checked');
 					//row.feedback = $tr.find('#feedback'+row.id).val();
 					row.type = 'gap';
