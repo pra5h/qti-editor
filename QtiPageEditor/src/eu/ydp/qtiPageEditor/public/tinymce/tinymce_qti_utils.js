@@ -994,7 +994,7 @@ function runGapInlineChoiceInteraction(selectedNode) {
 	data['question'] = selectedNode.children[0].innerHTML;
 	data['content'] = null;
 	data['inlineRows'] = new Array();
-	var contentElement = selectedNode.children[1];
+	var contentElement = selectedNode.children[1]; //p gapInlineChoiceInteractionContent
 	var contentText = '';
 	var nodeCounter = 0;
 	var tmpResponses = new Array();
@@ -1053,7 +1053,7 @@ function runGapInlineChoiceInteraction(selectedNode) {
 					contentText += '[gap#'+tmpResponses.indexOf(contentElement.childNodes[i].nextSibling.innerHTML)+']';
 				}
 			} else if ('INLINECHOICEINTERACTION' == child.tagName) {
-				
+
 				var span = contentElement.childNodes[i].nextSibling;
 				var n = null;
 				var comment = null;
@@ -1094,11 +1094,27 @@ function runGapInlineChoiceInteraction(selectedNode) {
 								feedbacks[comment.getAttribute('identifier')] = comment.lastChild.innerHTML;
 								comment.removeChild(comment.lastChild);
 							}
-							tmpAnswers += comment.innerHTML;
+							/*chcemy wyeliminować w formularzu edycyjnym ćwiczenia powtarzające się inlineChoice'y.
+							  Dwa inlineChoice'y są takie same jeżeli:
+							  1. wszystkie ich odpowiedzi są jednakowe
+							  2. wszystkie inlineChoice'y mają zaznaczoną jako poprawną odpowiedź, tą samą wartość odpowiedzi
+							  3. wszystkie inlineChoice'y mają tak samo zaznaczone fixed'y
+							  Poniżej ztorzymy string będący "id" inlineChoice'a w postaci:
+							  "[ans1][isCorrect][ans2][isCorrect][ans3][isCorrect]"
+							  Jeżeli w tmpResponses już wcześniej wystąpił taki string to znaczy że jest to duplikat jakiegoś innego inlineChoicea
+							  i nie trzeba go wstawiać w zmienną data
+							  */
+							var isCorrect = 0;
+							if (correctResponse[0] == comment.getAttribute('identifier')) {
+								isCorrect = 1;
+							}
+							tmpAnswers += comment.innerHTML+isCorrect+fixed[fixed.length-1];
 							answers.push(comment.innerHTML);
+							isCorrect = 0;
 						}
 					}
 				}
+				
 				if (-1 == tmpResponses.indexOf(tmpAnswers)) {
 					contentText += '[inlineChoice#'+nodeCounter+']';
 					tmpResponses.push(tmpAnswers);
