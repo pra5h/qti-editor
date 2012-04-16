@@ -59,7 +59,7 @@ var gapInlineChoiceDialog = {
 				if (0 == data.inlineRows.length) {
 					addNewRow(null);
 				}
-				$('#gapinlinechoice_insert').attr('value', 'Modify');
+				$('#gapinlinechoice_insert').attr('value', 'Save');
 				$('#remove_button').show();
 
 			} else {
