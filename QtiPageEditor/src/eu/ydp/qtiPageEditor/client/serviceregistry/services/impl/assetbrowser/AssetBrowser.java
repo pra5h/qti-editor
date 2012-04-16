@@ -95,12 +95,17 @@ public class AssetBrowser extends DialogBox  implements IAssetBrowser, IResource
 	
 	@UiHandler("_okButton")
 	protected void onClickOk(ClickEvent event){
-		if(_listBox.getSelectedIndex() > -1){
-			String filePath = getPathFromItemString(_listBox.getValue(_listBox.getSelectedIndex()));
-			filePath = cleanPath(filePath);
-			_jsCallback.onBrowseComplete(filePath+"?"+String.valueOf(System.currentTimeMillis()), getTitle());
-		}				
-		hide();		
+		boolean result = true;
+		if(_listBox.getSelectedIndex() > -1){			
+			try{
+				String filePath = getPathFromItemString(_listBox.getValue(_listBox.getSelectedIndex()));
+				filePath = cleanPath(filePath);
+				result = _jsCallback.onBrowseComplete(filePath+"?"+String.valueOf(System.currentTimeMillis()), getTitle());
+			}catch (Exception e) {
+			}
+		}			
+		if (result)
+			hide();		
 	}
 	
 	@UiHandler("_cancelButton")
