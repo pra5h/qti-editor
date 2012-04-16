@@ -236,7 +236,7 @@ var gapInlineChoiceDialog = {
 			if (validateGapInlineChoiceExercise(obj)) {
 				
 				if (obj.question != undefined && obj.question != '') {
-					var bm = ed.selection.getBookmark();
+					//var bm = ed.selection.getBookmark();
 //					ed.selection.moveToBookmark(bm);
 
 
@@ -270,8 +270,8 @@ var gapInlineChoiceDialog = {
 					//sourcesList.content += '<!-- </sourcesList> -->';
 					//content += sourcesList.content;
 
-					var ed = tinymce.EditorManager.activeEditor;
-					var bm = ed.selection.getBookmark();
+					//var ed = tinymce.EditorManager.activeEditor;
+					//var bm = ed.selection.getBookmark();
 
 					if(form.addnew != undefined && form.addnew.getAttribute('value') == '1') {
 						newData.content += '</div><!-- </textInteraction> --><p>&nbsp;</p><span id="focus">_</span>';
@@ -294,7 +294,7 @@ var gapInlineChoiceDialog = {
 						});
 
 						dom.setOuterHTML(dom.select('._mce_marker')[0], newData.content);
-						ed.selection.moveToBookmark(bm);
+						//ed.selection.moveToBookmark(bm);
 
 						body = ed.selection.getNode();
 						while(body.nodeName != 'BODY') {
@@ -306,7 +306,7 @@ var gapInlineChoiceDialog = {
 						
 					} else {
 						var nd = tinyMCE.selectedNode;
-
+						
 						while(nd.id != 'gapInlineChoiceInteraction') {
 							nd = nd.parentNode;
 						}
@@ -364,14 +364,34 @@ var gapInlineChoiceDialog = {
 								body.innerHTML = body.innerHTML.replace(regexp, '<!-- '+newRespSection + ' -->$1');
 							}*/
 							//wstawienie nowych correct response
-							regexp = new RegExp('(<!-- <itemBody> -->)','gi');
-							body.innerHTML = body.innerHTML.replace(regexp, sourcesList.responses + '$1');
 						}
+						var itemBody = null;
+						itemBody = $(ed.dom.doc.body).contents().filter(function() {
+								if (this.nodeType == 8 && this.nodeValue == ' <itemBody> ') {
+									return this;
+								}
+						});
+						//console.dir(itemBody.get(0));
 						
-						nd = ed.dom.get('gapInlineChoiceInteraction');
-						ed.focusAfterModify(nd);
+						//regexp = new RegExp('(<!-- <itemBody> -->)','gi');
+						//body.innerHTML = body.innerHTML.replace(regexp, sourcesList.responses + '$1');
+						//console.log(sourcesList.responses);
+						//ed.dom.doc.body.innerHTML = ed.dom.doc.body.innerHTML.replace(regexp, sourcesList.responses + '$1');
+						var respArray = sourcesList.responses.match(/<!-- .*? -->/gi);
+						//console.log(test[0].substr(4, test[0].length-5));
+						//.substr(5, test[0].length-10)
+						for ( var i in respArray) {
+							//var newNode = ed.dom.create('p',null,'&nbsp;');
+							itemBody.get(0).parentNode.insertBefore(document.createComment(respArray[i].replace('<!--', '').replace('-->','')),itemBody.get(0));
+						}
+						/*var a = document.createComment(test[0].replace('<!--', '').replace('-->',''));
+						console.dir(a);
+						regexp = new RegExp('(<!-- <itemBody> -->)','gi');
+						body.innerHTML = body.innerHTML.replace(regexp, sourcesList.responses + '$1');
+						*/
+						//ed.focusAfterInsert('focus');
+						ed.focusAfterModify(ed.dom.get(nd));
 					}
-					//ed.focusAfterInsert('focus');
 					//ed.selection.moveToBookmark(bm);
 
 					// Remove illegal text before headins
@@ -384,6 +404,7 @@ var gapInlineChoiceDialog = {
 					}
 				}
 				//ed.execCommand('mceEndUndoLevel');
+				tinyMCEPopup.restoreSelection();
 				tinyMCEPopup.close();
 				return true;
 			}

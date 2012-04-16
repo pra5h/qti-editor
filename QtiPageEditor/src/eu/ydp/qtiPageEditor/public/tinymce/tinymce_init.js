@@ -129,7 +129,9 @@ tinyMCE.init({
 		
 		ed.focusAfterModify = function(n) {
 			var toFocus = n.nextElementSibling;
-			ed.selection.select(toFocus, true);
+			ed.selection.select(ed.dom.get(toFocus), true);
+			ed.selection.collapse(false);
+			ed.nodeChanged();
 			ed.focus();
 		},
 		
