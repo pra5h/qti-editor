@@ -176,11 +176,9 @@ function html2qtiParseProcess(tree) {
 
     	if (tree.nodeType == 3) {
     		//text += ed.dom.encode(tree.nodeValue);
-    		
-    		if (undefined != tree.parentNode) {
-    			if (tree.parentNode.nodeName == 'VALUE') {
+
+    		if (undefined != tree.parentNode && tree.parentNode.nodeName == 'VALUE') {
     				text += ed.dom.encode(tree.nodeValue);
-    			}
     		} else {
     			text += tree.nodeValue;
     		}
@@ -894,8 +892,8 @@ function actionOnQTI(e) {
 				
 				// MathML
 				if (selectedNode.nodeName == 'DIV' && selectedNode.id == 'mathML') {
-					runMathMLInteraction(selectedNode);
-					break;
+					//runMathMLInteraction(selectedNode);
+					//break;
 				}
 				
 				// QY Comments
