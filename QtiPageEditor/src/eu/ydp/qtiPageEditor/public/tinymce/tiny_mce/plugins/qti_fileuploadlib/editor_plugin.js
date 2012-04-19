@@ -15,7 +15,7 @@
 
 						onBrowseComplete : function(filePath, title) {
 							
-							if (!ed.validateHtml(title, 'title')) {
+							if (!ed.validateHtml(title, 'title', true)) {
 								return false;
 							}
 							var node = ed.selection.getNode();

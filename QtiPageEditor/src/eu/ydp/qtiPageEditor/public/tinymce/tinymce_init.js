@@ -137,12 +137,14 @@ tinyMCE.init({
 		
 		//sprawdza czy redaktor podomykał tagi htmlowe podczas wpisywania kontentu
 		//w formularze edycyjne w naszych pluginach
-		ed.validateHtml = function (text, fieldName) {
+		ed.validateHtml = function (text, fieldName, cancelAlert) {
+				var showAlert = (cancelAlert)?false:true;
 				var div = $('<div/>');
 				div.html(text);
 				
 				if (text != div.html()) {
-					tinymce.EditorManager.activeEditor.windowManager.alert('The '+fieldName+' field contains illegal HTML elements.');
+					if (showAlert)
+						tinymce.EditorManager.activeEditor.windowManager.alert('The '+fieldName+' field contains illegal HTML elements.');
 					return false;
 				}
 				return true;

@@ -14,7 +14,7 @@
 				var browseCallback = {
 
 					onBrowseComplete : function(filePath, title) {
-						if (!ed.validateHtml(title, 'title')) {
+						if (!ed.validateHtml(title, 'title', true)) {
 							return false;
 						}
 						
