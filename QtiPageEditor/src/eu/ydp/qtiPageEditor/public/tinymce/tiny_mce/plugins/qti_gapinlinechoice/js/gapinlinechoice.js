@@ -34,10 +34,12 @@ var gapInlineChoiceDialog = {
 			if(data != undefined && data.inlineRows != undefined) {
 
 				for (r in data.inlineRows) {
-
+					var id = data.inlineRows[r].id;
+					
 					if ('gap' == data.inlineRows[r].type) {
 						data.inlineRows[r].answer = $('<div/>').html(data.inlineRows[r].answer).text();
 						addNewRow(data.inlineRows[r]);
+						
 					} else {
 						addNewRow(null);
 						var jsonString = tinymce.util.JSON.serialize(data.inlineRows[r]);
@@ -53,6 +55,10 @@ var gapInlineChoiceDialog = {
 								$('#answer'+data.inlineRows[r].id).val(stringDecode(data.inlineRows[r].answers[i]));
 							}
 						}
+					}
+					if ('' != $('#answer'+id).val()) {
+						$('#'+id+'_add').hide(); //attr('disabled', true);
+						$('#'+id+'_remove').show(); //attr('disabled', true);
 					}
 				}
 				

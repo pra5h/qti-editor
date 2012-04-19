@@ -995,7 +995,7 @@ function runGapInlineChoiceInteraction(selectedNode) {
 	var contentElement = selectedNode.children[1]; //p gapInlineChoiceInteractionContent
 	var contentText = '';
 	var nodeCounter = 0;
-	var tmpResponses = new Array();
+	//var tmpResponses = new Array();
 	
 	for(var i = 0; i < contentElement.childNodes.length; i++) {
 		var node = contentElement.childNodes[i];
@@ -1019,8 +1019,8 @@ function runGapInlineChoiceInteraction(selectedNode) {
 			var child = $(node.nodeValue).get(0);
 			
 			if ('TEXTENTRYINTERACTION' == child.tagName) {
-				if (-1 == tmpResponses.indexOf(contentElement.childNodes[i].nextSibling.innerHTML)) {
-					tmpResponses.push(contentElement.childNodes[i].nextSibling.innerHTML);
+				//if (-1 == tmpResponses.indexOf(contentElement.childNodes[i].nextSibling.innerHTML)) {
+					//tmpResponses.push(contentElement.childNodes[i].nextSibling.innerHTML);
 					contentText += '[gap#'+nodeCounter+']';
 					var feedback = new Array();
 						feedback['onOk'] = '';
@@ -1043,13 +1043,13 @@ function runGapInlineChoiceInteraction(selectedNode) {
 							type: 'gap'
 					});
 					nodeCounter++;
-				} else {
+				/*} else {
 					var cResp = xh.getCorrectResponseNodeId(body, child.getAttribute('responseIdentifier'));
 					if (null != cResp) {
 						cResp.parentNode.removeChild(cResp);
 					}
 					contentText += '[gap#'+tmpResponses.indexOf(contentElement.childNodes[i].nextSibling.innerHTML)+']';
-				}
+				}*/
 			} else if ('INLINECHOICEINTERACTION' == child.tagName) {
 
 				var span = contentElement.childNodes[i].nextSibling;
@@ -1113,9 +1113,9 @@ function runGapInlineChoiceInteraction(selectedNode) {
 					}
 				}
 				
-				if (-1 == tmpResponses.indexOf(tmpAnswers)) {
+				//if (-1 == tmpResponses.indexOf(tmpAnswers)) {
 					contentText += '[inlineChoice#'+nodeCounter+']';
-					tmpResponses.push(tmpAnswers);
+					//tmpResponses.push(tmpAnswers);
 					data['inlineRows'].push({
 						answers: answers,
 						feedbacks: feedbacks,
@@ -1128,13 +1128,14 @@ function runGapInlineChoiceInteraction(selectedNode) {
 						type: 'inlineChoice'
 					});
 					nodeCounter++;
-				} else {
+				/*} else {
 					var cResp = xh.getCorrectResponseNodeId(body, child.getAttribute('responseIdentifier'));
 					if (null != cResp) {
 						cResp.parentNode.removeChild(cResp);
 					}
-					contentText += '[inlineChoice#'+tmpResponses.indexOf(tmpAnswers)+']';
-				}
+					//contentText += '[inlineChoice#'+tmpResponses.indexOf(tmpAnswers)+']';
+					contentText += '[inlineChoice#'+nodeCounter+']';
+				}*/
 				var tmpNode = node;
 
 				for(;i < contentElement.childNodes.length; i++) {
