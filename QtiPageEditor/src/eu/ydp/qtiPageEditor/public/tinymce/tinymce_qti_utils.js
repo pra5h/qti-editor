@@ -1,5 +1,6 @@
 var baseTags = new Array('p','div','table','tbody','td','tr','th', 'sub', 'sup', 'span', 'strong', 'em', 'ul', 'li');
 baseTags.sort();
+
 function qti2htmlParse(tree) {
 	var text = qti2htmlParseProcess(tree);
 	text = mathml2subsup(text);
@@ -102,7 +103,7 @@ function html2qtiParse(tree) {
 function html2qtiParseProcess(tree) {
     var text = '';
     var ed = tinymce.EditorManager.activeEditor;
-   var xh = ed.XmlHelper;
+    var xh = ed.XmlHelper;
     if (tree.nodeType == 1) {
             if ('ASSESSMENTITEM' == tree.tagName) {
             	text += xh.prepareNodeBegin(tree);
@@ -175,7 +176,12 @@ function html2qtiParseProcess(tree) {
 
     	if (tree.nodeType == 3) {
     		//text += ed.dom.encode(tree.nodeValue);
-    		text += tree.nodeValue;
+
+    		if (undefined != tree.parentNode && tree.parentNode.nodeName == 'VALUE') {
+    				text += ed.dom.encode(tree.nodeValue);
+    		} else {
+    			text += tree.nodeValue;
+    		}
     	}
     }
 
@@ -229,7 +235,10 @@ function textInteractionsGroupToQTI(tig) {
 				text += '<span>';
 				spanBegun = true;
 			}
-			text += n.nodeValue;
+			var tn = $('<div/>');
+			tn.text(n.nodeValue);
+			text += tn.html();
+			//text += n.nodeValue;
 			
 		} else if (8 == n.nodeType) {
 		
@@ -881,12 +890,18 @@ function actionOnQTI(e) {
 		while(selectedNode.nodeName != 'BODY') {
 			if(selectedNode.attributes != undefined) {
 				
+				// MathML
+				if (selectedNode.nodeName == 'DIV' && selectedNode.id == 'mathML') {
+					//runMathMLInteraction(selectedNode);
+					//break;
+				}
+				
 				// QY Comments
-				if (selectedNode.nodeName == 'DIV' && selectedNode.getAttribute('class') == 'mceNonEditable qy_comment') {
+				/*if (selectedNode.nodeName == 'DIV' && selectedNode.getAttribute('class') == 'mceNonEditable qy_comment') {
 					//runComment(selectedNode);
 					alert('Not implemented yet');
 					break;
-				}
+				}*/
 
 				// Gap InlineChoice
 				if (selectedNode.nodeName == 'DIV' && selectedNode.id == 'gapInlineChoiceInteraction') {
@@ -896,11 +911,11 @@ function actionOnQTI(e) {
 				}
 				
 				// PlayPause
-				if (selectedNode.nodeName == 'IMG' && selectedNode.attributes != undefined && selectedNode.getAttribute('id') == 'mcePlayPause') {
+				/*if (selectedNode.nodeName == 'IMG' && selectedNode.attributes != undefined && selectedNode.getAttribute('id') == 'mcePlayPause') {
 					//runPlayPause(selectedNode);
 					alert('Not implemented yet');
 					break;
-				}
+				}*/
 				
 				// MediaLib
 				if(selectedNode.nodeName == 'IMG' || (selectedNode.nodeName == 'FIELDSET' && selectedNode.id == 'runFileUploadLib')) {
@@ -915,11 +930,11 @@ function actionOnQTI(e) {
 				}
 
 				// Drag and Drop
-				if ((selectedNode.nodeName == 'P' && selectedNode.id == 'dragDropInteractionContents') || (selectedNode.nodeName == 'DIV' && selectedNode.id == 'dragDropInteraction')) {
+				/*if ((selectedNode.nodeName == 'P' && selectedNode.id == 'dragDropInteractionContents') || (selectedNode.nodeName == 'DIV' && selectedNode.id == 'dragDropInteraction')) {
 					//runDraggable(selectedNode);
 					alert('Not implemented yet');
 					break;
-				}
+				}*/
 
 				// Selection
 				if (selectedNode.nodeName == 'DIV' && selectedNode.id == 'selectionInteraction') {
@@ -928,25 +943,25 @@ function actionOnQTI(e) {
 				}
 				
 				// Order
-				if (selectedNode.id == 'orderOption' || (selectedNode.id == 'choiceInteraction' && selectedNode.parentNode.id == 'orderInteraction')) {
+				/*if (selectedNode.id == 'orderOption' || (selectedNode.id == 'choiceInteraction' && selectedNode.parentNode.id == 'orderInteraction')) {
 					//runOrder(selectedNode);
 					alert('Not implemented yet');
 					break;
-				}
+				}*/
 				
 				// Match
-				if (selectedNode.id != undefined && (selectedNode.id == 'matchInteraction' || selectedNode.id.match(/canvas_/))) {
+				/*if (selectedNode.id != undefined && (selectedNode.id == 'matchInteraction' || selectedNode.id.match(/canvas_/))) {
 					//runMatch(selectedNode);
 					alert('Not implemented yet');
 					break;
-				}
+				}*/
 
 				// Identification
-				if (selectedNode.id == 'identificationInteraction' || selectedNode.id == 'identificationAnswer' || selectedNode.parentNode.id == 'identificationAnswer') {
+				/*if (selectedNode.id == 'identificationInteraction' || selectedNode.id == 'identificationAnswer' || selectedNode.parentNode.id == 'identificationAnswer') {
 					//runIdentification(selectedNode);
 					alert('Not implemented yet');
 					break;
-				}
+				}*/
 
 			}
 			selectedNode = selectedNode.parentNode;
@@ -955,6 +970,14 @@ function actionOnQTI(e) {
 	}
 	return true;
 	
+}
+
+function runMathMLInteraction(selectedNode) {
+	math = selectedNode.innerHTML;
+	math = math.replace(/<math[^>]+>/,'');
+	math = math.replace(/<\/math>/,'');
+	tinyMCE.selectedNode = selectedNode;
+	tinyMCE.execCommand('mceScience', false, math);
 }
 
 function runGapInlineChoiceInteraction(selectedNode) {
@@ -969,16 +992,19 @@ function runGapInlineChoiceInteraction(selectedNode) {
 	data['question'] = selectedNode.children[0].innerHTML;
 	data['content'] = null;
 	data['inlineRows'] = new Array();
-	var contentElement = selectedNode.children[1];
+	var contentElement = selectedNode.children[1]; //p gapInlineChoiceInteractionContent
 	var contentText = '';
 	var nodeCounter = 0;
-	var tmpResponses = new Array();
+	//var tmpResponses = new Array();
 	
 	for(var i = 0; i < contentElement.childNodes.length; i++) {
 		var node = contentElement.childNodes[i];
 
 		if (3 == node.nodeType) { //text node
-			contentText += node.nodeValue;
+			var tn = $('<div/>');
+			tn.text(node.nodeValue);
+			contentText += tn.html();
+			//contentText += node.nodeValue;
 		} else if (1 == node.nodeType) { //zwykly html node
 			
 			if ('SPAN' != node.tagName) {
@@ -993,8 +1019,8 @@ function runGapInlineChoiceInteraction(selectedNode) {
 			var child = $(node.nodeValue).get(0);
 			
 			if ('TEXTENTRYINTERACTION' == child.tagName) {
-				if (-1 == tmpResponses.indexOf(contentElement.childNodes[i].nextSibling.innerHTML)) {
-					tmpResponses.push(contentElement.childNodes[i].nextSibling.innerHTML);
+				//if (-1 == tmpResponses.indexOf(contentElement.childNodes[i].nextSibling.innerHTML)) {
+					//tmpResponses.push(contentElement.childNodes[i].nextSibling.innerHTML);
 					contentText += '[gap#'+nodeCounter+']';
 					var feedback = new Array();
 						feedback['onOk'] = '';
@@ -1017,15 +1043,15 @@ function runGapInlineChoiceInteraction(selectedNode) {
 							type: 'gap'
 					});
 					nodeCounter++;
-				} else {
+				/*} else {
 					var cResp = xh.getCorrectResponseNodeId(body, child.getAttribute('responseIdentifier'));
 					if (null != cResp) {
 						cResp.parentNode.removeChild(cResp);
 					}
 					contentText += '[gap#'+tmpResponses.indexOf(contentElement.childNodes[i].nextSibling.innerHTML)+']';
-				}
+				}*/
 			} else if ('INLINECHOICEINTERACTION' == child.tagName) {
-				
+
 				var span = contentElement.childNodes[i].nextSibling;
 				var n = null;
 				var comment = null;
@@ -1066,14 +1092,30 @@ function runGapInlineChoiceInteraction(selectedNode) {
 								feedbacks[comment.getAttribute('identifier')] = comment.lastChild.innerHTML;
 								comment.removeChild(comment.lastChild);
 							}
-							tmpAnswers += comment.innerHTML;
+							/*chcemy wyeliminować w formularzu edycyjnym ćwiczenia powtarzające się inlineChoice'y.
+							  Dwa inlineChoice'y są takie same jeżeli:
+							  1. wszystkie ich odpowiedzi są jednakowe
+							  2. wszystkie inlineChoice'y mają zaznaczoną jako poprawną odpowiedź, tą samą wartość odpowiedzi
+							  3. wszystkie inlineChoice'y mają tak samo zaznaczone fixed'y
+							  Poniżej ztorzymy string będący "id" inlineChoice'a w postaci:
+							  "[ans1][isCorrect][ans2][isCorrect][ans3][isCorrect]"
+							  Jeżeli w tmpResponses już wcześniej wystąpił taki string to znaczy że jest to duplikat jakiegoś innego inlineChoicea
+							  i nie trzeba go wstawiać w zmienną data
+							  */
+							var isCorrect = 0;
+							if (correctResponse[0] == comment.getAttribute('identifier')) {
+								isCorrect = 1;
+							}
+							tmpAnswers += comment.innerHTML+isCorrect+fixed[fixed.length-1];
 							answers.push(comment.innerHTML);
+							isCorrect = 0;
 						}
 					}
 				}
-				if (-1 == tmpResponses.indexOf(tmpAnswers)) {
+				
+				//if (-1 == tmpResponses.indexOf(tmpAnswers)) {
 					contentText += '[inlineChoice#'+nodeCounter+']';
-					tmpResponses.push(tmpAnswers);
+					//tmpResponses.push(tmpAnswers);
 					data['inlineRows'].push({
 						answers: answers,
 						feedbacks: feedbacks,
@@ -1086,13 +1128,14 @@ function runGapInlineChoiceInteraction(selectedNode) {
 						type: 'inlineChoice'
 					});
 					nodeCounter++;
-				} else {
+				/*} else {
 					var cResp = xh.getCorrectResponseNodeId(body, child.getAttribute('responseIdentifier'));
 					if (null != cResp) {
 						cResp.parentNode.removeChild(cResp);
 					}
-					contentText += '[inlineChoice#'+tmpResponses.indexOf(tmpAnswers)+']';
-				}
+					//contentText += '[inlineChoice#'+tmpResponses.indexOf(tmpAnswers)+']';
+					contentText += '[inlineChoice#'+nodeCounter+']';
+				}*/
 				var tmpNode = node;
 
 				for(;i < contentElement.childNodes.length; i++) {

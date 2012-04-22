@@ -149,6 +149,9 @@ var choiceDialog = {
 		while(elements[i] != undefined) {
 			var element = elements[i];
 			if(element.getAttribute('name') == 'question') {
+				if (!ed.validateHtml(element.value, 'question')) {
+					return false;
+				}
 				question = element.value;
 			}
 			if(element.getAttribute('name') == 'identifier') {
@@ -168,6 +171,9 @@ var choiceDialog = {
 					if(images == true) {
 						answers.push('<img src="' + element.value + '"/>');
 					} else {
+						if (!ed.validateHtml(element.value, 'answer')) {
+							return false;
+						}
 						answers.push(element.value);
 					}
 				} else {
@@ -250,7 +256,7 @@ var choiceDialog = {
 			responseDeclaration += '</correctResponse></responseDeclaration> -->';
 			choiceSection += '</div><!-- </choiceInteraction> -->';
 			
-			choiceSection += '<p>&nbsp;</p>';
+			choiceSection += '<p>&nbsp;</p><span id="focus">_</span>';
 			
 			var dom = ed.dom;
 			var patt = '';
@@ -282,6 +288,8 @@ var choiceDialog = {
 			}
 			regexp = new RegExp('(<!-- <itemBody> -->)','gi');
 			body.innerHTML = body.innerHTML.replace(regexp, responseDeclaration + '$1');
+			
+			ed.focusAfterInsert('focus');
 			
 		} else {
 		
@@ -335,8 +343,9 @@ var choiceDialog = {
 			regexp = new RegExp('(<responseDeclaration[^>]*>[^<]*<correctResponse>)(?:[^<]*<value>[^<]*<\/value>[^<]*)*(<\/correctResponse>[^>]*<\/responseDeclaration>)','gi');
 			correctResponseNode.nodeValue = correctResponseNode.nodeValue.replace(regexp, '$1' + responseDeclaration + '$2');
 			correctResponseNode.nodeValue = correctResponseNode.nodeValue.replace(/cardinality="[^"]+"/, 'cardinality="' + (multiple ? 'multiple' : 'single') + '"');
+			ed.focusAfterModify(nd);
 		}
-		
+
 		// Remove illegal text before headins
 		var beforeHeadings = ed.selection.dom.doc.body.innerHTML.match(/(.*?)(?=<!-- \?xml)/);
 		if(beforeHeadings != undefined && beforeHeadings[1] != '') {

@@ -2,7 +2,7 @@
  * $Id: editor_plugin_src.js 743 2008-03-23 17:47:33Z spocke $
  *
  * @author Moxiecode
- * @copyright Copyright © 2004-2008, Moxiecode Systems AB, All rights reserved.
+ * @copyright Copyright ï¿½ 2004-2008, Moxiecode Systems AB, All rights reserved.
  */
 
 (function() {
@@ -30,9 +30,14 @@
 				// Block or unblock
 				if (sc || ec) {
 					t._setDisabled(1);
+					cm.setDisabled('newLineBefore', false);
+					cm.setDisabled('newLineAfter', false);
 					return false;
-				} else
+				} else {
 					t._setDisabled(0);
+					cm.setDisabled('newLineBefore', true);
+					cm.setDisabled('newLineAfter', true);
+				}
 				
 			});
 		},

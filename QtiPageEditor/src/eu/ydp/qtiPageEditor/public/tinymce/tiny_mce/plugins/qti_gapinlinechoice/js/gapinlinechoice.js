@@ -34,9 +34,12 @@ var gapInlineChoiceDialog = {
 			if(data != undefined && data.inlineRows != undefined) {
 
 				for (r in data.inlineRows) {
-
+					var id = data.inlineRows[r].id;
+					
 					if ('gap' == data.inlineRows[r].type) {
+						data.inlineRows[r].answer = $('<div/>').html(data.inlineRows[r].answer).text();
 						addNewRow(data.inlineRows[r]);
+						
 					} else {
 						addNewRow(null);
 						var jsonString = tinymce.util.JSON.serialize(data.inlineRows[r]);
@@ -53,12 +56,16 @@ var gapInlineChoiceDialog = {
 							}
 						}
 					}
+					if ('' != $('#answer'+id).val()) {
+						$('#'+id+'_add').hide(); //attr('disabled', true);
+						$('#'+id+'_remove').show(); //attr('disabled', true);
+					}
 				}
 				
 				if (0 == data.inlineRows.length) {
 					addNewRow(null);
 				}
-				$('#gapinlinechoice_insert').attr('value', 'Modify');
+				$('#gapinlinechoice_insert').attr('value', 'Save');
 				$('#remove_button').show();
 
 			} else {
@@ -183,8 +190,19 @@ var gapInlineChoiceDialog = {
 			var ed = tinymce.EditorManager.activeEditor;
 			var obj = new Object();
 			obj.identifier = $('#identifier').val();
+			
+			if (!ed.validateHtml($('[name=question]').val(), 'content')) {
+				return false;
+			}
+			
 			obj.question = stringEncode($('[name=question]').val());
-			obj.content = stringEncode($('[name=exercise_content]').val()).replace(/\n/g,'<br/>').replace(/[ ]/gi,'&#32;');
+			
+			//obj.content = stringEncode($('[name=exercise_content]').val()).replace(/\n/g,'<br/>').replace(/[ ]/gi,'&#32;');
+			var ec = $('[name=exercise_content]').val();
+			if (!ed.validateHtml(ec, 'exercise content')) {
+				return false;
+			} 
+			obj.content = stringEncode(ec).replace(/\n/g,'<br/>').replace(/[ ]/gi,'&#32;');
 			obj.tags = new Array();
 			var reg = new RegExp(/(?:\[(?:(?:gap#|inlineChoice#)[0-9]+)*?\])+/gi);
 			
@@ -192,14 +210,20 @@ var gapInlineChoiceDialog = {
 				obj.tags.push(t[0]);
 			}
 			obj.inlineRows = new Array();
-
+			var validateHtmlFlag = true;
+			
 			$('#gaps tbody tr').each(function() {
 				$tr = $(this);
 				var row = new Object();
 				row.id = $tr.attr('id');
 				if (false == $('#checkbox' + row.id).attr('checked')) {
 					row.identifier = $tr.find('#identifier'+row.id).val();
-					row.answer = stringEncode($tr.find('#answer'+row.id).val());
+					//if (!ed.validateHtml($tr.find('#answer'+row.id).val(), 'correct answer')) {
+						//validateHtmlFlag = false;
+					//} 
+					row.answer = stringEncode($('<div/>').text($tr.find('#answer'+row.id).val()).html());
+					//row.answer = $("<div/>").text($tr.find('#answer'+row.id).val()).html();
+					//console.log(row.answer);
 					row.checkboks = $tr.find('#checkbox'+row.id).attr('checked');
 					//row.feedback = $tr.find('#feedback'+row.id).val();
 					row.type = 'gap';
@@ -211,10 +235,14 @@ var gapInlineChoiceDialog = {
 				obj.inlineRows.push(row);
 			});
 
+			if (!validateHtmlFlag) {
+				return false;
+			}
+			
 			if (validateGapInlineChoiceExercise(obj)) {
 				
 				if (obj.question != undefined && obj.question != '') {
-					var bm = ed.selection.getBookmark();
+					//var bm = ed.selection.getBookmark();
 //					ed.selection.moveToBookmark(bm);
 
 
@@ -248,11 +276,11 @@ var gapInlineChoiceDialog = {
 					//sourcesList.content += '<!-- </sourcesList> -->';
 					//content += sourcesList.content;
 
-					var ed = tinymce.EditorManager.activeEditor;
-					var bm = ed.selection.getBookmark();
+					//var ed = tinymce.EditorManager.activeEditor;
+					//var bm = ed.selection.getBookmark();
 
 					if(form.addnew != undefined && form.addnew.getAttribute('value') == '1') {
-						newData.content += '</div><!-- </textInteraction> --><p>&nbsp;</p>';
+						newData.content += '</div><!-- </textInteraction> --><p>&nbsp;</p><span id="focus">_</span>';
 
 						var dom = ed.dom;
 						var patt = '';
@@ -272,7 +300,7 @@ var gapInlineChoiceDialog = {
 						});
 
 						dom.setOuterHTML(dom.select('._mce_marker')[0], newData.content);
-						ed.selection.moveToBookmark(bm);
+						//ed.selection.moveToBookmark(bm);
 
 						body = ed.selection.getNode();
 						while(body.nodeName != 'BODY') {
@@ -280,13 +308,15 @@ var gapInlineChoiceDialog = {
 						}
 						regexp = new RegExp('(<!-- <itemBody> -->)','gi');
 						body.innerHTML = body.innerHTML.replace(regexp, sourcesList.responses + '$1');
-
+						ed.focusAfterInsert('focus');
+						
 					} else {
 						var nd = tinyMCE.selectedNode;
-
+						
 						while(nd.id != 'gapInlineChoiceInteraction') {
 							nd = nd.parentNode;
 						}
+
 						nd.innerHTML = newData.content;
 						body = nd;
 						while(body.nodeName != 'BODY') {
@@ -340,11 +370,35 @@ var gapInlineChoiceDialog = {
 								body.innerHTML = body.innerHTML.replace(regexp, '<!-- '+newRespSection + ' -->$1');
 							}*/
 							//wstawienie nowych correct response
-							regexp = new RegExp('(<!-- <itemBody> -->)','gi');
-							body.innerHTML = body.innerHTML.replace(regexp, sourcesList.responses + '$1');
 						}
+						var itemBody = null;
+						itemBody = $(ed.dom.doc.body).contents().filter(function() {
+								if (this.nodeType == 8 && this.nodeValue == ' <itemBody> ') {
+									return this;
+								}
+						});
+						//console.dir(itemBody.get(0));
+						
+						//regexp = new RegExp('(<!-- <itemBody> -->)','gi');
+						//body.innerHTML = body.innerHTML.replace(regexp, sourcesList.responses + '$1');
+						//console.log(sourcesList.responses);
+						//ed.dom.doc.body.innerHTML = ed.dom.doc.body.innerHTML.replace(regexp, sourcesList.responses + '$1');
+						var respArray = sourcesList.responses.match(/<!-- .*? -->/gi);
+						//console.log(test[0].substr(4, test[0].length-5));
+						//.substr(5, test[0].length-10)
+						for ( var i in respArray) {
+							//var newNode = ed.dom.create('p',null,'&nbsp;');
+							itemBody.get(0).parentNode.insertBefore(document.createComment(respArray[i].replace('<!--', '').replace('-->','')),itemBody.get(0));
+						}
+						/*var a = document.createComment(test[0].replace('<!--', '').replace('-->',''));
+						console.dir(a);
+						regexp = new RegExp('(<!-- <itemBody> -->)','gi');
+						body.innerHTML = body.innerHTML.replace(regexp, sourcesList.responses + '$1');
+						*/
+						//ed.focusAfterInsert('focus');
+						ed.focusAfterModify(ed.dom.get(nd));
 					}
-					ed.selection.moveToBookmark(bm);
+					//ed.selection.moveToBookmark(bm);
 
 					// Remove illegal text before headins
 					var beforeHeadings = ed.selection.dom.doc.body.innerHTML.match(/(.*?)(?=<!-- \?xml)/);
@@ -355,6 +409,8 @@ var gapInlineChoiceDialog = {
 						ed.selection.dom.doc.body.innerHTML = ed.selection.dom.doc.body.innerHTML.replace(/<itemBody> -->/,'<itemBody> -->' + beforeHeadings[1]);
 					}
 				}
+				//ed.execCommand('mceEndUndoLevel');
+				tinyMCEPopup.restoreSelection();
 				tinyMCEPopup.close();
 				return true;
 			}

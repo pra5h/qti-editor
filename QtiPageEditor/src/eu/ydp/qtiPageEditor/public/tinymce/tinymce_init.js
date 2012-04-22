@@ -7,11 +7,12 @@ tinyMCE.init({
 	elements : "content",
 	skin : "o2k7",
 	//spellchecker, asciimath,asciimathcharmap,
-	plugins : "safari,pagebreak,style,layer,table,save,advhr,advlink,emotions,iespell,inlinepopups,"
+	//qti_science,
+	plugins : "safari,pagebreak,layer,table,save,advhr,advlink,emotions,iespell,inlinepopups,"
 		+"insertdatetime,qti_empiriapreview,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,"
-		+"visualchars,nonbreaking,xhtmlxtras,template,imagemanager,filemanager,noneditable,asciisvg,"
+		+"visualchars,nonbreaking,xhtmlxtras,template,imagemanager,filemanager,asciisvg,"
 		+"qti_pagetitle,qti_choice,qti_gapinlinechoice,qti_fileuploadlib,"
-		+"qti_addvideo,qti_copyqti,qti_selection",
+		+"qti_addvideo,qti_copyqti,qti_selection,qti_newline",
 		
 	/*
 	plugins : "safari,spellchecker,pagebreak,style,layer,table,save,advhr,advlink,emotions,iespell,inlinepopups,"
@@ -30,8 +31,9 @@ tinyMCE.init({
 	theme_advanced_buttons1 : "save,newdocument,print,empiriapreview,|,fontselect,fontsizeselect,|,bold,italic,underline,strikethrough,|,help",
 	//pastetext,pasteword,    ,spellchecker  ,asciimath,asciimathcharmap,|   |,outdent,indent,|,link,unlink,
 	//,bullist,numlist,|
+	//,science
 	theme_advanced_buttons2 : "undo,redo,|,cut,copy,|,paste,|,search,replace,|,forecolor,backcolor,|,sub,sup,|,charmap",
-	theme_advanced_buttons3 : "pagetitle,insertgapinlinechoice,insertchoicesection,insertordersection,insertmatchsection,insertselectionsection,insertdraggablesection,insertidentificationsection,|,fileuploadlib_image,addvideo,playpause,|,insertcomment,|,tablecontrols,|,code",
+	theme_advanced_buttons3 : "newLineBefore,newLineAfter,pagetitle,insertgapinlinechoice,insertchoicesection,insertordersection,insertmatchsection,insertselectionsection,insertdraggablesection,insertidentificationsection,|,fileuploadlib_image,addvideo,playpause,|,insertcomment,|,tablecontrols,|,code",
 
 	extended_valid_elements : "simpleText,group,canvas[id|style|width|height],gap[identifier],choiceInteraction[shuffle|maxChoices|responseIdentifier],"
 		+"orderInteracion[shuffle|responseIdentifier],selectionInteracion[shuffle|responseIdentifier],item[identifier],matchInteraction[shuffle|maxAssociations|responseIdentifier],prompt,"
@@ -117,6 +119,36 @@ tinyMCE.init({
 				o.content = HTML2QTI(o.content);
             }
         });
+		
+		ed.focusAfterInsert = function(id) {
+			var toFocus = ed.dom.get(id).previousElementSibling;	
+			ed.selection.select(toFocus, true);
+			ed.selection.collapse(false);
+			ed.dom.remove(id);
+		},
+		
+		ed.focusAfterModify = function(n) {
+			var toFocus = n.nextElementSibling;
+			ed.selection.select(ed.dom.get(toFocus), true);
+			ed.selection.collapse(false);
+			ed.nodeChanged();
+			ed.focus();
+		},
+		
+		//sprawdza czy redaktor podomykał tagi htmlowe podczas wpisywania kontentu
+		//w formularze edycyjne w naszych pluginach
+		ed.validateHtml = function (text, fieldName, cancelAlert) {
+				var showAlert = (cancelAlert)?false:true;
+				var div = $('<div/>');
+				div.html(text);
+				
+				if (text != div.html()) {
+					if (showAlert)
+						tinymce.EditorManager.activeEditor.windowManager.alert('The '+fieldName+' field contains illegal HTML elements.');
+					return false;
+				}
+				return true;
+		};
 		
 		ed.XmlHelper = {
 				rootNode: {attributes: new Array(), node: null},

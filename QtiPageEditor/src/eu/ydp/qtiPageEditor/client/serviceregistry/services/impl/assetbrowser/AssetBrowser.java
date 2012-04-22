@@ -8,9 +8,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -19,6 +19,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -95,12 +96,37 @@ public class AssetBrowser extends DialogBox  implements IAssetBrowser, IResource
 	
 	@UiHandler("_okButton")
 	protected void onClickOk(ClickEvent event){
-		if(_listBox.getSelectedIndex() > -1){
-			String filePath = getPathFromItemString(_listBox.getValue(_listBox.getSelectedIndex()));
-			filePath = cleanPath(filePath);
-			_jsCallback.onBrowseComplete(filePath+"?"+String.valueOf(System.currentTimeMillis()), getTitle());
-		}				
-		hide();		
+		boolean result = true;
+		if(_listBox.getSelectedIndex() > -1){			
+			try{
+				String filePath = getPathFromItemString(_listBox.getValue(_listBox.getSelectedIndex()));
+				filePath = cleanPath(filePath);
+				result = _jsCallback.onBrowseComplete(filePath+"?"+String.valueOf(System.currentTimeMillis()), getTitle());
+			}catch (Exception e) {
+			}
+		}			
+		if (result){
+			hide();		
+		}else{
+			final DialogBox db = new DialogBox(false, true);
+			db.setText("Error");
+			VerticalPanel panel = new VerticalPanel();
+			Button okButton = new Button("OK");
+			okButton.addClickHandler(new ClickHandler() {
+				
+				@Override
+				public void onClick(ClickEvent event) {
+					db.hide();
+				}
+			});
+			panel.add(new Label("The title field contains illegal HTML elements."));
+			panel.add(okButton);
+			panel.setCellHorizontalAlignment(okButton, HasHorizontalAlignment.ALIGN_CENTER);
+			db.add(panel);
+			db.center();
+			db.show();			
+		}
+			
 	}
 	
 	@UiHandler("_cancelButton")

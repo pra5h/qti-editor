@@ -20,7 +20,7 @@ tinyMCE.addI18n('en.gapinlinechoice_dlg',{
 
 tinyMCE.addI18n('en.inlinechoice_dlg',{
 	window_title:"Insert / modify inline choice element",
-	modify:"Modify",
+	modify:"Save",
 	insert:"Insert",
 	remove:"Remove",
 	answers_label:"Answers",

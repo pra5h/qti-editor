@@ -224,6 +224,9 @@ var selectionDialog = {
 		while(elements[i] != undefined) {
 			var element = elements[i];
 			if(element.getAttribute('name') == 'question') {
+				if (!ed.validateHtml(element.value, 'question')) {
+					return false;
+				}
 				dataobj.question = element.value;
 			}
 			if(element.getAttribute('name') == 'identifier') {
@@ -234,6 +237,9 @@ var selectionDialog = {
 			}
 			if(element.getAttribute('name') == 'answers[]') {
 				if(element.value != '') {
+					if (!ed.validateHtml(element.value, 'answer')) {
+						return false;
+					}
 					dataobj.answers.push(element.value);
 				} else {
 					skip_point = 1;
@@ -241,6 +247,9 @@ var selectionDialog = {
 			}
 			if(element.getAttribute('name') == 'choices[]') {
 				if(element.value != '') {
+					if (!ed.validateHtml(element.value, 'option')) {
+						return false;
+					}
 					dataobj.options.push(element.value);
 				} else {
 					skip_point = 1;
@@ -358,7 +367,7 @@ var selectionDialog = {
 
 			responseDeclaration += '</correctResponse></responseDeclaration> -->';
 			selectionSection += '</div><!-- end of selectionInteraction -->';
-			selectionSection += '<p>&nbsp;</p>';
+			selectionSection += '<p>&nbsp;</p><span id="focus">_</span>';
 
 			//var ed = tinyMCEPopup.editor;
 			//var ed = tinymce.EditorManager.activeEditor;
@@ -386,7 +395,7 @@ var selectionDialog = {
 			}
 			regexp = new RegExp('(<!-- <itemBody> -->)','gi');
 			body.innerHTML = body.innerHTML.replace(regexp, responseDeclaration + '$1');
-			
+			ed.focusAfterInsert('focus');
 			//ed.execCommand('mceEndUndoLevel');
 
 		} else {
@@ -492,6 +501,7 @@ var selectionDialog = {
 			var correctResponseNode = xh.getCorrectResponseNodeId(body, dataobj.identifier);
 			regexp = new RegExp('(<responseDeclaration[^>]*>[^<]*<correctResponse>)(?:[^<]*<value>[^<]*<\/value>[^<]*)*(<\/correctResponse>[^>]*<\/responseDeclaration>)','gi');
 			correctResponseNode.nodeValue = correctResponseNode.nodeValue.replace(regexp, '$1' + responseDeclaration + '$2');
+			ed.focusAfterModify(nd);
 		}
 		
 		// Remove illegal text before headins

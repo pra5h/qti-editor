@@ -102,6 +102,9 @@ function addNewRow(row) {
 	newRow = newRow.replace(/{identifier}/, id);
 	
 	$('#gaps').last().append(newRow);
+
+	$('#'+newId+'_add').show();
+	$('#'+newId+'_remove').hide();
 	
 	if (null != row) {
 		$('#answer'+newId).attr('value', stringDecode(row.answer));
@@ -126,6 +129,8 @@ function applyExternalRowData(identifier) {
 	var before = contents.value.substring(0,contents.selectionStart);
 	var after = contents.value.substring(contents.selectionEnd);
 	contents.value = before + '['+type+'#' + lp + ']' + after;
+	$('#'+identifier+'_add').hide();
+	$('#'+identifier+'_remove').show();
 }
 
 function removeExternalRowData(removeElement) {
@@ -365,3 +370,4 @@ function lock(id) {
 	//$(tinymce.DOM.get(id)).css("z-index", zIndex);
 	return id;
 }
+

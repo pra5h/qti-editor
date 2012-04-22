@@ -100,7 +100,7 @@ var inlineChoiceDialog = {
 	},
 
 	insertInlineChoice : function(form) {
-		
+		var ed = tinymce.EditorManager.activeEditor;
 		var elements = form.elements;
 		var objData = new Array();
 		objData.answers = new Array();
@@ -126,6 +126,9 @@ var inlineChoiceDialog = {
 			
 			if(element.getAttribute('name') == 'answers[]') {
 				if(element.value != '') {
+					if (!ed.validateHtml(element.value, 'answer content')) {
+						return false;
+					}
 					objData.answers.push(stringEncode(element.value));
 				} else {
 					skip_point = 1;
