@@ -57,8 +57,8 @@ var gapInlineChoiceDialog = {
 						}
 					}
 					if ('' != $('#answer'+id).val()) {
-						$('#'+id+'_add').hide(); //attr('disabled', true);
-						$('#'+id+'_remove').show(); //attr('disabled', true);
+						$('#'+id+'_add').val('Del');
+						$('#'+id+'_add').attr('onClick', 'removeTagFromContentData('+id+')');
 					}
 				}
 				

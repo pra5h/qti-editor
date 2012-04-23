@@ -104,7 +104,6 @@ function addNewRow(row) {
 	$('#gaps').last().append(newRow);
 
 	$('#'+newId+'_add').show();
-	$('#'+newId+'_remove').hide();
 	
 	if (null != row) {
 		$('#answer'+newId).attr('value', stringDecode(row.answer));
@@ -114,7 +113,7 @@ function addNewRow(row) {
 }
 
 function applyExternalRowData(identifier) {
-	
+
 	var lp = identifier;
 	var chboxElm = $('#checkbox' + lp);
 	var type;
@@ -129,8 +128,9 @@ function applyExternalRowData(identifier) {
 	var before = contents.value.substring(0,contents.selectionStart);
 	var after = contents.value.substring(contents.selectionEnd);
 	contents.value = before + '['+type+'#' + lp + ']' + after;
-	$('#'+identifier+'_add').hide();
-	$('#'+identifier+'_remove').show();
+
+	$('#'+identifier+'_add').val('Del');
+	$('#'+identifier+'_add').attr('onClick', 'removeTagFromContentData('+identifier+')');
 }
 
 function removeExternalRowData(removeElement) {
@@ -163,6 +163,36 @@ function removeExternalRowData(removeElement) {
 	}
 	
 	tr.parentNode.removeChild(tr);
+}
+
+function removeTagFromContentData(id) {
+
+	var ed = tinymce.EditorManager.activeEditor;
+	var xh = ed.XmlHelper;
+	var ch = $('#checkbox'+id);
+	var contentNode = $('#exercise_content');
+	var contentValue = contentNode.val();
+	var c = null;
+	
+	if (true == ch.attr('checked')) {
+		var pattern = new RegExp('\\[inlineChoice#'+id+'\\]', 'gi');
+		contentValue = contentValue.replace(pattern, '');
+		var distractorData = tinymce.util.JSON.parse($('#distractorData'+id).val());
+		var identifier = distractorData['identifier'];
+		c = xh.getCorrectResponseNodeId(ed.dom.doc.body, identifier);
+	} else if (false == ch.attr('checked')) {
+		var pattern = new RegExp('\\[gap#'+id+'\\]', 'gi');
+		contentValue = contentValue.replace(pattern, '');
+		var identifier = $('#identifier'+id).val();
+		c = xh.getCorrectResponseNodeId(ed.dom.doc.body, identifier);
+	}
+	contentNode.val(contentValue);
+
+	if (c != null) {
+		c.parentNode.removeChild(c);
+	}
+	$('#'+id+'_add').val('Add'); //attr('disabled', true);
+	$('#'+id+'_add').attr('onClick', 'applyExternalRowData('+id+')');
 }
 
 function changeRowType(checkboxElement) {
