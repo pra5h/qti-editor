@@ -128,11 +128,18 @@ tinyMCE.init({
 		},
 		
 		ed.focusAfterModify = function(n) {
-			var toFocus = n.nextElementSibling;
-			ed.selection.select(ed.dom.get(toFocus), true);
-			ed.selection.collapse(false);
-			ed.nodeChanged();
-			ed.focus();
+			
+			if (null == n.nextElementSibling || n.nextElementSibling.nodeType != 1 || n.nextElementSibling.tagName != 'P') {
+				ed.selection.select(ed.dom.get(n), true);
+				ed.execCommand('mceAddNewLineAfter');
+
+			} else {
+				var toFocus = n.nextElementSibling;
+				ed.selection.select(ed.dom.get(toFocus), true);
+				ed.selection.collapse(false);
+				ed.nodeChanged();
+				ed.focus();
+			}
 		},
 		
 		//sprawdza czy redaktor podomykał tagi htmlowe podczas wpisywania kontentu
