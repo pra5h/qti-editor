@@ -201,12 +201,16 @@ function changeRowType(checkboxElement) {
 		$('#answer' + checkboxElement.id.replace('checkbox','')).attr('disabled', true);
 		$('#feedback' + checkboxElement.id.replace('checkbox','')).attr('disabled', true);
 		$('#exercise_content').val($('#exercise_content').val().replace('[gap#'+checkboxElement.id.replace('checkbox','')+']',''));
+		$('#'+checkboxElement.id.replace('checkbox','')+'_add').val('Add'); //attr('disabled', true);
+		$('#'+checkboxElement.id.replace('checkbox','')+'_add').attr('onClick', 'applyExternalRowData('+checkboxElement.id.replace('checkbox','')+')');
 
 	} else {
 		$('#distractor' + checkboxElement.id.replace('checkbox','')).attr('disabled', true);
 		$('#answer' + checkboxElement.id.replace('checkbox','')).attr('disabled', false);
 		$('#feedback' + checkboxElement.id.replace('checkbox','')).attr('disabled', false);
 		$('#exercise_content').val($('#exercise_content').val().replace('[inlineChoice#'+checkboxElement.id.replace('checkbox','')+']',''));
+		$('#'+checkboxElement.id.replace('checkbox','')+'_add').val('Add'); //attr('disabled', true);
+		$('#'+checkboxElement.id.replace('checkbox','')+'_add').attr('onClick', 'applyExternalRowData('+checkboxElement.id.replace('checkbox','')+')');
 	}
 	
 }
