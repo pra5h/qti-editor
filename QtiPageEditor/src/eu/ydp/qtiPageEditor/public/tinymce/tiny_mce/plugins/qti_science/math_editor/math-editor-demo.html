@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- The DOCTYPE declaration above will set the    -->
+<!-- browser's rendering engine into               -->
+<!-- "Standards Mode". Replacing this declaration  -->
+<!-- with a "Quirks Mode" doctype may lead to some -->
+<!-- differences in layout.                        -->
+
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+    <link type="text/css" rel="stylesheet" href="default.css">
+
+    <title>math-editor demo</title>
+    
+    <script type="text/javascript" language="javascript" src="math_editor/math_editor.nocache.js"></script>
+    <script type="text/javascript">
+		var editor;
+		function mathEditorOnAppLoaded(){
+			editor = createMathEditor("root","<mrow></mrow>");
+console.dir(editor);
+		}
+		function updateMML(){
+			var mml = document.getElementById('mml');
+			var txt = editor.getMathML();
+			while (txt.indexOf("<") != -1)
+				txt = txt.replace("<", "&lt;");
+			while (txt.indexOf(">") != -1)
+				txt = txt.replace(">", "&gt;");
+			mml.innerHTML = txt;
+		}
+		
+		function setMML(){
+			editor.setMathML("<mrow><msubsup><mrow><mn>4</mn><mfrac><mrow><mn>3</mn></mrow><mrow><mn>4</mn></mrow></mfrac></mrow><mrow><mn>3</mn></mrow><mrow><mn>2</mn></mrow></msubsup><msubsup><mrow><munder><mrow><mn>4</mn></mrow><mrow><mn>3</mn></mrow></munder></mrow><mrow><mn>5</mn></mrow><mrow><mn>4</mn></mrow></msubsup><mo>+</mo><mfenced open='curly' close='square'><mrow><mn>2</mn></mrow></mfenced><mn>1</mn><mo>+</mo><mroot><mrow><munderover><mrow><mn>2</mn></mrow><mrow><mfrac><mrow><mn>2</mn></mrow><mrow><mn>1</mn></mrow></mfrac></mrow><mrow><mn>3232323</mn></mrow></munderover></mrow><mrow><mn>2323</mn></mrow></mroot></mrow>");
+		}
+	</script>    
+  </head>
+
+  <body>
+
+    <!-- OPTIONAL: include this if you want history support -->
+    <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe>
+    
+    <!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
+    <noscript>
+      <div style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
+        Your web browser must have JavaScript enabled
+        in order for this application to display correctly.
+      </div>
+    </noscript>
+
+    <h1>math-editor demo</h1>
+
+    <div id="root"></div>
+	<input type="button" value="get MathML" onClick="updateMML()"/>
+	<input type="button" value="set MathML" onClick="setMML()"/>
+	<div id="mml"></div>
+  </body>
+</html>

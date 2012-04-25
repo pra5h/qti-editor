@@ -1,0 +1,192 @@
+body{
+	padding:12px !important;
+}
+
+.math-editor-container{
+}
+.math-editor-menu-container{
+	clear:both;
+}
+.math-editor-mainmenu{
+	width:600px;
+	height:26px;
+	margin:4px -2px;
+	clear:both;
+}
+.math-editor-submenu{
+	width:600px;
+	height:28px;
+	margin:4px 0px;
+	clear:both;
+}
+.math-editor-tools{
+	width:600px;
+	height:28px;
+	margin:4px 0px;
+	clear:both;
+}
+
+.math-editor-sandbox-container{
+	clear:both;
+}
+
+.math-editor-sandbox-panel{
+	width:600px;
+	height:180px;
+	background-color:#fff;
+	border-style:inset;
+	border-width:2px;
+	padding:8px;
+}
+
+
+.math-editor-submenu-button{
+	width:28px;
+	height:28px;
+	padding:0px 2px !important;
+	float:left;
+}
+
+.math-editor-submenu-button-face{
+	background-repeat:no-repeat;
+	width:28px;
+	height:28px;
+	background-position:0px 2px;
+}
+.math-editor-button-greeksmall{
+	width:24px !important;
+}
+.math-editor-button-greekcapital{
+	width:24px !important;
+}
+.math-editor-button-function{
+	width:48px !important;
+}
+
+.math-editor-button-fraction .math-editor-submenu-button-face{
+	background-image:url(images/icon_fraction.png);
+}
+.math-editor-button-subsup .math-editor-submenu-button-face{
+	background-image:url(images/icon_subsup.png);
+}
+.math-editor-button-sub .math-editor-submenu-button-face{
+	background-image:url(images/icon_sub.png);
+}
+.math-editor-button-sup .math-editor-submenu-button-face{
+	background-image:url(images/icon_sup.png);
+}
+.math-editor-button-underover .math-editor-submenu-button-face{
+	background-image:url(images/icon_underover.png);
+}
+.math-editor-button-under .math-editor-submenu-button-face{
+	background-image:url(images/icon_under.png);
+}
+.math-editor-button-over .math-editor-submenu-button-face{
+	background-image:url(images/icon_over.png);
+}
+.math-editor-button-root .math-editor-submenu-button-face{
+	background-image:url(images/icon_root.png);
+}
+.math-editor-button-sqrt .math-editor-submenu-button-face{
+	background-image:url(images/icon_sqrt.png);
+}
+/* BRACKETS */
+.math-editor-button-fenced-round .math-editor-submenu-button-face{
+	background-image:url(images/icon_fenced_round.png);
+}
+.math-editor-button-fenced-square .math-editor-submenu-button-face{
+	background-image:url(images/icon_fenced_square.png);
+}
+.math-editor-button-fenced-curly .math-editor-submenu-button-face{
+	background-image:url(images/icon_fenced_curly.png);
+}
+.math-editor-button-fenced-angle .math-editor-submenu-button-face{
+	background-image:url(images/icon_fenced_angle.png);
+}
+.math-editor-button-fenced-round-square .math-editor-submenu-button-face{
+	background-image:url(images/icon_fenced_round_square.png);
+}
+.math-editor-button-fenced-square-round .math-editor-submenu-button-face{
+	background-image:url(images/icon_fenced_square_round.png);
+}
+.math-editor-button-fenced-round-angle .math-editor-submenu-button-face{
+	background-image:url(images/icon_fenced_round_angle.png);
+}
+.math-editor-button-fenced-angle-round .math-editor-submenu-button-face{
+	background-image:url(images/icon_fenced_angle_round.png);
+}
+.math-editor-button-greeksmall .math-editor-submenu-button-face, .math-editor-button-greekcapital .math-editor-submenu-button-face{
+	width:16px;
+	height:16px;
+}
+.math-editor-button-relation .math-editor-submenu-button-face, .math-editor-button-operator .math-editor-submenu-button-face{
+	width:16px;
+	height:16px;
+	font-size:16px;
+}
+.math-editor-button-symbol .math-editor-submenu-button-face{
+	width:16px;
+	height:16px;
+	font-size:20px;
+	line-height:16px;
+}
+.math-editor-button-function .math-editor-submenu-button-face{
+	width:40px;
+	height:16px;
+}
+
+
+.math-editor-mainmenu-button{
+	width:40px;
+	height:24px;
+	padding:0px 0px !important;
+	float:left;
+	margin:0px 2px !important;
+}
+
+.math-editor-mainmenu-button-face{
+	background-repeat:no-repeat;
+	width:40px;
+	height:24px;
+	background-position:0px 2px;
+}
+
+.math-editor-button-layouts .math-editor-mainmenu-button-face{
+	background-image:url(images/icon_layouts.png);
+}
+.math-editor-button-operators .math-editor-mainmenu-button-face{
+	background-image:url(images/icon_operators.png);
+}
+.math-editor-button-relations .math-editor-mainmenu-button-face{
+	background-image:url(images/icon_relations.png);
+}
+.math-editor-button-brackets .math-editor-mainmenu-button-face{
+	background-image:url(images/icon_brackets.png);
+}
+.math-editor-button-functions .math-editor-mainmenu-button-face{
+	background-image:url(images/icon_functions.png);
+}
+.math-editor-button-symbols .math-editor-mainmenu-button-face{
+	background-image:url(images/icon_symbols.png);
+}
+.math-editor-button-greeksmalls .math-editor-mainmenu-button-face{
+	background-image:url(images/icon_greeksmalls.png);
+}
+.math-editor-button-greekcapitals .math-editor-mainmenu-button-face{
+	background-image:url(images/icon_greekcapitals.png);
+}
+
+
+.math-editor-tools-button{
+	width:20px;
+	height:20px;
+	padding:0px 2px !important;
+	float:left;
+}
+
+.math-editor-button-tool .math-editor-submenu-button-face{
+	width:12px;
+	height:12px;
+	font-size:16px;
+	line-height:12px;
+}
