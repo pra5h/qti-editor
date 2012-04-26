@@ -10,7 +10,7 @@
 				ed.windowManager.open({
 					file : url + '/science.htm',
 					width : 650,
-					height : 300,
+					height : 386,
 					inline : 1
 				}, {
 					plugin_url : url,
