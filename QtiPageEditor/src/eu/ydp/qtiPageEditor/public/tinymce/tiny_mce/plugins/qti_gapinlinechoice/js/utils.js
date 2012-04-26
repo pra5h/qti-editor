@@ -148,8 +148,11 @@ function removeExternalRowData(removeElement) {
 		var pattern = new RegExp('\\[inlineChoice#'+id+'\\]', 'gi');
 		contentValue = contentValue.replace(pattern, '');
 		var distractorData = tinymce.util.JSON.parse($('#distractorData'+id).val());
-		var identifier = distractorData['identifier'];
-		c = xh.getCorrectResponseNodeId(ed.dom.doc.body, identifier);
+		
+		if (undefined != distractorData) {
+			var identifier = distractorData['identifier'];
+			c = xh.getCorrectResponseNodeId(ed.dom.doc.body, identifier);
+		}
 	} else if (false == ch.attr('checked')) {
 		var pattern = new RegExp('\\[gap#'+id+'\\]', 'gi');
 		contentValue = contentValue.replace(pattern, '');
