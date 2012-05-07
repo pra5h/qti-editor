@@ -225,7 +225,10 @@ function html2qtiParseProcess(tree) {
 function mathInteractionToQTI(mi) {
 	var text = '';
 	text += '<mathText>';
-	text += mi.innerHTML;
+	var math = mi.innerHTML;
+	math = math.replace(/<math[^>]*>/,'');
+	math = math.replace(/<\/math>/,'');
+	text += math;
 	text += '</mathText>';
 	return text;
 }
@@ -234,7 +237,9 @@ function mathInteractionToHTML(mi) {
 	var text = '';
 	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
 	text += '<div id="mathML" class="mceNonEditable">';
+	text += '<math xmlns="http://www.w3.org/1998/Math/MathML">';
 	text += mi.innerHTML;
+	text += '</math>';
 	text += '</div>';
 	return text;
 	}
