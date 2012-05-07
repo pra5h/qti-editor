@@ -12,7 +12,8 @@ tinyMCE.init({
 		+"insertdatetime,qti_empiriapreview,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,"
 		+"visualchars,nonbreaking,xhtmlxtras,template,imagemanager,filemanager,asciisvg,"
 		+"qti_pagetitle,qti_choice,qti_gapinlinechoice,qti_fileuploadlib,"
-		+"qti_addvideo,qti_copyqti,qti_selection,qti_newline",
+		+"qti_addvideo,qti_copyqti,qti_selection,qti_newline", 
+		//,qti_science",
 		
 	/*
 	plugins : "safari,spellchecker,pagebreak,style,layer,table,save,advhr,advlink,emotions,iespell,inlinepopups,"
@@ -34,7 +35,7 @@ tinyMCE.init({
 	//,science
 	theme_advanced_buttons2 : "undo,redo,|,cut,copy,|,paste,|,search,replace,|,forecolor,backcolor,|,sub,sup,|,charmap",
 	theme_advanced_buttons3 : "newLineBefore,newLineAfter,pagetitle,insertgapinlinechoice,insertchoicesection,insertordersection,insertmatchsection,insertselectionsection,insertdraggablesection,insertidentificationsection,|,fileuploadlib_image,addvideo,playpause,|,insertcomment,|,tablecontrols,|,code",
-
+//science,
 	extended_valid_elements : "simpleText,group,canvas[id|style|width|height],gap[identifier],choiceInteraction[shuffle|maxChoices|responseIdentifier],"
 		+"orderInteracion[shuffle|responseIdentifier],selectionInteracion[shuffle|responseIdentifier],item[identifier],matchInteraction[shuffle|maxAssociations|responseIdentifier],prompt,"
 		+"simpleChoice[identifier|fixed],simpleAssociableChoice[identifier|fixed|matchMax],inlineChoiceInteraction,inlineChoice[score],"
@@ -128,11 +129,18 @@ tinyMCE.init({
 		},
 		
 		ed.focusAfterModify = function(n) {
-			var toFocus = n.nextElementSibling;
-			ed.selection.select(ed.dom.get(toFocus), true);
-			ed.selection.collapse(false);
-			ed.nodeChanged();
-			ed.focus();
+			
+			if (null == n.nextElementSibling || n.nextElementSibling.nodeType != 1 || n.nextElementSibling.tagName != 'P') {
+				ed.selection.select(ed.dom.get(n), true);
+				ed.execCommand('mceAddNewLineAfter');
+
+			} else {
+				var toFocus = n.nextElementSibling;
+				ed.selection.select(ed.dom.get(toFocus), true);
+				ed.selection.collapse(false);
+				ed.nodeChanged();
+				ed.focus();
+			}
 		},
 		
 		//sprawdza czy redaktor podomykał tagi htmlowe podczas wpisywania kontentu

@@ -51,7 +51,9 @@ var inlineChoiceDialog = {
 			}
 
 			if (0 < getObjectLength(data.ids)) {
-				tinyMCE.feedback = new Array();
+				if (undefined == tinyMCE.feedback) {
+					tinyMCE.feedback = new Array();
+				}
 				tinyMCE.feedback[data.identifier] = {"sound": new Array(), text: new Array()};
 				
 				for (q = 0; q < getObjectLength(data.ids); q++) {

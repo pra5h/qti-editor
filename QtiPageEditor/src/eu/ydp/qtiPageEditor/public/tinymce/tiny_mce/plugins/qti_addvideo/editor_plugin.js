@@ -92,13 +92,17 @@
 						filePath = getRelativeFromAbsoute(fromPath, filePath);
 						var videotag = paragraph+'<fieldset id="runFileUploadLib" class="mceNonEditable" style="font-size: 10px; font-color: #b0b0b0; color: #b0b0b0; border: 1px solid #d0d0d0;"><object data="' + filePath + '" type="video" alt="'+title+'"></object><img id="mceVideo" src="/res/skins/default/qtipageeditor/tinymce/tiny_mce/plugins/qti_addvideo/img/movie.png" /><br>' + title + '</fieldset><span id="focus">_</span>'+paragraph;
 						ed.execCommand('mceInsertContent', false, videotag);
+						n = ed.dom.get('focus');
 
-						var toFocus = ed.dom.get('focus').nextElementSibling.firstChild;
-						rng = ed.dom.createRng();
-						rng.setStart(toFocus, 0);
-						rng.setEnd(toFocus, 0);
-						ed.selection.setRng(rng);
-						ed.dom.remove('focus')
+						if (null == n.nextElementSibling || n.nextElementSibling.nodeType != 1 || n.nextElementSibling.tagName != 'P') {
+							var newNode = ed.dom.create('p',null,'&nbsp;');
+							ed.dom.insertAfter(newNode,ed.dom.get('focus'));
+						}
+						ed.selection.select(ed.dom.get(ed.dom.get('focus').nextElementSibling), true);
+						ed.selection.collapse(false);
+						ed.nodeChanged();
+						ed.focus();
+						ed.dom.remove('focus');
 						return true;
 					},
 					
