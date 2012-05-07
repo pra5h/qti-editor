@@ -180,9 +180,13 @@ function removeTagFromContentData(id) {
 	if (true == ch.attr('checked')) {
 		var pattern = new RegExp('\\[inlineChoice#'+id+'\\]', 'gi');
 		contentValue = contentValue.replace(pattern, '');
-		var distractorData = tinymce.util.JSON.parse($('#distractorData'+id).val());
-		var identifier = distractorData['identifier'];
-		c = xh.getCorrectResponseNodeId(ed.dom.doc.body, identifier);
+		var content = $('#distractorData'+id).val();
+		
+		if ('' != content) {
+			var distractorData = tinymce.util.JSON.parse(content);
+			var identifier = distractorData['identifier'];
+			c = xh.getCorrectResponseNodeId(ed.dom.doc.body, identifier);
+		}
 	} else if (false == ch.attr('checked')) {
 		var pattern = new RegExp('\\[gap#'+id+'\\]', 'gi');
 		contentValue = contentValue.replace(pattern, '');
