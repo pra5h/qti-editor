@@ -18,7 +18,7 @@ var gapRowTemplate = '<tr id="{number}">'
 						+'</td>'
 						+'<td>'
 							+'<input type="hidden" id="feedback{number}" name="feedback" />'
-							+'<img id="feedback{number}" alt="Set feedback" title="Set feedback" onclick="feedback({number});" src="img/feedback.png"/>'
+							+'<img id="imgfeedback{number}" alt="Set feedback" title="Set feedback" onclick="feedback({number});" src="img/feedback.png"/>'
 						+'</td>'
 					+'</tr>';
 
@@ -210,6 +210,7 @@ function changeRowType(checkboxElement) {
 		$('#exercise_content').val($('#exercise_content').val().replace('[gap#'+checkboxElement.id.replace('checkbox','')+']',''));
 		$('#'+checkboxElement.id.replace('checkbox','')+'_add').val('Add'); //attr('disabled', true);
 		$('#'+checkboxElement.id.replace('checkbox','')+'_add').attr('onClick', 'applyExternalRowData('+checkboxElement.id.replace('checkbox','')+')');
+		$('#imgfeedback'+checkboxElement.id.replace('checkbox','')).css('opacity', 0.4);
 
 	} else {
 		$('#distractor' + checkboxElement.id.replace('checkbox','')).attr('disabled', true);
@@ -218,6 +219,7 @@ function changeRowType(checkboxElement) {
 		$('#exercise_content').val($('#exercise_content').val().replace('[inlineChoice#'+checkboxElement.id.replace('checkbox','')+']',''));
 		$('#'+checkboxElement.id.replace('checkbox','')+'_add').val('Add'); //attr('disabled', true);
 		$('#'+checkboxElement.id.replace('checkbox','')+'_add').attr('onClick', 'applyExternalRowData('+checkboxElement.id.replace('checkbox','')+')');
+		$('#imgfeedback'+checkboxElement.id.replace('checkbox','')).css('opacity', 1);
 	}
 	
 }

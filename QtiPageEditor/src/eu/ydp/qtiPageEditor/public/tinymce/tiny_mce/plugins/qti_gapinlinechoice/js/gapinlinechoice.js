@@ -48,7 +48,7 @@ var gapInlineChoiceDialog = {
 						$('#answer' + data.inlineRows[r].id).attr('disabled', true);
 						$('#checkbox' + data.inlineRows[r].id).attr('checked', true);
 						$('#feedback' + data.inlineRows[r].id).attr('disabled', true);
-						
+						$('#imgfeedback' + data.inlineRows[r].id).css('opacity', 0.4);
 						//pokazanie w formularzu poprawnej odpowiedzi
 						for (i in data.inlineRows[r].points) {
 							if (1 == data.inlineRows[r].points[i]) {
