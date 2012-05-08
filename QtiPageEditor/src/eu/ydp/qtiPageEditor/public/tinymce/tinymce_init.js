@@ -150,8 +150,13 @@ tinyMCE.init({
 				div.html(text);
 				
 				if (text != div.html()) {
-					if (showAlert)
+					
+					if (showAlert) {
 						tinymce.EditorManager.activeEditor.windowManager.alert('The '+fieldName+' field contains illegal HTML elements.');
+						var wm = tinymce.EditorManager.activeEditor.windowManager;
+						var alertWindowId = wm.lastId.replace('_wrapper','');
+						$('#'+alertWindowId).append('<div style="z-index: -1;background-color:gray; position: fixed; left: 0px; top: 0px; opacity: 0.3; width: 100%; height:100%"></div>');
+					}
 					return false;
 				}
 				return true;
