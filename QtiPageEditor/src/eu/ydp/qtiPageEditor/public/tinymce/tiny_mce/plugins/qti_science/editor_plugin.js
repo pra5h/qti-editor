@@ -14,8 +14,41 @@
 					inline : 1
 				}, {
 					plugin_url : url,
-					mathXml : data
+					mathXml : data,
+					type: 0
 				});
+			});
+			
+			ed.addCommand('mceScienceInputFormulaInsert', function(ui, data) {
+
+				ed.windowManager.open({
+					file : url + '/science.htm',
+					width : 650,
+					height : 386,
+					inline : 1
+				}, {
+					plugin_url : url,
+					input : data['input'],
+					offset: data['offset'],
+					type: 1,
+				});
+				
+			});
+			
+			ed.addCommand('mceScienceInputFormulaModify', function(ui, data) {
+
+				ed.windowManager.open({
+					file : url + '/science.htm',
+					width : 650,
+					height : 386,
+					inline : 1
+				}, {
+					plugin_url : url,
+					mathXml : data['xml'],
+					input : data['input'],
+					type: 2,
+				});
+				
 			});
 
 			// Register example button
@@ -24,6 +57,8 @@
 				cmd : 'mceScience',
 				image : url + '/img/scienceButton.png'
 			});
+			
+			
 
 			// Add a node change handler, selects the button in the UI when a image is selected
 			ed.onNodeChange.add(function(ed, cm, n) {

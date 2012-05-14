@@ -14,6 +14,7 @@ var choiceDialog = {
 		var data = tinyMCEPopup.getWindowArg("choicedata");
 
 		tagInsert.init(f.question.id);
+		InputHelper.init(f.question);
 		
 		if(data != undefined && data[0] != undefined) {
 			f.question.value = data[0];

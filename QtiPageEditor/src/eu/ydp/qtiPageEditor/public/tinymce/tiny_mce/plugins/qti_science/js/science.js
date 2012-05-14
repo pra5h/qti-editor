@@ -4,11 +4,23 @@ var scienceDialog = {
 	mathXml : null,
 	mathEditor : null,
 	actionType : null,
+	type : null,
+	input : null,
+	offset : null,
 	
 	init : function(ed) {
 		document.body.setAttribute('onUnload',"tinymce.DOM.remove('mcePopupLayer_'+scienceDialog.windowId);");
 		document.body.setAttribute('onLoad',"scienceDialog.windowId = lock(tinyMCEPopup.id);");
 		this.mathXml = tinyMCEPopup.getWindowArg("mathXml");
+		this.type = tinyMCEPopup.getWindowArg("type");
+		
+		if (1 == this.type) {
+			this.input = tinyMCEPopup.getWindowArg("input");
+			this.offset = tinyMCEPopup.getWindowArg("offset");
+		} else if (2 == this.type) {
+			this.input = tinyMCEPopup.getWindowArg("input");
+		}
+		
 	},
 	
 	initMathEditor: function(me) {
@@ -24,41 +36,57 @@ var scienceDialog = {
 	},
 
 	insertScienceSection : function() {
-		var ed = tinymce.EditorManager.activeEditor;
-		var dom = ed.dom;
-		ed.execCommand('mceAddUndoLevel');
+		
 		var data = this.mathEditor.getMathML();
 		
-		if (this.actionType == 1) {
+		if (0 == this.type) {
+			var ed = tinymce.EditorManager.activeEditor;
+			var dom = ed.dom;
+			ed.execCommand('mceAddUndoLevel');
 
-			var patt = '';
-			ed.execCommand('mceInsertContent', false, '<br class="_mce_marker" />');
 
-			tinymce.each('h1,h2,h3,h4,h5,h6,p'.split(','), function(n) {
+			if (this.actionType == 1) {
 
-				if (patt) {
-					patt += ',';
+				var patt = '';
+				ed.execCommand('mceInsertContent', false, '<br class="_mce_marker" />');
+
+				tinymce.each('h1,h2,h3,h4,h5,h6,p'.split(','), function(n) {
+
+					if (patt) {
+						patt += ',';
+					}
+					patt += n + ' ._mce_marker';
+				});
+
+				tinymce.each(dom.select(patt), function(n) {
+					ed.dom.split(ed.dom.getParent(n, 'h1,h2,h3,h4,h5,h6,p'), n);
+				});
+
+				dom.setOuterHTML(dom.select('._mce_marker')[0], '<p>&nbsp;</p><div id="mathML" class="mceNonEditable"><math xmlns="http://www.w3.org/1998/Math/MathML">'+data+'</math></div><p>&nbsp;</p><span id="focus">_</span>');
+				ed.focusAfterInsert('focus');
+			} else {
+				var nd = tinyMCE.selectedNode;	
+
+				while(nd.nodeName != 'DIV') {
+					nd = nd.parentNode;
 				}
-				patt += n + ' ._mce_marker';
-			});
 
-			tinymce.each(dom.select(patt), function(n) {
-				ed.dom.split(ed.dom.getParent(n, 'h1,h2,h3,h4,h5,h6,p'), n);
-			});
-
-			dom.setOuterHTML(dom.select('._mce_marker')[0], '<p>&nbsp;</p><div id="mathML" class="mceNonEditable"><math xmlns="http://www.w3.org/1998/Math/MathML">'+data+'</math></div><p>&nbsp;</p><span id="focus">_</span>');
-			ed.focusAfterInsert('focus');
-		} else {
-			var nd = tinyMCE.selectedNode;	
+				nd.innerHTML = '<math xmlns="http://www.w3.org/1998/Math/MathML">'+data+'</math>';
+				ed.focusAfterModify(nd);
+			}
+			ed.execCommand('mceEndUndoLevel');
+		} else if (1 == this.type) {
+			//insert new
+			var prefix = this.input.value.substr(0, this.offset);
+			var suffix = this.input.value.substr(this.offset, this.input.value.length-this.offset);
 			
-			while(nd.nodeName != 'DIV') {
-				nd = nd.parentNode;
+			if ('<mrow></mrow>' != data) {
+				this.input.value = prefix+'<math>'+data+'</math>'+suffix;
 			}
 			
-			nd.innerHTML = '<math xmlns="http://www.w3.org/1998/Math/MathML">'+data+'</math>';
-			ed.focusAfterModify(nd);
+		} else if (2 == this.type) {
+			this.input.value = this.input.value.replace(this.mathXml, data);
 		}
-		ed.execCommand('mceEndUndoLevel');
 		tinyMCEPopup.close();
 		return true;
 		
