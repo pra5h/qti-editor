@@ -15,7 +15,7 @@ var InputHelper = {
 		this.input.onmousemove = this.mouseMove;
 		this.input.onmouseout = this.mouseOut;
 		this.input.oncontextmenu = this.onContextMenu;
-		this.input.onmouseup = this.onMouseUp;
+		this.input.onclick = this.onClick;
 		/*$(this.input).focusin(function(){
 			InputHelper.buttonNew.parentElement.style.opacity = '';
 			InputHelper.buttonNew.style.opacity = '1.0';
@@ -36,7 +36,7 @@ var InputHelper = {
 		//this.createLogger();
 	},
 	
-	onMouseUp: function(e){
+	onClick: function(e){
 		InputHelper.enableButtonNew();
 	},
 	
@@ -64,6 +64,7 @@ var InputHelper = {
 		if (null == st && null == ed) {
 			InputHelper.buttonNew.parentElement.style.opacity = '1.0';
 			InputHelper.buttonNew.style.opacity = '1.0';
+			InputHelper.buttonNew.onclick = InputHelper.insertNewMath;
 		} else {
 			InputHelper.disableButtonNew();
 		}
@@ -71,10 +72,14 @@ var InputHelper = {
 	
 	disableButtonNew: function() {
 		InputHelper.buttonNew.style.opacity = '0.3';
+		InputHelper.buttonNew.onclick = null;//disabled = true;
 	},
 	
 	onBlur: function(e) {
-		InputHelper.disableButtonNew();
+		var elm = e.explicitOriginalTarget||e.srcElement||document.activeElement;
+		if ('taginsert_math' != elm.className) {
+			InputHelper.disableButtonNew();
+		}
 	},
 	
 	insertButtonNew : function() {
@@ -96,9 +101,9 @@ var InputHelper = {
     	var ed = tinymce.EditorManager.activeEditor;
     	var data = new Object();
 
-   		data['offset'] = InputHelper.getCaretPosition(InputHelper.input);
-   		data['input'] = InputHelper.input;
-   		tinyMCE.execCommand('mceScienceInputFormulaInsert',false, data);
+    	data['offset'] = InputHelper.getCaretPosition(InputHelper.input);
+    	data['input'] = InputHelper.input;
+    	tinyMCE.execCommand('mceScienceInputFormulaInsert',false, data);
     },
     
 	getStart: function (str,i) {
