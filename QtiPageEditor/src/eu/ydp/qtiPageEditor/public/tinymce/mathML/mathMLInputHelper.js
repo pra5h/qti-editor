@@ -110,11 +110,11 @@ var InputHelper = {
 		str = str.substr(0, i);
 		var s = str.split( '' ).reverse().join( '' );
 		//this.set('startString',s);
-		var m = s.match(/(>[b|i|u|htam]+<)/);
+		var m = s.match(/(>(b|i|u|htam)+<)/);
 
 		if (null != m && undefined != typeof m[0]) {
 			this.startTag = m[0].split( '' ).reverse().join( '' );
-			this.startTagName = this.startTag.match(/<([b|i|u|math]+)>/)[1];
+			this.startTagName = this.startTag.match(/<((b|i|u|math)+)>/)[1];
 		}
 		this.startIndex = str.lastIndexOf(this.startTag);
 		//this.set('start',this.startIndex);
@@ -135,11 +135,11 @@ var InputHelper = {
 
 		str = str.substr(i, str.length-i);
 		//var m = str.match(/(\<\/[b|i|u|htam]+\>)/);
-		var m = str.match(/(\<\/[b|i|u|math]+\>)/);
+		var m = str.match(/(\<\/(b|i|u|math)+\>)/);
 		if (null != m && undefined != typeof m[0]) {
 			this.endTag = m[0];
 			//this.endTagName = this.endTag.match(/\<\/([b|i|u|htam]+)\>/)[1];
-			this.endTagName = this.endTag.match(/\<\/([b|i|u|math]+)\>/)[1];
+			this.endTagName = this.endTag.match(/\<\/((b|i|u|math)+)\>/)[1];
 
 		}
 		var checkIdx = null;		
@@ -159,7 +159,6 @@ var InputHelper = {
 	},
 
 	onContextMenu: function (e) {
-		//console.dir(InputHelper);
 
 		if ('' != InputHelper.cloud.innerHTML) {
 			InputHelper.cloud.style.display = 'none';
@@ -209,8 +208,8 @@ var InputHelper = {
 	mouseOver: function (e) {
 		var div = InputHelper.cloud; //.lastElementChild;
 		div.style.position = 'absolute';
-		div.style.left = e.pageX+10+'px';
-		div.style.top = e.pageY+1+'px';
+		div.style.left = e.pageX-div.clientWidth-5+'px';
+		div.style.top = e.pageY+'px';
 		//div.style.background = 'yellow';
 		div.style.display = 'block';
 		//div.style.padding = '10px';
@@ -220,18 +219,18 @@ var InputHelper = {
 	mouseMove: function (e) {
 		if (null == InputHelper.control) {
 			var div = InputHelper.cloud;
-			div.style.left = e.pageX+10+'px';
-			div.style.top = e.pageY+1+'px';
 			var st = InputHelper.getStart(this.value,e.rangeOffset);
 			var ed = InputHelper.getEnd(this.value,e.rangeOffset);
 			//InputHelper.set('startTag', InputHelper.startTagName);
 			//InputHelper.set('endTag', InputHelper.endTagName);
-			
+
 			if (null != st && null != ed && (InputHelper.startTagName == InputHelper.endTagName)) {
 				//InputHelper.set('content',this.value.substr(st, ed-st));
 				div.innerHTML = this.value.substr(st, ed-st);
-				
+
 				if ('' != div.innerHTML) {
+					div.style.left = e.pageX-div.clientWidth-5+'px';
+					div.style.top = e.pageY+'px';
 					div.style.display = 'block';
 				}
 			} else {
