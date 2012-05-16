@@ -49,6 +49,7 @@ var InputHelper = {
 	createPopup: function() {
 		this.cloud = document.createElement('div');
 		this.cloud.className = 'mathPopup';
+		this.cloud.style.display = 'none';
 		document.body.appendChild(this.cloud);
 	},
 	
