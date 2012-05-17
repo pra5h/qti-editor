@@ -53,7 +53,7 @@
 
 			// Register example button
 			ed.addButton('science', {
-				title : 'science.desc',
+				title : 'Insert scientific expression',
 				cmd : 'mceScience',
 				image : url + '/img/scienceButton.png'
 			});
