@@ -1,13 +1,17 @@
 .taginsert_math{ opacity: 1; width:20px; height:20px; background-image:url(../tiny_mce/plugins/qti_science/img/scienceButton.png); float:left; }
 
-div.mathPopup {
+div.mathPreview {
 	border: 1px solid #ABC6DD;
 	position: absolute;
+	/* --------- DEBUG */
 	/*left: 367px;
 	top: 74px;
-	background: none repeat scroll 0% 0% yellow; 
+	background-color: yellow; 
 	display: block;
+	width: 100px;
+	height: 10px;
 	*/
+	/* --------- DEBUG */
 	padding: 10px;
 	font-size: 12px;
 	text-align: center;

@@ -348,9 +348,16 @@ tinyMCE.init({
 				prepareNode: function(node) {
 					var text = '';
 					if (1 == node.nodeType) {
-						text += this.prepareNodeBegin(node);
-						text += node.innerHTML;
-						text += this.prepareNodeEnd(node);
+						
+						if ('math' == node.nodeName) {
+							var a = new XMLSerializer(); //.serializeToString(node);
+							text += a.serializeToString(node);
+							text = text.replace(/ xmlns="[^"]+"/,'');
+						} else {
+							text += this.prepareNodeBegin(node);
+							text += node.innerHTML;
+							text += this.prepareNodeEnd(node);
+						}
 					}
 					return text;
 				}

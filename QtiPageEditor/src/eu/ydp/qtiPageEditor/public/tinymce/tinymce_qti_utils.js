@@ -224,12 +224,11 @@ function html2qtiParseProcess(tree) {
 
 function mathInteractionToQTI(mi) {
 	var text = '';
-	text += '<mathText>';
+//	text += '<mathText>';
 	var math = mi.innerHTML;
-	math = math.replace(/<math[^>]*>/,'');
-	math = math.replace(/<\/math>/,'');
-	text += math;
-	text += '</mathText>';
+	text = parseMathHTML2QTI(math);
+	//text += math;
+	//text += '</mathText>';
 	return text;
 }
 
@@ -237,9 +236,9 @@ function mathInteractionToHTML(mi) {
 	var text = '';
 	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
 	text += '<div id="mathML" class="mceNonEditable">';
-	text += '<math xmlns="http://www.w3.org/1998/Math/MathML">';
-	text += mi.innerHTML;
-	text += '</math>';
+	//text += '<math xmlns="http://www.w3.org/1998/Math/MathML">';
+	text += parseMathQTI2HTML(mi.innerHTML);
+	//text += '</math>';
 	text += '</div>';
 	return text;
 	}
@@ -330,13 +329,13 @@ function choiceInteractionToHTML(ci) {
 	for (var k = 0; k < ci.childNodes.length; k++) {
 		if (1 == ci.childNodes[k].nodeType) {
 			if ('PROMPT' == ci.childNodes[k].tagName) {
-				text += '<p id="choiceInteraction">'+ci.childNodes[k].innerHTML+'</p>';
+				text += '<p id="choiceInteraction">'+parseMathQTI2HTML(ci.childNodes[k].innerHTML)+'</p>';
 			} else if ('SIMPLECHOICE' == ci.childNodes[k].tagName) {
 				text += '<!-- '+xh.prepareNodeBegin(ci.childNodes[k]);
 				var innerHtml = '';
 				for (var i = 0; i < ci.childNodes[k].childNodes.length; i++) {
 					var scChild = ci.childNodes[k].childNodes[i];
-					
+
 					if (1 == scChild.nodeType) {
 						if ('FEEDBACKINLINE' == scChild.tagName) {
 							text += xh.prepareNodeBegin(scChild)+scChild.innerHTML+xh.prepareNodeEnd(scChild);
@@ -344,11 +343,14 @@ function choiceInteractionToHTML(ci) {
 							text += xh.prepareEmptyNode(scChild);
 							innerHtml = xh.prepareEmptyNode(scChild);
 						} else {
-							text += xh.prepareNode(scChild);
+							text += parseMathQTI2HTML(xh.prepareNode(scChild));
+							//console.log(xh.prepareNode(scChild));
+							//text += xh.prepareNode(scChild);
 							//text += '<'+scChild.tagName.toLowerCase()+xh.prepareAttributes(scChild)+'>';
 							//text += scChild.innerHTML;
 							//text += '</'+scChild.tagName.toLowerCase()+'>';
-							innerHtml += xh.prepareNode(scChild);
+							innerHtml += parseMathQTI2HTML(xh.prepareNode(scChild));
+							//innerHtml += xh.prepareNode(scChild);
 							//innerHtml += '<'+scChild.tagName.toLowerCase()+xh.prepareAttributes(scChild)+'>';
 							//innerHtml += scChild.innerHTML;
 							//innerHtml += '</'+scChild.tagName.toLowerCase()+'>';
@@ -356,7 +358,7 @@ function choiceInteractionToHTML(ci) {
 						}
 					} else {
 						text += scChild.nodeValue;
-						innerHtml = scChild.nodeValue;
+						innerHtml += scChild.nodeValue;
 					}
 				}
 				text += xh.prepareNodeEnd(ci.childNodes[k])+' -->';
@@ -411,10 +413,10 @@ function choiceInteractionToQTI(ci) {
 	var cINode = ci.nextSibling;
 	
 	text += xh.prepareNodeBegin($(ci.nodeValue).get(0));
-	text += '<prompt>'+cINode.firstElementChild.innerHTML+'</prompt>';
+	text += '<prompt>'+parseMathHTML2QTI(cINode.firstElementChild.innerHTML)+'</prompt>';
 	for (var i = 0; i < cINode.childNodes.length; i++) {
 		if (8 == cINode.childNodes[i].nodeType) {
-			text += cINode.childNodes[i].nodeValue;
+			text += parseMathHTML2QTI(cINode.childNodes[i].nodeValue);
 		}
 	}
 	text += xh.prepareNodeEnd($(ci.nodeValue).get(0));
@@ -1218,7 +1220,7 @@ function runChoiceInteraction(selectedNode) {
 			} else {
 				points.push('0');
 			}
-			smCh = sectionDiv.childNodes[i].nodeValue;
+			smCh = tinymce.trim(sectionDiv.childNodes[i].nodeValue);
 			ids.push($(smCh).attr('identifier'));
 			fixed.push($(smCh).attr('fixed'));
 			var simpleCh = $(smCh).get(0);
@@ -1507,3 +1509,14 @@ function mathml2subsup(text){
 	return text;
 }
 
+function parseMathHTML2QTI(math) {
+	math = math.replace(/<math[^>]*>/g,'<mathText>');
+	math = math.replace(/<\/math>/g,'</mathText>');
+	return math;
+}
+
+function parseMathQTI2HTML(math) {
+	math = math.replace(/<mathText[^>]*>/gi, '<math>');
+	math = math.replace(/<\/mathText>/gi, '</math>');
+	return math;
+}

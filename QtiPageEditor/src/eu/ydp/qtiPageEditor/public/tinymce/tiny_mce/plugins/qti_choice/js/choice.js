@@ -1,7 +1,4 @@
 tinyMCEPopup.requireLangPack();
-function stringEncode(text) {
-	return $('<div/>').text(text).html().replace(/"/g, "&quot;").replace(/>/g, "&gt;").replace(/</g, "&lt;");
-}
 var choiceDialog = {
 	windowId : null,
 	
@@ -59,7 +56,7 @@ var choiceDialog = {
 					fixed = '';
 				}
 				var odp = data[1][q];
-				
+
 				if(odp.match(/^<img[^>]*\/?>$/i)) {
 					f.images.checked = true;
 					odp = odp.replace(/^<img src="([^"]*)"[^>]*\/?>$/, '$1');
@@ -71,7 +68,11 @@ var choiceDialog = {
 					newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td class="answer"><input type="text" id="answer_' + q + '" name="answers[]" style="width: 100%; margin-right: 5px;" value="' + odp + '"/></td><input type="hidden" id="id_' + q + '" name="ids[]" value="' + data[3][q] + '"/><td class="correct"><input id="point_' + q + '" type="' + type + '" name="points[]" style="margin: 0; padding: 0;"' + correct + '/></td><td class="fixed"><input id="fixed_' + q + '" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" ' + fixed + '/></td><td class="remove"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td class="feedback"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr></table>';
 				}
 				document.getElementById('answer_list').appendChild(newDiv);
+				//tak trzeba ze względu na <math> inaczej podczas inicjalizacji input.value zamienia &lt; na <
+				$("#answer_"+q).val(odp);
+				
 				tagInsert.init("answer_"+q);
+				InputHelper.init($("#answer_"+q));
 				if (f.images.checked){
 					document.getElementById("taginsert_menu_answer_"+q).style.display = 'none';
 				}
@@ -122,19 +123,20 @@ var choiceDialog = {
 			newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td class="answer"><input type="text" id="answer_0" name="answers[]" style="width: 100%; margin-right: 5px;" value=""/></td><input type="hidden" id="id_0" name="ids[]" value="' + id_0 + '"/><td class="correct"><input id="point_0" type="radio" name="points[]" style="margin: 0; padding: 0;"/></td><td class="fixed"><input id="fixed_0" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" /></td><td class="remove"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td class="feedback"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr></table>';
 			document.getElementById('answer_list').appendChild(newDiv);
 			tagInsert.init("answer_0");
+			InputHelper.init($("#answer_0").get(0));
 			
 			var newDiv = document.createElement('div');
 			newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
 			newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td class="answer"><input type="text" id="answer_1" name="answers[]" style="width: 100%; margin-right: 5px;" value=""/></td><input type="hidden" id="id_1" name="ids[]" value="' + id_1 + '"/><td class="correct"><input id="point_1" type="radio" name="points[]" style="margin: 0; padding: 0;"/></td><td class="fixed"><input id="fixed_1" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" /></td><td class="remove"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td class="feedback"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr></table>';
 			document.getElementById('answer_list').appendChild(newDiv);
 			tagInsert.init("answer_1");
-			
+			InputHelper.init($("#answer_1").get(0));
 			var removeButton = document.getElementById('remove_button');
 			removeButton.parentNode.removeChild(removeButton);
 			
 			var insertButton = document.getElementById('insert');
 			insertButton.setAttribute('value', 'Insert');
-		
+
 		}
 		$('.focusedChoice').focus();
 	},
@@ -150,9 +152,9 @@ var choiceDialog = {
 		while(elements[i] != undefined) {
 			var element = elements[i];
 			if(element.getAttribute('name') == 'question') {
-				if (!ed.validateHtml(element.value, 'question')) {
-					return false;
-				}
+				//if (!ed.validateHtml(element.value, 'question')) {
+					//return false;
+				//}
 				question = element.value;
 			}
 			if(element.getAttribute('name') == 'identifier') {

@@ -36,11 +36,12 @@ var scienceDialog = {
 	},
 
 	insertScienceSection : function() {
-		
+		var ed = tinymce.EditorManager.activeEditor;		
 		var data = this.mathEditor.getMathML();
-		
+		//data = $('<div/>').html('<math>'+data+'</math>').html();
+		data = $('<div/>').html(data).html();
+
 		if (0 == this.type) {
-			var ed = tinymce.EditorManager.activeEditor;
 			var dom = ed.dom;
 			ed.execCommand('mceAddUndoLevel');
 
