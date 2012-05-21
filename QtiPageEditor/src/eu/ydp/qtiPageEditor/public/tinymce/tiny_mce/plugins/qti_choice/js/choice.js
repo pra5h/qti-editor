@@ -152,9 +152,9 @@ var choiceDialog = {
 		while(elements[i] != undefined) {
 			var element = elements[i];
 			if(element.getAttribute('name') == 'question') {
-				//if (!ed.validateHtml(element.value, 'question')) {
-					//return false;
-				//}
+				if (!ed.validateHtml(element.value, 'question')) {
+					return false;
+				}
 				question = element.value;
 			}
 			if(element.getAttribute('name') == 'identifier') {
