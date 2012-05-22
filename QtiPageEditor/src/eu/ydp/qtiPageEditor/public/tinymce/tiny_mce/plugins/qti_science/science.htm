@@ -24,7 +24,12 @@
 			var editor = createMathEditor("root","<mrow></mrow>");
 			scienceDialog.initMathEditor(editor);
 		}
-	</script> 
+	</script>
+	<style type="text/css">
+	body {
+		background: inherit !important;
+	}
+	</style> 
 </head>
 <body>
 
@@ -57,6 +62,22 @@
 				margin: 2px;
 				margin-right: 8px;
 				font-weight: bold;
+				float: right;
 				padding-bottom: 2px;" />
+				
+	<input type="button" id="cancel" name="cancel" value="Cancel" style="
+				border: none; 
+				width: 94px; 
+				height: 25px; 
+				background-attachment:scroll;
+				background-color:transparent;
+				background-image:url(img/buttons.png);
+				background-position:0 -26px;
+				background-repeat:repeat; 
+				margin: 2px;
+				float: left; 
+				font-weight: bold;
+				padding-bottom: 2px;"  
+			onclick="tinyMCEPopup.close();" />
 </body>
 </html>

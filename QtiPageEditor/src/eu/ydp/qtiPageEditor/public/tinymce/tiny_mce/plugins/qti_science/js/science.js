@@ -13,14 +13,21 @@ var scienceDialog = {
 		document.body.setAttribute('onLoad',"scienceDialog.windowId = lock(tinyMCEPopup.id);");
 		this.mathXml = tinyMCEPopup.getWindowArg("mathXml");
 		this.type = tinyMCEPopup.getWindowArg("type");
-		
+
 		if (1 == this.type) {
 			this.input = tinyMCEPopup.getWindowArg("input");
 			this.offset = tinyMCEPopup.getWindowArg("offset");
 		} else if (2 == this.type) {
 			this.input = tinyMCEPopup.getWindowArg("input");
 		}
-		
+
+		ed.windowManager.onClose.add(this.close, this);
+	},
+	
+	close: function() {
+		var ed = tinymce.EditorManager.activeEditor;
+		$(this.input).focus();
+		ed.windowManager.onClose.remove(this.close);
 	},
 	
 	initMathEditor: function(me) {
@@ -90,7 +97,6 @@ var scienceDialog = {
 		}
 		tinyMCEPopup.close();
 		return true;
-		
 	},
 	
 	loadScript: function(url, callback) {

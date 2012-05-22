@@ -3,8 +3,8 @@ var preview = null;
 function createPreview() {
 	preview = $('<div>');
 	preview.addClass('mathPreview');
-	//this.preview.style.display = 'none';
 	preview.appendTo(document.body);
+	preview.hide();
 };
 
 function getCaretPosition(el) { 

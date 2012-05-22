@@ -30,7 +30,7 @@
 					plugin_url : url,
 					input : data['input'],
 					offset: data['offset'],
-					type: 1,
+					type: 1
 				});
 				
 			});
@@ -46,7 +46,7 @@
 					plugin_url : url,
 					mathXml : data['xml'],
 					input : data['input'],
-					type: 2,
+					type: 2
 				});
 				
 			});
