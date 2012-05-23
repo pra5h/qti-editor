@@ -27,7 +27,9 @@ var feedbackDialog = {
 			*/
 		//}
 		tagInsert.init("feedback_onok");
+		InputHelper.init($("#feedback_onok"));
 		tagInsert.init("feedback_onwrong");
+		InputHelper.init($("#feedback_onwrong"));
 		$('#feedback_onok').focus();
 	},
 

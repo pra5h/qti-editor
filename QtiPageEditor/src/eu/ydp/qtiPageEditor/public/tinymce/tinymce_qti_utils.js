@@ -385,7 +385,7 @@ function selectionInteractionToQTI (si) {
 	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
 	var sINode = si.nextSibling;
 	text += xh.prepareNodeBegin($(si.nodeValue).get(0));
-	text += '<prompt>'+sINode.firstElementChild.innerHTML+'</prompt>';
+	text += '<prompt>'+parseMathHTML2QTI(sINode.firstElementChild.innerHTML)+'</prompt>';
 	var table = sINode.firstElementChild.nextElementSibling;
 	var tr = null;
 	
@@ -394,7 +394,7 @@ function selectionInteractionToQTI (si) {
 			for (var j = 0; j < tr.childNodes.length; j++) { // for tr
 				for (var k = 0; k < tr.childNodes[j].childNodes.length; k++) { //for td
 					if (8 == tr.childNodes[j].childNodes[k].nodeType) {
-						text += $.trim(tr.childNodes[j].childNodes[k].nodeValue);
+						text += parseMathHTML2QTI($.trim(tr.childNodes[j].childNodes[k].nodeValue));
 					}
 				}
 			}
@@ -486,12 +486,12 @@ function selectionInteractionToHTML(si) {
 	text += '<div id="selectionInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;" mce_style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">';
 
 	var prompts = si.getElementsByTagName('prompt');
-	text += '<p id="selectionInteraction">'+prompts[0].innerHTML+'</p>';
+	text += '<p id="selectionInteraction">'+parseMathQTI2HTML(prompts[0].innerHTML)+'</p>';
 	var options = si.getElementsByTagName('simpleChoice');
 	
 	text += '<table class="selectionTable"><tbody><tr><td>&nbsp;</td>';
 	for (var i = 0; i < options.length; i++) {
-		text += '<td><!-- '+xh.prepareNode(options[i])+' -->'+options[i].innerHTML+'</td>';
+		text += '<td><!-- '+parseMathQTI2HTML(xh.prepareNode(options[i]))+' -->'+parseMathQTI2HTML(options[i].innerHTML)+'</td>';
 	}
 	text += '</tr>';
 	
@@ -509,13 +509,13 @@ function selectionInteractionToHTML(si) {
 
 			if (item.childNodes[j].tagName == 'FEEDBACKINLINE') {
 				feedback = item.childNodes[j];
-				feedbacksText += xh.prepareNode(feedback);
+				feedbacksText += parseMathQTI2HTML(xh.prepareNode(feedback));
 				item.removeChild(feedback);
 			}
 		}
-		text += item.innerHTML;
+		text += parseMathQTI2HTML(item.innerHTML);
 		text += feedbacksText;
-		text += xh.prepareNodeEnd(item)+' -->'+item.innerHTML+'</td>';
+		text += xh.prepareNodeEnd(item)+' -->'+parseMathQTI2HTML(item.innerHTML)+'</td>';
 		feedbacksText = '';
 		
 		for (var j = 0; j < options.length; j++) {
