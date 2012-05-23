@@ -338,7 +338,7 @@ function choiceInteractionToHTML(ci) {
 
 					if (1 == scChild.nodeType) {
 						if ('FEEDBACKINLINE' == scChild.tagName) {
-							text += xh.prepareNodeBegin(scChild)+scChild.innerHTML+xh.prepareNodeEnd(scChild);
+							text += xh.prepareNodeBegin(scChild)+parseMathQTI2HTML(scChild.innerHTML)+xh.prepareNodeEnd(scChild);
 						} else if ('IMG' == scChild.tagName) {
 							text += xh.prepareEmptyNode(scChild);
 							innerHtml = xh.prepareEmptyNode(scChild);
