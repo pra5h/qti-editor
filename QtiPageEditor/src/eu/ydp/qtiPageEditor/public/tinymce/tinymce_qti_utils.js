@@ -237,7 +237,7 @@ function mathInteractionToHTML(mi) {
 	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
 	text += '<div id="mathML" class="mceNonEditable">';
 	//text += '<math xmlns="http://www.w3.org/1998/Math/MathML">';
-	text += parseMathQTI2HTML(mi.innerHTML);
+	text += parseMathQTI2HTML(mi.outerHTML);
 	//text += '</math>';
 	text += '</div>';
 	return text;
