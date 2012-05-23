@@ -176,6 +176,12 @@
 							break;
 						}
 						
+						// MathML
+						if (selectedNode.id != undefined  && selectedNode.id == 'mathML' && selectedNode.nodeName == 'DIV') {
+							node = 'science';
+							break;
+						}
+						
 					}
 					selectedNode = selectedNode.parentNode;
 				}
@@ -242,6 +248,18 @@
 				qtimenu.add({title : 'Remove selection section', icon : 'removeselectionsection', cmd : 'mceSelectionRemove'});
 			} else {
 				qtimenu.add({title : 'Remove selection section', icon : 'removeselectionsection', cmd : 'mceSelectionRemove'}).setDisabled(true);
+			}
+			
+			if(node != '') {
+				qtimenu.add({title : 'Insert science section', icon : 'insertsciencesection', cmd : 'mceScience'}).setDisabled(true);
+			} else {
+				qtimenu.add({title : 'Insert science section', icon : 'insertsciencesection', cmd : 'mceScience'});
+			}
+			
+			if(node == 'science') {
+				qtimenu.add({title : 'Remove science section', icon : 'removesciencesection', cmd : 'mceScienceRemove'});
+			} else {
+				qtimenu.add({title : 'Remove science section', icon : 'removesciencesection', cmd : 'mceScienceRemove'}).setDisabled(true);	
 			}
 
 			/*

@@ -33,7 +33,7 @@ tinyMCE.init({
 	//,bullist,numlist,|
 	//,science
 	theme_advanced_buttons2 : "undo,redo,|,cut,copy,|,paste,|,search,replace,|,forecolor,backcolor,|,sub,sup,|,charmap",
-	theme_advanced_buttons3 : "science,newLineBefore,newLineAfter,pagetitle,insertgapinlinechoice,insertchoicesection,insertordersection,insertmatchsection,insertselectionsection,insertdraggablesection,insertidentificationsection,|,fileuploadlib_image,addvideo,playpause,|,insertcomment,|,tablecontrols,|,code",
+	theme_advanced_buttons3 : "insertsciencesection,newLineBefore,newLineAfter,pagetitle,insertgapinlinechoice,insertchoicesection,insertordersection,insertmatchsection,insertselectionsection,insertdraggablesection,insertidentificationsection,|,fileuploadlib_image,addvideo,playpause,|,insertcomment,|,tablecontrols,|,code",
 
 	extended_valid_elements : "simpleText,group,canvas[id|style|width|height],gap[identifier],choiceInteraction[shuffle|maxChoices|responseIdentifier],"
 		+"orderInteracion[shuffle|responseIdentifier],selectionInteracion[shuffle|responseIdentifier],item[identifier],matchInteraction[shuffle|maxAssociations|responseIdentifier],prompt,"

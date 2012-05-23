@@ -50,14 +50,32 @@
 				});
 				
 			});
+			
+			ed.addCommand('mceScienceRemove', function(ui, data) {
+				
+				var node = ed.selection.getNode();
+				while(node.nodeName != 'DIV') {
+					node = node.parentNode;
+				}
+				
+				var body = node;
+				while(body.nodeName != 'BODY') {
+					body = body.parentNode;
+				}
+				
+				node.parentNode.removeChild(node);
+								
+				return true;
+				
+			});
 
 			// Register example button
-			ed.addButton('science', {
+			/*ed.addButton('insertscience', {
 				title : 'Insert scientific expression',
-				cmd : 'mceScience',
+				cmd : 'mceScience'
 				image : url + '/img/scienceButton.png'
-			});
-			
+			});*/
+			ed.addButton('insertsciencesection', {title : 'Insert scientific expression', cmd : 'mceScience'});
 			
 
 			// Add a node change handler, selects the button in the UI when a image is selected
