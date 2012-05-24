@@ -49,6 +49,8 @@ var selectionDialog = {
 					<input type="text" name="choices[]" value="' + data.choices[q] + '" id="choice_'+q+'">&nbsp;\n\
 					<input type="button" id="remove_option" name="remove_option" value="Remove" onclick="remove_option_row(this);" />';
 				document.getElementById('option_list').appendChild(newDiv);
+				// &lt vs <
+				$('#choice_'+q).val(data.choices[q]);
 				tagInsert.init("choice_"+q);
 				InputHelper.init($("#choice_"+q));
 				
@@ -93,6 +95,9 @@ var selectionDialog = {
 				newDiv.innerHTML = newInnerHTML;
 
 				document.getElementById('answer_list').appendChild(newDiv);
+				// &lt vs <
+				$('#answer_'+q).val(odp);
+				
 				tagInsert.init("answer_"+q);
 				InputHelper.init($("#answer_"+q));
 
