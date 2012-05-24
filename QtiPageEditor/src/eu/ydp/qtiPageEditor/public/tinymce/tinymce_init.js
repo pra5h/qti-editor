@@ -6,6 +6,8 @@ tinyMCE.init({
 	mode: "textareas",
 	elements : "content",
 	skin : "o2k7",
+	inGuestRole : 0,
+	
 	//spellchecker, asciimath,asciimathcharmap,
 	//qti_science,
 	plugins : "safari,pagebreak,layer,table,save,advhr,advlink,emotions,iespell,inlinepopups,"
