@@ -430,18 +430,18 @@ function mediaInteractionToQTI(mi) {
 
 	if ('IMG' == mediaNode.tagName) {
 		var src = mediaNode.getAttribute('src');
-		var title = mediaNode.getAttribute('alt');
-		text += '<img src="'+src+'"><title>'+title+'</title><description></description></img>';
+		var title = $('<div/>').html(mediaNode.getAttribute('alt')).html();
+		text += '<img src="'+src+'"><title>'+parseMathHTML2QTI(title)+'</title><description></description></img>';
 
 	} else {
-		var title = mediaNode.getAttribute('alt');
+		var title = $('<div/>').html(mediaNode.getAttribute('alt')).html();
 		var data = mediaNode.getAttribute('data');
 		var type = mediaNode.getAttribute('type');
 		
 		if (null == title) {
 			title = '';
 		}
-		text += '<object data="'+data+'" type="'+type+'"><title>'+title+'</title><description></description></object>';
+		text += '<object data="'+data+'" type="'+type+'"><title>'+parseMathHTML2QTI(title)+'</title><description></description></object>';
 	}
 	return text;
 }
@@ -453,7 +453,7 @@ function mediaInteractionsToHTML(mi) {
 
 	if ('IMG' == mi.tagName) {
 		var src = mi.getAttribute('src');
-		var title = mi.nextElementSibling.innerHTML;
+		var title = parseMathQTI2HTML(mi.nextElementSibling.textContent); //innerHTML);
 		text += '<img alt="'+title+'" src="'+src+'" />';
 		mi.parentNode.removeChild(mi.nextElementSibling.nextElementSibling); //description
 		mi.parentNode.removeChild(mi.nextElementSibling); //title
@@ -461,7 +461,7 @@ function mediaInteractionsToHTML(mi) {
 	} else { // if video object
 		var data = mi.getAttribute('data');
 		var type = mi.getAttribute('type');
-		var title = mi.firstElementChild.innerHTML;
+		var title = parseMathQTI2HTML(mi.firstElementChild.textContent); //innerHTML);
 		text += '<object alt="'+title+'" data="'+data+'" type="'+type+'"></object>'
 		text += '<img id="mceVideo" src="/res/skins/default/qtipageeditor/tinymce/tiny_mce/plugins/qti_addvideo/img/movie.png" mce_src="/res/skins/default/qtipageeditor/tinymce/tiny_mce/plugins/qti_addvideo/img/movie.png"/>';
 
@@ -1376,7 +1376,7 @@ function runMediaLib(selectedNode) {
 		var src = node.previousSibling.getAttribute('data');
 		var title = '';
 		
-		title = node.previousSibling.getAttribute('alt');
+		title = $('<div/>').html(node.previousSibling.getAttribute('alt')).html();
 		/*if (null != node.nextSibling.nextSibling) {
 			title = node.nextSibling.nextSibling.nodeValue;
 		}*/
@@ -1384,7 +1384,7 @@ function runMediaLib(selectedNode) {
 	} else {
 		var src = node.attributes['src'].value;
 		if(node.attributes['alt'] != undefined) {
-			var title = node.attributes['alt'].value;
+			var title = $('<div/>').html(node.attributes['alt'].value).html();
 		} else {
 			var title = '';
 		}

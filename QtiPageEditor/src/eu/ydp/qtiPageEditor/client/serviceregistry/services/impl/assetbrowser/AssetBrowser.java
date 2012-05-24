@@ -4,10 +4,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.lang.String;
 
+
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -78,10 +81,15 @@ public class AssetBrowser extends DialogBox  implements IAssetBrowser, IResource
 		String id = Document.get().createUniqueId();
 		_txtTitle.getElement().setId(id);
 		initTagInsert(id);
+		initInputHelper(_txtTitle.getElement());
 	}
-	
+
 	private native void initTagInsert(String id)/*-{
 		$wnd.tagInsert.init(id);
+	}-*/;
+	
+	private native void initInputHelper(Element input)/*-{
+	$wnd.InputHelper.init(input);
 	}-*/;
 	
 	@UiHandler("_listBox")
