@@ -248,7 +248,7 @@ function textInteractionsGroupToQTI(tig) {
 	var text = '';
 	text += xh.prepareNodeBegin($(tig.nodeValue).get(0));
 	var gic = tig.nextSibling;
-	text += '<prompt>'+gic.firstElementChild.innerHTML+'</prompt>';
+	text += '<prompt>'+parseMathHTML2QTI(gic.firstElementChild.innerHTML)+'</prompt>';
 	var content = gic.firstElementChild.nextElementSibling;
 	var n = null;
 	var spanBegun = false;
@@ -275,14 +275,14 @@ function textInteractionsGroupToQTI(tig) {
 			}
 
 			if ('textEntryInteraction' == $.trim(n.nodeValue).substr(1, 20)) {
-				text += $.trim(n.nodeValue);
+				text += parseMathHTML2QTI($.trim(n.nodeValue));
 			} else if ('inlineChoiceInteraction' == $.trim(n.nodeValue).substr(1, 23)) {
 				text += $.trim(n.nodeValue);
 				for (j = 0; j < n.nextSibling.childNodes.length; j++) {
 					var ic = n.nextSibling.childNodes[j];
 					if (8 == ic.nodeType) {
 						if ('inlineChoice' == $.trim(ic.nodeValue).substr(1, 12)) {
-							text += $.trim(ic.nodeValue);
+							text += parseMathHTML2QTI($.trim(ic.nodeValue));
 							n.nextSibling.removeChild(n.nextSibling.childNodes[j]);
 						}
 					}
@@ -304,7 +304,7 @@ function textInteractionsGroupToQTI(tig) {
 				if ('BR' == n.tagName) {
 					text += xh.prepareEmptyNode(n);
 				} else {
-					text += xh.prepareNode(n);
+					text += parseMathHTML2QTI(xh.prepareNode(n));
 				}
 			}
 		}
@@ -550,7 +550,7 @@ function textInteractionsGroupToHTML(ti) {
 		} else {
 			var feedbacksText = '';
 			if ('PROMPT' == ti.childNodes[i].tagName) {
-				text += '<!-- <prompt> --><p id="gapInlineChoiceInteractionQuestion">'+ti.childNodes[i].innerHTML+'</p><!-- </prompt> -->';
+				text += '<!-- <prompt> --><p id="gapInlineChoiceInteractionQuestion">'+parseMathQTI2HTML(ti.childNodes[i].innerHTML)+'</p><!-- </prompt> -->';
 				text += '<p id="gapInlineChoiceInteractionContent">';
 			} else if ('TEXTENTRYINTERACTION' == ti.childNodes[i].tagName) {
 				text += '<!-- '+xh.prepareNodeBegin(ti.childNodes[i]);
@@ -565,7 +565,7 @@ function textInteractionsGroupToHTML(ti) {
 							ti.childNodes[i].removeChild(feedback);
 						}
 					}
-					text += feedbacksText;
+					text += parseMathQTI2HTML(feedbacksText);
 				}
 				text += xh.prepareNodeEnd(ti.childNodes[i])+' -->';
 				var correctResponses = xh.getCorrectResponseByIdentifier(ti.childNodes[i].getAttribute('responseIdentifier'));
@@ -607,14 +607,14 @@ function textInteractionsGroupToHTML(ti) {
 							}
 							feedbacksText = '';
 						}
-						text += iCText;
+						text += parseMathQTI2HTML(iCText);
 					}
 				}
 				text += '</span><!-- '+xh.prepareNodeEnd(ti.childNodes[i])+' -->';
 			} else {
 				//wszystkie node typu tekst opakowane są w spany
 				if ('SPAN' == ti.childNodes[i].tagName) {
-					text += ti.childNodes[i].innerHTML;
+					text += parseMathQTI2HTML(ti.childNodes[i].innerHTML);
 				} else {
 					if ('BR' == ti.childNodes[i].tagName) {
 						text += xh.prepareEmptyNode(ti.childNodes[i]);

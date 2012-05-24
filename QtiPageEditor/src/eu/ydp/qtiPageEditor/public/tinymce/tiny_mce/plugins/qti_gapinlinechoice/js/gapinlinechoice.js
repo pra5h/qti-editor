@@ -11,7 +11,9 @@ var gapInlineChoiceDialog = {
 			var data = tinyMCEPopup.getWindowArg("gapInlineChoiceData");
 
 			tagInsert.init(f.question.id);
+			InputHelper.init(f.question);
 			tagInsert.init(f.exercise_content.id);
+			InputHelper.init(f.exercise_content);
 
 			if(data != undefined && data.question != undefined) {
 				f.question.value = stringDecode(data.question);
