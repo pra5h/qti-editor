@@ -196,14 +196,14 @@ var gapInlineChoiceDialog = {
 			if (!ed.validateHtml($('[name=question]').val(), 'content')) {
 				return false;
 			}
-			
+
 			obj.question = stringEncode($('[name=question]').val());
 			
 			//obj.content = stringEncode($('[name=exercise_content]').val()).replace(/\n/g,'<br/>').replace(/[ ]/gi,'&#32;');
 			var ec = $('[name=exercise_content]').val();
 			if (!ed.validateHtml(ec, 'exercise content')) {
 				return false;
-			} 
+			}
 			obj.content = stringEncode(ec).replace(/\n/g,'<br/>').replace(/[ ]/gi,'&#32;');
 			obj.tags = new Array();
 			var reg = new RegExp(/(?:\[(?:(?:gap#|inlineChoice#)[0-9]+)*?\])+/gi);
@@ -301,6 +301,7 @@ var gapInlineChoiceDialog = {
 							ed.dom.split(ed.dom.getParent(n, 'h1,h2,h3,h4,h5,h6,p'), n);
 						});
 
+						newData.content = ed.correctHtml(newData.content); //poprawka quot'ów w atrybutach mathml'a
 						dom.setOuterHTML(dom.select('._mce_marker')[0], newData.content);
 						//ed.selection.moveToBookmark(bm);
 
@@ -318,7 +319,8 @@ var gapInlineChoiceDialog = {
 						while(nd.id != 'gapInlineChoiceInteraction') {
 							nd = nd.parentNode;
 						}
-
+						
+						newData.content = ed.correctHtml(newData.content);
 						nd.innerHTML = newData.content;
 						body = nd;
 						while(body.nodeName != 'BODY') {

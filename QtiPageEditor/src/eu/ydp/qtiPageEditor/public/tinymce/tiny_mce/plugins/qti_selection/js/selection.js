@@ -399,6 +399,7 @@ var selectionDialog = {
 			tinymce.each(dom.select(patt), function(n) {
 				ed.dom.split(ed.dom.getParent(n, 'h1,h2,h3,h4,h5,h6,p'), n);
 			});
+			selectionSection = ed.correctHtml(selectionSection);
 			dom.setOuterHTML(dom.select('._mce_marker')[0], selectionSection);
 
 			body = ed.selection.getNode();
@@ -502,6 +503,7 @@ var selectionDialog = {
 			for(i in dataobj.points) {
 				responseDeclaration += '<value>' + i + ' ' + dataobj.points[i] + '</value>';
 			}
+			selectionSection = ed.correctHtml(selectionSection);
 			nd.innerHTML = selectionSection;
 
 			var body = nd;

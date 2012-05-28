@@ -280,7 +280,7 @@ var choiceDialog = {
 			tinymce.each(dom.select(patt), function(n) {
 				ed.dom.split(ed.dom.getParent(n, 'h1,h2,h3,h4,h5,h6,p'), n);
 			});
-
+			choiceSection = ed.correctHtml(choiceSection);
 			dom.setOuterHTML(dom.select('._mce_marker')[0], choiceSection);
 
 //			ed.execCommand('mceEndUndoLevel');
@@ -334,6 +334,7 @@ var choiceDialog = {
 					responseDeclaration += '<value>' + ids[i] + '</value>';
 				}
 			}
+			choiceSection = ed.correctHtml(choiceSection);
 			nd.innerHTML = choiceSection;
 			
 			body = nd;

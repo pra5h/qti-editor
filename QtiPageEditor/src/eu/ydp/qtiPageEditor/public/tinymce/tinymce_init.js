@@ -165,6 +165,18 @@ tinyMCE.init({
 				return true;
 		};
 		
+		ed.correctHtml = function (text) {
+			return text.replace(/open=&quot;([\S]{1})&quot; close=&quot;([\S]{1})&quot;/g, "open=\"$1\" close=\"$2\"");
+			/*
+			 //var reg = new RegExp(/open=&quot;([\S]{1})&quot; close=&quot;([\S]{1})&quot;/g);
+			var reg = new RegExp(/open=\"([\S]{1})\" close=\"([\S]{1})\"/g);
+			if (null == reg.exec(text)) {
+				return text.replace(/open=&quot;([\S]{1})&quot; close=&quot;([\S]{1})&quot;/g, "open=\"$1\" close=\"$2\"");
+			}
+			return text.replace(/open=\"([\S]{1})\" close=\"([\S]{1})\"/g, "open=&quot;$1&quot; close=&quot;$2&quot;");
+			*/
+		};
+		
 		ed.XmlHelper = {
 				rootNode: {attributes: new Array(), node: null},
 				actualNode: {attributes: new Array(), node: null},
