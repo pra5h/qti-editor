@@ -454,6 +454,7 @@ function mediaInteractionsToHTML(mi) {
 	if ('IMG' == mi.tagName) {
 		var src = mi.getAttribute('src');
 		var title = parseMathQTI2HTML(mi.nextElementSibling.textContent); //innerHTML);
+		title = tinyMCE.activeEditor.dom.encode(title);
 		text += '<img alt="'+title+'" src="'+src+'" />';
 		mi.parentNode.removeChild(mi.nextElementSibling.nextElementSibling); //description
 		mi.parentNode.removeChild(mi.nextElementSibling); //title
@@ -462,6 +463,7 @@ function mediaInteractionsToHTML(mi) {
 		var data = mi.getAttribute('data');
 		var type = mi.getAttribute('type');
 		var title = parseMathQTI2HTML(mi.firstElementChild.textContent); //innerHTML);
+		title = tinyMCE.activeEditor.dom.encode(title);
 		text += '<object alt="'+title+'" data="'+data+'" type="'+type+'"></object>'
 		text += '<img id="mceVideo" src="/res/skins/default/qtipageeditor/tinymce/tiny_mce/plugins/qti_addvideo/img/movie.png" mce_src="/res/skins/default/qtipageeditor/tinymce/tiny_mce/plugins/qti_addvideo/img/movie.png"/>';
 

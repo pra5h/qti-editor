@@ -19,7 +19,8 @@ var gapInlineChoiceDialog = {
 				f.question.value = stringDecode(data.question);
 			}
 			if(data != undefined && data.content != undefined) {
-				data.content = data.content.replace(/&#32;/g,' ').replace(/<br \/>/g,'\n').replace(/<br>/g,'\n');
+				//data.content = data.content.replace(/&#32;/g,' ').replace(/<br \/>/g,'\n').replace(/<br>/g,'\n');
+				data.content = data.content.replace(/<br \/>/g,'\n').replace(/<br>/g,'\n');
 				f.exercise_content.value = stringDecode(data.content);
 			}
 
@@ -204,7 +205,7 @@ var gapInlineChoiceDialog = {
 			if (!ed.validateHtml(ec, 'exercise content')) {
 				return false;
 			}
-			obj.content = stringEncode(ec).replace(/\n/g,'<br/>').replace(/[ ]/gi,'&#32;');
+			obj.content = stringEncode(ec).replace(/\n/g,'<br/>');//.replace(/[ ]/gi,'&#32;');
 			obj.tags = new Array();
 			var reg = new RegExp(/(?:\[(?:(?:gap#|inlineChoice#)[0-9]+)*?\])+/gi);
 			
