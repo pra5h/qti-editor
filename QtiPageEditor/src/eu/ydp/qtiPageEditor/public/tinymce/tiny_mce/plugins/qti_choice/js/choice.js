@@ -65,7 +65,7 @@ var choiceDialog = {
 					newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td class="answer"><input type="hidden" id="answer_' + q + '" name="answers[]" style="width: 100%; margin-right: 5px;" value="' + odp + '"/><div style="width: 80px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;" onclick="tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'' + src + '\',div:this});"><img style="max-height: 40px; max-width: 80px;" src="' + odp + '" /></div></td><input type="hidden" id="id_' + q + '" name="ids[]" value="' + data[3][q] + '"/><td class="correct"><input id="point_' + q + '" type="' + type + '" name="points[]" style="margin: 0; padding: 0;"' + correct + '/></td><td class="fixed"><input id="fixed_' + q + '" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" ' + fixed + '/></td><td class="remove"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td class="feedback"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr></table>';
 				} else {
 					f.images.checked = false;
-					newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td class="answer"><input type="text" id="answer_' + q + '" name="answers[]" style="width: 100%; margin-right: 5px;" value="' + odp + '"/></td><input type="hidden" id="id_' + q + '" name="ids[]" value="' + data[3][q] + '"/><td class="correct"><input id="point_' + q + '" type="' + type + '" name="points[]" style="margin: 0; padding: 0;"' + correct + '/></td><td class="fixed"><input id="fixed_' + q + '" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" ' + fixed + '/></td><td class="remove"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td class="feedback"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr></table>';
+					newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td class="answer"><input type="text" id="answer_' + q + '" name="answers[]" style="width: 100%; margin-right: 5px;" value=""/></td><input type="hidden" id="id_' + q + '" name="ids[]" value="' + data[3][q] + '"/><td class="correct"><input id="point_' + q + '" type="' + type + '" name="points[]" style="margin: 0; padding: 0;"' + correct + '/></td><td class="fixed"><input id="fixed_' + q + '" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" ' + fixed + '/></td><td class="remove"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td class="feedback"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr></table>';
 				}
 				document.getElementById('answer_list').appendChild(newDiv);
 				//tak trzeba ze względu na <math> inaczej podczas inicjalizacji input.value zamienia &lt; na <
@@ -280,7 +280,7 @@ var choiceDialog = {
 			tinymce.each(dom.select(patt), function(n) {
 				ed.dom.split(ed.dom.getParent(n, 'h1,h2,h3,h4,h5,h6,p'), n);
 			});
-			choiceSection = ed.correctHtml(choiceSection);
+			choiceSection = ed.correctHtml(choiceSection, 'decode');
 			dom.setOuterHTML(dom.select('._mce_marker')[0], choiceSection);
 
 //			ed.execCommand('mceEndUndoLevel');
@@ -334,7 +334,7 @@ var choiceDialog = {
 					responseDeclaration += '<value>' + ids[i] + '</value>';
 				}
 			}
-			choiceSection = ed.correctHtml(choiceSection);
+			choiceSection = ed.correctHtml(choiceSection, 'decode');
 			nd.innerHTML = choiceSection;
 			
 			body = nd;

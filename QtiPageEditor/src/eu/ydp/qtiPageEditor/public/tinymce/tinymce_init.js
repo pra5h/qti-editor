@@ -165,15 +165,21 @@ tinyMCE.init({
 				return true;
 		};
 		
-		ed.correctHtml = function (text) {
+		ed.correctHtml = function (text, type) {
 			//return text.replace(/open=&quot;([\S]+)&quot; close=&quot;([\S]+)&quot;/g, "open=\"$1\" close=\"$2\"");
 			 //var reg = new RegExp(/open=&quot;([\S]{1})&quot; close=&quot;([\S]{1})&quot;/g);
-			var reg = new RegExp(/open=\"([\S]+)\" close=\"([\S]+)\"/g);
+			/*var reg = new RegExp(/open=\"([\S]+)\" close=\"([\S]+)\"/g);
 			if (null == reg.exec(text)) {
 				return text.replace(/open=&quot;([\S]+)&quot; close=&quot;([\S]+)&quot;/g, "open=\"$1\" close=\"$2\"");
 			}
 			return text.replace(/open=\"([\S]+)\" close=\"([\S]+)\"/g, "open=&quot;$1&quot; close=&quot;$2&quot;");
-			
+			*/
+			if ('decode' == type) {
+				return text.replace(/(open|close)=&quot;([\S]+)&quot; (open|close)=&quot;([\S]+)&quot;/g, "$1=\"$2\" $3=\"$4\"");
+			}
+			if ('encode' == type) {
+				return text.replace(/(open|close)=\"([\S]+)\" (open|close)=\"([\S]+)\"/g, "$1=&quot;$2&quot; $3=&quot;$4&quot;");
+			}
 		};
 		
 		ed.XmlHelper = {

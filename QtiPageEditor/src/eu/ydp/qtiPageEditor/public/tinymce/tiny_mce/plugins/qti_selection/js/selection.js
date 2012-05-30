@@ -46,7 +46,7 @@ var selectionDialog = {
 				var ct = q+1;
 				newDiv.innerHTML = '<br class="clr"/><strong>' + ct + '.</strong>&nbsp;\n\
 					<input type="hidden" name="choices_ids[]" value="' + data.ids_ch[q] + '">\n\
-					<input type="text" name="choices[]" value="' + data.choices[q] + '" id="choice_'+q+'">&nbsp;\n\
+					<input type="text" name="choices[]" value="" id="choice_'+q+'">&nbsp;\n\
 					<input type="button" id="remove_option" name="remove_option" value="Remove" onclick="remove_option_row(this);" />';
 				document.getElementById('option_list').appendChild(newDiv);
 				// &lt vs <
@@ -69,7 +69,7 @@ var selectionDialog = {
 
 				var newInnerHTML = '<table class="answer" cellpadding=0 cellspacing=0><tr>\n\
 					<td width="260px" style="padding-right: 5px;">\n\
-					<input type="text" id="answer_'+q+'" name="answers[]" style="width: 100%; margin-right: 5px;" value="' + odp + '"/>\n\
+					<input type="text" id="answer_'+q+'" name="answers[]" style="width: 100%; margin-right: 5px;" value=""/>\n\
 					</td>\n\
 					<input type="hidden" id="id_0" name="ids[]" value="' + data.ids_ans[q] + '"/>\n\
 					<td width="400px" id="optionsSpans">';
@@ -399,7 +399,7 @@ var selectionDialog = {
 			tinymce.each(dom.select(patt), function(n) {
 				ed.dom.split(ed.dom.getParent(n, 'h1,h2,h3,h4,h5,h6,p'), n);
 			});
-			selectionSection = ed.correctHtml(selectionSection);
+			selectionSection = ed.correctHtml(selectionSection, 'decode');
 			dom.setOuterHTML(dom.select('._mce_marker')[0], selectionSection);
 
 			body = ed.selection.getNode();
@@ -503,7 +503,7 @@ var selectionDialog = {
 			for(i in dataobj.points) {
 				responseDeclaration += '<value>' + i + ' ' + dataobj.points[i] + '</value>';
 			}
-			selectionSection = ed.correctHtml(selectionSection);
+			selectionSection = ed.correctHtml(selectionSection, 'decode');
 			nd.innerHTML = selectionSection;
 
 			var body = nd;
