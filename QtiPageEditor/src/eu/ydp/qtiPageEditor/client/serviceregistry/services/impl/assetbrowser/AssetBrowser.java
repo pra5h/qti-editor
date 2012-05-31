@@ -69,7 +69,7 @@ public class AssetBrowser extends DialogBox  implements IAssetBrowser, IResource
 	private AssetBrowserCallback _jsCallback;	
 	
 	public AssetBrowser(){		
-		super(false, true);		
+		super(false, false);	
 		setText("Upload / insert media for qti");
 		setGlassEnabled(true);		
 		setWidget(uiBinder.createAndBindUi(this));
