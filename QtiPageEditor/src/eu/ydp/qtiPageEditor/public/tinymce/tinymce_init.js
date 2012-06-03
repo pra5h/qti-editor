@@ -44,8 +44,8 @@ tinyMCE.init({
 		+"correctResponse,value,itemBody,applink[lid|title],mapping[defaultValue],mapEntry[mapKey|mappedValue],"
 		+"qy:comment[idref],feedbackInline[identifier|showHide|outcomeIdentifier|senderIdentifier|fadeEffect|mark],modalFeedback[outcomeIdentifier|identifier|showHide|sound|senderIdentifier|style],"
 		+"math[title|xmlns],mstyle[mathsize|mathcolor|fontfamily|displaystyle],mfrac,mrow,mi,mo,mn,msup,mroot,munder,msubsup,msub,msup,munderover,munder,mover,msqrt,mroot,"
-		+"mfenced[open|close],"
-		+"mtable,mtr,mtd,mspace,changesTracking[state],styleDeclaration,link[href|userAgent],qy:tag[name],audioPlayer[data|id|class],dragDropInteraction[responseIdentifier],contents,slot,sourcelist,dragElement[identifier]"
+		+"mfenced[open|close],ms[lquote|rquote],"
+		+"mtable,mtr,mtd,mspace[width],changesTracking[state],styleDeclaration,link[href|userAgent],qy:tag[name],audioPlayer[data|id|class],dragDropInteraction[responseIdentifier],contents,slot,sourcelist,dragElement[identifier]"
 		+"identificationInteraction[responseIdentifier|shuffle|maxSelections|separator]",
 
 	handle_event_callback : "actionOnQTI",
@@ -175,10 +175,10 @@ tinyMCE.init({
 			return text.replace(/open=\"([\S]+)\" close=\"([\S]+)\"/g, "open=&quot;$1&quot; close=&quot;$2&quot;");
 			*/
 			if ('decode' == type) {
-				return text.replace(/(open|close)=&quot;([\S]+)&quot; (open|close)=&quot;([\S]+)&quot;/g, "$1=\"$2\" $3=\"$4\"");
+				return text.replace(/(open|close|lquote|rquote)=&quot;([\S]+)&quot; (open|close|lquote|rquote)=&quot;([\S]+)&quot;/g, "$1=\"$2\" $3=\"$4\"");
 			}
 			if ('encode' == type) {
-				return text.replace(/(open|close)=\"([\S]+)\" (open|close)=\"([\S]+)\"/g, "$1=&quot;$2&quot; $3=&quot;$4&quot;");
+				return text.replace(/(open|close|lquote|rquote)=\"([\S]+)\" (open|close|lquote|rquote)=\"([\S]+)\"/g, "$1=&quot;$2&quot; $3=&quot;$4&quot;");
 			}
 		};
 		
