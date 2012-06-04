@@ -165,6 +165,7 @@ function mathInputHelperClass() {
 				if ('' != preview.html()) {
 					preview.css('left', e.pageX-preview.width()-25+'px');
 					preview.css('top', e.pageY+'px');
+					preview.css('width', $(preview).children(':first-child').get(0).scrollWidth+'px');
 					preview.show();
 				}
 			} else {
