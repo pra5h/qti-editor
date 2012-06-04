@@ -69,8 +69,10 @@ function qti2htmlParseProcess(tree) {
 	} else {
 
 		if (tree.nodeType == 3) {
-			//text += ed.dom.encode(tree.nodeValue);
-			text += tree.nodeValue;
+			text += ed.dom.encode(tree.nodeValue);
+			//console.log(tree.nodeValue);
+			//console.dir(tree);
+			//text += tree.nodeValue;
 		} else if (processAsText){
 			text += "<"+tree.tagName+">"+tree.innerHTML+"</"+tree.tagName+">";
 		}
@@ -186,7 +188,7 @@ function html2qtiParseProcess(tree) {
     		if (undefined != tree.parentNode && tree.parentNode.nodeName == 'VALUE') {
     				text += ed.dom.encode(tree.nodeValue);
     		} else {
-    			text += tree.nodeValue;
+    			text += ed.dom.encode(tree.nodeValue);
     		}
     	}
     }
