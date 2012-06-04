@@ -70,6 +70,18 @@ function mathInputHelperClass() {
 			var button = e.data;
 			instance.enableButtonNew(e.target, button);
 		});
+		
+		instance.input.keypress(function(e) {
+			if (e.shiftKey && 60 == e.which) {
+				var pos = getCaretPosition(this);
+				this.value = this.value.substr(0, pos)+'&lt;'+this.value.substr(pos);
+				e.preventDefault();
+			} else if (e.shiftKey && 62 == e.which) {
+				var pos = getCaretPosition(this);
+				this.value = this.value.substr(0, pos)+'&gt;'+this.value.substr(pos);
+				e.preventDefault();
+			}
+		});
 	};
 	
 	this.onContextMenu = function (e) {
