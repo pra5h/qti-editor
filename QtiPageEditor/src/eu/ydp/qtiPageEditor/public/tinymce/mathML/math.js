@@ -1,10 +1,38 @@
 var preview = null;
+var mathPreview = null;
+
+function createMathPreview() {
+	mathPreview = $('<div>');
+	mathPreview.addClass('mathPreview');
+	mathPreview.appendTo(document.body);
+	mathPreview.hide();
+};
 
 function createPreview() {
-	preview = $('<div>');
-	preview.addClass('mathPreview');
+	var html = '<div id="inputPreviewContener">'
+				+'<div id="inputPreviewLayer"></div>'
+				+'<div id="inputPreview">'
+					+'<div id="inputPreviewBody">'
+						+'<div id="inputPreviewClose"></div>'
+						+'<div id="inputPreviewContent"></div>'
+					+'</div>'
+				+'</div>'
+				+'</div>';
+	preview = $(html);
 	preview.appendTo(document.body);
 	preview.hide();
+	$('#inputPreviewClose', preview).click(function(e){preview.close();});
+	preview.setHtml = function(html,x,y) {
+		//this.css('left', x-(this.width()/2)+'px'); //e.pageX-preview.width()-25+'px');
+		this.css('top', y-20+'px');
+		$('#inputPreviewContent', this).html(html);
+		this.show();
+	};
+	
+	preview.close = function() {
+		$('#inputPreviewContent', this).html('');
+		this.hide();
+	}
 };
 
 function getCaretPosition(el) { 
@@ -45,6 +73,9 @@ function mathInputHelperClass() {
 		instance.id = Math.random();
 		instance.input = $(obj);
 		
+		if (null == mathPreview) {
+			createMathPreview();
+		}
 		if (null == preview) {
 			createPreview();
 		}
@@ -86,45 +117,67 @@ function mathInputHelperClass() {
 	
 	this.onContextMenu = function (e) {
 		var input = e.data;
-		if ('' != preview.html()) {
-			preview.hide();
-			var control = $('<div>');
-			control.attr('id', 'mathContextMenuControl');
-			control.addClass('mathContextMenuControl');
-			control.html('<div>remove</div><div>modify</div>');
-			control.css('left', e.pageX+'px');
-			control.css('top', e.pageY+'px');
+		
+		if ('block' == preview.css('display')) {
+			e.preventDefault();
+			return;
+		}
+		var control = $('<div>');
+		control.attr('id', 'mathContextMenuControl');
+		control.addClass('mathContextMenuControl');
+		control.html('<div>preview</div>');
+		control.css('left', e.pageX+'px');
+		control.css('top', e.pageY+'px');
+		
+		$(document.body).mousedown(function(e) {
 
-			$(document.body).mousedown(function(e) {
-
-				if (null != control) {
-					control.remove();
-				}
-			});
+			if (null != control) {
+				control.remove();
+			}
+		});
+		
+		if ('' != mathPreview.html()) {
+			mathPreview.hide();
+			control.html('<div>remove</div><div>modify</div><div>preview</div>');
 
 			$('div:first-child', control).mousedown(function(e) {
-				var math = preview.html();
+				var math = mathPreview.html();
 				input.val(input.val().replace(math, ''));
 				control.remove();
 				e.preventDefault();
 			});
 			
-			$('div:last-child', control).mousedown(function(e) {
+			$('div:nth-child(2)', control).mousedown(function(e) {
 				var ed = tinymce.EditorManager.activeEditor;
-				var math = preview.html();
+				var math = mathPreview.html();
 				math = math.replace(/<math[^>]*>/,'');
 				math = math.replace(/<\/math>/,'');
 				var data = new Object();
 
-				if ('' != preview.html()) {
+				if ('' != mathPreview.html()) {
 					data['xml'] = math;
 					data['input'] = input.get(0);
 					tinyMCE.execCommand('mceScienceInputFormulaModify',false, data);
 					e.preventDefault();
 				}
 			});
+			
+			$('div:last-child', control).mousedown(function(e) {
+				preview.setHtml(input.val(), e.pageX, e.pageY);
+				e.preventDefault();
+			});
 			$(document.body).append(control);
 			e.preventDefault();
+		} else {
+
+			if ('' != input.val()) {
+				$('div:first-child', control).mousedown(function(e) {
+					preview.setHtml(input.val(), e.pageX, e.pageY);
+				});
+
+				$(document.body).append(control);
+				e.preventDefault();
+			}
 		}
 	};
 	
@@ -154,12 +207,12 @@ function mathInputHelperClass() {
 	this.mouseOver = function (e) {
     	
     	if (null == $('#mathContextMenuControl').get(0)) {
-    		if ('' != preview.html()) {
-    			preview.css('position','absolute');
-    			preview.css('left', e.pageX-preview.width()-25+'px');
-    			preview.css('top', e.pageY+'px');
-    			preview.show();
-    			preview.html('');
+    		if ('' != mathPreview.html()) {
+    			mathPreview.css('position','absolute');
+    			mathPreview.css('left', e.pageX-mathPreview.width()-25+'px');
+    			mathPreview.css('top', e.pageY+'px');
+    			mathPreview.show();
+    			mathPreview.html('');
     		}
     	}
 	};
@@ -172,22 +225,22 @@ function mathInputHelperClass() {
 			var ed = object.getEnd(this.value, e.originalEvent.rangeOffset);
 
 			if (null != st && null != ed && (object.startTagName == object.endTagName)) {
-				preview.html(this.value.substr(st, ed-st));
+				mathPreview.html(this.value.substr(st, ed-st));
 
-				if ('' != preview.html()) {
-					preview.css('left', e.pageX-preview.width()-25+'px');
-					preview.css('top', e.pageY+'px');
-					preview.css('width', $(preview).children(':first-child').get(0).scrollWidth+'px');
-					preview.show();
+				if ('' != mathPreview.html()) {
+					mathPreview.css('left', e.pageX-mathPreview.width()-25+'px');
+					mathPreview.css('top', e.pageY+'px');
+					mathPreview.css('width', $(mathPreview).children(':first-child').get(0).scrollWidth+'px');
+					mathPreview.show();
 				}
 			} else {
-				preview.hide();
+				mathPreview.hide();
 			}
 		}
 	};
 	
 	this.mouseOut = function (e) {
-		preview.hide();
+		mathPreview.hide();
 	};
 	
 	this.getStart = function (str,i) {
