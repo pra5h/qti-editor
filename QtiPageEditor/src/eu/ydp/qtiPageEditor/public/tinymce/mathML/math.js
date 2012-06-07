@@ -24,6 +24,7 @@ function createPreview() {
 	$('#inputPreviewClose', preview).click(function(e){preview.close();});
 	preview.setHtml = function(html,x,y) {
 		//this.css('left', x-(this.width()/2)+'px'); //e.pageX-preview.width()-25+'px');
+		html = html.replace(/\n/g,'<br/>');
 		this.css('top', y-20+'px');
 		$('#inputPreviewContent', this).html(html);
 		this.show();
@@ -246,11 +247,11 @@ function mathInputHelperClass() {
 	this.getStart = function (str,i) {
 		str = str.substr(0, i);
 		var s = str.split( '' ).reverse().join( '' );
-		var m = s.match(/(>(b|i|u|htam)+<)/);
+		var m = s.match(/(>(htam)+<)/);
 
 		if (null != m && undefined != typeof m[0]) {
 			this.startTag = m[0].split( '' ).reverse().join( '' );
-			this.startTagName = this.startTag.match(/<((b|i|u|math)+)>/)[1];
+			this.startTagName = this.startTag.match(/<((math)+)>/)[1];
 		}
 		this.startIndex = str.lastIndexOf(this.startTag);
 
@@ -270,11 +271,11 @@ function mathInputHelperClass() {
 	this.getEnd = function (str,i) {
 
 		str = str.substr(i, str.length-i);
-		var m = str.match(/(\<\/(b|i|u|math)+\>)/);
+		var m = str.match(/(\<\/(math)+\>)/);
 
 		if (null != m && undefined != typeof m[0]) {
 			this.endTag = m[0];
-			this.endTagName = this.endTag.match(/\<\/((b|i|u|math)+)\>/)[1];
+			this.endTagName = this.endTag.match(/\<\/((math)+)\>/)[1];
 		}
 		var checkIdx = null;		
 		
