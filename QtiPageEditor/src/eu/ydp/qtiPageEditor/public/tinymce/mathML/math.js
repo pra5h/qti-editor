@@ -23,7 +23,6 @@ function createPreview() {
 	preview.hide();
 	$('#inputPreviewClose', preview).click(function(e){preview.close();});
 	preview.setHtml = function(html,x,y) {
-		//this.css('left', x-(this.width()/2)+'px'); //e.pageX-preview.width()-25+'px');
 		html = html.replace(/\n/g,'<br/>');
 		this.css('top', y-20+'px');
 		$('#inputPreviewContent', this).html(html);

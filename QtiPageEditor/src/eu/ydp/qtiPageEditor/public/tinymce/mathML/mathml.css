@@ -3,15 +3,6 @@
 div.mathPreview {
 	border: 1px solid #ABC6DD;
 	position: absolute;
-	/* --------- DEBUG */
-	/*left: 367px;
-	top: 74px;
-	background-color: yellow; 
-	display: block;
-	width: 100px;
-	height: 10px;
-	*/
-	/* --------- DEBUG */
 	padding: 10px;
 	font-size: 12px;
 	text-align: center;
@@ -50,15 +41,18 @@ div.mathLogger {
 /* Preview */
 div#inputPreviewContener {
 	position: absolute;
+	left: 0px;
+	right: 0px;
 }
 div#inputPreview {
 	border: 1px solid #ABC6DD;
-	position: absolute;
-	width: 400px;
-	min-height: 100px;
+	position: relative;
 	font-size: 12px;
 	background-color: #FFFFFF;
 	z-index: 10001;
+	margin-left: auto;
+	margin-right: auto;
+	width: 450px;
 }
 
 div#inputPreviewClose {
@@ -73,7 +67,8 @@ div#inputPreviewClose {
 }
 
 div#inputPreviewContent {
-	text-align: center;
+	padding: 5px 10px;
+	min-height: 40px;
 }
 	
 div#inputPreviewLayer {
@@ -83,5 +78,6 @@ div#inputPreviewLayer {
 	background-color: gray;
 	opacity: 0.3;
 	top: 0px;
+	left: 0px;
 	z-index: 1000;
 }
