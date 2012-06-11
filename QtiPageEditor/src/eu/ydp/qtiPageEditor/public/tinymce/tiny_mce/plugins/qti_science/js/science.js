@@ -47,8 +47,6 @@ var scienceDialog = {
 		var data = this.mathEditor.getMathML();
 		//data = $('<div/>').html('<math>'+data+'</math>').html();
 		data = $('<div/>').html(data).html();
-		data = data.replace(/lquote=\"\"/g, "lquote=\" \"");
-		data = data.replace(/rquote=\"\"/g, "rquote=\" \"");
 
 		if (0 == this.type) {
 			var dom = ed.dom;
