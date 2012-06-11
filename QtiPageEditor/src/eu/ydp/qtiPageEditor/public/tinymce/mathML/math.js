@@ -56,6 +56,19 @@ function getCaretPosition(el) {
 	return 0; 
 };
 
+
+function setCaretPosition(object, pos) {
+	if ($(object).get(0).setSelectionRange) {
+		$(object).get(0).setSelectionRange(pos, pos);
+	} else if ($(object).get(0).createTextRange) {
+		var range = $(object).get(0).createTextRange();
+		range.collapse(true);
+		range.moveEnd('character', pos);
+		range.moveStart('character', pos);
+		range.select();
+	}
+};
+
 function mathInputHelperClass() {
 	/*
 	this.id = null;
@@ -103,13 +116,16 @@ function mathInputHelperClass() {
 		});
 		
 		instance.input.keypress(function(e) {
+
 			if (e.shiftKey && 60 == e.which) {
 				var pos = getCaretPosition(this);
 				this.value = this.value.substr(0, pos)+'&lt;'+this.value.substr(pos);
+				setCaretPosition(this, pos+4);
 				e.preventDefault();
 			} else if (e.shiftKey && 62 == e.which) {
 				var pos = getCaretPosition(this);
 				this.value = this.value.substr(0, pos)+'&gt;'+this.value.substr(pos);
+				setCaretPosition(this, pos+4);
 				e.preventDefault();
 			}
 		});
