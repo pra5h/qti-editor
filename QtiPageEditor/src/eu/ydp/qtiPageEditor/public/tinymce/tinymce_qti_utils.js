@@ -347,7 +347,7 @@ function textInteractionsGroupToQTI(tig) {
 	var text = '';
 	text += xh.prepareNodeBegin($(tig.nodeValue).get(0));
 	var gic = tig.nextSibling;
-	text += '<prompt>'+parseMathHTML2QTI(gic.firstElementChild.innerHTML)+'</prompt>';
+	text += '<prompt>'+parseMathHTML2QTI(gic.firstElementChild.innerHTML, true)+'</prompt>';
 	var content = gic.firstElementChild.nextElementSibling;
 	var n = null;
 	var spanBegun = new Object({value: false});
@@ -428,7 +428,7 @@ function selectionInteractionToQTI (si) {
 	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
 	var sINode = si.nextSibling;
 	text += xh.prepareNodeBegin($(si.nodeValue).get(0));
-	text += '<prompt>'+parseMathHTML2QTI(sINode.firstElementChild.innerHTML)+'</prompt>';
+	text += '<prompt>'+parseMathHTML2QTI(sINode.firstElementChild.innerHTML, true)+'</prompt>';
 	var table = sINode.firstElementChild.nextElementSibling;
 	var tr = null;
 	
@@ -456,7 +456,7 @@ function choiceInteractionToQTI(ci) {
 	var cINode = ci.nextSibling;
 	
 	text += xh.prepareNodeBegin($(ci.nodeValue).get(0));
-	text += '<prompt>'+parseMathHTML2QTI(cINode.firstElementChild.innerHTML)+'</prompt>';
+	text += '<prompt>'+parseMathHTML2QTI(cINode.firstElementChild.innerHTML, true)+'</prompt>';
 	for (var i = 0; i < cINode.childNodes.length; i++) {
 		if (8 == cINode.childNodes[i].nodeType) {
 			text += parseMathHTML2QTI(cINode.childNodes[i].nodeValue);
@@ -1579,8 +1579,12 @@ function mathml2subsup(text){
 	return text;
 }
 
-function parseMathHTML2QTI(math) {
-	math = math.replace(/<math[^>]*>/g,'<mathText>');
+function parseMathHTML2QTI(math, isInPrompt) {
+	var className = '';
+	if (true == isInPrompt) {
+		className = ' class="mathBold"';
+	}
+	math = math.replace(/<math[^>]*>/g,'<mathText'+className+'>');
 	math = math.replace(/<\/math>/g,'</mathText>');
 	return math;
 }
