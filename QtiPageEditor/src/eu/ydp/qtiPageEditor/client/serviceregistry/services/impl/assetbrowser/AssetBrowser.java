@@ -10,10 +10,6 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -83,20 +79,7 @@ public class AssetBrowser extends DialogBox  implements IAssetBrowser, IResource
 		_txtTitle.getElement().setId(id);
 		initTagInsert(id);
 		initInputHelper(_txtTitle.getElement());
-		_txtTitle.addKeyUpHandler(new KeyUpHandler() {	
-			
-			@Override
-			public void onKeyUp(KeyUpEvent arg0) {
-				checkValidOKButton();		
-			}
-		});
-		_txtTitle.addValueChangeHandler(new ValueChangeHandler<String>() {
-			
-			@Override
-			public void onValueChange(ValueChangeEvent<String> arg0) {
-				checkValidOKButton();
-			}
-		});
+		checkValidOKButton();
 	}
 
 	private native void initTagInsert(String id)/*-{
@@ -120,7 +103,7 @@ public class AssetBrowser extends DialogBox  implements IAssetBrowser, IResource
 	
 	private void checkValidOKButton() {
 
-		if (_listBox.getSelectedIndex() > -1 && !getTitle().isEmpty()) {
+		if (_listBox.getSelectedIndex() > -1) {
 			_okButton.setEnabled(true);
 		} else {
 			_okButton.setEnabled(false);
@@ -361,6 +344,7 @@ public class AssetBrowser extends DialogBox  implements IAssetBrowser, IResource
 		
 		if(_selectedFilePath != null){
 			showSelectedFilePath();
+			checkValidOKButton();
 		}
 		
 	}
