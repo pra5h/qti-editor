@@ -414,3 +414,63 @@ function lock(id) {
 	return id;
 }
 
+
+
+
+function imgInputHelperClass() {
+
+	this.init = function(obj) {
+		var instance = this;
+		instance.id = Math.random();
+		instance.input = $(obj);
+		
+		instance.insertButtonNew();
+	};
+	
+	this.insertButtonNew = function() {
+		this.buttonNew = $('<div>');
+		this.buttonNew.addClass('mediahelper');
+		this.buttonNew.css('opacity', '0.3');
+		this.buttonNew.val('img');
+		var panel = $('#taginsert_menu_'+this.input.attr('id'));
+		//this.buttonNew.insertBefore(this.input);
+		this.buttonNew.insertAfter(panel.next());
+		
+		this.buttonNew.bind('click', this.input, this.insertNewMedia);
+	};
+	
+	this.insertNewMedia = function(e) {
+		var o = e.data;
+
+		var ed = tinymce.EditorManager.activeEditor;
+		var data = new Object();
+
+		data['offset'] = getCaretPosition(o.get(0));
+		data['input'] = o.get(0);
+		data['src'] = '';
+		data['title'] = '';
+		tinyMCE.execCommand('mceAppendImageToInput', false, data);
+	};
+}
+
+function getCaretPosition(el) { 
+	if (el.selectionStart) { 
+		return el.selectionStart; 
+
+	} else if (document.selection) { 
+		el.focus(); 
+
+		var r = document.selection.createRange(); 
+		if (r == null) { 
+			return 0; 
+		} 
+
+		var re = el.createTextRange(), 
+		rc = re.duplicate(); 
+		re.moveToBookmark(r.getBookmark()); 
+		rc.setEndPoint('EndToStart', re); 
+		return rc.text.length; 
+	}  
+	return 0; 
+};
+var MediaHelper = new imgInputHelperClass();

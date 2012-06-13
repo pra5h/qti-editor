@@ -151,7 +151,7 @@ tinyMCE.init({
 				var showAlert = (cancelAlert)?false:true;
 				var div = $('<div/>');
 				div.html(text);
-				
+
 				if (text != div.html()) {
 					
 					if (showAlert) {

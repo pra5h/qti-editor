@@ -136,6 +136,57 @@
 				
 			});
 			
+			ed.addCommand('mceAppendImageToInput', function(ui, data) {
+				
+				var browseCallback = {
+
+						onBrowseComplete : function(filePath, title) {
+							
+							if (!ed.validateHtml(title, 'title', true)) {
+								return false;
+							}
+							
+							var fromPath =tinyMCE.gwtProxy.getPageBasePath();
+							fromPath = fromPath.split('/');
+							fromPath.pop();
+							fromPath = fromPath.join('/');
+							filePath = getRelativeFromAbsoute(fromPath, filePath);
+							
+							var prefix = data['input'].value.substr(0, data['offset']);
+							var suffix = data['input'].value.substr(data['offset'], data['input'].value.length-data['offset']);
+							var template = '[img title={'+title+'} src={'+fromPath + '/' + filePath+'}]';
+							data['input'].value = prefix+template+suffix;
+							data['input'].focus();
+							return true;
+						},
+
+						onBrowseError : function(error) {
+							tinyMCE.activeEditor.windowManager.alert(error);
+							return false;
+						}
+
+				}
+				
+				var extensions = [".jpg",".jpeg", ".gif", ".bmp", ".png"];
+				
+				var assetBrowser = tinyMCE.gwtProxy.getAssetBrowser();
+				
+				if(data != undefined) {
+					if(data.src != undefined && data.src != '') {
+						srcArr = data.src.split('/');
+						fileName = String(srcArr[srcArr.length-1]);
+						assetBrowser.setSelectedFile(fileName);
+					}
+					if(data.title != undefined && data.title != '') {
+						assetBrowser.setTitle(data.title);
+					}
+				}
+				
+				assetBrowser.browse(browseCallback, extensions);
+				$('.gwt-TextBox').focus();
+				
+			});
+			
 			ed.addCommand('mceAppendImageToExercise', function(ui,data) {
 			
 				var browseCallback = {
