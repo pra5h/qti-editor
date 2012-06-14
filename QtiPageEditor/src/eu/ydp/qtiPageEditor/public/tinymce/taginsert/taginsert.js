@@ -64,6 +64,7 @@ function tagInsertClass(){
 		var elem = $("#"+id).get();
 		if (elem[0] === document.activeElement){
 			var txtCurrent = this.getSelection(id);
+			var oldLength = $('#'+id).val().length;
 			var start = this.getSelectionStart(id);
 			if (txtCurrent != undefined  &&  txtCurrent != ""){
 				var scrollTop = document.activeElement.scrollTop;
@@ -71,8 +72,20 @@ function tagInsertClass(){
 				this.opacityTo(id, 0.3);
 				document.activeElement.scrollTop = scrollTop;
 			}
+			
+			var newLength = $('#'+id).val().length;
 			var offset = tag.length+2;
-			this.setSelection(id, start+offset, start+txtCurrent.length+offset);
+			var res = Math.abs(oldLength-(newLength-(2*tag.length+5)));
+			var begin = 0;
+			var end = 0;
+			if (0 != res) {
+				begin = $('#'+id).val().indexOf(txtCurrent);
+				end = begin+txtCurrent.length;
+			} else {
+				begin = start+offset;
+				end = start+txtCurrent.length+offset;
+			}
+			this.setSelection(id, begin, end);
 			return false;
 		}
 	};
