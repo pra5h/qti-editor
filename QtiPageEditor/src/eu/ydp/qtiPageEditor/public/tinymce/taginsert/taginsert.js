@@ -29,11 +29,11 @@ function tagInsertClass(){
 	this.init = function(id){
 		var currId = id;
 		var btns = $("<div id='taginsert_menu_"+id+"' class='taginsert_menu'/>");
-		var bbtn = $("<div class='taginsert_bold' onmousedown='tagInsert.selectionMark(\""+id+"\",\"b\")'></div>");
-		var ibtn = $("<div class='taginsert_italic' onmousedown='tagInsert.selectionMark(\""+id+"\",\"i\")'></div>");
-		var ubtn = $("<div class='taginsert_underline' onmousedown='tagInsert.selectionMark(\""+id+"\",\"u\")'></div>");
-		var subbtn = $("<div class='taginsert_sub' onmousedown='tagInsert.selectionMark(\""+id+"\",\"sub\")'></div>");
-		var supbtn = $("<div class='taginsert_sup' onmousedown='tagInsert.selectionMark(\""+id+"\",\"sup\")'></div>");
+		var bbtn = $("<div class='taginsert_bold' onmousedown='return tagInsert.selectionMark(\""+id+"\",\"b\")'></div>");
+		var ibtn = $("<div class='taginsert_italic' onmousedown='return tagInsert.selectionMark(\""+id+"\",\"i\")'></div>");
+		var ubtn = $("<div class='taginsert_underline' onmousedown='return tagInsert.selectionMark(\""+id+"\",\"u\")'></div>");
+		var subbtn = $("<div class='taginsert_sub' onmousedown='return tagInsert.selectionMark(\""+id+"\",\"sub\")'></div>");
+		var supbtn = $("<div class='taginsert_sup' onmousedown='return tagInsert.selectionMark(\""+id+"\",\"sup\")'></div>");
 		var btnsArr = [bbtn, ibtn, ubtn, subbtn, supbtn];
 		for (var i = 0 ; i < btnsArr.length ; i ++){
 			btnsArr[i].css({ opacity: 0.3 });
@@ -64,12 +64,16 @@ function tagInsertClass(){
 		var elem = $("#"+id).get();
 		if (elem[0] === document.activeElement){
 			var txtCurrent = this.getSelection(id);
+			var start = this.getSelectionStart(id);
 			if (txtCurrent != undefined  &&  txtCurrent != ""){
 				var scrollTop = document.activeElement.scrollTop;
 				this.replaceSelection(id, tag);
 				this.opacityTo(id, 0.3);
 				document.activeElement.scrollTop = scrollTop;
 			}
+			var offset = tag.length+2;
+			this.setSelection(id, start+offset, start+txtCurrent.length+offset);
+			return false;
 		}
 	};
 	
@@ -199,6 +203,29 @@ function tagInsertClass(){
 			return el.value.substr(s,e-s);
 		}
 		return "";
+	};
+	
+	this.getSelectionStart = function(id) {
+		
+		if (getInternetExplorerVersion() == -1){
+			var el = document.getElementById(id);
+			return el.selectionStart;
+		}
+		return 0;
+	};
+	
+	this.setSelection = function(id, start, end) {
+		if ($('#'+id).get(0).setSelectionRange) {
+			$('#'+id).get(0).focus();
+			$('#'+id).get(0).setSelectionRange(start, end);
+		} else if ($('#'+id).get(0).createTextRange) {
+			var range = $('#'+id).get(0).createTextRange();
+			range.collapse(true);
+			range.moveEnd('character', end);
+			range.moveStart('character', start);
+			range.select();
+		}
+		this.modifyOpacity(id);
 	};
 }
 
