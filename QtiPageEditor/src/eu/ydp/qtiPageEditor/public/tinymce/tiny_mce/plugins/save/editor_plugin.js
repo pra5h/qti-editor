@@ -48,7 +48,10 @@
 		// Private methods
 
 		_save : function() {
-			if (blockForGuests()) return;
+		
+			if(typeof blockForGuests == 'function') {
+				if (blockForGuests()) return;
+			}
 			
 			tinyMCE.gwtProxy.savePage();
 			
