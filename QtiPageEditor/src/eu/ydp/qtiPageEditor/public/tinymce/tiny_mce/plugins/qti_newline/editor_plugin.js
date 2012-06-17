@@ -8,12 +8,26 @@
 				var node = null;
 
 				while (n.parentNode != null) {
-					n = n.parentNode;
+
 					if (ed.dom.hasClass(n, "mceNonEditable")) {
 						node = n;
 					}
+					n = n.parentNode;
 				}
-				node.parentNode.insertBefore(ed.dom.create('p',null,'&nbsp;'),node);
+
+				/*W ćwiczeniach cały moduł rozpoczyna się węzłem typu komentarz
+				 * a dopiero później jest <div> "opakowujący" moduł stąd nowa linię trzeba postawić przed
+				 * węzłem typu #comment. Wyjątkiem są moduły mediowe gdzie #comment nie występuje
+				 */
+				if (null != node.previousSibling && 8 == node.previousSibling.nodeType) {
+					node = node.previousSibling;
+				}
+
+				var newNode = ed.dom.create('p',null,'&nbsp;');
+				node.parentNode.insertBefore(newNode,node);
+				ed.selection.select(newNode, true);
+				ed.selection.collapse(false);
+				ed.focus();
 			});
 			
 			ed.addCommand('mceAddNewLineAfter', function(ui, data) {
@@ -21,12 +35,27 @@
 				var node = null;
 
 				while (n.parentNode != null) {
-					n = n.parentNode;
+
 					if (ed.dom.hasClass(n, "mceNonEditable")) {
 						node = n;
 					}
+					n = n.parentNode;
 				}
-				ed.dom.insertAfter(ed.dom.create('p',null,'&nbsp;'),node);
+
+				/*W ćwiczeniach cały moduł rozpoczyna się węzłem typu komentarz
+				 * a dopiero później jest <div> "opakowujący". Podobnie jak wyżej najpierw następuje zamknięcie diva
+				 * a dopiero później #comment, który kończy blok modułu stąd nowa linię trzeba postawić za
+				 * węzłem typu #comment. Wyjątkiem są moduły mediowe gdzie #comment nie występuje
+				 */
+				if (null != node.nextSibling && 8 == node.nextSibling.nodeType) {
+					node = node.nextSibling;
+				}
+
+				var newNode = ed.dom.create('p',null,'&nbsp;');
+				ed.dom.insertAfter(newNode,node);
+				ed.selection.select(newNode, true);
+				ed.selection.collapse(false);
+				ed.focus();
 			});
 			
 			ed.addButton('newLineBefore', {title : 'Add new line before', cmd : 'mceAddNewLineBefore', image : url + '/img/beforeButton.png'});
