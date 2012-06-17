@@ -11,13 +11,16 @@ var gapInlineChoiceDialog = {
 			var data = tinyMCEPopup.getWindowArg("gapInlineChoiceData");
 
 			tagInsert.init(f.question.id);
+			InputHelper.init(f.question);
 			tagInsert.init(f.exercise_content.id);
+			InputHelper.init(f.exercise_content);
 
 			if(data != undefined && data.question != undefined) {
 				f.question.value = stringDecode(data.question);
 			}
 			if(data != undefined && data.content != undefined) {
-				data.content = data.content.replace(/&#32;/g,' ').replace(/<br \/>/g,'\n').replace(/<br>/g,'\n');
+				//data.content = data.content.replace(/&#32;/g,' ').replace(/<br \/>/g,'\n').replace(/<br>/g,'\n');
+				data.content = data.content.replace(/<br \/>/g,'\n').replace(/<br>/g,'\n');
 				f.exercise_content.value = stringDecode(data.content);
 			}
 
@@ -56,12 +59,10 @@ var gapInlineChoiceDialog = {
 							}
 						}
 					}
-
 					if ('' != $('#answer'+id).val()) {
 						$('#'+id+'_add').val('Del');
 						$('#'+id+'_add').attr('onClick', 'removeTagFromContentData('+id+')');
 					}
-
 				}
 				
 				if (0 == data.inlineRows.length) {
@@ -196,15 +197,15 @@ var gapInlineChoiceDialog = {
 			if (!ed.validateHtml($('[name=question]').val(), 'content')) {
 				return false;
 			}
-			
+
 			obj.question = stringEncode($('[name=question]').val());
 			
 			//obj.content = stringEncode($('[name=exercise_content]').val()).replace(/\n/g,'<br/>').replace(/[ ]/gi,'&#32;');
 			var ec = $('[name=exercise_content]').val();
 			if (!ed.validateHtml(ec, 'exercise content')) {
 				return false;
-			} 
-			obj.content = stringEncode(ec).replace(/\n/g,'<br/>').replace(/[ ]/gi,'&#32;');
+			}
+			obj.content = stringEncode(ec).replace(/\n/g,'<br/>');//.replace(/[ ]/gi,'&#32;');
 			obj.tags = new Array();
 			var reg = new RegExp(/(?:\[(?:(?:gap#|inlineChoice#)[0-9]+)*?\])+/gi);
 			
@@ -301,6 +302,7 @@ var gapInlineChoiceDialog = {
 							ed.dom.split(ed.dom.getParent(n, 'h1,h2,h3,h4,h5,h6,p'), n);
 						});
 
+						newData.content = ed.correctHtml(newData.content, 'decode'); //poprawka quot'ów w atrybutach mathml'a
 						dom.setOuterHTML(dom.select('._mce_marker')[0], newData.content);
 						//ed.selection.moveToBookmark(bm);
 
@@ -318,7 +320,8 @@ var gapInlineChoiceDialog = {
 						while(nd.id != 'gapInlineChoiceInteraction') {
 							nd = nd.parentNode;
 						}
-
+						
+						newData.content = ed.correctHtml(newData.content, 'decode');
 						nd.innerHTML = newData.content;
 						body = nd;
 						while(body.nodeName != 'BODY') {

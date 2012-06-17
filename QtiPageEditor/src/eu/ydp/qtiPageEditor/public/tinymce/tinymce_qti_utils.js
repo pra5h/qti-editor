@@ -69,8 +69,10 @@ function qti2htmlParseProcess(tree) {
 	} else {
 
 		if (tree.nodeType == 3) {
-			//text += ed.dom.encode(tree.nodeValue);
-			text += tree.nodeValue;
+			text += ed.dom.encode(tree.nodeValue);
+			//console.log(tree.nodeValue);
+			//console.dir(tree);
+			//text += tree.nodeValue;
 		} else if (processAsText){
 			text += "<"+tree.tagName+">"+tree.innerHTML+"</"+tree.tagName+">";
 		}
@@ -186,7 +188,7 @@ function html2qtiParseProcess(tree) {
     		if (undefined != tree.parentNode && tree.parentNode.nodeName == 'VALUE') {
     				text += ed.dom.encode(tree.nodeValue);
     		} else {
-    			text += tree.nodeValue;
+    			text += ed.dom.encode(tree.nodeValue);
     		}
     	}
     }
@@ -224,9 +226,11 @@ function html2qtiParseProcess(tree) {
 
 function mathInteractionToQTI(mi) {
 	var text = '';
-	text += '<mathText>';
-	text += mi.innerHTML;
-	text += '</mathText>';
+//	text += '<mathText>';
+	var math = mi.innerHTML;
+	text = parseMathHTML2QTI(math);
+	//text += math;
+	//text += '</mathText>';
 	return text;
 }
 
@@ -234,80 +238,123 @@ function mathInteractionToHTML(mi) {
 	var text = '';
 	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
 	text += '<div id="mathML" class="mceNonEditable">';
-	text += mi.innerHTML;
+	//text += '<math xmlns="http://www.w3.org/1998/Math/MathML">';
+	text += parseMathQTI2HTML(mi.outerHTML);
+	//text += '</math>';
 	text += '</div>';
 	return text;
 	}
-
-function textInteractionsGroupToQTI(tig) {
+function textInteractionsGroupHtmlNodeToQTI(n) {
 	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
 	var text = '';
-	text += xh.prepareNodeBegin($(tig.nodeValue).get(0));
-	var gic = tig.nextSibling;
-	text += '<prompt>'+gic.firstElementChild.innerHTML+'</prompt>';
-	var content = gic.firstElementChild.nextElementSibling;
+	if ('textEntryInteraction' == $.trim(n.nodeValue).substr(1, 20)) {
+		text += parseMathHTML2QTI($.trim(n.nodeValue));
+	} else if ('inlineChoiceInteraction' == $.trim(n.nodeValue).substr(1, 23)) {
+		text += $.trim(n.nodeValue);
+		for (j = 0; j < n.nextSibling.childNodes.length; j++) {
+			var ic = n.nextSibling.childNodes[j];
+			if (8 == ic.nodeType) {
+				if ('inlineChoice' == $.trim(ic.nodeValue).substr(1, 12)) {
+					text += parseMathHTML2QTI($.trim(ic.nodeValue));
+					n.nextSibling.removeChild(n.nextSibling.childNodes[j]);
+				}
+			}
+		}
+		text += xh.prepareNodeEnd($(n.nodeValue).get(0));
+		//text += '</inlineChoiceInteraction>';
+		//content.removeChild(content.childNodes[i]);
+	}
+	return text;
+}
+function textInteractionsGroupContentToQTI(content, spanBegun) {
+	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
+	var text = '';
 	var n = null;
-	var spanBegun = false;
+
 	for (var i = 0; i < content.childNodes.length; i++) {
-		
+
 		n = content.childNodes[i];
 
 		if (3 == n.nodeType) {
-		
-			if (!spanBegun){
+
+			if (!spanBegun.value){
 				text += '<span>';
-				spanBegun = true;
+				spanBegun.value = true;
 			}
 			var tn = $('<div/>');
 			tn.text(n.nodeValue);
 			text += tn.html();
 			//text += n.nodeValue;
-			
 		} else if (8 == n.nodeType) {
-		
-			if (spanBegun){
-				text += '</span>';
-				spanBegun = false;
-			}
 
+			if (spanBegun.value){
+				text += '</span>';
+				spanBegun.value = false;
+			}
+			/*
 			if ('textEntryInteraction' == $.trim(n.nodeValue).substr(1, 20)) {
-				text += $.trim(n.nodeValue);
+				text += parseMathHTML2QTI($.trim(n.nodeValue));
 			} else if ('inlineChoiceInteraction' == $.trim(n.nodeValue).substr(1, 23)) {
 				text += $.trim(n.nodeValue);
 				for (j = 0; j < n.nextSibling.childNodes.length; j++) {
 					var ic = n.nextSibling.childNodes[j];
 					if (8 == ic.nodeType) {
 						if ('inlineChoice' == $.trim(ic.nodeValue).substr(1, 12)) {
-							text += $.trim(ic.nodeValue);
+							text += parseMathHTML2QTI($.trim(ic.nodeValue));
 							n.nextSibling.removeChild(n.nextSibling.childNodes[j]);
 						}
 					}
 				}
 				text += xh.prepareNodeEnd($(n.nodeValue).get(0));
-				//text += '</inlineChoiceInteraction>';
-				//content.removeChild(content.childNodes[i]);
-			}
-			
+			 */
+			//text += '</inlineChoiceInteraction>';
+			//content.removeChild(content.childNodes[i]);
+			text += textInteractionsGroupHtmlNodeToQTI(n);
+			//}
 		} else {
 			if ('SPAN' != n.tagName) {
-				var xh = tinymce.EditorManager.activeEditor.XmlHelper;
-				
-				if (!spanBegun){
+
+				if (!spanBegun.value){
 					text += '<span>';
-					spanBegun = true;
+					spanBegun.value = true;
 				}
-				
+
 				if ('BR' == n.tagName) {
 					text += xh.prepareEmptyNode(n);
+				} else if ('SUB' == n.tagName || 'SUP' == n.tagName) {
+
+					//zamknięcie tylko jeżeli w sub/sup jest moduł
+					if (-1 != n.innerHTML.indexOf('textEntryInteraction') || -1 != n.innerHTML.indexOf('inlineChoiceInteraction')) {
+						if (spanBegun.value){
+							text += '</span>';
+							spanBegun.value = false;
+						}	
+					}
+					
+					text += xh.prepareNodeBegin(n);
+					text += textInteractionsGroupContentToQTI(n, spanBegun);
+					text += xh.prepareNodeEnd(n);
 				} else {
-					text += xh.prepareNode(n);
+					text += parseMathHTML2QTI(xh.prepareNode(n));
 				}
 			}
 		}
-	}	
-	if (spanBegun){
+	}
+	return text;
+}
+function textInteractionsGroupToQTI(tig) {
+	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
+	var text = '';
+	text += xh.prepareNodeBegin($(tig.nodeValue).get(0));
+	var gic = tig.nextSibling;
+	text += '<prompt>'+parseMathHTML2QTI(gic.firstElementChild.innerHTML, true)+'</prompt>';
+	var content = gic.firstElementChild.nextElementSibling;
+	var n = null;
+	var spanBegun = new Object({value: false});
+	text += textInteractionsGroupContentToQTI(content, spanBegun);
+	if (spanBegun.value){
 		text += '</span>';
-		spanBegun = false;
+		spanBegun.value = false;
 	}
 	text += xh.prepareNodeEnd($(tig.nodeValue).get(0));
 	return text;
@@ -325,25 +372,28 @@ function choiceInteractionToHTML(ci) {
 	for (var k = 0; k < ci.childNodes.length; k++) {
 		if (1 == ci.childNodes[k].nodeType) {
 			if ('PROMPT' == ci.childNodes[k].tagName) {
-				text += '<p id="choiceInteraction">'+ci.childNodes[k].innerHTML+'</p>';
+				text += '<p id="choiceInteraction">'+parseMathQTI2HTML(ci.childNodes[k].innerHTML)+'</p>';
 			} else if ('SIMPLECHOICE' == ci.childNodes[k].tagName) {
 				text += '<!-- '+xh.prepareNodeBegin(ci.childNodes[k]);
 				var innerHtml = '';
 				for (var i = 0; i < ci.childNodes[k].childNodes.length; i++) {
 					var scChild = ci.childNodes[k].childNodes[i];
-					
+
 					if (1 == scChild.nodeType) {
 						if ('FEEDBACKINLINE' == scChild.tagName) {
-							text += xh.prepareNodeBegin(scChild)+scChild.innerHTML+xh.prepareNodeEnd(scChild);
+							text += xh.prepareNodeBegin(scChild)+parseMathQTI2HTML(scChild.innerHTML)+xh.prepareNodeEnd(scChild);
 						} else if ('IMG' == scChild.tagName) {
 							text += xh.prepareEmptyNode(scChild);
 							innerHtml = xh.prepareEmptyNode(scChild);
 						} else {
-							text += xh.prepareNode(scChild);
+							text += parseMathQTI2HTML(xh.prepareNode(scChild));
+							//console.log(xh.prepareNode(scChild));
+							//text += xh.prepareNode(scChild);
 							//text += '<'+scChild.tagName.toLowerCase()+xh.prepareAttributes(scChild)+'>';
 							//text += scChild.innerHTML;
 							//text += '</'+scChild.tagName.toLowerCase()+'>';
-							innerHtml += xh.prepareNode(scChild);
+							innerHtml += parseMathQTI2HTML(xh.prepareNode(scChild));
+							//innerHtml += xh.prepareNode(scChild);
 							//innerHtml += '<'+scChild.tagName.toLowerCase()+xh.prepareAttributes(scChild)+'>';
 							//innerHtml += scChild.innerHTML;
 							//innerHtml += '</'+scChild.tagName.toLowerCase()+'>';
@@ -351,7 +401,7 @@ function choiceInteractionToHTML(ci) {
 						}
 					} else {
 						text += scChild.nodeValue;
-						innerHtml = scChild.nodeValue;
+						innerHtml += scChild.nodeValue;
 					}
 				}
 				text += xh.prepareNodeEnd(ci.childNodes[k])+' -->';
@@ -378,7 +428,7 @@ function selectionInteractionToQTI (si) {
 	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
 	var sINode = si.nextSibling;
 	text += xh.prepareNodeBegin($(si.nodeValue).get(0));
-	text += '<prompt>'+sINode.firstElementChild.innerHTML+'</prompt>';
+	text += '<prompt>'+parseMathHTML2QTI(sINode.firstElementChild.innerHTML, true)+'</prompt>';
 	var table = sINode.firstElementChild.nextElementSibling;
 	var tr = null;
 	
@@ -387,7 +437,7 @@ function selectionInteractionToQTI (si) {
 			for (var j = 0; j < tr.childNodes.length; j++) { // for tr
 				for (var k = 0; k < tr.childNodes[j].childNodes.length; k++) { //for td
 					if (8 == tr.childNodes[j].childNodes[k].nodeType) {
-						text += $.trim(tr.childNodes[j].childNodes[k].nodeValue);
+						text += parseMathHTML2QTI($.trim(tr.childNodes[j].childNodes[k].nodeValue));
 					}
 				}
 			}
@@ -406,10 +456,10 @@ function choiceInteractionToQTI(ci) {
 	var cINode = ci.nextSibling;
 	
 	text += xh.prepareNodeBegin($(ci.nodeValue).get(0));
-	text += '<prompt>'+cINode.firstElementChild.innerHTML+'</prompt>';
+	text += '<prompt>'+parseMathHTML2QTI(cINode.firstElementChild.innerHTML, true)+'</prompt>';
 	for (var i = 0; i < cINode.childNodes.length; i++) {
 		if (8 == cINode.childNodes[i].nodeType) {
-			text += cINode.childNodes[i].nodeValue;
+			text += parseMathHTML2QTI(cINode.childNodes[i].nodeValue);
 		}
 	}
 	text += xh.prepareNodeEnd($(ci.nodeValue).get(0));
@@ -423,18 +473,18 @@ function mediaInteractionToQTI(mi) {
 
 	if ('IMG' == mediaNode.tagName) {
 		var src = mediaNode.getAttribute('src');
-		var title = mediaNode.getAttribute('alt');
-		text += '<img src="'+src+'"><title>'+title+'</title><description></description></img>';
+		var title = $('<div/>').html(mediaNode.getAttribute('alt')).html();
+		text += '<img src="'+src+'"><title>'+parseMathHTML2QTI(title)+'</title><description></description></img>';
 
 	} else {
-		var title = mediaNode.getAttribute('alt');
+		var title = $('<div/>').html(mediaNode.getAttribute('alt')).html();
 		var data = mediaNode.getAttribute('data');
 		var type = mediaNode.getAttribute('type');
 		
 		if (null == title) {
 			title = '';
 		}
-		text += '<object data="'+data+'" type="'+type+'"><title>'+title+'</title><description></description></object>';
+		text += '<object data="'+data+'" type="'+type+'"><title>'+parseMathHTML2QTI(title)+'</title><description></description></object>';
 	}
 	return text;
 }
@@ -446,7 +496,8 @@ function mediaInteractionsToHTML(mi) {
 
 	if ('IMG' == mi.tagName) {
 		var src = mi.getAttribute('src');
-		var title = mi.nextElementSibling.innerHTML;
+		var title = parseMathQTI2HTML(mi.nextElementSibling.textContent); //innerHTML);
+		title = tinyMCE.activeEditor.dom.encode(title);
 		text += '<img alt="'+title+'" src="'+src+'" />';
 		mi.parentNode.removeChild(mi.nextElementSibling.nextElementSibling); //description
 		mi.parentNode.removeChild(mi.nextElementSibling); //title
@@ -454,7 +505,8 @@ function mediaInteractionsToHTML(mi) {
 	} else { // if video object
 		var data = mi.getAttribute('data');
 		var type = mi.getAttribute('type');
-		var title = mi.firstElementChild.innerHTML;
+		var title = parseMathQTI2HTML(mi.firstElementChild.textContent); //innerHTML);
+		title = tinyMCE.activeEditor.dom.encode(title);
 		text += '<object alt="'+title+'" data="'+data+'" type="'+type+'"></object>'
 		text += '<img id="mceVideo" src="/res/skins/default/qtipageeditor/tinymce/tiny_mce/plugins/qti_addvideo/img/movie.png" mce_src="/res/skins/default/qtipageeditor/tinymce/tiny_mce/plugins/qti_addvideo/img/movie.png"/>';
 
@@ -479,12 +531,12 @@ function selectionInteractionToHTML(si) {
 	text += '<div id="selectionInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;" mce_style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">';
 
 	var prompts = si.getElementsByTagName('prompt');
-	text += '<p id="selectionInteraction">'+prompts[0].innerHTML+'</p>';
+	text += '<p id="selectionInteraction">'+parseMathQTI2HTML(prompts[0].innerHTML)+'</p>';
 	var options = si.getElementsByTagName('simpleChoice');
 	
 	text += '<table class="selectionTable"><tbody><tr><td>&nbsp;</td>';
 	for (var i = 0; i < options.length; i++) {
-		text += '<td><!-- '+xh.prepareNode(options[i])+' -->'+options[i].innerHTML+'</td>';
+		text += '<td><!-- '+parseMathQTI2HTML(xh.prepareNode(options[i]))+' -->'+parseMathQTI2HTML(options[i].innerHTML)+'</td>';
 	}
 	text += '</tr>';
 	
@@ -502,13 +554,13 @@ function selectionInteractionToHTML(si) {
 
 			if (item.childNodes[j].tagName == 'FEEDBACKINLINE') {
 				feedback = item.childNodes[j];
-				feedbacksText += xh.prepareNode(feedback);
+				feedbacksText += parseMathQTI2HTML(xh.prepareNode(feedback));
 				item.removeChild(feedback);
 			}
 		}
-		text += item.innerHTML;
+		text += parseMathQTI2HTML(item.innerHTML);
 		text += feedbacksText;
-		text += xh.prepareNodeEnd(item)+' -->'+item.innerHTML+'</td>';
+		text += xh.prepareNodeEnd(item)+' -->'+parseMathQTI2HTML(item.innerHTML)+'</td>';
 		feedbacksText = '';
 		
 		for (var j = 0; j < options.length; j++) {
@@ -535,21 +587,32 @@ function textInteractionsGroupToHTML(ti) {
 	var text = '';
 	text += '<!-- '+xh.prepareNodeBegin(ti)+' -->';
 	text += '<div id="gapInlineChoiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;" mce_style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">';
+	text += textInteractionsGroupNodeToHTML(ti);
+	text += '</p></div><!-- '+xh.prepareNodeEnd(ti)+' -->';
+	//usuniecie childeow zeby rekurencja juz tam nie wpadla
+	while(ti.hasChildNodes()){
+		ti.removeChild(ti.lastChild);
+	}
+	return text;
+}
+
+function textInteractionsGroupNodeToHTML(ti) {
+	text = '';
+	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
 	
 	for (var i = 0; i < ti.childNodes.length; i++) {
-
 		if (3 == ti.childNodes[i].nodeType) {
 			text += ti.childNodes[i].nodeValue;
 		} else {
 			var feedbacksText = '';
 			if ('PROMPT' == ti.childNodes[i].tagName) {
-				text += '<!-- <prompt> --><p id="gapInlineChoiceInteractionQuestion">'+ti.childNodes[i].innerHTML+'</p><!-- </prompt> -->';
+				text += '<!-- <prompt> --><p id="gapInlineChoiceInteractionQuestion">'+parseMathQTI2HTML(ti.childNodes[i].innerHTML)+'</p><!-- </prompt> -->';
 				text += '<p id="gapInlineChoiceInteractionContent">';
 			} else if ('TEXTENTRYINTERACTION' == ti.childNodes[i].tagName) {
 				text += '<!-- '+xh.prepareNodeBegin(ti.childNodes[i]);
-				
+
 				if (null != ti.childNodes[i].childNodes) {
-					
+
 					for (var j = ti.childNodes[i].childNodes.length-1; j >= 0; j--) {
 
 						if (ti.childNodes[i].childNodes[j].tagName == 'FEEDBACKINLINE') {
@@ -558,28 +621,29 @@ function textInteractionsGroupToHTML(ti) {
 							ti.childNodes[i].removeChild(feedback);
 						}
 					}
-					text += feedbacksText;
+					text += parseMathQTI2HTML(feedbacksText);
 				}
 				text += xh.prepareNodeEnd(ti.childNodes[i])+' -->';
 				var correctResponses = xh.getCorrectResponseByIdentifier(ti.childNodes[i].getAttribute('responseIdentifier'));
 				text += '<span id="gap" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;" mce_style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">'+correctResponses+'</span>';
 				feedbacksText = '';
+
 			} else if ('INLINECHOICEINTERACTION' == ti.childNodes[i].tagName) {
 				text += '<!-- '+xh.prepareNodeBegin(ti.childNodes[i])+' -->';
 				text += '<span mce_style="border: 1px solid blue; color: blue; background-color: #f0f0f0;" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;" class="mceNonEditable" id="inlineChoiceInteraction">';
-				
+
 				if (null != ti.childNodes[i].childNodes) {
-					
+
 					for (var j = 0; j < ti.childNodes[i].childNodes.length; j++) {
 						var iCText = '';
-						
+
 						if (ti.childNodes[i].childNodes[j].tagName == 'INLINECHOICE') {
 							var ic = ti.childNodes[i].childNodes[j];
 							iCText += '<!-- '+xh.prepareNodeBegin(ic);
-							
+
 							if (null != ic.childNodes) {
 								var feedbacksText = '';
-								
+
 								for (var k = ic.childNodes.length-1; k >= 0; k--) {
 
 									if (ic.childNodes[k].tagName == 'FEEDBACKINLINE') {
@@ -600,29 +664,29 @@ function textInteractionsGroupToHTML(ti) {
 							}
 							feedbacksText = '';
 						}
-						text += iCText;
+						text += parseMathQTI2HTML(iCText);
 					}
 				}
 				text += '</span><!-- '+xh.prepareNodeEnd(ti.childNodes[i])+' -->';
 			} else {
 				//wszystkie node typu tekst opakowane są w spany
 				if ('SPAN' == ti.childNodes[i].tagName) {
-					text += ti.childNodes[i].innerHTML;
+					text += parseMathQTI2HTML(ti.childNodes[i].innerHTML);
 				} else {
 					if ('BR' == ti.childNodes[i].tagName) {
 						text += xh.prepareEmptyNode(ti.childNodes[i]);
+					} else if ('SUB' == ti.childNodes[i].tagName || 'SUP' == ti.childNodes[i].tagName) {
+						//console.log(ti.childNodes[i].tagName);
+						text += xh.prepareNodeBegin(ti.childNodes[i]);
+						//text += 'ok'
+						text += textInteractionsGroupNodeToHTML(ti.childNodes[i]);
+						text += xh.prepareNodeEnd(ti.childNodes[i]);
 					} else {
 						text += xh.prepareNode(ti.childNodes[i]);
 					}
 				}
 			}
 		}
-	}
-
-	text += '</p></div><!-- '+xh.prepareNodeEnd(ti)+' -->';
-	//usuniecie childeow zeby rekurencja juz tam nie wpadla
-	while(ti.hasChildNodes()){
-		ti.removeChild(ti.lastChild);
 	}
 	return text;
 }
@@ -663,6 +727,7 @@ function QTI2HTML(h) {
 	//if(h.match(/^<table[^>]*>.*<\/table>$/i) == undefined) {
 		h = processQTI(h);
 	//}
+//		console.log(h);
 	return h;
 }
 
@@ -1003,22 +1068,9 @@ function runMathMLInteraction(selectedNode) {
 	tinyMCE.execCommand('mceScience', false, math);
 }
 
-function runGapInlineChoiceInteraction(selectedNode) {
-	
-	var body = selectedNode;
-	while(body.nodeName != 'BODY') {
-		body = body.parentNode;
-	}
+function runGapInlineChoiceInteractionNode(contentElement, data, body, nodeCounter) {
 	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
-
-	var data = new Array();
-	data['question'] = selectedNode.children[0].innerHTML;
-	data['content'] = null;
-	data['inlineRows'] = new Array();
-	var contentElement = selectedNode.children[1]; //p gapInlineChoiceInteractionContent
 	var contentText = '';
-	var nodeCounter = 0;
-	//var tmpResponses = new Array();
 	
 	for(var i = 0; i < contentElement.childNodes.length; i++) {
 		var node = contentElement.childNodes[i];
@@ -1034,6 +1086,10 @@ function runGapInlineChoiceInteraction(selectedNode) {
 				
 				if ('BR' == node.tagName) {
 					contentText += xh.prepareEmptyNode(node);
+				} else if ('SUB' == node.tagName || 'SUP' == node.tagName) {
+					contentText += xh.prepareNodeBegin(node);
+					contentText += runGapInlineChoiceInteractionNode(node, data, body, nodeCounter);
+					contentText += xh.prepareNodeEnd(node);
 				} else {
 					contentText += xh.prepareNode(node);
 				}
@@ -1044,7 +1100,7 @@ function runGapInlineChoiceInteraction(selectedNode) {
 			if ('TEXTENTRYINTERACTION' == child.tagName) {
 				//if (-1 == tmpResponses.indexOf(contentElement.childNodes[i].nextSibling.innerHTML)) {
 					//tmpResponses.push(contentElement.childNodes[i].nextSibling.innerHTML);
-					contentText += '[gap#'+nodeCounter+']';
+					contentText += '[gap#'+nodeCounter.value+']';
 					var feedback = new Array();
 						feedback['onOk'] = '';
 						feedback['onWrong'] = '';
@@ -1061,11 +1117,11 @@ function runGapInlineChoiceInteraction(selectedNode) {
 					data['inlineRows'].push({
 							answer: contentElement.childNodes[i].nextSibling.innerHTML,
 							feedback: feedback,
-							id: nodeCounter,
+							id: nodeCounter.value,
 							identifier: child.getAttribute('responseIdentifier'),
 							type: 'gap'
 					});
-					nodeCounter++;
+					nodeCounter.value++;
 				/*} else {
 					var cResp = xh.getCorrectResponseNodeId(body, child.getAttribute('responseIdentifier'));
 					if (null != cResp) {
@@ -1137,20 +1193,20 @@ function runGapInlineChoiceInteraction(selectedNode) {
 				}
 				
 				//if (-1 == tmpResponses.indexOf(tmpAnswers)) {
-					contentText += '[inlineChoice#'+nodeCounter+']';
+					contentText += '[inlineChoice#'+nodeCounter.value+']';
 					//tmpResponses.push(tmpAnswers);
 					data['inlineRows'].push({
 						answers: answers,
 						feedbacks: feedbacks,
 						fixed: fixed,
-						id: nodeCounter,
+						id: nodeCounter.value,
 						identifier: child.getAttribute('responseIdentifier'),
 						ids: ids,
 						points: points,
 						shuffle: shuffle,
 						type: 'inlineChoice'
 					});
-					nodeCounter++;
+					nodeCounter.value++;
 				/*} else {
 					var cResp = xh.getCorrectResponseNodeId(body, child.getAttribute('responseIdentifier'));
 					if (null != cResp) {
@@ -1171,6 +1227,27 @@ function runGapInlineChoiceInteraction(selectedNode) {
 			}
 		}
 	}
+	return contentText;
+}
+
+function runGapInlineChoiceInteraction(selectedNode) {
+	
+	var body = selectedNode;
+	while(body.nodeName != 'BODY') {
+		body = body.parentNode;
+	}
+
+	var data = new Array();
+	data['question'] = selectedNode.children[0].innerHTML;
+	data['content'] = null;
+	data['inlineRows'] = new Array();
+	var contentElement = selectedNode.children[1]; //p gapInlineChoiceInteractionContent
+	var contentText = '';
+	var nodeCounter = new Object({value: 0});
+	//var nodeCounter = 0;
+	//var tmpResponses = new Array();
+	contentText = runGapInlineChoiceInteractionNode(contentElement, data, body, nodeCounter);
+	
 	data['content'] = contentText;
 	tinyMCE.selectedNode = selectedNode;
 	tinyMCE.execCommand('mceGapInlineChoice', false, data);
@@ -1213,7 +1290,7 @@ function runChoiceInteraction(selectedNode) {
 			} else {
 				points.push('0');
 			}
-			smCh = sectionDiv.childNodes[i].nodeValue;
+			smCh = tinymce.trim(sectionDiv.childNodes[i].nodeValue);
 			ids.push($(smCh).attr('identifier'));
 			fixed.push($(smCh).attr('fixed'));
 			var simpleCh = $(smCh).get(0);
@@ -1369,7 +1446,7 @@ function runMediaLib(selectedNode) {
 		var src = node.previousSibling.getAttribute('data');
 		var title = '';
 		
-		title = node.previousSibling.getAttribute('alt');
+		title = $('<div/>').html(node.previousSibling.getAttribute('alt')).html();
 		/*if (null != node.nextSibling.nextSibling) {
 			title = node.nextSibling.nextSibling.nodeValue;
 		}*/
@@ -1377,7 +1454,7 @@ function runMediaLib(selectedNode) {
 	} else {
 		var src = node.attributes['src'].value;
 		if(node.attributes['alt'] != undefined) {
-			var title = node.attributes['alt'].value;
+			var title = $('<div/>').html(node.attributes['alt'].value).html();
 		} else {
 			var title = '';
 		}
@@ -1500,5 +1577,21 @@ function mathml2subsup(text){
 		}			
 	}
 	return text;
+}
+
+function parseMathHTML2QTI(math, isInPrompt) {
+	var className = '';
+	if (true == isInPrompt) {
+		className = ' class="mathBold"';
+	}
+	math = math.replace(/<math[^>]*>/g,'<mathText'+className+'>');
+	math = math.replace(/<\/math>/g,'</mathText>');
+	return math;
+}
+
+function parseMathQTI2HTML(math) {
+	math = math.replace(/<mathText[^>]*>/gi, '<math>');
+	math = math.replace(/<\/mathText>/gi, '</math>');
+	return math;
 }
 

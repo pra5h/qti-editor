@@ -6,14 +6,15 @@ tinyMCE.init({
 	mode: "textareas",
 	elements : "content",
 	skin : "o2k7",
+	inGuestRole : 0,
+	
 	//spellchecker, asciimath,asciimathcharmap,
 	//qti_science,
 	plugins : "safari,pagebreak,layer,table,save,advhr,advlink,emotions,iespell,inlinepopups,"
 		+"insertdatetime,qti_empiriapreview,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,"
 		+"visualchars,nonbreaking,xhtmlxtras,template,imagemanager,filemanager,asciisvg,"
 		+"qti_pagetitle,qti_choice,qti_gapinlinechoice,qti_fileuploadlib,"
-		+"qti_addvideo,qti_copyqti,qti_selection,qti_newline", 
-		//,qti_science",
+		+"qti_addvideo,qti_copyqti,qti_selection,qti_newline,qti_science",
 		
 	/*
 	plugins : "safari,spellchecker,pagebreak,style,layer,table,save,advhr,advlink,emotions,iespell,inlinepopups,"
@@ -34,16 +35,17 @@ tinyMCE.init({
 	//,bullist,numlist,|
 	//,science
 	theme_advanced_buttons2 : "undo,redo,|,cut,copy,|,paste,|,search,replace,|,forecolor,backcolor,|,sub,sup,|,charmap",
-	theme_advanced_buttons3 : "newLineBefore,newLineAfter,pagetitle,insertgapinlinechoice,insertchoicesection,insertordersection,insertmatchsection,insertselectionsection,insertdraggablesection,insertidentificationsection,|,fileuploadlib_image,addvideo,playpause,|,insertcomment,|,tablecontrols,|,code",
-//science,
+	theme_advanced_buttons3 : "insertsciencesection,newLineBefore,newLineAfter,pagetitle,insertgapinlinechoice,insertchoicesection,insertordersection,insertmatchsection,insertselectionsection,insertdraggablesection,insertidentificationsection,|,fileuploadlib_image,addvideo,playpause,|,insertcomment,|,tablecontrols,|,code",
+
 	extended_valid_elements : "simpleText,group,canvas[id|style|width|height],gap[identifier],choiceInteraction[shuffle|maxChoices|responseIdentifier],"
 		+"orderInteracion[shuffle|responseIdentifier],selectionInteracion[shuffle|responseIdentifier],item[identifier],matchInteraction[shuffle|maxAssociations|responseIdentifier],prompt,"
 		+"simpleChoice[identifier|fixed],simpleAssociableChoice[identifier|fixed|matchMax],inlineChoiceInteraction,inlineChoice[score],"
 		+"assessmentItem[xmlns|identifier|title|adaptive|timeDependent],responseDeclaration[identifier|cardinality|baseType],"
 		+"correctResponse,value,itemBody,applink[lid|title],mapping[defaultValue],mapEntry[mapKey|mappedValue],"
 		+"qy:comment[idref],feedbackInline[identifier|showHide|outcomeIdentifier|senderIdentifier|fadeEffect|mark],modalFeedback[outcomeIdentifier|identifier|showHide|sound|senderIdentifier|style],"
-		+"math[title|xmlns],mstyle[mathsize|mathcolor|fontfamily|displaystyle],mfrac,mrow,mi,mo,mn,msup,mroot,munder,"
-		+"mtable,mtr,mtd,mspace,changesTracking[state],styleDeclaration,link[href|userAgent],qy:tag[name],audioPlayer[data|id|class],dragDropInteraction[responseIdentifier],contents,slot,sourcelist,dragElement[identifier]"
+		+"math[title|xmlns],mstyle[mathsize|mathcolor|fontfamily|displaystyle],mfrac,mrow,mi,mo,mn,msup,mroot,munder,msubsup,msub,msup,munderover,munder,mover,msqrt,mroot,"
+		+"mfenced[open|close],ms[lquote|rquote],mtext,"
+		+"mtable,mtr,mtd,mspace[width],changesTracking[state],styleDeclaration,link[href|userAgent],qy:tag[name],audioPlayer[data|id|class],dragDropInteraction[responseIdentifier],contents,slot,sourcelist,dragElement[identifier]"
 		+"identificationInteraction[responseIdentifier|shuffle|maxSelections|separator]",
 
 	handle_event_callback : "actionOnQTI",
@@ -149,13 +151,27 @@ tinyMCE.init({
 				var showAlert = (cancelAlert)?false:true;
 				var div = $('<div/>');
 				div.html(text);
-				
+
 				if (text != div.html()) {
-					if (showAlert)
+					
+					if (showAlert) {
 						tinymce.EditorManager.activeEditor.windowManager.alert('The '+fieldName+' field contains illegal HTML elements.');
+						var wm = tinymce.EditorManager.activeEditor.windowManager;
+						var alertWindowId = wm.lastId.replace('_wrapper','');
+						$('#'+alertWindowId).append('<div style="z-index: -1;background-color:gray; position: fixed; left: 0px; top: 0px; opacity: 0.3; width: 100%; height:100%"></div>');
+					}
 					return false;
 				}
 				return true;
+		};
+		
+		ed.correctHtml = function (text, type) {
+			if ('decode' == type) {
+				return text.replace(/(open|close|lquote|rquote)=&quot;([\S]+)&quot; (open|close|lquote|rquote)=&quot;([\S]+)&quot;/g, "$1=\"$2\" $3=\"$4\"");
+			}
+			if ('encode' == type) {
+				return text.replace(/(open|close|lquote|rquote)=\"([\S]+)\" (open|close|lquote|rquote)=\"([\S]+)\"/g, "$1=&quot;$2&quot; $3=&quot;$4&quot;");
+			}
 		};
 		
 		ed.XmlHelper = {
@@ -195,7 +211,6 @@ tinyMCE.init({
 				},
 
 				loadXML: function(xml) {
-					//this.rootNode.node = $(xml.replace(/\<\?xml[^>]+>[^<]*/, '')).get(0).parentNode;
 					this.actualNode.node = $(xml.replace(/\<\?xml[^>]+>[^<]*/, '')).get(0).parentNode;
 					
 					if (this.actualNode.node.nodeType == 11) {
@@ -343,9 +358,16 @@ tinyMCE.init({
 				prepareNode: function(node) {
 					var text = '';
 					if (1 == node.nodeType) {
-						text += this.prepareNodeBegin(node);
-						text += node.innerHTML;
-						text += this.prepareNodeEnd(node);
+						
+						if ('math' == node.nodeName) {
+							var a = new XMLSerializer();
+							text += a.serializeToString(node);
+							text = text.replace(/ xmlns="[^"]+"/,'');
+						} else {
+							text += this.prepareNodeBegin(node);
+							text += node.innerHTML;
+							text += this.prepareNodeEnd(node);
+						}
 					}
 					return text;
 				}
