@@ -49,8 +49,10 @@
 
 		_save : function() {
 		
-			if(typeof blockForGuests == 'function') {
-				if (blockForGuests()) return;
+			if (1 == this.editor.getParam('inGuestRole')) 
+			{
+				alert("Blocked for saving.");
+				return;
 			}
 			
 			tinyMCE.gwtProxy.savePage();
