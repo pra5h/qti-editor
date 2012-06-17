@@ -14,6 +14,7 @@
 					}
 					n = n.parentNode;
 				}
+
 				/*W ćwiczeniach cały moduł rozpoczyna się węzłem typu komentarz
 				 * a dopiero później jest <div> "opakowujący" moduł stąd nowa linię trzeba postawić przed
 				 * węzłem typu #comment. Wyjątkiem są moduły mediowe gdzie #comment nie występuje
@@ -40,6 +41,7 @@
 					}
 					n = n.parentNode;
 				}
+
 				/*W ćwiczeniach cały moduł rozpoczyna się węzłem typu komentarz
 				 * a dopiero później jest <div> "opakowujący". Podobnie jak wyżej najpierw następuje zamknięcie diva
 				 * a dopiero później #comment, który kończy blok modułu stąd nowa linię trzeba postawić za
