@@ -166,14 +166,6 @@ tinyMCE.init({
 		};
 		
 		ed.correctHtml = function (text, type) {
-			//return text.replace(/open=&quot;([\S]+)&quot; close=&quot;([\S]+)&quot;/g, "open=\"$1\" close=\"$2\"");
-			 //var reg = new RegExp(/open=&quot;([\S]{1})&quot; close=&quot;([\S]{1})&quot;/g);
-			/*var reg = new RegExp(/open=\"([\S]+)\" close=\"([\S]+)\"/g);
-			if (null == reg.exec(text)) {
-				return text.replace(/open=&quot;([\S]+)&quot; close=&quot;([\S]+)&quot;/g, "open=\"$1\" close=\"$2\"");
-			}
-			return text.replace(/open=\"([\S]+)\" close=\"([\S]+)\"/g, "open=&quot;$1&quot; close=&quot;$2&quot;");
-			*/
 			if ('decode' == type) {
 				return text.replace(/(open|close|lquote|rquote)=&quot;([\S]+)&quot; (open|close|lquote|rquote)=&quot;([\S]+)&quot;/g, "$1=\"$2\" $3=\"$4\"");
 			}
@@ -219,7 +211,6 @@ tinyMCE.init({
 				},
 
 				loadXML: function(xml) {
-					//this.rootNode.node = $(xml.replace(/\<\?xml[^>]+>[^<]*/, '')).get(0).parentNode;
 					this.actualNode.node = $(xml.replace(/\<\?xml[^>]+>[^<]*/, '')).get(0).parentNode;
 					
 					if (this.actualNode.node.nodeType == 11) {
@@ -369,7 +360,7 @@ tinyMCE.init({
 					if (1 == node.nodeType) {
 						
 						if ('math' == node.nodeName) {
-							var a = new XMLSerializer(); //.serializeToString(node);
+							var a = new XMLSerializer();
 							text += a.serializeToString(node);
 							text = text.replace(/ xmlns="[^"]+"/,'');
 						} else {
