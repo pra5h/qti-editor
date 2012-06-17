@@ -14,7 +14,6 @@ var gapInlineChoiceDialog = {
 			InputHelper.init(f.question);
 			tagInsert.init(f.exercise_content.id);
 			InputHelper.init(f.exercise_content);
-			MediaHelper.init(f.exercise_content);
 
 			if(data != undefined && data.question != undefined) {
 				f.question.value = stringDecode(data.question);
@@ -249,7 +248,6 @@ var gapInlineChoiceDialog = {
 					//var bm = ed.selection.getBookmark();
 //					ed.selection.moveToBookmark(bm);
 
-					obj.content = obj.content.replace(/\[img title={([^"]*)} src={([^"]*)}\]/g, '<img src="$2" alt="$1"/>');
 
 					var newData = new Object();
 					newData.content = '';

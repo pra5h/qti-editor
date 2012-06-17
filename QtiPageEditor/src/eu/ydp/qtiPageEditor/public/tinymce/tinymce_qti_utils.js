@@ -334,8 +334,6 @@ function textInteractionsGroupContentToQTI(content, spanBegun) {
 					text += xh.prepareNodeBegin(n);
 					text += textInteractionsGroupContentToQTI(n, spanBegun);
 					text += xh.prepareNodeEnd(n);
-				} else if ('IMG' == n.tagName) {
-					text += mediaInteractionToQTI(n);
 				} else {
 					text += parseMathHTML2QTI(xh.prepareNode(n));
 				}
@@ -471,13 +469,7 @@ function choiceInteractionToQTI(ci) {
 function mediaInteractionToQTI(mi) {
 	var text = '';
 	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
-	var mediaNode = null;
-	
-	if (null != mi.firstChild) {
-		mediaNode = mi.firstChild;
-	} else {
-		mediaNode = mi;
-	}
+	var mediaNode = mi.firstChild;
 
 	if ('IMG' == mediaNode.tagName) {
 		var src = mediaNode.getAttribute('src');
@@ -1014,7 +1006,7 @@ function actionOnQTI(e) {
 				}*/
 				
 				// MediaLib
-				if((selectedNode.nodeName == 'IMG' && selectedNode.parentNode.id != 'gapInlineChoiceInteractionContent') || (selectedNode.nodeName == 'FIELDSET' && selectedNode.id == 'runFileUploadLib')) {
+				if(selectedNode.nodeName == 'IMG' || (selectedNode.nodeName == 'FIELDSET' && selectedNode.id == 'runFileUploadLib')) {
 					runMediaLib(selectedNode);
 					break;
 				}
