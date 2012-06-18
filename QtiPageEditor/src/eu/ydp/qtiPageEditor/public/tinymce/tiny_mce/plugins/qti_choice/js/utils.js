@@ -30,7 +30,6 @@ function add_answer_row(form) {
 	newDiv.innerHTML = html;
 	list.appendChild(newDiv);
 	tagInsert.init(no);
-	InputHelper.init($("#"+no));
 }
 
 function remove_answer_row(row) {

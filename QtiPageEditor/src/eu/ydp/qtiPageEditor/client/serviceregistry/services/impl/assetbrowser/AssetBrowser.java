@@ -2,6 +2,7 @@ package eu.ydp.qtiPageEditor.client.serviceregistry.services.impl.assetbrowser;
 
 import java.util.Iterator;
 import java.util.List;
+import java.lang.String;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -14,7 +15,6 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -66,7 +66,7 @@ public class AssetBrowser extends DialogBox  implements IAssetBrowser, IResource
 	private AssetBrowserCallback _jsCallback;	
 	
 	public AssetBrowser(){		
-		super(false, false);	
+		super(false, true);		
 		setText("Upload / insert media for qti");
 		setGlassEnabled(true);		
 		setWidget(uiBinder.createAndBindUi(this));
@@ -78,16 +78,10 @@ public class AssetBrowser extends DialogBox  implements IAssetBrowser, IResource
 		String id = Document.get().createUniqueId();
 		_txtTitle.getElement().setId(id);
 		initTagInsert(id);
-		initInputHelper(_txtTitle.getElement());
-		checkValidOKButton();
 	}
-
+	
 	private native void initTagInsert(String id)/*-{
 		$wnd.tagInsert.init(id);
-	}-*/;
-	
-	private native void initInputHelper(Element input)/*-{
-	$wnd.InputHelper.init(input);
 	}-*/;
 	
 	@UiHandler("_listBox")
@@ -97,19 +91,9 @@ public class AssetBrowser extends DialogBox  implements IAssetBrowser, IResource
 		setTitle("");
 		setSize(getSizeFromItemString(_listBox.getValue(_listBox.getSelectedIndex())));
 		setDate(getDateFromItemString(_listBox.getValue(_listBox.getSelectedIndex())));
-		showPreview(path);
-		checkValidOKButton();
+		showPreview(path);		
 	}
 	
-	private void checkValidOKButton() {
-
-		if (_listBox.getSelectedIndex() > -1) {
-			_okButton.setEnabled(true);
-		} else {
-			_okButton.setEnabled(false);
-		}
-	}
-
 	@UiHandler("_okButton")
 	protected void onClickOk(ClickEvent event){
 		boolean result = true;
@@ -344,7 +328,6 @@ public class AssetBrowser extends DialogBox  implements IAssetBrowser, IResource
 		
 		if(_selectedFilePath != null){
 			showSelectedFilePath();
-			checkValidOKButton();
 		}
 		
 	}

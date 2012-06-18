@@ -32,9 +32,6 @@ function qti2htmlParseProcess(tree) {
 			text += selectionInteractionToHTML(tree);
 		} else if ('TEXTINTERACTION' == tree.tagName) {
 			text += textInteractionsGroupToHTML(tree);
-		} else if ('MATHTEXT' == tree.tagName) {
-			text += mathInteractionToHTML(tree);
-			return text;
 		} else if ('IMG' == tree.tagName || 'OBJECT' == tree.tagName) {
 			text += mediaInteractionsToHTML(tree);
 		} else if ('SIMPLETEXT' == tree.tagName) {
@@ -69,10 +66,8 @@ function qti2htmlParseProcess(tree) {
 	} else {
 
 		if (tree.nodeType == 3) {
-			text += ed.dom.encode(tree.nodeValue);
-			//console.log(tree.nodeValue);
-			//console.dir(tree);
-			//text += tree.nodeValue;
+			//text += ed.dom.encode(tree.nodeValue);
+			text += tree.nodeValue;
 		} else if (processAsText){
 			text += "<"+tree.tagName+">"+tree.innerHTML+"</"+tree.tagName+">";
 		}
@@ -122,13 +117,10 @@ function html2qtiParseProcess(tree) {
                     text += xh.prepareNodeBegin(tree);
             } else if ('VALUE' == tree.tagName) {
                     text += xh.prepareNodeBegin(tree);
-			} else if ('ITEMBODY' == tree.tagName) {
-					text += xh.prepareNodeBegin(tree);
+            } else if ('ITEMBODY' == tree.tagName) {
+                    text += xh.prepareNodeBegin(tree);
             } else if ('FIELDSET' == tree.tagName && tree.getAttribute('id') == 'runFileUploadLib') {
                 text += mediaInteractionToQTI(tree);
-                return text;
-            } else if ('DIV' == tree.tagName && tree.getAttribute('id') == 'mathML') {
-                text += mathInteractionToQTI(tree);
                 return text;
             } else if ('DIV' == tree.tagName) {
                 text += xh.prepareNodeBegin(tree);
@@ -188,7 +180,7 @@ function html2qtiParseProcess(tree) {
     		if (undefined != tree.parentNode && tree.parentNode.nodeName == 'VALUE') {
     				text += ed.dom.encode(tree.nodeValue);
     		} else {
-    			text += ed.dom.encode(tree.nodeValue);
+    			text += tree.nodeValue;
     		}
     	}
     }
@@ -224,137 +216,75 @@ function html2qtiParseProcess(tree) {
     return text;
 }
 
-function mathInteractionToQTI(mi) {
-	var text = '';
-//	text += '<mathText>';
-	var math = mi.innerHTML;
-	text = parseMathHTML2QTI(math);
-	//text += math;
-	//text += '</mathText>';
-	return text;
-}
-
-function mathInteractionToHTML(mi) {
-	var text = '';
-	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
-	text += '<div id="mathML" class="mceNonEditable">';
-	//text += '<math xmlns="http://www.w3.org/1998/Math/MathML">';
-	text += parseMathQTI2HTML(mi.outerHTML);
-	//text += '</math>';
-	text += '</div>';
-	return text;
-	}
-function textInteractionsGroupHtmlNodeToQTI(n) {
+function textInteractionsGroupToQTI(tig) {
 	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
 	var text = '';
-	if ('textEntryInteraction' == $.trim(n.nodeValue).substr(1, 20)) {
-		text += parseMathHTML2QTI($.trim(n.nodeValue));
-	} else if ('inlineChoiceInteraction' == $.trim(n.nodeValue).substr(1, 23)) {
-		text += $.trim(n.nodeValue);
-		for (j = 0; j < n.nextSibling.childNodes.length; j++) {
-			var ic = n.nextSibling.childNodes[j];
-			if (8 == ic.nodeType) {
-				if ('inlineChoice' == $.trim(ic.nodeValue).substr(1, 12)) {
-					text += parseMathHTML2QTI($.trim(ic.nodeValue));
-					n.nextSibling.removeChild(n.nextSibling.childNodes[j]);
-				}
-			}
-		}
-		text += xh.prepareNodeEnd($(n.nodeValue).get(0));
-		//text += '</inlineChoiceInteraction>';
-		//content.removeChild(content.childNodes[i]);
-	}
-	return text;
-}
-function textInteractionsGroupContentToQTI(content, spanBegun) {
-	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
-	var text = '';
+	text += xh.prepareNodeBegin($(tig.nodeValue).get(0));
+	var gic = tig.nextSibling;
+	text += '<prompt>'+gic.firstElementChild.innerHTML+'</prompt>';
+	var content = gic.firstElementChild.nextElementSibling;
 	var n = null;
-
+	var spanBegun = false;
 	for (var i = 0; i < content.childNodes.length; i++) {
-
+		
 		n = content.childNodes[i];
 
 		if (3 == n.nodeType) {
-
-			if (!spanBegun.value){
+		
+			if (!spanBegun){
 				text += '<span>';
-				spanBegun.value = true;
+				spanBegun = true;
 			}
 			var tn = $('<div/>');
 			tn.text(n.nodeValue);
 			text += tn.html();
 			//text += n.nodeValue;
+			
 		} else if (8 == n.nodeType) {
-
-			if (spanBegun.value){
+		
+			if (spanBegun){
 				text += '</span>';
-				spanBegun.value = false;
+				spanBegun = false;
 			}
-			/*
+
 			if ('textEntryInteraction' == $.trim(n.nodeValue).substr(1, 20)) {
-				text += parseMathHTML2QTI($.trim(n.nodeValue));
+				text += $.trim(n.nodeValue);
 			} else if ('inlineChoiceInteraction' == $.trim(n.nodeValue).substr(1, 23)) {
 				text += $.trim(n.nodeValue);
 				for (j = 0; j < n.nextSibling.childNodes.length; j++) {
 					var ic = n.nextSibling.childNodes[j];
 					if (8 == ic.nodeType) {
 						if ('inlineChoice' == $.trim(ic.nodeValue).substr(1, 12)) {
-							text += parseMathHTML2QTI($.trim(ic.nodeValue));
+							text += $.trim(ic.nodeValue);
 							n.nextSibling.removeChild(n.nextSibling.childNodes[j]);
 						}
 					}
 				}
 				text += xh.prepareNodeEnd($(n.nodeValue).get(0));
-			 */
-			//text += '</inlineChoiceInteraction>';
-			//content.removeChild(content.childNodes[i]);
-			text += textInteractionsGroupHtmlNodeToQTI(n);
-			//}
+				//text += '</inlineChoiceInteraction>';
+				//content.removeChild(content.childNodes[i]);
+			}
+			
 		} else {
 			if ('SPAN' != n.tagName) {
-
-				if (!spanBegun.value){
+				var xh = tinymce.EditorManager.activeEditor.XmlHelper;
+				
+				if (!spanBegun){
 					text += '<span>';
-					spanBegun.value = true;
+					spanBegun = true;
 				}
-
+				
 				if ('BR' == n.tagName) {
 					text += xh.prepareEmptyNode(n);
-				} else if ('SUB' == n.tagName || 'SUP' == n.tagName) {
-
-					//zamknięcie tylko jeżeli w sub/sup jest moduł
-					if (-1 != n.innerHTML.indexOf('textEntryInteraction') || -1 != n.innerHTML.indexOf('inlineChoiceInteraction')) {
-						if (spanBegun.value){
-							text += '</span>';
-							spanBegun.value = false;
-						}	
-					}
-					
-					text += xh.prepareNodeBegin(n);
-					text += textInteractionsGroupContentToQTI(n, spanBegun);
-					text += xh.prepareNodeEnd(n);
 				} else {
-					text += parseMathHTML2QTI(xh.prepareNode(n));
+					text += xh.prepareNode(n);
 				}
 			}
 		}
-	}
-	return text;
-}
-function textInteractionsGroupToQTI(tig) {
-	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
-	var text = '';
-	text += xh.prepareNodeBegin($(tig.nodeValue).get(0));
-	var gic = tig.nextSibling;
-	text += '<prompt>'+parseMathHTML2QTI(gic.firstElementChild.innerHTML, true)+'</prompt>';
-	var content = gic.firstElementChild.nextElementSibling;
-	var n = null;
-	var spanBegun = new Object({value: false});
-	text += textInteractionsGroupContentToQTI(content, spanBegun);
-	if (spanBegun.value){
+	}	
+	if (spanBegun){
 		text += '</span>';
-		spanBegun.value = false;
+		spanBegun = false;
 	}
 	text += xh.prepareNodeEnd($(tig.nodeValue).get(0));
 	return text;
@@ -372,28 +302,25 @@ function choiceInteractionToHTML(ci) {
 	for (var k = 0; k < ci.childNodes.length; k++) {
 		if (1 == ci.childNodes[k].nodeType) {
 			if ('PROMPT' == ci.childNodes[k].tagName) {
-				text += '<p id="choiceInteraction">'+parseMathQTI2HTML(ci.childNodes[k].innerHTML)+'</p>';
+				text += '<p id="choiceInteraction">'+ci.childNodes[k].innerHTML+'</p>';
 			} else if ('SIMPLECHOICE' == ci.childNodes[k].tagName) {
 				text += '<!-- '+xh.prepareNodeBegin(ci.childNodes[k]);
 				var innerHtml = '';
 				for (var i = 0; i < ci.childNodes[k].childNodes.length; i++) {
 					var scChild = ci.childNodes[k].childNodes[i];
-
+					
 					if (1 == scChild.nodeType) {
 						if ('FEEDBACKINLINE' == scChild.tagName) {
-							text += xh.prepareNodeBegin(scChild)+parseMathQTI2HTML(scChild.innerHTML)+xh.prepareNodeEnd(scChild);
+							text += xh.prepareNodeBegin(scChild)+scChild.innerHTML+xh.prepareNodeEnd(scChild);
 						} else if ('IMG' == scChild.tagName) {
 							text += xh.prepareEmptyNode(scChild);
 							innerHtml = xh.prepareEmptyNode(scChild);
 						} else {
-							text += parseMathQTI2HTML(xh.prepareNode(scChild));
-							//console.log(xh.prepareNode(scChild));
-							//text += xh.prepareNode(scChild);
+							text += xh.prepareNode(scChild);
 							//text += '<'+scChild.tagName.toLowerCase()+xh.prepareAttributes(scChild)+'>';
 							//text += scChild.innerHTML;
 							//text += '</'+scChild.tagName.toLowerCase()+'>';
-							innerHtml += parseMathQTI2HTML(xh.prepareNode(scChild));
-							//innerHtml += xh.prepareNode(scChild);
+							innerHtml += xh.prepareNode(scChild);
 							//innerHtml += '<'+scChild.tagName.toLowerCase()+xh.prepareAttributes(scChild)+'>';
 							//innerHtml += scChild.innerHTML;
 							//innerHtml += '</'+scChild.tagName.toLowerCase()+'>';
@@ -401,7 +328,7 @@ function choiceInteractionToHTML(ci) {
 						}
 					} else {
 						text += scChild.nodeValue;
-						innerHtml += scChild.nodeValue;
+						innerHtml = scChild.nodeValue;
 					}
 				}
 				text += xh.prepareNodeEnd(ci.childNodes[k])+' -->';
@@ -428,7 +355,7 @@ function selectionInteractionToQTI (si) {
 	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
 	var sINode = si.nextSibling;
 	text += xh.prepareNodeBegin($(si.nodeValue).get(0));
-	text += '<prompt>'+parseMathHTML2QTI(sINode.firstElementChild.innerHTML, true)+'</prompt>';
+	text += '<prompt>'+sINode.firstElementChild.innerHTML+'</prompt>';
 	var table = sINode.firstElementChild.nextElementSibling;
 	var tr = null;
 	
@@ -437,7 +364,7 @@ function selectionInteractionToQTI (si) {
 			for (var j = 0; j < tr.childNodes.length; j++) { // for tr
 				for (var k = 0; k < tr.childNodes[j].childNodes.length; k++) { //for td
 					if (8 == tr.childNodes[j].childNodes[k].nodeType) {
-						text += parseMathHTML2QTI($.trim(tr.childNodes[j].childNodes[k].nodeValue));
+						text += $.trim(tr.childNodes[j].childNodes[k].nodeValue);
 					}
 				}
 			}
@@ -456,10 +383,10 @@ function choiceInteractionToQTI(ci) {
 	var cINode = ci.nextSibling;
 	
 	text += xh.prepareNodeBegin($(ci.nodeValue).get(0));
-	text += '<prompt>'+parseMathHTML2QTI(cINode.firstElementChild.innerHTML, true)+'</prompt>';
+	text += '<prompt>'+cINode.firstElementChild.innerHTML+'</prompt>';
 	for (var i = 0; i < cINode.childNodes.length; i++) {
 		if (8 == cINode.childNodes[i].nodeType) {
-			text += parseMathHTML2QTI(cINode.childNodes[i].nodeValue);
+			text += cINode.childNodes[i].nodeValue;
 		}
 	}
 	text += xh.prepareNodeEnd($(ci.nodeValue).get(0));
@@ -473,18 +400,18 @@ function mediaInteractionToQTI(mi) {
 
 	if ('IMG' == mediaNode.tagName) {
 		var src = mediaNode.getAttribute('src');
-		var title = $('<div/>').html(mediaNode.getAttribute('alt')).html();
-		text += '<img src="'+src+'"><title>'+parseMathHTML2QTI(title)+'</title><description></description></img>';
+		var title = mediaNode.getAttribute('alt');
+		text += '<img src="'+src+'"><title>'+title+'</title><description></description></img>';
 
 	} else {
-		var title = $('<div/>').html(mediaNode.getAttribute('alt')).html();
+		var title = mediaNode.getAttribute('alt');
 		var data = mediaNode.getAttribute('data');
 		var type = mediaNode.getAttribute('type');
 		
 		if (null == title) {
 			title = '';
 		}
-		text += '<object data="'+data+'" type="'+type+'"><title>'+parseMathHTML2QTI(title)+'</title><description></description></object>';
+		text += '<object data="'+data+'" type="'+type+'"><title>'+title+'</title><description></description></object>';
 	}
 	return text;
 }
@@ -496,8 +423,7 @@ function mediaInteractionsToHTML(mi) {
 
 	if ('IMG' == mi.tagName) {
 		var src = mi.getAttribute('src');
-		var title = parseMathQTI2HTML(mi.nextElementSibling.textContent); //innerHTML);
-		title = tinyMCE.activeEditor.dom.encode(title);
+		var title = mi.nextElementSibling.innerHTML;
 		text += '<img alt="'+title+'" src="'+src+'" />';
 		mi.parentNode.removeChild(mi.nextElementSibling.nextElementSibling); //description
 		mi.parentNode.removeChild(mi.nextElementSibling); //title
@@ -505,8 +431,7 @@ function mediaInteractionsToHTML(mi) {
 	} else { // if video object
 		var data = mi.getAttribute('data');
 		var type = mi.getAttribute('type');
-		var title = parseMathQTI2HTML(mi.firstElementChild.textContent); //innerHTML);
-		title = tinyMCE.activeEditor.dom.encode(title);
+		var title = mi.firstElementChild.innerHTML;
 		text += '<object alt="'+title+'" data="'+data+'" type="'+type+'"></object>'
 		text += '<img id="mceVideo" src="/res/skins/default/qtipageeditor/tinymce/tiny_mce/plugins/qti_addvideo/img/movie.png" mce_src="/res/skins/default/qtipageeditor/tinymce/tiny_mce/plugins/qti_addvideo/img/movie.png"/>';
 
@@ -531,12 +456,12 @@ function selectionInteractionToHTML(si) {
 	text += '<div id="selectionInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;" mce_style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">';
 
 	var prompts = si.getElementsByTagName('prompt');
-	text += '<p id="selectionInteraction">'+parseMathQTI2HTML(prompts[0].innerHTML)+'</p>';
+	text += '<p id="selectionInteraction">'+prompts[0].innerHTML+'</p>';
 	var options = si.getElementsByTagName('simpleChoice');
 	
 	text += '<table class="selectionTable"><tbody><tr><td>&nbsp;</td>';
 	for (var i = 0; i < options.length; i++) {
-		text += '<td><!-- '+parseMathQTI2HTML(xh.prepareNode(options[i]))+' -->'+parseMathQTI2HTML(options[i].innerHTML)+'</td>';
+		text += '<td><!-- '+xh.prepareNode(options[i])+' -->'+options[i].innerHTML+'</td>';
 	}
 	text += '</tr>';
 	
@@ -554,13 +479,13 @@ function selectionInteractionToHTML(si) {
 
 			if (item.childNodes[j].tagName == 'FEEDBACKINLINE') {
 				feedback = item.childNodes[j];
-				feedbacksText += parseMathQTI2HTML(xh.prepareNode(feedback));
+				feedbacksText += xh.prepareNode(feedback);
 				item.removeChild(feedback);
 			}
 		}
-		text += parseMathQTI2HTML(item.innerHTML);
+		text += item.innerHTML;
 		text += feedbacksText;
-		text += xh.prepareNodeEnd(item)+' -->'+parseMathQTI2HTML(item.innerHTML)+'</td>';
+		text += xh.prepareNodeEnd(item)+' -->'+item.innerHTML+'</td>';
 		feedbacksText = '';
 		
 		for (var j = 0; j < options.length; j++) {
@@ -587,32 +512,21 @@ function textInteractionsGroupToHTML(ti) {
 	var text = '';
 	text += '<!-- '+xh.prepareNodeBegin(ti)+' -->';
 	text += '<div id="gapInlineChoiceInteraction" class="mceNonEditable" style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;" mce_style="border: 1px solid blue; color: blue; padding: 5px; background-color: #f0f0f0;">';
-	text += textInteractionsGroupNodeToHTML(ti);
-	text += '</p></div><!-- '+xh.prepareNodeEnd(ti)+' -->';
-	//usuniecie childeow zeby rekurencja juz tam nie wpadla
-	while(ti.hasChildNodes()){
-		ti.removeChild(ti.lastChild);
-	}
-	return text;
-}
-
-function textInteractionsGroupNodeToHTML(ti) {
-	text = '';
-	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
 	
 	for (var i = 0; i < ti.childNodes.length; i++) {
+
 		if (3 == ti.childNodes[i].nodeType) {
 			text += ti.childNodes[i].nodeValue;
 		} else {
 			var feedbacksText = '';
 			if ('PROMPT' == ti.childNodes[i].tagName) {
-				text += '<!-- <prompt> --><p id="gapInlineChoiceInteractionQuestion">'+parseMathQTI2HTML(ti.childNodes[i].innerHTML)+'</p><!-- </prompt> -->';
+				text += '<!-- <prompt> --><p id="gapInlineChoiceInteractionQuestion">'+ti.childNodes[i].innerHTML+'</p><!-- </prompt> -->';
 				text += '<p id="gapInlineChoiceInteractionContent">';
 			} else if ('TEXTENTRYINTERACTION' == ti.childNodes[i].tagName) {
 				text += '<!-- '+xh.prepareNodeBegin(ti.childNodes[i]);
-
+				
 				if (null != ti.childNodes[i].childNodes) {
-
+					
 					for (var j = ti.childNodes[i].childNodes.length-1; j >= 0; j--) {
 
 						if (ti.childNodes[i].childNodes[j].tagName == 'FEEDBACKINLINE') {
@@ -621,29 +535,28 @@ function textInteractionsGroupNodeToHTML(ti) {
 							ti.childNodes[i].removeChild(feedback);
 						}
 					}
-					text += parseMathQTI2HTML(feedbacksText);
+					text += feedbacksText;
 				}
 				text += xh.prepareNodeEnd(ti.childNodes[i])+' -->';
 				var correctResponses = xh.getCorrectResponseByIdentifier(ti.childNodes[i].getAttribute('responseIdentifier'));
 				text += '<span id="gap" class="mceNonEditable" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;" mce_style="border: 1px solid blue; color: blue; background-color: #f0f0f0;">'+correctResponses+'</span>';
 				feedbacksText = '';
-
 			} else if ('INLINECHOICEINTERACTION' == ti.childNodes[i].tagName) {
 				text += '<!-- '+xh.prepareNodeBegin(ti.childNodes[i])+' -->';
 				text += '<span mce_style="border: 1px solid blue; color: blue; background-color: #f0f0f0;" style="border: 1px solid blue; color: blue; background-color: #f0f0f0;" class="mceNonEditable" id="inlineChoiceInteraction">';
-
+				
 				if (null != ti.childNodes[i].childNodes) {
-
+					
 					for (var j = 0; j < ti.childNodes[i].childNodes.length; j++) {
 						var iCText = '';
-
+						
 						if (ti.childNodes[i].childNodes[j].tagName == 'INLINECHOICE') {
 							var ic = ti.childNodes[i].childNodes[j];
 							iCText += '<!-- '+xh.prepareNodeBegin(ic);
-
+							
 							if (null != ic.childNodes) {
 								var feedbacksText = '';
-
+								
 								for (var k = ic.childNodes.length-1; k >= 0; k--) {
 
 									if (ic.childNodes[k].tagName == 'FEEDBACKINLINE') {
@@ -664,29 +577,29 @@ function textInteractionsGroupNodeToHTML(ti) {
 							}
 							feedbacksText = '';
 						}
-						text += parseMathQTI2HTML(iCText);
+						text += iCText;
 					}
 				}
 				text += '</span><!-- '+xh.prepareNodeEnd(ti.childNodes[i])+' -->';
 			} else {
 				//wszystkie node typu tekst opakowane są w spany
 				if ('SPAN' == ti.childNodes[i].tagName) {
-					text += parseMathQTI2HTML(ti.childNodes[i].innerHTML);
+					text += ti.childNodes[i].innerHTML;
 				} else {
 					if ('BR' == ti.childNodes[i].tagName) {
 						text += xh.prepareEmptyNode(ti.childNodes[i]);
-					} else if ('SUB' == ti.childNodes[i].tagName || 'SUP' == ti.childNodes[i].tagName) {
-						//console.log(ti.childNodes[i].tagName);
-						text += xh.prepareNodeBegin(ti.childNodes[i]);
-						//text += 'ok'
-						text += textInteractionsGroupNodeToHTML(ti.childNodes[i]);
-						text += xh.prepareNodeEnd(ti.childNodes[i]);
 					} else {
 						text += xh.prepareNode(ti.childNodes[i]);
 					}
 				}
 			}
 		}
+	}
+
+	text += '</p></div><!-- '+xh.prepareNodeEnd(ti)+' -->';
+	//usuniecie childeow zeby rekurencja juz tam nie wpadla
+	while(ti.hasChildNodes()){
+		ti.removeChild(ti.lastChild);
 	}
 	return text;
 }
@@ -727,7 +640,6 @@ function QTI2HTML(h) {
 	//if(h.match(/^<table[^>]*>.*<\/table>$/i) == undefined) {
 		h = processQTI(h);
 	//}
-//		console.log(h);
 	return h;
 }
 
@@ -980,8 +892,8 @@ function actionOnQTI(e) {
 				
 				// MathML
 				if (selectedNode.nodeName == 'DIV' && selectedNode.id == 'mathML') {
-					runMathMLInteraction(selectedNode);
-					break;
+					//runMathMLInteraction(selectedNode);
+					//break;
 				}
 				
 				// QY Comments
@@ -1061,16 +973,29 @@ function actionOnQTI(e) {
 }
 
 function runMathMLInteraction(selectedNode) {
-	var math = selectedNode.innerHTML;
-	math = math.replace(/<math[^>]*>/,'');
+	math = selectedNode.innerHTML;
+	math = math.replace(/<math[^>]+>/,'');
 	math = math.replace(/<\/math>/,'');
 	tinyMCE.selectedNode = selectedNode;
 	tinyMCE.execCommand('mceScience', false, math);
 }
 
-function runGapInlineChoiceInteractionNode(contentElement, data, body, nodeCounter) {
+function runGapInlineChoiceInteraction(selectedNode) {
+	
+	var body = selectedNode;
+	while(body.nodeName != 'BODY') {
+		body = body.parentNode;
+	}
 	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
+
+	var data = new Array();
+	data['question'] = selectedNode.children[0].innerHTML;
+	data['content'] = null;
+	data['inlineRows'] = new Array();
+	var contentElement = selectedNode.children[1]; //p gapInlineChoiceInteractionContent
 	var contentText = '';
+	var nodeCounter = 0;
+	//var tmpResponses = new Array();
 	
 	for(var i = 0; i < contentElement.childNodes.length; i++) {
 		var node = contentElement.childNodes[i];
@@ -1086,10 +1011,6 @@ function runGapInlineChoiceInteractionNode(contentElement, data, body, nodeCount
 				
 				if ('BR' == node.tagName) {
 					contentText += xh.prepareEmptyNode(node);
-				} else if ('SUB' == node.tagName || 'SUP' == node.tagName) {
-					contentText += xh.prepareNodeBegin(node);
-					contentText += runGapInlineChoiceInteractionNode(node, data, body, nodeCounter);
-					contentText += xh.prepareNodeEnd(node);
 				} else {
 					contentText += xh.prepareNode(node);
 				}
@@ -1100,7 +1021,7 @@ function runGapInlineChoiceInteractionNode(contentElement, data, body, nodeCount
 			if ('TEXTENTRYINTERACTION' == child.tagName) {
 				//if (-1 == tmpResponses.indexOf(contentElement.childNodes[i].nextSibling.innerHTML)) {
 					//tmpResponses.push(contentElement.childNodes[i].nextSibling.innerHTML);
-					contentText += '[gap#'+nodeCounter.value+']';
+					contentText += '[gap#'+nodeCounter+']';
 					var feedback = new Array();
 						feedback['onOk'] = '';
 						feedback['onWrong'] = '';
@@ -1117,11 +1038,11 @@ function runGapInlineChoiceInteractionNode(contentElement, data, body, nodeCount
 					data['inlineRows'].push({
 							answer: contentElement.childNodes[i].nextSibling.innerHTML,
 							feedback: feedback,
-							id: nodeCounter.value,
+							id: nodeCounter,
 							identifier: child.getAttribute('responseIdentifier'),
 							type: 'gap'
 					});
-					nodeCounter.value++;
+					nodeCounter++;
 				/*} else {
 					var cResp = xh.getCorrectResponseNodeId(body, child.getAttribute('responseIdentifier'));
 					if (null != cResp) {
@@ -1193,20 +1114,20 @@ function runGapInlineChoiceInteractionNode(contentElement, data, body, nodeCount
 				}
 				
 				//if (-1 == tmpResponses.indexOf(tmpAnswers)) {
-					contentText += '[inlineChoice#'+nodeCounter.value+']';
+					contentText += '[inlineChoice#'+nodeCounter+']';
 					//tmpResponses.push(tmpAnswers);
 					data['inlineRows'].push({
 						answers: answers,
 						feedbacks: feedbacks,
 						fixed: fixed,
-						id: nodeCounter.value,
+						id: nodeCounter,
 						identifier: child.getAttribute('responseIdentifier'),
 						ids: ids,
 						points: points,
 						shuffle: shuffle,
 						type: 'inlineChoice'
 					});
-					nodeCounter.value++;
+					nodeCounter++;
 				/*} else {
 					var cResp = xh.getCorrectResponseNodeId(body, child.getAttribute('responseIdentifier'));
 					if (null != cResp) {
@@ -1227,27 +1148,6 @@ function runGapInlineChoiceInteractionNode(contentElement, data, body, nodeCount
 			}
 		}
 	}
-	return contentText;
-}
-
-function runGapInlineChoiceInteraction(selectedNode) {
-	
-	var body = selectedNode;
-	while(body.nodeName != 'BODY') {
-		body = body.parentNode;
-	}
-
-	var data = new Array();
-	data['question'] = selectedNode.children[0].innerHTML;
-	data['content'] = null;
-	data['inlineRows'] = new Array();
-	var contentElement = selectedNode.children[1]; //p gapInlineChoiceInteractionContent
-	var contentText = '';
-	var nodeCounter = new Object({value: 0});
-	//var nodeCounter = 0;
-	//var tmpResponses = new Array();
-	contentText = runGapInlineChoiceInteractionNode(contentElement, data, body, nodeCounter);
-	
 	data['content'] = contentText;
 	tinyMCE.selectedNode = selectedNode;
 	tinyMCE.execCommand('mceGapInlineChoice', false, data);
@@ -1290,7 +1190,7 @@ function runChoiceInteraction(selectedNode) {
 			} else {
 				points.push('0');
 			}
-			smCh = tinymce.trim(sectionDiv.childNodes[i].nodeValue);
+			smCh = sectionDiv.childNodes[i].nodeValue;
 			ids.push($(smCh).attr('identifier'));
 			fixed.push($(smCh).attr('fixed'));
 			var simpleCh = $(smCh).get(0);
@@ -1446,7 +1346,7 @@ function runMediaLib(selectedNode) {
 		var src = node.previousSibling.getAttribute('data');
 		var title = '';
 		
-		title = $('<div/>').html(node.previousSibling.getAttribute('alt')).html();
+		title = node.previousSibling.getAttribute('alt');
 		/*if (null != node.nextSibling.nextSibling) {
 			title = node.nextSibling.nextSibling.nodeValue;
 		}*/
@@ -1454,7 +1354,7 @@ function runMediaLib(selectedNode) {
 	} else {
 		var src = node.attributes['src'].value;
 		if(node.attributes['alt'] != undefined) {
-			var title = $('<div/>').html(node.attributes['alt'].value).html();
+			var title = node.attributes['alt'].value;
 		} else {
 			var title = '';
 		}
@@ -1577,21 +1477,5 @@ function mathml2subsup(text){
 		}			
 	}
 	return text;
-}
-
-function parseMathHTML2QTI(math, isInPrompt) {
-	var className = '';
-	if (true == isInPrompt) {
-		className = ' class="mathBold"';
-	}
-	math = math.replace(/<math[^>]*>/g,'<mathText'+className+'>');
-	math = math.replace(/<\/math>/g,'</mathText>');
-	return math;
-}
-
-function parseMathQTI2HTML(math) {
-	math = math.replace(/<mathText[^>]*>/gi, '<math>');
-	math = math.replace(/<\/mathText>/gi, '</math>');
-	return math;
 }
 

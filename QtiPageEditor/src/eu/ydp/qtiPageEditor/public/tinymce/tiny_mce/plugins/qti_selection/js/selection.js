@@ -11,7 +11,6 @@ var selectionDialog = {
 		var data = tinyMCEPopup.getWindowArg("selectiondata");
 		
 		tagInsert.init(f.question.id);
-		InputHelper.init(f.question);
 
 		if(data != undefined && data.question != undefined) {
 			f.question.value = data.question;
@@ -44,15 +43,12 @@ var selectionDialog = {
 //				}
 				var odp = data.answers[q];
 				var ct = q+1;
-				newDiv.innerHTML = '<br class="clr"/><strong>' + ct + '.</strong>&nbsp;\n\
+				newDiv.innerHTML = '<strong>' + ct + '.</strong>&nbsp;\n\
 					<input type="hidden" name="choices_ids[]" value="' + data.ids_ch[q] + '">\n\
-					<input type="text" name="choices[]" value="" id="choice_'+q+'">&nbsp;\n\
+					<input type="text" name="choices[]" value="' + data.choices[q] + '" id="choice_'+q+'">&nbsp;\n\
 					<input type="button" id="remove_option" name="remove_option" value="Remove" onclick="remove_option_row(this);" />';
 				document.getElementById('option_list').appendChild(newDiv);
-				// &lt vs <
-				$('#choice_'+q).val(data.choices[q]);
 				tagInsert.init("choice_"+q);
-				InputHelper.init($("#choice_"+q));
 				
 			}
 
@@ -69,7 +65,7 @@ var selectionDialog = {
 
 				var newInnerHTML = '<table class="answer" cellpadding=0 cellspacing=0><tr>\n\
 					<td width="260px" style="padding-right: 5px;">\n\
-					<input type="text" id="answer_'+q+'" name="answers[]" style="width: 100%; margin-right: 5px;" value=""/>\n\
+					<input type="text" id="answer_'+q+'" name="answers[]" style="width: 100%; margin-right: 5px;" value="' + odp + '"/>\n\
 					</td>\n\
 					<input type="hidden" id="id_0" name="ids[]" value="' + data.ids_ans[q] + '"/>\n\
 					<td width="400px" id="optionsSpans">';
@@ -95,11 +91,7 @@ var selectionDialog = {
 				newDiv.innerHTML = newInnerHTML;
 
 				document.getElementById('answer_list').appendChild(newDiv);
-				// &lt vs <
-				$('#answer_'+q).val(odp);
-				
 				tagInsert.init("answer_"+q);
-				InputHelper.init($("#answer_"+q));
 
 				if(tinyMCE.feedback == undefined) {
 					tinyMCE.feedback = new Array;
@@ -127,23 +119,21 @@ var selectionDialog = {
 
 			var newDiv = document.createElement('div');
 			newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
-			newDiv.innerHTML = '<br class="clr"/><strong>1.</strong>&nbsp;\n\
+			newDiv.innerHTML = '<strong>1.</strong>&nbsp;\n\
 				<input type="hidden" name="choices_ids[]" value="' + id_2 + '">\n\
 				<input type="text" name="choices[]" value="" id="choice_0">\n\
 				<input type="button" id="remove_option" name="remove_option" value="Remove" onclick="remove_option_row(this);" />';
 			document.getElementById('option_list').appendChild(newDiv);
 			tagInsert.init("choice_0");
-			InputHelper.init($("#choice_0"));
 
 			var newDiv = document.createElement('div');
 			newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
-			newDiv.innerHTML = '<br class="clr"/><strong>2.</strong>&nbsp;\n\
+			newDiv.innerHTML = '<strong>2.</strong>&nbsp;\n\
 				<input type="hidden" name="choices_ids[]" value="' + id_3 + '">\n\
 				<input type="text" name="choices[]" value="" id="choice_1">\n\
 				<input type="button" id="remove_option" name="remove_option" value="Remove" onclick="remove_option_row(this);" />';
 			document.getElementById('option_list').appendChild(newDiv);
 			tagInsert.init("choice_1");
-			InputHelper.init($("#choice_1"));
 
 			var randid = Math.random();
 			randid = String(randid);
@@ -178,7 +168,6 @@ var selectionDialog = {
 				</table>';
 			document.getElementById('answer_list').appendChild(newDiv);
 			tagInsert.init("answer_0");
-			InputHelper.init($("#answer_0"));
 			
 			var newDiv = document.createElement('div');
 			newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
@@ -201,7 +190,6 @@ var selectionDialog = {
 				</table>';
 			document.getElementById('answer_list').appendChild(newDiv);
 			tagInsert.init("answer_1");
-			InputHelper.init($("#answer_1"));
 			
 			var removeButton = document.getElementById('remove_button');
 			removeButton.parentNode.removeChild(removeButton);
@@ -399,7 +387,6 @@ var selectionDialog = {
 			tinymce.each(dom.select(patt), function(n) {
 				ed.dom.split(ed.dom.getParent(n, 'h1,h2,h3,h4,h5,h6,p'), n);
 			});
-			selectionSection = ed.correctHtml(selectionSection, 'decode');
 			dom.setOuterHTML(dom.select('._mce_marker')[0], selectionSection);
 
 			body = ed.selection.getNode();
@@ -503,7 +490,6 @@ var selectionDialog = {
 			for(i in dataobj.points) {
 				responseDeclaration += '<value>' + i + ' ' + dataobj.points[i] + '</value>';
 			}
-			selectionSection = ed.correctHtml(selectionSection, 'decode');
 			nd.innerHTML = selectionSection;
 
 			var body = nd;

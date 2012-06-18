@@ -85,26 +85,15 @@
 								}
 							} 
 
-							var imgTag = paragraph+'<fieldset id="runFileUploadLib" class="mceNonEditable" style="font-size: 10px; font-color: #b0b0b0; color: #b0b0b0; border: 1px solid #d0d0d0;"><img src="' + fromPath + '/' + filePath + '" alt="' + ed.correctHtml(title, "encode") + '"/><br>' + title + '</fieldset><span id="focus">_</span>'+paragraph;
+							var imgTag = paragraph+'<fieldset id="runFileUploadLib" class="mceNonEditable" style="font-size: 10px; font-color: #b0b0b0; color: #b0b0b0; border: 1px solid #d0d0d0;"><img src="' + fromPath + '/' + filePath + '" alt="' + title + '"/><br>' + title + '</fieldset><span id="focus">_</span>'+paragraph;
 							ed.execCommand('mceInsertContent', false, imgTag);
 
-							n = ed.dom.get('focus');
-
-							if (null == n.nextElementSibling || n.nextElementSibling.nodeType != 1 || n.nextElementSibling.tagName != 'P') {
-								var newNode = ed.dom.create('p',null,'&nbsp;');
-								ed.dom.insertAfter(newNode,ed.dom.get('focus'));
-							}
-							ed.selection.select(ed.dom.get(ed.dom.get('focus').nextElementSibling), true);
-							ed.selection.collapse(false);
-							ed.nodeChanged();
-							ed.focus();
-							ed.dom.remove('focus');
-							/*var toFocus = ed.dom.get('focus').nextElementSibling.firstChild;
+							var toFocus = ed.dom.get('focus').nextElementSibling.firstChild;
 							rng = ed.dom.createRng();
 							rng.setStart(toFocus, 0);
 							rng.setEnd(toFocus, 0);
 							ed.selection.setRng(rng);
-							ed.dom.remove('focus');*/
+							ed.dom.remove('focus');
 						
 							return true;
 						},

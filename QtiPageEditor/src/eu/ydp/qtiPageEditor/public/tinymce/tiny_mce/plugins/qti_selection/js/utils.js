@@ -42,7 +42,6 @@ function add_answer_row(form) {
 	newDiv.innerHTML = newInnerHTML;
 	document.getElementById('answer_list').appendChild(newDiv);
 	tagInsert.init('answer_' + last);
-	InputHelper.init($('#answer_'+last));
 }
 
 
@@ -59,17 +58,16 @@ function add_option_row(form) {
 	}
 
 	var newDiv = document.createElement('div');
-	var last = document.getElementById('option_list').lastChild.childNodes[3].innerHTML;
+	var last = document.getElementById('option_list').lastChild.childNodes[1].innerHTML;
 	last = parseInt(last.replace('.',''));
 	var next = last + 1;
 	newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
-	newDiv.innerHTML = '<br class="clr"/><strong>' + next + '.</strong>&nbsp;\n'
+	newDiv.innerHTML = '<strong>' + next + '.</strong>&nbsp;\n'
 		+'<input type="hidden" name="choices_ids[]" value="' + id + '">\n'
 		+'<input type="text" name="choices[]" value="" id="choice_' + last + '">&nbsp;\n'
 		+'<input type="button" id="remove_option" name="remove_option" value="Remove" onclick="remove_option_row(this);" />';
 	document.getElementById('option_list').appendChild(newDiv);
 	tagInsert.init('choice_' + last);
-	InputHelper.init($('#choice_'+last));
 
 	var optionSpans = document.getElementsByClassName('optionSpan');
 	var ids = new Array();

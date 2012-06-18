@@ -48,13 +48,10 @@ var inlineChoiceDialog = {
 				//value wstawiam później bo innerHTML nie pozwalał na wstawianie znaków "<",">", """ itd...
 				$('#answer_' + q).val(stringDecode(data['answers'][q]));
 				tagInsert.init('answer_' + q);
-				InputHelper.init($('#answer_' + q));
 			}
 
 			if (0 < getObjectLength(data.ids)) {
-				if (undefined == tinyMCE.feedback) {
-					tinyMCE.feedback = new Array();
-				}
+				tinyMCE.feedback = new Array();
 				tinyMCE.feedback[data.identifier] = {"sound": new Array(), text: new Array()};
 				
 				for (q = 0; q < getObjectLength(data.ids); q++) {
@@ -86,14 +83,12 @@ var inlineChoiceDialog = {
 			newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td width="260px" style="padding-right: 5px;"><input type="text" id="answer_0" name="answers[]" style="width: 100%; margin-right: 5px;" value=""/></td><input type="hidden" id="id_0" name="ids[]" value="' + id_0 + '"/><td width="50px" align="center"><input id="point_0" type="radio" name="points[]" style="margin: 0; padding: 0;"/></td><td width="50px" align="center"><input id="fixed_0" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" /></td><td width="80px"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td width="50px" align="left"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr></table>';
 			document.getElementById('answer_list').appendChild(newDiv);
 			tagInsert.init("answer_0");
-			InputHelper.init($("#answer_0"));
 			
 			var newDiv = document.createElement('div');
 			newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
 			newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td width="260px" style="padding-right: 5px;"><input type="text" id="answer_1" name="answers[]" style="width: 100%; margin-right: 5px;" value=""/></td><input type="hidden" id="id_1" name="ids[]" value="' + id_1 + '"/><td width="50px" align="center"><input id="point_1" type="radio" name="points[]" style="margin: 0; padding: 0;"/></td><td width="50px" align="center"><input id="fixed_1" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" /></td><td width="80px"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td width="50px" align="left"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr></table>';
 			document.getElementById('answer_list').appendChild(newDiv);
 			tagInsert.init("answer_1");
-			InputHelper.init($("#answer_1"));
 			
 			//var removeButton = document.getElementById('remove_button');
 			//removeButton.parentNode.removeChild(removeButton);

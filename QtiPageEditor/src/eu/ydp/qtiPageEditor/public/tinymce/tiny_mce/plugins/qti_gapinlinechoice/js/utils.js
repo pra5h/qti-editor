@@ -18,7 +18,7 @@ var gapRowTemplate = '<tr id="{number}">'
 						+'</td>'
 						+'<td>'
 							+'<input type="hidden" id="feedback{number}" name="feedback" />'
-							+'<img id="imgfeedback{number}" alt="Set feedback" title="Set feedback" onclick="feedback({number});" src="img/feedback.png"/>'
+							+'<img id="feedback{number}" alt="Set feedback" title="Set feedback" onclick="feedback({number});" src="img/feedback.png"/>'
 						+'</td>'
 					+'</tr>';
 
@@ -104,6 +104,7 @@ function addNewRow(row) {
 	$('#gaps').last().append(newRow);
 
 	$('#'+newId+'_add').show();
+	$('#'+newId+'_remove').hide();
 	
 	if (null != row) {
 		$('#answer'+newId).attr('value', stringDecode(row.answer));
@@ -113,7 +114,7 @@ function addNewRow(row) {
 }
 
 function applyExternalRowData(identifier) {
-
+	
 	var lp = identifier;
 	var chboxElm = $('#checkbox' + lp);
 	var type;
@@ -128,9 +129,8 @@ function applyExternalRowData(identifier) {
 	var before = contents.value.substring(0,contents.selectionStart);
 	var after = contents.value.substring(contents.selectionEnd);
 	contents.value = before + '['+type+'#' + lp + ']' + after;
-
-	$('#'+identifier+'_add').val('Del');
-	$('#'+identifier+'_add').attr('onClick', 'removeTagFromContentData('+identifier+')');
+	$('#'+identifier+'_add').hide();
+	$('#'+identifier+'_remove').show();
 }
 
 function removeExternalRowData(removeElement) {
@@ -148,11 +148,8 @@ function removeExternalRowData(removeElement) {
 		var pattern = new RegExp('\\[inlineChoice#'+id+'\\]', 'gi');
 		contentValue = contentValue.replace(pattern, '');
 		var distractorData = tinymce.util.JSON.parse($('#distractorData'+id).val());
-		
-		if (undefined != distractorData) {
-			var identifier = distractorData['identifier'];
-			c = xh.getCorrectResponseNodeId(ed.dom.doc.body, identifier);
-		}
+		var identifier = distractorData['identifier'];
+		c = xh.getCorrectResponseNodeId(ed.dom.doc.body, identifier);
 	} else if (false == ch.attr('checked')) {
 		var pattern = new RegExp('\\[gap#'+id+'\\]', 'gi');
 		contentValue = contentValue.replace(pattern, '');
@@ -168,58 +165,18 @@ function removeExternalRowData(removeElement) {
 	tr.parentNode.removeChild(tr);
 }
 
-function removeTagFromContentData(id) {
-
-	var ed = tinymce.EditorManager.activeEditor;
-	var xh = ed.XmlHelper;
-	var ch = $('#checkbox'+id);
-	var contentNode = $('#exercise_content');
-	var contentValue = contentNode.val();
-	var c = null;
-	
-	if (true == ch.attr('checked')) {
-		var pattern = new RegExp('\\[inlineChoice#'+id+'\\]', 'gi');
-		contentValue = contentValue.replace(pattern, '');
-		var content = $('#distractorData'+id).val();
-		
-		if ('' != content) {
-			var distractorData = tinymce.util.JSON.parse(content);
-			var identifier = distractorData['identifier'];
-			c = xh.getCorrectResponseNodeId(ed.dom.doc.body, identifier);
-		}
-	} else if (false == ch.attr('checked')) {
-		var pattern = new RegExp('\\[gap#'+id+'\\]', 'gi');
-		contentValue = contentValue.replace(pattern, '');
-		var identifier = $('#identifier'+id).val();
-		c = xh.getCorrectResponseNodeId(ed.dom.doc.body, identifier);
-	}
-	contentNode.val(contentValue);
-
-	if (c != null) {
-		c.parentNode.removeChild(c);
-	}
-	$('#'+id+'_add').val('Add'); //attr('disabled', true);
-	$('#'+id+'_add').attr('onClick', 'applyExternalRowData('+id+')');
-}
-
 function changeRowType(checkboxElement) {
 	if (checkboxElement.checked) {
 		$('#distractor' + checkboxElement.id.replace('checkbox','')).attr('disabled', false);
 		$('#answer' + checkboxElement.id.replace('checkbox','')).attr('disabled', true);
 		$('#feedback' + checkboxElement.id.replace('checkbox','')).attr('disabled', true);
 		$('#exercise_content').val($('#exercise_content').val().replace('[gap#'+checkboxElement.id.replace('checkbox','')+']',''));
-		$('#'+checkboxElement.id.replace('checkbox','')+'_add').val('Add'); //attr('disabled', true);
-		$('#'+checkboxElement.id.replace('checkbox','')+'_add').attr('onClick', 'applyExternalRowData('+checkboxElement.id.replace('checkbox','')+')');
-		$('#imgfeedback'+checkboxElement.id.replace('checkbox','')).css('opacity', 0.4);
 
 	} else {
 		$('#distractor' + checkboxElement.id.replace('checkbox','')).attr('disabled', true);
 		$('#answer' + checkboxElement.id.replace('checkbox','')).attr('disabled', false);
 		$('#feedback' + checkboxElement.id.replace('checkbox','')).attr('disabled', false);
 		$('#exercise_content').val($('#exercise_content').val().replace('[inlineChoice#'+checkboxElement.id.replace('checkbox','')+']',''));
-		$('#'+checkboxElement.id.replace('checkbox','')+'_add').val('Add'); //attr('disabled', true);
-		$('#'+checkboxElement.id.replace('checkbox','')+'_add').attr('onClick', 'applyExternalRowData('+checkboxElement.id.replace('checkbox','')+')');
-		$('#imgfeedback'+checkboxElement.id.replace('checkbox','')).css('opacity', 1);
 	}
 	
 }
@@ -238,7 +195,7 @@ function add_answer_row() {
 	newDiv.innerHTML = '<table cellpadding=0 cellspacing=0><tr><td width="260px" style="padding-right: 5px;"><input type="text" id="answer_'+ansId+'" name="answers[]" style="width: 100%; margin-right: 5px;" /></td><input type="hidden" id="id_" name="ids[]" value="' + id + '"/><td width="50px" align="center"><input type="radio" name="points[]" style="margin: 0; padding: 0;" /></td><td width="50px" align="center"><input id="" type="checkbox" name="fixed[]" style="margin: 0; padding: 0;" /></td><td width="80px"><input type="button" id="remove_answer" name="remove_answer" value="Remove" onclick="remove_answer_row(this);" /></td><td width="50px" align="left"><img src="img/feedback.png" onclick="feedback(this);" title="Set feedback" alt="Set feedback"/></td></tr></table>';
 	document.getElementById('answer_list').appendChild(newDiv);
 	tagInsert.init('answer_'+ansId);
-	InputHelper.init($('#answer_'+ansId));
+	
 }
 
 function remove_answer_row(row) {
@@ -413,3 +370,4 @@ function lock(id) {
 	//$(tinymce.DOM.get(id)).css("z-index", zIndex);
 	return id;
 }
+

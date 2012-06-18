@@ -8,6 +8,7 @@ tinyMCE.addI18n('en.gapinlinechoice_dlg',{
 	gap_correct_answer:"Correct answer",
 	gap_dropdown:"Drop down",
 	gap_distractor:"Distractors",
+	gap_apply_gap:"Apply gap",
 	gap_remove_gap:"Remove gap",
 	gap_remove:"Remove",
 	gap_add:"Add",

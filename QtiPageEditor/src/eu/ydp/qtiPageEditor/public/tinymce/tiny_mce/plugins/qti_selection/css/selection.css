@@ -1,8 +1,7 @@
 #option_list .taginsert_menu {
+    display: inline-block;
+    width: 100%;
 	padding-left:20px;
-}
-.clr {
-	clear: both;
 }
 .panel_wrapper {height:85px;}
 .panel_wrapper div.current {height:85px;}

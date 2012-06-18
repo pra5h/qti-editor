@@ -30,8 +30,6 @@ function empiriaPlayerAppLoaded() {
 	player.loadExtension("PlayerCoreApiExtension");
 	player.loadExtension(OPSExtension);
 	var itemXml = tinyMCEPopup.editor.getContent();
-	itemXml = itemXml.replace(/<math[^>]*>/,'<mathText>');
-	itemXml = itemXml.replace(/<\/math>/,'</mathText>');
 	var itemDatas = [ {document:itemXml, baseURL:basePagePath} ];
 	var assessmentXml = '<?xml version="1.0" encoding="UTF-8" ?><assessmentTest title="Test" identifier="Test"><styleDeclaration><link href="../qtidesign_default/default.css" userAgent=".*" /><link href="../qtidesign_default/msie.css" userAgent="MSIE" /><link href="../qtidesign_default/ipad.css" userAgent="iPad" /><link href="../qtidesign_default/iphone.css" userAgent="iPhone" /></styleDeclaration><testPart><assessmentSection><assessmentItemRef href="" identifier=""/></assessmentSection></testPart></assessmentTest>';
 	var assessmentData = {document:assessmentXml, baseURL:basePagePath};
