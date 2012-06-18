@@ -1,0 +1,29 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>{#paste.paste_qti_desc}</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<script type="text/javascript" src="../../tiny_mce_popup.js"></script>
+	<script type="text/javascript" src="js/pasteqti.js"></script>
+</head>
+<body onresize="PasteQTIDialog.resize();" style="display:none; overflow:hidden;">
+	<form name="source" onsubmit="return PasteQTIDialog.insert();" action="#">
+		<div style="float: left" class="title">{#paste.paste_qti_desc}</div>
+
+		<br style="clear: both" />
+
+		<div>{#paste_dlg.text_title}</div>
+		
+		<div id="iframecontainer"></div>
+		
+		<div class="mceActionPanel">
+			<div style="float: left">
+				<input type="submit" name="insert" value="{#insert}" id="insert" />
+			</div>
+
+			<div style="float: right">
+				<input type="button" name="cancel" value="{#cancel}" onclick="tinyMCEPopup.close();" id="cancel" />
+			</div>
+		</div>
+	</form>
+</body> 
+</html>

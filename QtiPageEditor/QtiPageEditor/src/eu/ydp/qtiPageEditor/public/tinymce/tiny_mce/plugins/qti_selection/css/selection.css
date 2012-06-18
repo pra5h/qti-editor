@@ -1,0 +1,33 @@
+#option_list .taginsert_menu {
+	padding-left:20px;
+}
+.clr {
+	clear: both;
+}
+.panel_wrapper {height:85px;}
+.panel_wrapper div.current {height:85px;}
+
+/* IE */
+* html .panel_wrapper {height:100px;}
+* html .panel_wrapper div.current {height:100px;}
+
+.optionSpan {display: inline-block;
+	margin-left: 8px; 
+	margin-right: 8px;
+	width: 35px}
+	
+.optionSpan > input {
+	margin: 0; 
+	margin: 0;}
+	
+hr {width: 80%;
+	height: 1px;
+	background-color: #eee;
+	color: #eee;}
+	
+.answer > tbody > tr > td	{border-bottom: 1px;
+	border-top: 0px;
+	border-right: 0px;
+	border-left: 0px;
+	border-style: solid;
+	border-color: #aaa;}

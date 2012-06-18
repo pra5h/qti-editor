@@ -1,0 +1,39 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">	
+	
+	<ui:style>
+       
+   </ui:style>	
+	<g:VerticalPanel width="500px" height = "400px" borderWidth="1" spacing="4"  ui:field="_contentPane">
+		<g:cell verticalAlignment="ALIGN_MIDDLE">
+			<g:HorizontalPanel spacing="4" ui:field="_hFormUploadPanel"></g:HorizontalPanel>
+		</g:cell>	
+		<g:cell verticalAlignment="ALIGN_MIDDLE">	
+			<g:HorizontalPanel spacing="4" ui:field="_hListPanel">
+				<g:cell width="225px">
+				<g:VerticalPanel>
+					<g:ListBox ui:field="_listBox" width="200px" visibleItemCount="10"></g:ListBox>
+					<g:Label styleName="small-label" ui:field="_labelDate" width="180px">Uploaded on: -</g:Label>
+					<g:Label styleName="small-label" ui:field="_labelSize" width="180px">Size: -</g:Label>
+				</g:VerticalPanel>
+				</g:cell>						
+				<g:Image ui:field="_image" pixelSize="220,180"></g:Image>
+			</g:HorizontalPanel>
+		</g:cell>
+		<g:cell verticalAlignment="ALIGN_MIDDLE">
+			<g:HorizontalPanel spacing="4">
+				<g:HTML>Resource Title:</g:HTML>
+				<g:TextBox ui:field="_txtTitle" width="300px"></g:TextBox>
+			</g:HorizontalPanel>
+		</g:cell>
+		<g:cell verticalAlignment="ALIGN_MIDDLE">
+			<g:HorizontalPanel spacing="4" width="100%" ui:field="_hButtonPanel">
+				<g:cell width="100%">
+					<g:Button ui:field="_okButton">OK</g:Button>
+				</g:cell>				
+				<g:Button ui:field="_cancelButton" >Cancel</g:Button>
+			</g:HorizontalPanel>		
+		</g:cell>
+	</g:VerticalPanel>	
+</ui:UiBinder> 

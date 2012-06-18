@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">	   
+	<info organisation="eu.ydp" module="qtiPageEditor">
+		<ivyauthor name="ydp" />
+	</info>	
+	<configurations>
+		<conf name="java_script" description="Java script distribution of qtiPageEditor"/>
+		<conf name="default" description="Jar file distribution of qtiPageEditor"/>		
+	</configurations>
+	<publications>
+		<artifact name="qtiPageEditor" type="zip" conf="java_script" ext="zip"/>
+		<artifact name="qtiPageEditor" type="jar" conf="default" ext="jar"/>		
+	</publications>
+	<dependencies>		
+		<dependency org="com.google.gwt" name="gwt-servlet" rev="2.0.3"/>
+		<dependency org="com.google.gwt" name="gwt-user" rev="2.0.3"/>
+		<dependency org="com.google.gwt" name="gwt-dev" rev="2.0.3"/>
+		<dependency org ="com.klangner" name= "qtiplayer" rev="latest.release" transitive="true" />
+		<dependency org="eu.ydp" name="webapistorageGWT" rev="latest.integration" conf="default"/>
+		<dependency org="org.puremvc" name="PureMVC_Java_MultiCore" rev="1.0.6"/>				
+	</dependencies>
+</ivy-module>

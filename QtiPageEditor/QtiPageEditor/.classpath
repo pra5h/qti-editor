@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" output="test-classes" path="test"/>
+	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/home/dawid/Applications/gwt-2.4.0"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/home/dawid/workspace/qti-editor/ivy-lib/PureMVC_Java_MultiCore.jar"/>
+	<classpathentry kind="lib" path="/home/dawid/workspace/qti-editor/ivy-lib/webapistorageGWT.jar"/>
+	<classpathentry kind="lib" path="/home/dawid/workspace/qti-editor/ivy-lib/qtiplayerlib.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
+	<classpathentry kind="lib" path="/home/dawid/workspace/qti-editor/ivy-lib/commons-fileupload.jar"/>
+	<classpathentry kind="lib" path="/home/dawid/workspace/qti-editor/ivy-lib/gwt-log.jar"/>
+	<classpathentry kind="lib" path="libs/gwt-graphics-0.9.7.jar"/>
+	<classpathentry kind="lib" path="libs/gwt-voices-1.7.0.jar"/>
+	<classpathentry kind="lib" path="/home/dawid/workspace/qti-editor/ivy-lib/guice.jar"/>
+	<classpathentry kind="lib" path="/home/dawid/workspace/qti-editor/ivy-lib/smath-expression.jar"/>
+	<classpathentry kind="lib" path="/home/dawid/workspace/qti-editor/ivy-lib/gwt-g2d-v007.jar"/>
+	<classpathentry kind="lib" path="/home/dawid/workspace/qti-editor/ivy-lib/smath-renderer.jar"/>
+	<classpathentry kind="lib" path="/home/dawid/Applications/gwt-2.4.0/gwt-servlet.jar" sourcepath=""/>
+	<classpathentry kind="output" path="war/WEB-INF/classes"/>
+</classpath>

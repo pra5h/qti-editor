@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- The DOCTYPE declaration above will set the    -->
+<!-- browser's rendering engine into               -->
+<!-- "Standards Mode". Replacing this declaration  -->
+<!-- with a "Quirks Mode" doctype may lead to some -->
+<!-- differences in layout.                        -->
+
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+	<title>Insert / modify science formula</title>
+	<script type="text/javascript" src="../../tiny_mce_popup.js"></script>
+	<script type="text/javascript" src="../../utils/mctabs.js"></script>
+	<script type="text/javascript" src="../../utils/form_utils.js"></script>
+	<script type="text/javascript" src="../../../jquery/jquery-1.4.2.min.js"></script>
+	<script type="text/javascript" src="../../../jquery/jquery-ui-1.8.1.custom.min.js"></script>
+	
+	<script type="text/javascript" src="/res/skins/default/matheditor/math_editor/math_editor.nocache.js"></script>
+	<script type="text/javascript" src="js/utils.js"></script>
+	<script type="text/javascript" src="js/science.js"></script>
+	<script type="text/javascript">
+		function mathEditorOnAppLoaded(a){
+			var editor = createMathEditor("root","<mrow></mrow>");
+			scienceDialog.initMathEditor(editor);
+		}
+	</script>
+	<style type="text/css">
+	body {
+		background: inherit !important;
+	}
+	</style> 
+</head>
+<body>
+
+    <!-- OPTIONAL: include this if you want history support -->
+   <!-- <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe>-->
+    
+    <!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
+    <noscript>
+      <div style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
+        Your web browser must have JavaScript enabled
+        in order for this application to display correctly.
+      </div>
+    </noscript>
+
+    <h1>math-editor</h1>
+    <div id="root"></div>
+
+	
+
+	<input type="button" id="save_mathContent" name="save_mathContent" value="Insert"
+				onclick="scienceDialog.insertScienceSection();" style="
+				border: none; 
+				width: 94px; 
+				height: 25px; 
+				background-attachment:scroll;
+				background-color:transparent;
+				background-image:url(img/buttons.png);
+				background-position:0 -26px;
+				background-repeat:repeat; 
+				margin: 2px;
+				margin-right: 8px;
+				font-weight: bold;
+				float: right;
+				padding-bottom: 2px;" />
+				
+	<input type="button" id="cancel" name="cancel" value="Cancel" style="
+				border: none; 
+				width: 94px; 
+				height: 25px; 
+				background-attachment:scroll;
+				background-color:transparent;
+				background-image:url(img/buttons.png);
+				background-position:0 -26px;
+				background-repeat:repeat; 
+				margin: 2px;
+				float: left; 
+				font-weight: bold;
+				padding-bottom: 2px;"  
+			onclick="tinyMCEPopup.close();" />
+</body>
+</html>

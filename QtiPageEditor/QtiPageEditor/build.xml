@@ -1,0 +1,154 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<project name="qtiPageEditor" default="dist" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
+
+	<property file="./default.properties" />	
+	<property name ="src.dir" value= "./src" />	
+	<property name ="war.dir" value = "./war" />
+	<property name ="webinf.dir" value = "${war.dir}/WEB-INF" />
+	<property name ="webinf.classes.dir" value="${webinf.dir}/classes" />
+	<property name ="webinf.lib.dir" value ="${webinf.dir}/lib" />	
+	<property name ="ivylib.dir" value="./ivy-lib" />	
+	<property name ="dist.dir" value="./dist" />	
+	<property name ="test.dir" value="./test"/>
+	<property name ="webinf.test.classes.dir" value="${webinf.dir}/test-classes" />
+	<property name ="test.report.dir" value="./test-report"/>
+	
+	
+	<condition property="XstartOnFirstThread" value="-XstartOnFirstThread">
+		<os family="mac"/>
+	</condition>
+	<condition property="XstartOnFirstThread" value="">
+		<not><os family="mac"/></not>
+	</condition>
+	
+	<path id="project.class.path">
+		<pathelement location="${webinf.classes.dir}"/>		
+		<fileset dir="${webinf.lib.dir}" includes="**/*.jar"/>
+	</path>
+	
+	<path id="project.test.class.path">		
+			<pathelement location="${webinf.test.classes.dir}"/>
+			<pathelement location="${webinf.classes.dir}"/>
+			<fileset dir="${webinf.lib.dir}" includes="**/*.jar"/>				
+	</path>
+
+	<target name="resolve" description="--> retrieve dependencies with ivy">
+		<makeurl file="${ivy.settings.file}" property="ivy.settings.url_t" validate="false"/>
+		<condition property="ivy.settings.url" value="${ivy.settings.url_t}" else="${ivy.settings.url.default}" >
+			<isset property="ivy.settings.file" />
+		</condition>
+		<ivy:configure url="${ivy.settings.url}" />
+		<ivy:retrieve pattern="${ivylib.dir}/[artifact].[ext]" sync="true"/>
+  	</target>
+	
+	<target name="libs" depends="resolve" description="Copy libs to WEB-INF/lib">
+	    <unzip src="${ivylib.dir}/qtiplayerLibs.zip" dest="${ivylib.dir}"></unzip>
+		<mkdir dir="${webinf.lib.dir}" />
+	    <copy todir="${webinf.lib.dir}">
+			<fileset dir="${ivylib.dir}" includes="**/*.jar"/>	    	  
+		</copy>	    
+	</target>
+	
+	<target name="javac" depends="libs" description="Compile java source">
+		<mkdir dir="${webinf.classes.dir}"/>
+	    <javac srcdir="${src.dir}" includes="**" encoding="utf-8"
+	    	destdir="${webinf.classes.dir}"
+		    source="1.6" target="1.6" nowarn="true"
+		    debug="true" debuglevel="lines,vars,source">
+		    <classpath refid="project.class.path"/>
+	    </javac>
+		<copy todir="${webinf.classes.dir}">
+			<fileset dir="${src.dir}"/>
+		</copy>
+	</target>
+		  
+	<target name="gwtc" depends="javac" description="GWT compile to JavaScript">
+		<java failonerror="true" fork="true" classname="com.google.gwt.dev.Compiler">
+			<classpath>
+				<pathelement location="${src.dir}"/>
+				<path refid="project.class.path"/>
+			</classpath>
+		    <!-- add jvmarg -Xss16M or similar if you see a StackOverflowError -->
+			<jvmarg value="-Xmx256M"/>
+		    <jvmarg line="${XstartOnFirstThread}"/>
+		    <!-- Additional arguments like -style PRETTY or -logLevel DEBUG -->
+		    <arg value="eu.ydp.qtiPageEditor.QtiPageEditor"/>
+		</java>
+	</target>
+	
+	<target name="build" depends="gwtc" description="Build this project" />	
+	
+	<target name="clean" description="Cleans this project">		
+		<delete dir="${dist.dir}"/>
+		<delete dir="${war.dir}/qtipageeditor" failonerror="false"/>
+		<delete dir="${webinf.classes.dir}" failonerror="false"/> 
+		<delete dir="${webinf.lib.dir}" failonerror="false" />	  
+		<delete dir="${webinf.test.classes.dir}" failonerror="false"/>
+		<delete dir="${ivylib.dir}" failonerror="false" />		
+		<delete dir="${test.report.dir}" failonerror="false" />
+		<delete dir="./.gwt-tmp" failonerror="false" />
+		<delete dir="./tomcat" failonerror="false" />
+		<delete dir="./test-classes" failonerror="false" />
+		<delete file="./project.xml"/>
+	</target>	
+	  
+	<target name="modulelib" depends="javac" description="Create module library">				
+		<mkdir dir="${dist.dir}" />					
+		<jar destfile="${dist.dir}/qtiPageEditor.jar">
+			<fileset dir="${webinf.classes.dir}"/>
+			<manifest>
+				<attribute name="Main-Class" value="eu.ydp.qtiPageEditor.client.QtiPageEditor"/>
+			</manifest>
+		</jar>	
+	</target>	
+	
+	<target name="dist" depends="clean, build, modulelib" description="Create java script distribution">
+	    <mkdir dir="${dist.dir}/build/qtipageeditor" />
+	    <copy todir="${dist.dir}/build/qtipageeditor">
+	      <fileset dir="${war.dir}/qtipageeditor"/>
+	    </copy>		
+		<copy todir="${dist.dir}/build" file="war/QtiPageEditor.html" />				
+	    <zip destfile="${dist.dir}/qtiPageEditor.zip" basedir="${dist.dir}/build"/>		 
+	</target>
+	
+	<target name="project.file">
+		<copy file="./project.template.xml" tofile="./project.xml">
+			<filterchain>
+				<expandproperties/>
+			</filterchain>
+		</copy>
+	</target>
+	
+	<target name="compileTest" description="Compile java unit tests source">
+				<mkdir dir="${webinf.test.classes.dir}"/>
+			    <javac srcdir="${test.dir}" includes="**" encoding="utf-8"
+			    	destdir="${webinf.test.classes.dir}"
+				    source="1.6" target="1.6" nowarn="true"
+				    debug="true" debuglevel="lines,vars,source">
+				    <classpath refid="project.class.path"/>
+			    </javac>
+				<copy todir="${webinf.test.classes.dir}">
+					<fileset dir="${test.dir}"/>
+				</copy>
+		</target>
+	
+	<target name="test" depends="compileTest" description="runs all JUnit tests">		
+			<mkdir dir="${test.report.dir}/raw"/>
+			<junit printsummary="yes" haltonfailure="yes" showoutput="yes" >			
+				<jvmarg value="-Dgwt.args=-runStyle HtmlUnit:FF3" />
+				<jvmarg value="-Xmx256M"/>
+				<jvmarg line="${XstartOnFirstThread}"/>
+				<classpath refid="project.test.class.path"/>		
+				<formatter type="xml"/>
+				<batchtest fork="yes" todir="${test.report.dir}/raw">		    	
+			        <fileset dir="${webinf.test.classes.dir}">
+			           	<include name="**/*TestSuite*.java"/>
+			        </fileset>				
+			     </batchtest>
+			</junit>	    	    
+	</target>
+	
+	<target name="publish" depends="dist,project.file" description="Publish artifacts in Ivy repository">			
+		<ivy:publish pubrevision="${moduleversion}" resolver="${ivy.publish.ydp.resolver}" 	status="${ivy.publish.status}"	forcedeliver="true"	artifactspattern="${dist.dir}/[artifact].[ext]"	overwrite="true"/>
+	</target>
+</project>

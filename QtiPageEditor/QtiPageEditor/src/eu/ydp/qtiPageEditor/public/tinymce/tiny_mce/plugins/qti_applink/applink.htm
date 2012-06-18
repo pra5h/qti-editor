@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>{#applink_dlg.window_title}</title>
+	<script type="text/javascript" src="../../tiny_mce_popup.js"></script>
+	<script type="text/javascript" src="../../utils/mctabs.js"></script>
+	<script type="text/javascript" src="../../utils/form_utils.js"></script>
+	<script type="text/javascript" src="js/applink.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/applink.css" />
+</head>
+<body style="display:none;">
+<form onsubmit="applinkDialog.insertApplink(this);" action="#">
+	
+		<fieldset style="margin-bottom: 20px;" id="applink_metadata">
+			<legend>{#applink_dlg.applink_label}:</legend>
+			<table style="width: 100%;">
+			<tr>
+				<td style="width: 80px;">
+					{#applink_dlg.lid_input}
+				</td><td>
+					<input type="text" id="lid_input" name="lid_input" style="width: 100%;"/>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 80px;">
+					{#applink_dlg.title_input}
+				</td><td>
+					<input type="text" id="title_input" name="title_input" style="width: 100%;"/>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 80px;">
+					{#applink_dlg.value_input}
+				</td><td>
+					<input type="text" id="value_input" name="value_input" style="width: 100%;"/>
+				</td>
+			</tr>
+			</table>
+		</fieldset>
+
+	<div class="mceActionPanel">
+		<div style="float: left">
+			<input type="button" id="remove_button" name="remove" value="{#applink_dlg.remove}" style="
+				border: none; 
+				width: 94px; 
+				height: 25px; 
+				background-attachment:scroll;
+				background-color:transparent;
+				background-image:url(img/buttons.png);
+				background-position:0 0;
+				background-repeat:repeat; 
+				margin: 2px; 
+				font-weight: bold;
+				padding-bottom: 2px;" 
+			onclick="tinyMCE.execCommand('mceApplinkRemove');tinyMCEPopup.close();" />
+		</div>
+
+		<div style="float: right">	
+			<input type="submit" id="insert" name="insert" value="{#applink_dlg.save}" />
+			<input type="button" id="cancel" name="cancel" value="{#cancel}" style="
+				border: none; 
+				width: 94px; 
+				height: 25px; 
+				background-attachment:scroll;
+				background-color:transparent;
+				background-image:url(img/buttons.png);
+				background-position:0 -26px;
+				background-repeat:repeat; 
+				margin: 2px; 
+				font-weight: bold;
+				padding-bottom: 2px;"  
+			onclick="tinyMCEPopup.close();" />
+		</div>
+	</div>
+</form>
+</body>
+</html>
