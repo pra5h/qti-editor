@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<qy:schema xmlns:qy="http://www.w3.org/2001/XMLSchema">
-
-<qy:element name="qy:comment" type="qy:string">
-  <qy:attribute name="idref" type="qy:string"/>
-</qy:element>
-
-</qy:schema>
