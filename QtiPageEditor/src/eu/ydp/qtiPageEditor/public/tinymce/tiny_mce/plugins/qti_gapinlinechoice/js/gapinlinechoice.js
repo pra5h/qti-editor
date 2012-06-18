@@ -48,7 +48,7 @@ var gapInlineChoiceDialog = {
 						$('#answer' + data.inlineRows[r].id).attr('disabled', true);
 						$('#checkbox' + data.inlineRows[r].id).attr('checked', true);
 						$('#feedback' + data.inlineRows[r].id).attr('disabled', true);
-						
+						$('#imgfeedback' + data.inlineRows[r].id).css('opacity', 0.4);
 						//pokazanie w formularzu poprawnej odpowiedzi
 						for (i in data.inlineRows[r].points) {
 							if (1 == data.inlineRows[r].points[i]) {
@@ -56,10 +56,12 @@ var gapInlineChoiceDialog = {
 							}
 						}
 					}
+
 					if ('' != $('#answer'+id).val()) {
-						$('#'+id+'_add').hide(); //attr('disabled', true);
-						$('#'+id+'_remove').show(); //attr('disabled', true);
+						$('#'+id+'_add').val('Del');
+						$('#'+id+'_add').attr('onClick', 'removeTagFromContentData('+id+')');
 					}
+
 				}
 				
 				if (0 == data.inlineRows.length) {

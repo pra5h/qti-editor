@@ -32,6 +32,9 @@ function qti2htmlParseProcess(tree) {
 			text += selectionInteractionToHTML(tree);
 		} else if ('TEXTINTERACTION' == tree.tagName) {
 			text += textInteractionsGroupToHTML(tree);
+		} else if ('MATHTEXT' == tree.tagName) {
+			text += mathInteractionToHTML(tree);
+			return text;
 		} else if ('IMG' == tree.tagName || 'OBJECT' == tree.tagName) {
 			text += mediaInteractionsToHTML(tree);
 		} else if ('SIMPLETEXT' == tree.tagName) {
@@ -117,10 +120,13 @@ function html2qtiParseProcess(tree) {
                     text += xh.prepareNodeBegin(tree);
             } else if ('VALUE' == tree.tagName) {
                     text += xh.prepareNodeBegin(tree);
-            } else if ('ITEMBODY' == tree.tagName) {
-                    text += xh.prepareNodeBegin(tree);
+			} else if ('ITEMBODY' == tree.tagName) {
+					text += xh.prepareNodeBegin(tree);
             } else if ('FIELDSET' == tree.tagName && tree.getAttribute('id') == 'runFileUploadLib') {
                 text += mediaInteractionToQTI(tree);
+                return text;
+            } else if ('DIV' == tree.tagName && tree.getAttribute('id') == 'mathML') {
+                text += mathInteractionToQTI(tree);
                 return text;
             } else if ('DIV' == tree.tagName) {
                 text += xh.prepareNodeBegin(tree);
@@ -215,6 +221,23 @@ function html2qtiParseProcess(tree) {
 
     return text;
 }
+
+function mathInteractionToQTI(mi) {
+	var text = '';
+	text += '<mathText>';
+	text += mi.innerHTML;
+	text += '</mathText>';
+	return text;
+}
+
+function mathInteractionToHTML(mi) {
+	var text = '';
+	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
+	text += '<div id="mathML" class="mceNonEditable">';
+	text += mi.innerHTML;
+	text += '</div>';
+	return text;
+	}
 
 function textInteractionsGroupToQTI(tig) {
 	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
@@ -892,8 +915,8 @@ function actionOnQTI(e) {
 				
 				// MathML
 				if (selectedNode.nodeName == 'DIV' && selectedNode.id == 'mathML') {
-					//runMathMLInteraction(selectedNode);
-					//break;
+					runMathMLInteraction(selectedNode);
+					break;
 				}
 				
 				// QY Comments
@@ -973,8 +996,8 @@ function actionOnQTI(e) {
 }
 
 function runMathMLInteraction(selectedNode) {
-	math = selectedNode.innerHTML;
-	math = math.replace(/<math[^>]+>/,'');
+	var math = selectedNode.innerHTML;
+	math = math.replace(/<math[^>]*>/,'');
 	math = math.replace(/<\/math>/,'');
 	tinyMCE.selectedNode = selectedNode;
 	tinyMCE.execCommand('mceScience', false, math);
