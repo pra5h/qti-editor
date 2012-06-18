@@ -2,7 +2,7 @@
  * $Id: editor_plugin_src.js 851 2008-05-26 15:38:49Z spocke $
  *
  * @author Moxiecode
- * @copyright Copyright © 2004-2008, Moxiecode Systems AB, All rights reserved.
+ * @copyright Copyright ï¿½ 2004-2008, Moxiecode Systems AB, All rights reserved.
  */
 
 (function() {
@@ -48,10 +48,9 @@
 		// Private methods
 
 		_save : function() {
-		
-			if (1 == this.editor.getParam('inGuestRole')) 
-			{
-				alert("Blocked for saving.");
+
+			if (1 == this.editor.getParam('inGuestRole')) {
+				this.editor.windowManager.alert("This functionality is blocked for guests.");
 				return;
 			}
 			
