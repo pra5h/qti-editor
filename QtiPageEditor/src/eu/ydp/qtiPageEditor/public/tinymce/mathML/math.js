@@ -96,23 +96,30 @@ function mathInputHelperClass() {
 		instance.input.mouseout(instance.mouseOut);
 		instance.input.bind('mousemove',instance, instance.mouseMove);
 		instance.insertButtonNew();
-		instance.input.bind('contextmenu',instance.input,instance.onContextMenu);
-		instance.input.bind('focus', instance.buttonNew, function(e){
-			var button = e.data;
-			instance.enableButtonNew(e.target, button);
+		//Media button
+		if ('mediaHelper' == instance.buttonNew.next().attr('id')) {
+			instance.buttonMedia = instance.buttonNew.next();
+		}
+		
+		instance.input.bind('contextmenu',{input: instance.input, media: instance.buttonMedia}, function(e){
+			instance.onContextMenu(e);
 		});
-		instance.input.bind('blur', instance.buttonNew, function(e) {
+		instance.input.bind('focus', {math: instance.buttonNew, media: instance.buttonMedia}, function(e){
+			//var button = e.data.math;
+			instance.enableMenuButtons(e.target, e.data.math, e.data.media);
+		});
+		instance.input.bind('blur', {math: instance.buttonNew, media: instance.buttonMedia}, function(e) {
 			
 			var elm = e.originalEvent.explicitOriginalTarget; //||e.srcElement||document.activeElement;
 			
 			if (!$(elm).hasClass('taginsert_math')) {
-				var button = e.data;
-				instance.disableButtonNew(button);
+				//var button = e.data.math;
+				instance.disableMenuButtons(e.data.math, e.data.media);
 			}
 		});
-		instance.input.bind('click', instance.buttonNew, function(e){
-			var button = e.data;
-			instance.enableButtonNew(e.target, button);
+		instance.input.bind('click', {math: instance.buttonNew, media: instance.buttonMedia}, function(e){
+			//var button = e.data;
+			instance.enableMenuButtons(e.target, e.data.math, e.data.media);
 		});
 		
 		instance.input.keypress(function(e) {
@@ -132,7 +139,7 @@ function mathInputHelperClass() {
 	};
 	
 	this.onContextMenu = function (e) {
-		var input = e.data;
+		var input = e.data.input;
 		
 		if ('block' == preview.css('display')) {
 			e.preventDefault();
@@ -187,6 +194,34 @@ function mathInputHelperClass() {
 		} else {
 
 			if ('' != input.val()) {
+				control.html('<div>preview</div>');
+				
+				var start = this.getStartIndexOfMediaPhrase(input, e.originalEvent.rangeOffset);
+				var mediaPhrase = this.getMediaPhrase(input, e.originalEvent.rangeOffset);
+				
+				//if (null != mediaPhrase && buttonMedia.length > 0) {
+				if (null != mediaPhrase && undefined != e.data.media) {
+					control.html(control.html()+'<div>modify media</div><div>remove media</div>');
+					
+					$('div:nth-child(2)', control).mousedown(function(e) {
+						var data = new Object();
+						data['media'] = mediaPhrase;
+						data['input'] = input.get(0);
+						data['type'] = 'modify';
+						data['src'] = mediaPhrase.match(/src="([^"]*)"/)[1];
+						data['title'] = mediaPhrase.match(/alt="([^"]*)"/)[1];
+						tinyMCE.execCommand('mceAppendImageToInput',false, data);
+						e.preventDefault();
+					});
+					
+					$('div:last-child', control).mousedown(function(e) {
+						input.val(input.val().replace(mediaPhrase, ''));
+						control.remove();
+						setCaretPosition(input, start);
+						e.preventDefault();
+					});
+				}
+				
 				$('div:first-child', control).mousedown(function(e) {
 					preview.setHtml(input.val(), e.pageX, e.pageY);
 				});
@@ -194,7 +229,32 @@ function mathInputHelperClass() {
 				$(document.body).append(control);
 				e.preventDefault();
 			}
+		};
+	};
+	
+	this.getMediaPhrase = function(input, offset) {
+		var start = this.getStartIndexOfMediaPhrase(input, offset);
+
+		if (null != start) {
+			var tmpString = input.val().substr(start);
+			var res = tmpString.match(/<img[^>]+>/g);
+			var phraseLength = res[0].length;
+
+			if ((start+phraseLength) > offset) {
+				return res[0];
+			}
 		}
+		return null;
+	};
+	
+	this.getStartIndexOfMediaPhrase = function(input, offset) {
+		var str = input.val().substr(0, offset+3);
+		var start = str.lastIndexOf("<img");
+
+		if (start > 0 && start<offset) {
+			return start;
+		}
+		return null;
 	};
 	
 	this.insertButtonNew = function() {
@@ -309,23 +369,33 @@ function mathInputHelperClass() {
 		return this.endIndex;
 	};
 	
-	this.enableButtonNew = function(input, button) {
+	this.enableMenuButtons = function(input, buttonMath, buttonMedia) {
 		var carretPos = getCaretPosition(input);
 		var st = this.getStart(input.value,carretPos);
 		var ed = this.getEnd(input.value,carretPos);
+		var mediaPhrase = this.getMediaPhrase($(input), carretPos);
+		
+		if (null == st && null == ed && null == mediaPhrase) {
+			buttonMath.css('opacity', '1.0');
+			buttonMath.data('active', true);//('click', input, this.insertNewMath);
+		
+			if (undefined != buttonMedia) {
+				buttonMedia.css('opacity', '1.0');
+			}
 
-		if (null == st && null == ed) {
-			button.css('opacity', '1.0');
-			button.data('active', true);//('click', input, this.insertNewMath);
 		} else {
-			this.disableButtonNew(button);
+			this.disableMenuButtons(buttonMath, buttonMedia);
 		}
 	};
 	
-	this.disableButtonNew = function(button) {
-		button.css('opacity', '0.3');
+	this.disableMenuButtons = function(buttonMath, buttonMedia) {
+		buttonMath.css('opacity', '0.3');
 		//button.unbind('click');
-		button.data('active', false);
+		buttonMath.data('active', false);
+		
+		if (undefined != buttonMedia) {
+			buttonMedia.css('opacity', '0.3');
+		}
 	};
 }
 

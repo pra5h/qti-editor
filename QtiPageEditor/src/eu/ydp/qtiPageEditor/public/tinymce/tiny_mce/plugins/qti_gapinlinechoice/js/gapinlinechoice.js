@@ -13,7 +13,9 @@ var gapInlineChoiceDialog = {
 			tagInsert.init(f.question.id);
 			InputHelper.init(f.question);
 			tagInsert.init(f.exercise_content.id);
+			MediaHelper.init(f.exercise_content);
 			InputHelper.init(f.exercise_content);
+//			MediaHelper.init(f.exercise_content);
 
 			if(data != undefined && data.question != undefined) {
 				f.question.value = stringDecode(data.question);
@@ -205,6 +207,7 @@ var gapInlineChoiceDialog = {
 			if (!ed.validateHtml(ec, 'exercise content')) {
 				return false;
 			}
+			ec = ec.replace(/<img alt="([^"]*)" src="([^"]*)">/g, '[img alt={$1} src={$2}]'); //, '<img src="$2" alt="$1"/>');
 			obj.content = stringEncode(ec).replace(/\n/g,'<br/>');//.replace(/[ ]/gi,'&#32;');
 			obj.tags = new Array();
 			var reg = new RegExp(/(?:\[(?:(?:gap#|inlineChoice#)[0-9]+)*?\])+/gi);
@@ -248,6 +251,8 @@ var gapInlineChoiceDialog = {
 					//var bm = ed.selection.getBookmark();
 //					ed.selection.moveToBookmark(bm);
 
+					//obj.content = obj.content.replace(/\[img title={([^"]*)} src={([^"]*)}\]/g, '<img src="$2" alt="$1"/>');
+					obj.content = obj.content.replace(/\[img alt={([^"]*)} src={([^"]*)}\]/g, '<span class="mediaInputModule"><img alt="$1" src="$2"/><br/>$1</span>');
 
 					var newData = new Object();
 					newData.content = '';

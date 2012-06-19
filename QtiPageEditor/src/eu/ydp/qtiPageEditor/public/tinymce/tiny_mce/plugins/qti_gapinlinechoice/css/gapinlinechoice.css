@@ -1,17 +1,31 @@
 input.answer {
 	width: 100%;
-	}
+}
+
 table#gaps td {
 	text-align: center;
-	}
+}
+
 input[disabled] {
 	border: 1px solid #999;
 	background-color: #ddd;
 }
+
 .validateInputError {
 	border: 1px solid #FF0000;
 }
+
 .validateTrError {
 	background-color: #FF0000;
 }
 
+.mediahelper {
+	opacity: 1;
+	width: 20px;
+	height: 20px;
+	/*background-image: url(../../qti_science/img/scienceButton.png);*/
+	background: url("../../../themes/advanced/img/icons.gif") no-repeat scroll 20px 20px transparent;
+	background-position: -320px -40px;
+	float: left;
+	margin-left:2px;
+}

@@ -312,7 +312,7 @@ function textInteractionsGroupContentToQTI(content, spanBegun) {
 			text += textInteractionsGroupHtmlNodeToQTI(n);
 			//}
 		} else {
-			if ('SPAN' != n.tagName) {
+			if ('SPAN' != n.tagName || 'mediaInputModule' == n.className) {
 
 				if (!spanBegun.value){
 					text += '<span>';
@@ -334,6 +334,8 @@ function textInteractionsGroupContentToQTI(content, spanBegun) {
 					text += xh.prepareNodeBegin(n);
 					text += textInteractionsGroupContentToQTI(n, spanBegun);
 					text += xh.prepareNodeEnd(n);
+				} else if ('mediaInputModule' == n.className) {
+					text += mediaInteractionToQTI(n);
 				} else {
 					text += parseMathHTML2QTI(xh.prepareNode(n));
 				}
@@ -469,7 +471,13 @@ function choiceInteractionToQTI(ci) {
 function mediaInteractionToQTI(mi) {
 	var text = '';
 	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
-	var mediaNode = mi.firstChild;
+	var mediaNode = null;
+
+	if (null != mi.firstChild) {
+		mediaNode = mi.firstChild;
+	} else {
+		mediaNode = mi;
+	}
 
 	if ('IMG' == mediaNode.tagName) {
 		var src = mediaNode.getAttribute('src');
@@ -671,7 +679,9 @@ function textInteractionsGroupNodeToHTML(ti) {
 			} else {
 				//wszystkie node typu tekst opakowane są w spany
 				if ('SPAN' == ti.childNodes[i].tagName) {
-					text += parseMathQTI2HTML(ti.childNodes[i].innerHTML);
+					var tmpTextContent = ti.childNodes[i].innerHTML;
+					tmpTextContent = tmpTextContent.replace(/<img src="([^"]*)"><title>([^<]*)<\/title><description><\/description>(<\/img>)?/g, '<span class="mediaInputModule"><img alt="$2" src="$1"/><br/>$2</span>');
+					text += parseMathQTI2HTML(tmpTextContent);
 				} else {
 					if ('BR' == ti.childNodes[i].tagName) {
 						text += xh.prepareEmptyNode(ti.childNodes[i]);
@@ -1004,9 +1014,9 @@ function actionOnQTI(e) {
 					alert('Not implemented yet');
 					break;
 				}*/
-				
+
 				// MediaLib
-				if(selectedNode.nodeName == 'IMG' || (selectedNode.nodeName == 'FIELDSET' && selectedNode.id == 'runFileUploadLib')) {
+				if((selectedNode.nodeName == 'IMG' && selectedNode.parentNode.className != 'mediaInputModule') || (selectedNode.nodeName == 'FIELDSET' && selectedNode.id == 'runFileUploadLib')) {
 					runMediaLib(selectedNode);
 					break;
 				}
@@ -1092,6 +1102,10 @@ function runGapInlineChoiceInteractionNode(contentElement, data, body, nodeCount
 					contentText += xh.prepareNodeEnd(node);
 				} else {
 					contentText += xh.prepareNode(node);
+				}
+			} else {
+				if ('SPAN' == node.tagName && node.className == 'mediaInputModule') {
+					contentText += '<img alt="'+node.firstChild.getAttribute("alt")+'" src="'+node.firstChild.getAttribute("src")+'">';
 				}
 			}
 		} else if (8 == node.nodeType) { //comment node
