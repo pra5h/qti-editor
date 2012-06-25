@@ -252,7 +252,7 @@ var gapInlineChoiceDialog = {
 //					ed.selection.moveToBookmark(bm);
 
 					//obj.content = obj.content.replace(/\[img title={([^"]*)} src={([^"]*)}\]/g, '<img src="$2" alt="$1"/>');
-					obj.content = obj.content.replace(/\[img alt={([^"]*)} src={([^"]*)}\]/g, '<span class="mediaInputModule"><img alt="$1" src="$2"/><br/>$1</span>');
+					obj.content = obj.content.replace(/\[img alt={([^"]*?)} src={([^"]*?)}\]/g, '<span class="mediaInputModule"><img alt="$1" src="$2"/><br/>$1</span>');
 
 					var newData = new Object();
 					newData.content = '';

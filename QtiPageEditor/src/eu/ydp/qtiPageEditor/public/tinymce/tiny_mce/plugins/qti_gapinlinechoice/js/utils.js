@@ -446,15 +446,16 @@ function imgInputHelperClass() {
 	
 	this.insertNewMedia = function(e) {
 		var o = e.data;
+		if($(this).data('active')) {
+			var ed = tinymce.EditorManager.activeEditor;
+			var data = new Object();
 
-		var ed = tinymce.EditorManager.activeEditor;
-		var data = new Object();
-
-		data['offset'] = getCaretPosition(o.get(0));
-		data['input'] = o.get(0);
-		data['src'] = '';
-		data['title'] = '';
-		tinyMCE.execCommand('mceAppendImageToInput', false, data);
+			data['offset'] = getCaretPosition(o.get(0));
+			data['input'] = o.get(0);
+			data['src'] = '';
+			data['title'] = '';
+			tinyMCE.execCommand('mceAppendImageToInput', false, data);
+		}
 	};
 }
 

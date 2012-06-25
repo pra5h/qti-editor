@@ -112,7 +112,7 @@ function mathInputHelperClass() {
 			
 			var elm = e.originalEvent.explicitOriginalTarget; //||e.srcElement||document.activeElement;
 			
-			if (!$(elm).hasClass('taginsert_math')) {
+			if (!$(elm).hasClass('taginsert_math') && !$(elm).hasClass('mediahelper')) {
 				//var button = e.data.math;
 				instance.disableMenuButtons(e.data.math, e.data.media);
 			}
@@ -381,6 +381,7 @@ function mathInputHelperClass() {
 		
 			if (undefined != buttonMedia) {
 				buttonMedia.css('opacity', '1.0');
+				buttonMedia.data('active', true);
 			}
 
 		} else {
@@ -395,6 +396,7 @@ function mathInputHelperClass() {
 		
 		if (undefined != buttonMedia) {
 			buttonMedia.css('opacity', '0.3');
+			buttonMedia.data('active', false);
 		}
 	};
 }

@@ -7,6 +7,7 @@ var scienceDialog = {
 	type : null,
 	input : null,
 	offset : null,
+	gwtDialogBox: null,
 	
 	init : function(ed) {
 		document.body.setAttribute('onUnload',"tinymce.DOM.remove('mcePopupLayer_'+scienceDialog.windowId);");
@@ -17,17 +18,27 @@ var scienceDialog = {
 		if (1 == this.type) {
 			this.input = tinyMCEPopup.getWindowArg("input");
 			this.offset = tinyMCEPopup.getWindowArg("offset");
+			this.gwtDialogBox = $('.gwt-DialogBox',this.input.ownerDocument.body);
 		} else if (2 == this.type) {
 			this.input = tinyMCEPopup.getWindowArg("input");
+			this.gwtDialogBox = $('.gwt-DialogBox',this.input.ownerDocument.body);
+		}
+		
+		if (null != this.gwtDialogBox) {
+			this.gwtDialogBox.css('display', 'none');
 		}
 
 		ed.windowManager.onClose.add(this.close, this);
 	},
 	
 	close: function() {
+		if (null != this.gwtDialogBox) {
+			this.gwtDialogBox.css('display', 'block');
+		}
 		var ed = tinymce.EditorManager.activeEditor;
 		$(this.input).focus();
 		ed.windowManager.onClose.remove(this.close);
+		tinyMCEPopup.close();
 	},
 	
 	initMathEditor: function(me) {
@@ -90,12 +101,15 @@ var scienceDialog = {
 			
 			if ('<mrow></mrow>' != data) {
 				this.input.value = prefix+'<math>'+data+'</math>'+suffix;
+				this.input.focus();
 			}
 			
 		} else if (2 == this.type) {
 			this.input.value = this.input.value.replace(this.mathXml, data);
+			this.input.focus();
 		}
-		tinyMCEPopup.close();
+		//tinyMCEPopup.close();
+		this.close();
 		return true;
 	},
 	

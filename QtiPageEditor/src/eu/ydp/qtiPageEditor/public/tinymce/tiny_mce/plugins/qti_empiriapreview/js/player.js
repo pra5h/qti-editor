@@ -3,7 +3,18 @@ var basePagePath =tinyMCE.gwtProxy.getPageBasePath();
 	basePagePath.pop();
 	basePagePath = basePagePath.join('/');
 	basePagePath += '/';
-
+var empiriaPlayerDialog = {
+			
+			init : function(ed) {
+				ed.windowManager.onClose.add(this.close, this);
+			},
+			
+			close: function() {
+				var ed = tinymce.EditorManager.activeEditor;
+				ed.windowManager.onClose.remove(this.close);
+			}
+};
+tinyMCEPopup.onInit.add(empiriaPlayerDialog.init, empiriaPlayerDialog);
 var tv = 0;
 var player;
 var OPSExtension = new AssessmentCentreEditorOnPageSwitchExtension();
