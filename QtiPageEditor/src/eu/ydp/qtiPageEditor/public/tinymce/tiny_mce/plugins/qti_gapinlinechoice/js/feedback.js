@@ -5,7 +5,7 @@ var feedbackDialog = {
 		
 		init : function(ed) {
 			document.body.setAttribute('onUnload',"tinymce.DOM.remove('mcePopupLayer_'+feedbackDialog.windowId);delete tinymce.EditorManager.activeEditor.windowManager.isFeedbackOpened;");
-			document.body.setAttribute('onLoad',"feedbackDialog.windowId = lock(tinyMCEPopup.id);");
+			document.body.setAttribute('onLoad',"feedbackDialog.windowId = tinymce.EditorManager.activeEditor.QTIWindowHelper.lockUI(tinyMCEPopup.id);");
 			var data = tinyMCEPopup.getWindowArg("data");
 
 			if ('gap' == data.type) {

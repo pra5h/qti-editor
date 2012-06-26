@@ -173,7 +173,7 @@ tinyMCE.init({
 				return text.replace(/(open|close|lquote|rquote)=\"([\S]+)\" (open|close|lquote|rquote)=\"([\S]+)\"/g, "$1=&quot;$2&quot; $3=&quot;$4&quot;");
 			}
 		};
-		
+
 		ed.XmlHelper = {
 				rootNode: {attributes: new Array(), node: null},
 				actualNode: {attributes: new Array(), node: null},
@@ -371,6 +371,31 @@ tinyMCE.init({
 					}
 					return text;
 				}
+		};
+		
+		ed.QTIWindowHelper = {
+			lockUI : function (id) {
+				var ed = tinymce.EditorManager.activeEditor;
+				var zIndex = ed.windowManager.zIndex;
+				var elm = tinymce.DOM.create('div', {id : 'mcePopupLayer_'+id, style : 'background-color: gray;height: 100%;opacity: 0.3;position: fixed;top: 0;width: 100%;z-index:'+(zIndex-1)+';'}, '&nbsp;');
+				$(elm).insertBefore(tinymce.DOM.get(id));
+				return id;
+			},
+			
+			getPopupWindowZIndex : function () {
+				return tinymce.EditorManager.activeEditor.windowManager.zIndex;
+			},
+			
+			correctGwtWindowZIndex : function (gwtDialogBox) {
+				var zIndex = this.getPopupWindowZIndex();
+				var box = gwtDialogBox;
+				if (undefined == box) {
+					box = $('.gwt-DialogBox'); 
+				}
+				if (box.length > 0) {
+					box.zIndex(zIndex);
+				}
+			}
 		};
 	}
 });

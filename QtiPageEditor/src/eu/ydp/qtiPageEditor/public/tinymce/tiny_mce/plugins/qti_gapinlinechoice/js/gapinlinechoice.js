@@ -5,7 +5,7 @@ var gapInlineChoiceDialog = {
 		
 		init : function(ed) {
 			document.body.setAttribute('onUnload',"tinymce.DOM.remove('mcePopupLayer_'+gapInlineChoiceDialog.windowId);");
-			document.body.setAttribute('onLoad',"gapInlineChoiceDialog.windowId = lock(tinyMCEPopup.id);");
+			document.body.setAttribute('onLoad',"gapInlineChoiceDialog.windowId = tinymce.EditorManager.activeEditor.QTIWindowHelper.lockUI(tinyMCEPopup.id);");
 			var ed = ed;
 			var f = document.forms[0]; 
 			var data = tinyMCEPopup.getWindowArg("gapInlineChoiceData");

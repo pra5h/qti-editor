@@ -133,7 +133,6 @@
 				
 				assetBrowser.browse(browseCallback, extensions);
 				$('.gwt-TextBox').focus();
-				
 			});
 			
 			ed.addCommand('mceAppendImageToInput', function(ui, data) {
@@ -192,6 +191,7 @@
 				}
 				
 				assetBrowser.browse(browseCallback, extensions);
+				ed.QTIWindowHelper.correctGwtWindowZIndex();
 				$('.gwt-TextBox').focus();
 				
 			});

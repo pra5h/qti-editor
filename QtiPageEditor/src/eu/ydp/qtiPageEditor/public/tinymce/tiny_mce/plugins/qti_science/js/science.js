@@ -32,13 +32,15 @@ var scienceDialog = {
 	},
 	
 	close: function() {
-		if (null != this.gwtDialogBox) {
-			this.gwtDialogBox.css('display', 'block');
-		}
 		var ed = tinymce.EditorManager.activeEditor;
 		$(this.input).focus();
 		ed.windowManager.onClose.remove(this.close);
 		tinyMCEPopup.close();
+		
+		if (null != this.gwtDialogBox) {
+			this.gwtDialogBox.css('display', 'block');
+			ed.QTIWindowHelper.correctGwtWindowZIndex(this.gwtDialogBox);
+		}
 	},
 	
 	initMathEditor: function(me) {
