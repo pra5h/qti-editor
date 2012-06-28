@@ -158,8 +158,8 @@ function mathInputHelperClass() {
 				control.remove();
 			}
 		});
-		
-		if ('' != mathPreview.html()) {
+
+		if ('' != mathPreview.html() && 'block' == mathPreview.css('display')) {
 			mathPreview.hide();
 			control.html('<div>remove</div><div>modify</div><div>preview</div>');
 
