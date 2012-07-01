@@ -165,6 +165,18 @@ tinyMCE.init({
 				return true;
 		};
 		
+		ed.decodeMath = function(s) {
+			var reg = new RegExp(/(&lt;math&gt;)([.\S]*)(&lt;\/math&gt;)/g);
+			s = s.replace(reg, function(a){
+				return a.replace(/&lt;/g, '<').replace(/&gt;/g,'>');
+			});
+			var reg = new RegExp(/(&lt;mathText&gt;)([.\S]*)(&lt;\/mathText&gt;)/g);
+			s = s.replace(reg, function(a){
+				return a.replace(/&lt;/g, '<').replace(/&gt;/g,'>');
+			});
+			return s;
+		};
+		
 		ed.correctHtml = function (text, type) {
 			if ('decode' == type) {
 				return text.replace(/(open|close|lquote|rquote)=&quot;([\S]+)&quot; (open|close|lquote|rquote)=&quot;([\S]+)&quot;/g, "$1=\"$2\" $3=\"$4\"");

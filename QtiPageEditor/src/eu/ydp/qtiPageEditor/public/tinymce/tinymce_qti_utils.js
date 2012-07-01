@@ -481,7 +481,11 @@ function mediaInteractionToQTI(mi) {
 
 	if ('IMG' == mediaNode.tagName) {
 		var src = mediaNode.getAttribute('src');
-		var title = $('<div/>').html(mediaNode.getAttribute('alt')).html();
+		//var title = $('<div/>').html(mediaNode.getAttribute('alt')).html();
+		//text += '<img src="'+src+'"><title>'+parseMathHTML2QTI(title)+'</title><description></description></img>';
+		var title = mediaNode.getAttribute('alt');
+		title = tinymce.DOM.encode(title);
+		title = tinymce.EditorManager.activeEditor.decodeMath(title);
 		text += '<img src="'+src+'"><title>'+parseMathHTML2QTI(title)+'</title><description></description></img>';
 
 	} else {
@@ -680,7 +684,11 @@ function textInteractionsGroupNodeToHTML(ti) {
 				//wszystkie node typu tekst opakowane są w spany
 				if ('SPAN' == ti.childNodes[i].tagName) {
 					var tmpTextContent = ti.childNodes[i].innerHTML;
-					tmpTextContent = tmpTextContent.replace(/<img src="([^"]*)"><title>([^<]*)<\/title><description><\/description>(<\/img>)?/g, '<span class="mediaInputModule"><img alt="$2" src="$1"/><br/>$2</span>');
+					//tmpTextContent = tmpTextContent.replace(/<img src="([^"]*)"><title>([^<]*)<\/title><description><\/description>(<\/img>)?/g, '<span class="mediaInputModule"><img alt="$2" src="$1"/><br/>$2</span>');
+					tmpTextContent = tmpTextContent.replace(/<img src="([^"]*)"><title>([^<]*)<\/title><description><\/description>(<\/img>)?/g, function(a, src, title) {
+						title = parseMathQTI2HTML(tinymce.DOM.decode(title));
+						return '<span class="mediaInputModule"><img alt="'+tinymce.DOM.encode(title)+'" src="'+src+'"/><br/>'+tinymce.EditorManager.activeEditor.decodeMath(tinymce.DOM.encode(title))+'</span>';
+					});
 					text += parseMathQTI2HTML(tmpTextContent);
 				} else {
 					if ('BR' == ti.childNodes[i].tagName) {
@@ -1105,7 +1113,9 @@ function runGapInlineChoiceInteractionNode(contentElement, data, body, nodeCount
 				}
 			} else {
 				if ('SPAN' == node.tagName && node.className == 'mediaInputModule') {
-					contentText += '<img alt="'+node.firstChild.getAttribute("alt")+'" src="'+node.firstChild.getAttribute("src")+'">';
+					//contentText += '<img alt="'+node.firstChild.getAttribute("alt")+'" src="'+node.firstChild.getAttribute("src")+'">';
+					var alt = tinymce.DOM.encode(node.firstChild.getAttribute("alt"));
+					contentText += '<img alt="'+alt+'" src="'+node.firstChild.getAttribute("src")+'">';
 				}
 			}
 		} else if (8 == node.nodeType) { //comment node

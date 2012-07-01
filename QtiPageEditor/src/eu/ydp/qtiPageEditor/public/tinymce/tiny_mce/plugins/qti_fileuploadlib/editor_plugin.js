@@ -154,8 +154,10 @@
 							var prefix = data['input'].value.substr(0, data['offset']);
 							var suffix = data['input'].value.substr(data['offset'], data['input'].value.length-data['offset']);
 							//var template = '[img title={'+title+'} src={'+fromPath + '/' + filePath+'}]';
-							var template = '<img alt="'+title.replace(/\"/g,'&quot;')+'" src="'+fromPath + '/' + filePath+'">';
-							
+							//var template = '<img alt="'+title.replace(/\"/g,'&quot;')+'" src="'+fromPath + '/' + filePath+'">';
+							title = title.replace(/&lt;/,"<").replace(/&gt;/,">");
+							var template = '<img alt="'+ed.dom.encode(title)+'" src="'+fromPath + '/' + filePath+'">';
+
 							if (undefined == data['type']) {
 								data['input'].value = prefix+template+suffix;
 							} else {
@@ -186,7 +188,11 @@
 						assetBrowser.setSelectedFile(fileName);
 					}
 					if(data.title != undefined && data.title != '') {
-						assetBrowser.setTitle(data.title);
+						title = ed.dom.decode(data.title);
+						title = title.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+						title = ed.decodeMath(title);
+//						assetBrowser.setTitle(data.title);
+						assetBrowser.setTitle(title);
 					}
 				}
 				

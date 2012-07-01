@@ -23,7 +23,7 @@ var gapInlineChoiceDialog = {
 			if(data != undefined && data.content != undefined) {
 				//data.content = data.content.replace(/&#32;/g,' ').replace(/<br \/>/g,'\n').replace(/<br>/g,'\n');
 				data.content = data.content.replace(/<br \/>/g,'\n').replace(/<br>/g,'\n');
-				f.exercise_content.value = stringDecode(data.content);
+				f.exercise_content.value = data.content;
 			}
 
 			if(data != undefined && data.identifier != undefined) {
@@ -252,7 +252,11 @@ var gapInlineChoiceDialog = {
 //					ed.selection.moveToBookmark(bm);
 
 					//obj.content = obj.content.replace(/\[img title={([^"]*)} src={([^"]*)}\]/g, '<img src="$2" alt="$1"/>');
-					obj.content = obj.content.replace(/\[img alt={([^"]*?)} src={([^"]*?)}\]/g, '<span class="mediaInputModule"><img alt="$1" src="$2"/><br/>$1</span>');
+					//obj.content = obj.content.replace(/\[img alt={([^"]*?)} src={([^"]*?)}\]/g, '<span class="mediaInputModule"><img alt="$1" src="$2"/><br/>$1</span>');
+					obj.content = obj.content.replace(/\[img alt={([^"]*?)} src={([^"]*?)}\]/g, function(a, alt, src) {
+						var ret = '<span class="mediaInputModule"><img alt="'+alt+'" src="'+src+'"/><br/>'+ed.decodeMath(alt)+'</span>';
+						return ret;
+					});
 
 					var newData = new Object();
 					newData.content = '';
