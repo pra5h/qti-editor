@@ -22,9 +22,10 @@ function createPreview() {
 	preview.appendTo(document.body);
 	preview.hide();
 	$('#inputPreviewClose', preview).click(function(e){preview.close();});
-	preview.setHtml = function(html,x,y) {
+	preview.setHtml = function(html,x,y, zIndex) {
 		html = html.replace(/\n/g,'<br/>');
 		this.css('top', y-20+'px');
+		this.zIndex(zIndex);
 		$('#inputPreviewContent', this).html(html);
 		this.show();
 	};
@@ -186,9 +187,10 @@ function mathInputHelperClass() {
 			});
 			
 			$('div:last-child', control).mousedown(function(e) {
-				preview.setHtml(input.val(), e.pageX, e.pageY);
+				preview.setHtml(input.val(), e.pageX, e.pageY, input.zIndex());
 				e.preventDefault();
 			});
+			control.zIndex(input.zIndex());
 			$(document.body).append(control);
 			e.preventDefault();
 		} else {
@@ -223,9 +225,9 @@ function mathInputHelperClass() {
 				}
 				
 				$('div:first-child', control).mousedown(function(e) {
-					preview.setHtml(input.val(), e.pageX, e.pageY);
+					preview.setHtml(input.val(), e.pageX, e.pageY, input.zIndex());
 				});
-
+				control.zIndex(input.zIndex());
 				$(document.body).append(control);
 				e.preventDefault();
 			}

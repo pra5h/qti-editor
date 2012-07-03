@@ -82,3 +82,8 @@ scrollbar-track-color:#F5F5F5;
 div#selectionInteraction table td {
 	text-align: center;
 	}
+span.mediaInputModule {
+	color: #B0B0B0; 
+	font-size: 10px;
+	display: block;
+}
