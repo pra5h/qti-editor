@@ -70,17 +70,24 @@
 			m.add({title : 'advanced.copy_desc', icon : 'copy', cmd : 'Copy'}).setDisabled(col);
 			m.add({title : 'advanced.paste_desc', icon : 'paste', cmd : 'Paste'});
 
-			if ((el.nodeName == 'A' && !ed.dom.getAttrib(el, 'name')) || !col) {
+			/*if ((el.nodeName != 'IMG' && el.nodeName == 'A' && !ed.dom.getAttrib(el, 'name')) || col) {
 				m.addSeparator();
 				m.add({title : 'advanced.link_desc', icon : 'link', cmd : ed.plugins.advlink ? 'mceAdvLink' : 'mceLink', ui : true});
 				m.add({title : 'advanced.unlink_desc', icon : 'unlink', cmd : 'UnLink'});
-			}
+			}*/
 
 			t.onContextMenu.dispatch(t, m, el, col);
 			
 			m.addSeparator();
 			//m.add({title : 'advanced.image_desc', icon : 'image', cmd : ed.plugins.advimage ? 'mceAdvImage' : 'mceImage', ui : true});
-			if ('DIV' == el.parentNode.nodeName && el.parentNode.className == 'text') {
+			
+			//odnalezienie wezla nadrzednego dla pluginu
+			var tmpNode = el;
+			while(tmpNode.nodeName != 'DIV') {
+				tmpNode = tmpNode.parentNode;
+			}
+
+			if (-1 == tmpNode.id.indexOf('Interaction')) {
 				am = m.addMenu({title : 'Media files support'});
 				if((el.id != undefined && el.id == 'runFileUploadLib') || (el.nodeName != undefined && el.nodeName == 'IMG')) {
 					am.add({title : 'Insert image', icon : 'fileuploadlib_image', cmd : 'mceAppendImageToPage'}).setDisabled(true);
