@@ -3,7 +3,7 @@ baseTags.sort();
 
 function qti2htmlParse(tree) {
 	var text = qti2htmlParseProcess(tree);
-	text = mathml2subsup(text);
+	//text = mathml2subsup(text);
 	return text;
 }
 function qti2htmlParseProcess(tree) {
@@ -743,9 +743,10 @@ function QTI2HTML(h) {
 */
 	// bug 35201
 	//if(h.match(/^<table[^>]*>.*<\/table>$/i) == undefined) {
-		h = processQTI(h);
+	h = mathml2subsup(h);
+	h = processQTI(h);
 	//}
-//		console.log(h);
+
 	return h;
 }
 
@@ -1556,7 +1557,7 @@ function subsup2mathml(text){
 			firstValue = firstValue.replace(new RegExp(/<[^>]+>/g), "");
 			var secondValue = text.substring(juctionPos+11, secondClosePos);
 			secondValue = secondValue.replace(new RegExp(/<[^>]+>/g), "");
-			var mathml = "<mathText><mrow><msubsup><mrow>";
+			var mathml = '<mathText class="mathBold"><mrow><msubsup><mrow>';
 			mathml += "<ms>" + baseValue + "</ms>";
 			mathml += "</mrow><mrow>";
 			if (firstTag == "sub"){
@@ -1579,9 +1580,9 @@ function subsup2mathml(text){
 }
 
 function mathml2subsup(text){
-	while (text.toLowerCase().indexOf("<mathtext>") != -1){
-		var mathTextOpenPos = text.toLowerCase().indexOf("<mathtext>");
-		var mathTextClosePos = text.toLowerCase().indexOf("</mathtext>");
+	while (text.toLowerCase().indexOf("<mathtext") != -1){
+		var mathTextOpenPos = text.toLowerCase().indexOf("<mathtext");
+		var mathTextClosePos = text.toLowerCase().indexOf("</mathtext");
 		var firstMsOpenPos = text.indexOf("<ms>", mathTextOpenPos);
 		var firstMsClosePos = text.indexOf("</ms>", mathTextOpenPos);
 		var secondMsOpenPos = text.indexOf("<ms>", firstMsOpenPos+1);
