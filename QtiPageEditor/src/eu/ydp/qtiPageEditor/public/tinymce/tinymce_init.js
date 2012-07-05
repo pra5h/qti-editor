@@ -10,7 +10,7 @@ tinyMCE.init({
 	
 	//spellchecker, asciimath,asciimathcharmap,
 	//qti_science,
-	plugins : "safari,pagebreak,layer,table,save,advhr,advlink,emotions,iespell,inlinepopups,"
+	plugins : "safari,pagebreak,layer,table,save,advhr,emotions,iespell,inlinepopups,"
 		+"insertdatetime,qti_empiriapreview,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,"
 		+"visualchars,nonbreaking,xhtmlxtras,template,imagemanager,filemanager,asciisvg,"
 		+"qti_pagetitle,qti_choice,qti_gapinlinechoice,qti_fileuploadlib,"

@@ -70,27 +70,35 @@
 			m.add({title : 'advanced.copy_desc', icon : 'copy', cmd : 'Copy'}).setDisabled(col);
 			m.add({title : 'advanced.paste_desc', icon : 'paste', cmd : 'Paste'});
 
-			if ((el.nodeName == 'A' && !ed.dom.getAttrib(el, 'name')) || !col) {
+			/*if ((el.nodeName != 'IMG' && el.nodeName == 'A' && !ed.dom.getAttrib(el, 'name')) || col) {
 				m.addSeparator();
 				m.add({title : 'advanced.link_desc', icon : 'link', cmd : ed.plugins.advlink ? 'mceAdvLink' : 'mceLink', ui : true});
 				m.add({title : 'advanced.unlink_desc', icon : 'unlink', cmd : 'UnLink'});
-			}
+			}*/
 
 			t.onContextMenu.dispatch(t, m, el, col);
 			
 			m.addSeparator();
 			//m.add({title : 'advanced.image_desc', icon : 'image', cmd : ed.plugins.advimage ? 'mceAdvImage' : 'mceImage', ui : true});
-			am = m.addMenu({title : 'Media files support'});
-			if((el.id != undefined && el.id == 'runFileUploadLib') || (el.nodeName != undefined && el.nodeName == 'IMG')) {
-				am.add({title : 'Insert image', icon : 'fileuploadlib_image', cmd : 'mceAppendImageToPage'}).setDisabled(true);
-				am.add({title : 'Insert flash / video movie', icon : 'addvideo', cmd : 'mceAddVideo'}).setDisabled(true);
-				am.add({title : 'Remove media file', icon : '', cmd : 'mceRemoveMedia'});
-			} else {
-				am.add({title : 'Insert image', icon : 'fileuploadlib_image', cmd : 'mceAppendImageToPage'});
-				am.add({title : 'Insert flash / video movie', icon : 'addvideo', cmd : 'mceAddVideo'});
-				am.add({title : 'Remove media file', icon : '', cmd : 'mceRemoveMedia'}).setDisabled(true);
+			
+			//odnalezienie wezla nadrzednego dla pluginu
+			var tmpNode = el;
+			while(tmpNode.nodeName != 'DIV') {
+				tmpNode = tmpNode.parentNode;
 			}
 
+			if (-1 == tmpNode.id.indexOf('Interaction')) {
+				am = m.addMenu({title : 'Media files support'});
+				if((el.id != undefined && el.id == 'runFileUploadLib') || (el.nodeName != undefined && el.nodeName == 'IMG')) {
+					am.add({title : 'Insert image', icon : 'fileuploadlib_image', cmd : 'mceAppendImageToPage'}).setDisabled(true);
+					am.add({title : 'Insert flash / video movie', icon : 'addvideo', cmd : 'mceAddVideo'}).setDisabled(true);
+					am.add({title : 'Remove media file', icon : '', cmd : 'mceRemoveMedia'});
+				} else {
+					am.add({title : 'Insert image', icon : 'fileuploadlib_image', cmd : 'mceAppendImageToPage'});
+					am.add({title : 'Insert flash / video movie', icon : 'addvideo', cmd : 'mceAddVideo'});
+					am.add({title : 'Remove media file', icon : '', cmd : 'mceRemoveMedia'}).setDisabled(true);
+				}
+			}
 			m.addSeparator();
 			//am = m.addMenu({title : 'contextmenu.align'});
 			//am.add({title : 'contextmenu.left', icon : 'justifyleft', cmd : 'JustifyLeft'});
@@ -318,13 +326,13 @@
 			*/
 			
 			m.addSeparator();
-				
+			/*	
 			if(node == 'gapinlinechoice' || node == 'multiplechoice' || node == 'order' || node == 'match' || node == 'selection' || node == 'draggable' || node == 'identification') {
 				m.add({title : 'Copy QTI activity', icon : 'copyqtibutton', cmd : 'mceCopyQTI', ui: selectedNode});
 			} else if (tinyMCE.clipboard != undefined && ed.selection.getContent() == '') {
 				m.add({title : 'Paste QTI activity', icon : 'pasteqtibutton', cmd : 'mcePasteQTI'});
 			}
-			
+			*/
 			for (var itemName in m.items) {
 				if ('Alignment' == m.items[itemName].settings.title && node != '') {
 					for (item in m.items[itemName].items) {
