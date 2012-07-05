@@ -25,8 +25,8 @@ function createPreview() {
 	preview.setHtml = function(html,x,y, zIndex) {
 		html = html.replace(/\n/g,'<br/>');
 		this.css('top', y-20+'px');
-		this.zIndex(zIndex);
 		$('#inputPreviewContent', this).html(html);
+		this.zIndex(zIndex+1);
 		this.show();
 	};
 	

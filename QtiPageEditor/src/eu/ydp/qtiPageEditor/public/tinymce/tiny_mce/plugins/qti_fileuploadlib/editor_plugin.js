@@ -155,7 +155,7 @@
 							var suffix = data['input'].value.substr(data['offset'], data['input'].value.length-data['offset']);
 							//var template = '[img title={'+title+'} src={'+fromPath + '/' + filePath+'}]';
 							//var template = '<img alt="'+title.replace(/\"/g,'&quot;')+'" src="'+fromPath + '/' + filePath+'">';
-							title = title.replace(/&lt;/,"<").replace(/&gt;/,">");
+							title = title.replace(/&lt;/g,"<").replace(/&gt;/g,">");
 							var template = '<img alt="'+ed.dom.encode(title)+'" src="'+fromPath + '/' + filePath+'">';
 
 							if (undefined == data['type']) {
