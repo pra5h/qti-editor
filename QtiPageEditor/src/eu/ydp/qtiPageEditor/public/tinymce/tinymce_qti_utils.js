@@ -3,7 +3,7 @@ baseTags.sort();
 
 function qti2htmlParse(tree) {
 	var text = qti2htmlParseProcess(tree);
-	//text = mathml2subsup(text);
+	text = mathml2subsup(text);
 	return text;
 }
 function qti2htmlParseProcess(tree) {
@@ -743,7 +743,6 @@ function QTI2HTML(h) {
 */
 	// bug 35201
 	//if(h.match(/^<table[^>]*>.*<\/table>$/i) == undefined) {
-	h = mathml2subsup(h);
 	h = processQTI(h);
 	//}
 
@@ -1580,6 +1579,7 @@ function subsup2mathml(text){
 }
 
 function mathml2subsup(text){
+	return text;
 	while (text.toLowerCase().indexOf("<mathtext") != -1){
 		var mathTextOpenPos = text.toLowerCase().indexOf("<mathtext");
 		var mathTextClosePos = text.toLowerCase().indexOf("</mathtext");
