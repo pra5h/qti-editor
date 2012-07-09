@@ -3,7 +3,6 @@ baseTags.sort();
 
 function qti2htmlParse(tree) {
 	var text = qti2htmlParseProcess(tree);
-	text = mathml2subsup(text);
 	return text;
 }
 function qti2htmlParseProcess(tree) {
@@ -102,7 +101,7 @@ function qti2htmlParseProcess(tree) {
 }
 function html2qtiParse(tree) {
 	var text = html2qtiParseProcess(tree);
-	text = subsup2mathml(text);
+	text = subsup2mathml(text, false);
 	return text
 }
 function html2qtiParseProcess(tree) {
@@ -237,13 +236,19 @@ function mathInteractionToQTI(mi) {
 function mathInteractionToHTML(mi) {
 	var text = '';
 	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
-	text += '<div id="mathML" class="mceNonEditable">';
-	//text += '<math xmlns="http://www.w3.org/1998/Math/MathML">';
-	text += parseMathQTI2HTML(mi.outerHTML);
-	//text += '</math>';
-	text += '</div>';
-	return text;
+	var tmpText = mathml2subsup(mi.outerHTML);
+	if (mi.outerHTML != tmpText) {
+		text = tmpText;
+	} else {
+		text += '<div id="mathML" class="mceNonEditable">';
+		//text += '<math xmlns="http://www.w3.org/1998/Math/MathML">';
+		text += parseMathQTI2HTML(mi.outerHTML);
+		//text += '</math>';
+		text += '</div>';
 	}
+	return text;
+}
+
 function textInteractionsGroupHtmlNodeToQTI(n) {
 	var xh = tinymce.EditorManager.activeEditor.XmlHelper;
 	var text = '';
@@ -1529,7 +1534,7 @@ function cutQTI(content) {
 	
 }
 
-function subsup2mathml(text){
+function subsup2mathml(text, isInPrompt){
 	var firstTag;
 	var secondTag;
 	var junctionPos;
@@ -1556,7 +1561,12 @@ function subsup2mathml(text){
 			firstValue = firstValue.replace(new RegExp(/<[^>]+>/g), "");
 			var secondValue = text.substring(juctionPos+11, secondClosePos);
 			secondValue = secondValue.replace(new RegExp(/<[^>]+>/g), "");
-			var mathml = '<mathText class="mathBold"><mrow><msubsup><mrow>';
+			var boldClass = '';
+			
+			if (isInPrompt) {
+				boldClass = ' class="mathBold"';
+			}
+			var mathml = '<mathText'+boldClass+'><mrow><msubsup><mrow>';
 			mathml += "<ms>" + baseValue + "</ms>";
 			mathml += "</mrow><mrow>";
 			if (firstTag == "sub"){
@@ -1579,8 +1589,9 @@ function subsup2mathml(text){
 }
 
 function mathml2subsup(text){
-	return text;
-	while (text.toLowerCase().indexOf("<mathtext") != -1){
+
+	if (text.toLowerCase().indexOf("<mathtext") != -1){
+
 		var mathTextOpenPos = text.toLowerCase().indexOf("<mathtext");
 		var mathTextClosePos = text.toLowerCase().indexOf("</mathtext");
 		var firstMsOpenPos = text.indexOf("<ms>", mathTextOpenPos);
@@ -1598,8 +1609,8 @@ function mathml2subsup(text){
 			var thirdValue = text.substring(thirdMsOpenPos+4, thirdMsClosePos);
 			text = text.substring(0, mathTextOpenPos) + 
 				firstValue + "<sub>" + secondValue + "</sub><sup>" + thirdValue + "</sup>" +
-				text.substring(mathTextClosePos+11); 
-		}			
+				text.substring(mathTextClosePos+11);
+		}
 	}
 	return text;
 }
@@ -1611,10 +1622,13 @@ function parseMathHTML2QTI(math, isInPrompt) {
 	}
 	math = math.replace(/<math[^>]*>/g,'<mathText'+className+'>');
 	math = math.replace(/<\/math>/g,'</mathText>');
+	//Jezeli nie ma <math> to może być fraza </sub><sup> która też powinna być zamieniana na math
+	math = subsup2mathml(math, isInPrompt);
 	return math;
 }
 
 function parseMathQTI2HTML(math) {
+	math = mathml2subsup(math);
 	math = math.replace(/<mathText[^>]*>/gi, '<math>');
 	math = math.replace(/<\/mathText>/gi, '</math>');
 	return math;
