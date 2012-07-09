@@ -121,13 +121,13 @@
 					fixTableCaretPos();
 				}
 
-				/*if (ed && ed.plugins.contextmenu) {
+				if (ed && ed.plugins.contextmenu) {
 					ed.plugins.contextmenu.onContextMenu.add(function(th, m, e) {
 						var sm, se = ed.selection, el = se.getNode() || ed.getBody();
 
 						if (ed.dom.getParent(e, 'td') || ed.dom.getParent(e, 'th')) {
 							m.removeAll();
-
+/*
 							if (el.nodeName == 'A' && !ed.dom.getAttrib(el, 'name')) {
 								m.add({title : 'advanced.link_desc', icon : 'link', cmd : ed.plugins.advlink ? 'mceAdvLink' : 'mceLink', ui : true});
 								m.add({title : 'advanced.unlink_desc', icon : 'unlink', cmd : 'UnLink'});
@@ -141,11 +141,12 @@
 
 							m.add({title : 'table.desc', icon : 'table', cmd : 'mceInsertTable', ui : true, value : {action : 'insert'}});
 							m.add({title : 'table.props_desc', icon : 'table_props', cmd : 'mceInsertTable', ui : true});
+							*/
 							m.add({title : 'table.del', icon : 'delete_table', cmd : 'mceTableDelete', ui : true});
 							m.addSeparator();
 
 							// Cell menu
-							sm = m.addMenu({title : 'table.cell'});
+							/*sm = m.addMenu({title : 'table.cell'});
 							sm.add({title : 'table.cell_desc', icon : 'cell_props', cmd : 'mceTableCellProps', ui : true});
 							sm.add({title : 'table.split_cells_desc', icon : 'split_cells', cmd : 'mceTableSplitCells', ui : true});
 							sm.add({title : 'table.merge_cells_desc', icon : 'merge_cells', cmd : 'mceTableMergeCells', ui : true});
@@ -167,10 +168,11 @@
 							sm.add({title : 'table.col_before_desc', icon : 'col_before', cmd : 'mceTableInsertColBefore'});
 							sm.add({title : 'table.col_after_desc', icon : 'col_after', cmd : 'mceTableInsertColAfter'});
 							sm.add({title : 'table.delete_col_desc', icon : 'delete_col', cmd : 'mceTableDeleteCol'});
+							*/
 						} else
 							m.add({title : 'table.desc', icon : 'table', cmd : 'mceInsertTable', ui : true});
 					});
-				}*/
+				}
 			});
 
 			// Add undo level when new rows are created using the tab key
