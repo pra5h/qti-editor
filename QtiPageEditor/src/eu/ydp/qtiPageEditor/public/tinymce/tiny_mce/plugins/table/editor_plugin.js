@@ -169,8 +169,10 @@
 							sm.add({title : 'table.col_after_desc', icon : 'col_after', cmd : 'mceTableInsertColAfter'});
 							sm.add({title : 'table.delete_col_desc', icon : 'delete_col', cmd : 'mceTableDeleteCol'});
 							*/
-						} else
+						} /*else
 							m.add({title : 'table.desc', icon : 'table', cmd : 'mceInsertTable', ui : true});
+							*/
+							
 					});
 				}
 			});
