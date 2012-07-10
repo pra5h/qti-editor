@@ -407,11 +407,16 @@ tinyMCE.init({
 			correctGwtWindowZIndex : function (gwtDialogBox) {
 				var zIndex = this.getPopupWindowZIndex();
 				var box = gwtDialogBox;
+
 				if (undefined == box) {
-					box = $('.gwt-DialogBox'); 
+					box = $('.gwt-DialogBox');
 				}
 				if (box.length > 0) {
 					box.zIndex(zIndex);
+				}
+				var glassPanel = $('.gwt-PopupPanelGlass');
+				if (glassPanel.length > 0) {
+					glassPanel.zIndex(zIndex);
 				}
 			}
 		};
