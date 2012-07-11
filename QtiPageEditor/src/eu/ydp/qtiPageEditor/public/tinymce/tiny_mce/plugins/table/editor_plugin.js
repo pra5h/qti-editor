@@ -142,8 +142,10 @@
 							m.add({title : 'table.desc', icon : 'table', cmd : 'mceInsertTable', ui : true, value : {action : 'insert'}});
 							m.add({title : 'table.props_desc', icon : 'table_props', cmd : 'mceInsertTable', ui : true});
 							*/
-							m.add({title : 'table.del', icon : 'delete_table', cmd : 'mceTableDelete', ui : true});
-							m.addSeparator();
+							if ('selectionTable' != el.offsetParent.className) {
+								m.add({title : 'table.del', icon : 'delete_table', cmd : 'mceTableDelete', ui : true});
+								m.addSeparator();
+							}
 
 							// Cell menu
 							/*sm = m.addMenu({title : 'table.cell'});
