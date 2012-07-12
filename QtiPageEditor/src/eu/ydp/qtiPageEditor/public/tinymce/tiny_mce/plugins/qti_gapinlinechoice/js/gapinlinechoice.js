@@ -311,7 +311,7 @@ var gapInlineChoiceDialog = {
 							ed.dom.split(ed.dom.getParent(n, 'h1,h2,h3,h4,h5,h6,p'), n);
 						});
 
-						newData.content = ed.correctHtml(newData.content, 'decode'); //poprawka quot'ów w atrybutach mathml'a
+						//newData.content = ed.correctHtml(newData.content, 'decode'); //poprawka quot'ów w atrybutach mathml'a
 						dom.setOuterHTML(dom.select('._mce_marker')[0], newData.content);
 						//ed.selection.moveToBookmark(bm);
 
@@ -329,8 +329,7 @@ var gapInlineChoiceDialog = {
 						while(nd.id != 'gapInlineChoiceInteraction') {
 							nd = nd.parentNode;
 						}
-						
-						newData.content = ed.correctHtml(newData.content, 'decode');
+						//newData.content = ed.correctHtml(newData.content, 'decode');
 						nd.innerHTML = newData.content;
 						body = nd;
 						while(body.nodeName != 'BODY') {
