@@ -208,7 +208,8 @@ var gapInlineChoiceDialog = {
 				return false;
 			}
 			ec = ec.replace(/<img alt="([^"]*)" src="([^"]*)">/g, '[img alt={$1} src={$2}]'); //, '<img src="$2" alt="$1"/>');
-			obj.content = stringEncode(ec).replace(/\n/g,'<br/>');//.replace(/[ ]/gi,'&#32;');
+			//obj.content = stringEncode(ec).replace(/\n/g,'<br/>');//.replace(/[ ]/gi,'&#32;');
+			obj.content = ec.replace(/\n/g,'<br/>');//.replace(/[ ]/gi,'&#32;');
 			obj.tags = new Array();
 			var reg = new RegExp(/(?:\[(?:(?:gap#|inlineChoice#)[0-9]+)*?\])+/gi);
 			
