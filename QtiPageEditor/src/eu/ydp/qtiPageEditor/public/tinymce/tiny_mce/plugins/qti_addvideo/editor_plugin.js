@@ -90,7 +90,7 @@
 						fromPath.pop();
 						fromPath = fromPath.join('/');
 						filePath = getRelativeFromAbsoute(fromPath, filePath);
-						var videotag = paragraph+'<fieldset id="runFileUploadLib" class="mceNonEditable" style="font-size: 10px; font-color: #b0b0b0; color: #b0b0b0; border: 1px solid #d0d0d0;"><object data="' + filePath + '" type="video" alt="'+ed.correctHtml(title, "encode")+'"></object><img id="mceVideo" src="/res/skins/default/qtipageeditor/tinymce/tiny_mce/plugins/qti_addvideo/img/movie.png" /><br>' + title + '</fieldset><span id="focus">_</span>'+paragraph;
+						var videotag = paragraph+'<fieldset id="runFileUploadLib" class="mceNonEditable" style="font-size: 10px; font-color: #b0b0b0; color: #b0b0b0; border: 1px solid #d0d0d0;"><object data="' + filePath + '" type="video" alt="'+ed.correctHtml(title, "encode").replace(/"/g,'&quot;')+'"></object><img id="mceVideo" src="/res/skins/default/qtipageeditor/tinymce/tiny_mce/plugins/qti_addvideo/img/movie.png" /><br>' + title + '</fieldset><span id="focus">_</span>'+paragraph;
 						ed.execCommand('mceInsertContent', false, videotag);
 						n = ed.dom.get('focus');
 
@@ -124,12 +124,84 @@
 						assetBrowser.setSelectedFile(fileName);
 					}
 					if(data.title != undefined && data.title != '') {
-						assetBrowser.setTitle(data.title);
+						var title = data.title;
+						title = title.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+						title = ed.decodeMath(title);
+						assetBrowser.setTitle(title);
 					}
 				}
 				
 				assetBrowser.browse(browseCallback, extensions);
 				$('.gwt-TextBox').focus();
+			});
+			
+			ed.addCommand('mceAppendVideoToInput', function(ui, data) {
+				
+				var browseCallback = {
+
+						onBrowseComplete : function(filePath, title) {
+							
+							if (!ed.validateHtml(title, 'title', true)) {
+								return false;
+							}
+							
+							var fromPath =tinyMCE.gwtProxy.getPageBasePath();
+							fromPath = fromPath.split('/');
+							fromPath.pop();
+							fromPath = fromPath.join('/');
+							filePath = getRelativeFromAbsoute(fromPath, filePath);
+							
+							var prefix = data['input'].value.substr(0, data['offset']);
+							var suffix = data['input'].value.substr(data['offset'], data['input'].value.length-data['offset']);
+							//var template = '[img title={'+title+'} src={'+fromPath + '/' + filePath+'}]';
+							//var template = '<img alt="'+title.replace(/\"/g,'&quot;')+'" src="'+fromPath + '/' + filePath+'">';
+							title = title.replace(/&lt;/g,"<").replace(/&gt;/g,">");
+							var template = '<object data="' + filePath + '" type="video" alt="'+ed.dom.encode(title)+'"></object>';
+							//<img id="mceVideo" src="/res/skins/default/qtipageeditor/tinymce/tiny_mce/plugins/qti_addvideo/img/movie.png" />
+//							var template = '<img alt="'+ed.dom.encode(title)+'" src="'+fromPath + '/' + filePath+'">';
+
+							if (undefined == data['type']) {
+								data['input'].value = prefix+template+suffix;
+							} else {
+								
+								if ('modify' == data['type']) {
+									data['input'].value = data['input'].value.replace(data['media'], template);
+								}
+							}
+							data['input'].focus();
+							return true;
+						},
+
+						onBrowseError : function(error) {
+							tinyMCE.activeEditor.windowManager.alert(error);
+							return false;
+						}
+
+				}
+				
+				var extensions = [".mp4", ".swf", ".flv", ".avi"];
+				
+				var assetBrowser = tinyMCE.gwtProxy.getAssetBrowser();
+				
+				if(data != undefined) {
+					if(data.src != undefined && data.src != '') {
+						srcArr = data.src.split('/');
+						fileName = String(srcArr[srcArr.length-1]);
+						assetBrowser.setSelectedFile(fileName);
+					}
+					if(data.title != undefined && data.title != '') {
+						title = ed.dom.decode(data.title);
+						title = title.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+						title = ed.decodeMath(title);
+//						assetBrowser.setTitle(data.title);
+						assetBrowser.setTitle(title);
+					}
+				}
+				
+				assetBrowser.browse(browseCallback, extensions);
+				ed.QTIWindowHelper.correctGwtWindowZIndex();
+				$('.gwt-TextBox').focus();
+				
 			});
 			
 			ed.addButton('addvideo', {title : 'Add video / flash movie', cmd : 'mceAddVideo'});

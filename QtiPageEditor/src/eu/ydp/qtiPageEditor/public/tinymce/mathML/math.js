@@ -98,29 +98,30 @@ function mathInputHelperClass() {
 		instance.input.bind('mousemove',instance, instance.mouseMove);
 		instance.insertButtonNew();
 		//Media button
-		if ('mediaHelper' == instance.buttonNew.next().attr('id')) {
-			instance.buttonMedia = instance.buttonNew.next();
+		if ('mediaPanel' == instance.buttonNew.next().attr('id')) {
+			instance.buttonMediaImage = instance.buttonNew.next().children('div:first-child'); //'div:first-child');
+			instance.buttonMediaVideo = instance.buttonNew.next().children('div::nth-child(2)'); //'div:first-child');
 		}
 		
-		instance.input.bind('contextmenu',{input: instance.input, media: instance.buttonMedia}, function(e){
+		instance.input.bind('contextmenu',{input: instance.input, mediaImage: instance.buttonMediaImage, mediaVideo: instance.buttonMediaVideo}, function(e){
 			instance.onContextMenu(e);
 		});
-		instance.input.bind('focus', {math: instance.buttonNew, media: instance.buttonMedia}, function(e){
+		instance.input.bind('focus', {math: instance.buttonNew, mediaImage: instance.buttonMediaImage, mediaVideo: instance.buttonMediaVideo}, function(e){
 			//var button = e.data.math;
-			instance.enableMenuButtons(e.target, e.data.math, e.data.media);
+			instance.enableMenuButtons(e.target, e.data.math, e.data.mediaImage, e.data.mediaVideo);
 		});
-		instance.input.bind('blur', {math: instance.buttonNew, media: instance.buttonMedia}, function(e) {
+		instance.input.bind('blur', {math: instance.buttonNew, mediaImage: instance.buttonMediaImage, mediaVideo: instance.buttonMediaVideo}, function(e) {
 			
 			var elm = e.originalEvent.explicitOriginalTarget; //||e.srcElement||document.activeElement;
 			
-			if (!$(elm).hasClass('taginsert_math') && !$(elm).hasClass('mediahelper')) {
+			if (!$(elm).hasClass('taginsert_math') && !$(elm).hasClass('mediaImage') && !$(elm).hasClass('mediaVideo')) {
 				//var button = e.data.math;
-				instance.disableMenuButtons(e.data.math, e.data.media);
+				instance.disableMenuButtons(e.data.math, e.data.mediaImage, e.data.mediaVideo);
 			}
 		});
-		instance.input.bind('click', {math: instance.buttonNew, media: instance.buttonMedia}, function(e){
+		instance.input.bind('click', {math: instance.buttonNew, mediaImage: instance.buttonMediaImage, mediaVideo: instance.buttonMediaVideo}, function(e){
 			//var button = e.data;
-			instance.enableMenuButtons(e.target, e.data.math, e.data.media);
+			instance.enableMenuButtons(e.target, e.data.math, e.data.mediaImage, e.data.mediaVideo);
 		});
 		
 		instance.input.keypress(function(e) {
@@ -200,19 +201,24 @@ function mathInputHelperClass() {
 				
 				var start = this.getStartIndexOfMediaPhrase(input, e.originalEvent.rangeOffset);
 				var mediaPhrase = this.getMediaPhrase(input, e.originalEvent.rangeOffset);
-				
+				var type = mediaPhrase.match(/<(img|object)/)[1];
 				//if (null != mediaPhrase && buttonMedia.length > 0) {
-				if (null != mediaPhrase && undefined != e.data.media) {
+				if (null != mediaPhrase && undefined != e.data.mediaImage && undefined != e.data.mediaVideo) {
 					control.html(control.html()+'<div>modify media</div><div>remove media</div>');
 					
 					$('div:nth-child(2)', control).mousedown(function(e) {
 						var data = new Object();
+						data['title'] = mediaPhrase.match(/alt="([^"]*)"/)[1];
 						data['media'] = mediaPhrase;
 						data['input'] = input.get(0);
 						data['type'] = 'modify';
-						data['src'] = mediaPhrase.match(/src="([^"]*)"/)[1];
-						data['title'] = mediaPhrase.match(/alt="([^"]*)"/)[1];
-						tinyMCE.execCommand('mceAppendImageToInput',false, data);
+						if ('img' == type) {
+							data['src'] = mediaPhrase.match(/src="([^"]*)"/)[1];
+							tinyMCE.execCommand('mceAppendImageToInput',false, data);
+						} else if ('object' == type) {
+							data['src'] = mediaPhrase.match(/data="([^"]*)"/)[1];
+							tinyMCE.execCommand('mceAppendVideoToInput',false, data);
+						}
 						e.preventDefault();
 					});
 					
@@ -239,11 +245,14 @@ function mathInputHelperClass() {
 
 		if (null != start) {
 			var tmpString = input.val().substr(start);
-			var res = tmpString.match(/<img[^>]+>/g);
-			var phraseLength = res[0].length;
+			//var res = tmpString.match(/<img[^>]+>/g);
+			var res = tmpString.match(/<(img|object)[^>]+>(<\/object>)?/);
+			if (null != res) {
+				var phraseLength = res[0].length;
 
-			if ((start+phraseLength) > offset) {
-				return res[0];
+				if ((start+phraseLength) > offset) {
+					return res[0];
+				}
 			}
 		}
 		return null;
@@ -252,8 +261,13 @@ function mathInputHelperClass() {
 	this.getStartIndexOfMediaPhrase = function(input, offset) {
 		var str = input.val().substr(0, offset+3);
 		var start = str.lastIndexOf("<img");
-
-		if (start > 0 && start<offset) {
+		
+		if (-1 == start) {
+			start = str.lastIndexOf("<object");
+		}
+		
+		//if (start > 0 && start<offset) {
+		if (start<offset) {
 			return start;
 		}
 		return null;
@@ -371,7 +385,7 @@ function mathInputHelperClass() {
 		return this.endIndex;
 	};
 	
-	this.enableMenuButtons = function(input, buttonMath, buttonMedia) {
+	this.enableMenuButtons = function(input, buttonMath, buttonMediaImage, buttonMediaVideo) {
 		var carretPos = getCaretPosition(input);
 		var st = this.getStart(input.value,carretPos);
 		var ed = this.getEnd(input.value,carretPos);
@@ -381,24 +395,34 @@ function mathInputHelperClass() {
 			buttonMath.css('opacity', '1.0');
 			buttonMath.data('active', true);//('click', input, this.insertNewMath);
 		
-			if (undefined != buttonMedia) {
-				buttonMedia.css('opacity', '1.0');
-				buttonMedia.data('active', true);
+			if (undefined != buttonMediaImage) {
+				buttonMediaImage.css('opacity', '1.0');
+				buttonMediaImage.data('active', true);
+			}
+			
+			if (undefined != buttonMediaVideo) {
+				buttonMediaVideo.css('opacity', '1.0');
+				buttonMediaVideo.data('active', true);
 			}
 
 		} else {
-			this.disableMenuButtons(buttonMath, buttonMedia);
+			this.disableMenuButtons(buttonMath, buttonMediaImage, buttonMediaVideo);
 		}
 	};
 	
-	this.disableMenuButtons = function(buttonMath, buttonMedia) {
+	this.disableMenuButtons = function(buttonMath, buttonMediaImage, buttonMediaVideo) {
 		buttonMath.css('opacity', '0.3');
 		//button.unbind('click');
 		buttonMath.data('active', false);
 		
-		if (undefined != buttonMedia) {
-			buttonMedia.css('opacity', '0.3');
-			buttonMedia.data('active', false);
+		if (undefined != buttonMediaImage) {
+			buttonMediaImage.css('opacity', '0.3');
+			buttonMediaImage.data('active', false);
+		}
+		
+		if (undefined != buttonMediaVideo) {
+			buttonMediaVideo.css('opacity', '0.3');
+			buttonMediaVideo.data('active', false);
 		}
 	};
 }

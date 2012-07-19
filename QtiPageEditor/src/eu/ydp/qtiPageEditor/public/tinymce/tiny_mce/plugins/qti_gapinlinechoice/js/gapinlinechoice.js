@@ -208,6 +208,7 @@ var gapInlineChoiceDialog = {
 				return false;
 			}
 			ec = ec.replace(/<img alt="([^"]*)" src="([^"]*)">/g, '[img alt={$1} src={$2}]'); //, '<img src="$2" alt="$1"/>');
+			ec = ec.replace(/<object data="([^"]*)" type="(video)" alt="([^"]*)"><\/object>/g, '[object data={$1} type={$2} alt={$3}]'); //, '<img src="$2" alt="$1"/>');
 			//obj.content = stringEncode(ec).replace(/\n/g,'<br/>');//.replace(/[ ]/gi,'&#32;');
 			obj.content = ec.replace(/\n/g,'<br/>');//.replace(/[ ]/gi,'&#32;');
 			obj.tags = new Array();
@@ -251,14 +252,16 @@ var gapInlineChoiceDialog = {
 				if (obj.question != undefined && obj.question != '') {
 					//var bm = ed.selection.getBookmark();
 //					ed.selection.moveToBookmark(bm);
-
 					//obj.content = obj.content.replace(/\[img title={([^"]*)} src={([^"]*)}\]/g, '<img src="$2" alt="$1"/>');
 					//obj.content = obj.content.replace(/\[img alt={([^"]*?)} src={([^"]*?)}\]/g, '<span class="mediaInputModule"><img alt="$1" src="$2"/><br/>$1</span>');
 					obj.content = obj.content.replace(/\[img alt={([^"]*?)} src={([^"]*?)}\]/g, function(a, alt, src) {
 						var ret = '<span class="mediaInputModule"><img alt="'+alt+'" src="'+src+'"/><br/>'+ed.decodeMath(alt)+'</span>';
 						return ret;
 					});
-
+					obj.content = obj.content.replace(/\[object data={([^"]*?)} type={([^"]*?)} alt={([^"]*?)}\]/g, function(a, data, type, alt) {
+						var ret = '<span class="mediaInputModule"><object data="'+data+'" type="'+type+'" alt="'+alt+'"></object><img alt="'+alt+'" src="/res/skins/default/qtipageeditor/tinymce/tiny_mce/plugins/qti_addvideo/img/movie.png"/><br/>'+ed.decodeMath(alt)+'</span>';
+						return ret;
+					});
 					var newData = new Object();
 					newData.content = '';
 

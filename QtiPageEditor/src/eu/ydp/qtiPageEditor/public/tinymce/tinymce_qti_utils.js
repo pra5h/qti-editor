@@ -494,7 +494,10 @@ function mediaInteractionToQTI(mi) {
 		text += '<img src="'+src+'"><title>'+parseMathHTML2QTI(title)+'</title><description></description></img>';
 
 	} else {
-		var title = $('<div/>').html(mediaNode.getAttribute('alt')).html();
+		//var title = $('<div/>').html(mediaNode.getAttribute('alt')).html();
+		var title = mediaNode.getAttribute('alt');
+		title = tinymce.DOM.encode(title);
+		title = tinymce.EditorManager.activeEditor.decodeMath(title);
 		var data = mediaNode.getAttribute('data');
 		var type = mediaNode.getAttribute('type');
 		
@@ -534,7 +537,10 @@ function mediaInteractionsToHTML(mi) {
 	text += '<br/>';
 	var titleMatch = text.match(/alt="([^"]+)"/);
 	if (null != titleMatch) {
-		text += tinyMCE.activeEditor.dom.decode(titleMatch[1]);
+		var t = tinyMCE.activeEditor.dom.decode(titleMatch[1]);
+		t = t.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+		t = tinyMCE.activeEditor.decodeMath(t);
+		text += t;
 	}
 	text += '</fieldset>';
 	return text;
@@ -693,6 +699,10 @@ function textInteractionsGroupNodeToHTML(ti) {
 					tmpTextContent = tmpTextContent.replace(/<img src="([^"]*)"><title>([^<]*)<\/title><description><\/description>(<\/img>)?/g, function(a, src, title) {
 						title = parseMathQTI2HTML(tinymce.DOM.decode(title));
 						return '<span class="mediaInputModule"><img alt="'+tinymce.DOM.encode(title)+'" src="'+src+'"/><br/>'+tinymce.EditorManager.activeEditor.decodeMath(tinymce.DOM.encode(title))+'</span>';
+					});
+					tmpTextContent = tmpTextContent.replace(/<object data="([^"]*)" type="([^"]*)"><title>([^<]*)<\/title><description><\/description>(<\/object>)?/g, function(a, data, type, title) {
+						title = parseMathQTI2HTML(tinymce.DOM.decode(title));
+						return '<span class="mediaInputModule"><object data="'+data+'" type="'+type+'" alt="'+tinymce.DOM.encode(title)+'"></object><img alt="'+tinymce.DOM.encode(title)+'" src="/res/skins/default/qtipageeditor/tinymce/tiny_mce/plugins/qti_addvideo/img/movie.png"/><br/>'+tinymce.EditorManager.activeEditor.decodeMath(tinymce.DOM.encode(title))+'</span>';
 					});
 					text += parseMathQTI2HTML(tmpTextContent);
 				} else {
@@ -1118,9 +1128,14 @@ function runGapInlineChoiceInteractionNode(contentElement, data, body, nodeCount
 				}
 			} else {
 				if ('SPAN' == node.tagName && node.className == 'mediaInputModule') {
-					//contentText += '<img alt="'+node.firstChild.getAttribute("alt")+'" src="'+node.firstChild.getAttribute("src")+'">';
-					var alt = tinymce.DOM.encode(node.firstChild.getAttribute("alt"));
-					contentText += '<img alt="'+alt+'" src="'+node.firstChild.getAttribute("src")+'">';
+					if ('OBJECT' == node.firstChild.nodeName) {
+						var alt = tinymce.DOM.encode(node.firstChild.getAttribute("alt"));
+						contentText += xh.prepareNode(node.firstChild); //'<img alt="'+alt+'" src="'+node.firstChild.getAttribute("src")+'">';
+					} else if ('IMG' == node.firstChild.nodeName) {
+						//contentText += '<img alt="'+node.firstChild.getAttribute("alt")+'" src="'+node.firstChild.getAttribute("src")+'">';
+						var alt = tinymce.DOM.encode(node.firstChild.getAttribute("alt"));
+						contentText += '<img alt="'+alt+'" src="'+node.firstChild.getAttribute("src")+'">';
+					}
 				}
 			}
 		} else if (8 == node.nodeType) { //comment node
@@ -1474,18 +1489,20 @@ function runMediaLib(selectedNode) {
 	if(node.getAttribute('id') == 'mceVideo') {
 		var src = node.previousSibling.getAttribute('data');
 		var title = '';
-		
-		title = $('<div/>').html(node.previousSibling.getAttribute('alt')).html();
+		if(node.previousSibling.attributes['alt'] != undefined) {
+			title = node.previousSibling.getAttribute('alt');
+		}
+//		title = $('<div/>').html(node.previousSibling.getAttribute('alt')).html();
 		/*if (null != node.nextSibling.nextSibling) {
 			title = node.nextSibling.nextSibling.nodeValue;
 		}*/
 		tinyMCE.execCommand('mceAddVideo', false, {src: src, title: title});
 	} else {
 		var src = node.attributes['src'].value;
+		var title = '';
 		if(node.attributes['alt'] != undefined) {
-			var title = $('<div/>').html(node.attributes['alt'].value).html();
-		} else {
-			var title = '';
+			title = node.getAttribute('alt');
+			//var title = $('<div/>').html(node.attributes['alt'].value).html();
 		}
 		var data = {src: src, title: title};
 		tinyMCE.execCommand('mceAppendImageToPage', false, data);

@@ -403,7 +403,7 @@ function stringDecode(text) {
 	return text.replace(/&quot;/g, "\"");
 }
 
-function imgInputHelperClass() {
+function mediaInputHelperClass() {
 
 	this.init = function(obj) {
 		var instance = this;
@@ -414,23 +414,35 @@ function imgInputHelperClass() {
 	};
 	
 	this.insertButtonMedia = function() {
-		this.buttonNew = $('<div>');
-		this.buttonNew.attr('id', 'mediaHelper');
-		this.buttonNew.addClass('mediahelper');
-		this.buttonNew.css('opacity', '0.3');
-		this.buttonNew.val('img');
+		var mediaPanel = $('<div>');
+		mediaPanel.attr('id', 'mediaPanel');
+		this.imageNewButton = $('<div>');
+		this.imageNewButton.attr('id', 'mediaImage');
+		this.imageNewButton.addClass('mediaImage');
+		this.imageNewButton.css('opacity', '0.3');
+		this.imageNewButton.val('img');
+		mediaPanel.append(this.imageNewButton);
+		this.videoNewButton = $('<div>');
+		this.videoNewButton.attr('id', 'mediaVideo');
+		this.videoNewButton.addClass('mediaVideo');
+		this.videoNewButton.css('opacity', '0.3');
+		this.videoNewButton.val('video');
+		mediaPanel.append(this.videoNewButton);
 		var panel = $('#taginsert_menu_'+this.input.attr('id'));
-		//this.buttonNew.insertBefore(this.input);
+		//this.imageNewButton.insertBefore(this.input);
 		if (panel.length > 0 && panel.next().hasClass('taginsert_math')) {
-			this.buttonNew.insertAfter(panel.next());
+			//this.imageNewButton.insertAfter(panel.next());
+			mediaPanel.insertAfter(panel.next());
 		} else {
-			this.buttonNew.insertAfter(panel);
+			//this.imageNewButton.insertAfter(panel);
+			mediaPanel.insertAfter(panel);
 		}
 		
-		this.buttonNew.bind('click', this.input, this.insertNewMedia);
+		this.imageNewButton.bind('click', this.input, this.insertNewImageMedia);
+		this.videoNewButton.bind('click', this.input, this.insertNewVideoMedia);
 	};
 	
-	this.insertNewMedia = function(e) {
+	this.insertNewImageMedia = function(e) {
 		var o = e.data;
 		if($(this).data('active')) {
 			var ed = tinymce.EditorManager.activeEditor;
@@ -441,6 +453,20 @@ function imgInputHelperClass() {
 			data['src'] = '';
 			data['title'] = '';
 			tinyMCE.execCommand('mceAppendImageToInput', false, data);
+		}
+	};
+	
+	this.insertNewVideoMedia = function(e) {
+		var o = e.data;
+		if($(this).data('active')) {
+			var ed = tinymce.EditorManager.activeEditor;
+			var data = new Object();
+
+			data['offset'] = getCaretPosition(o.get(0));
+			data['input'] = o.get(0);
+			data['src'] = '';
+			data['title'] = '';
+			tinyMCE.execCommand('mceAppendVideoToInput', false, data);
 		}
 	};
 }
@@ -465,4 +491,4 @@ function getCaretPosition(el) {
 	}  
 	return 0; 
 };
-var MediaHelper = new imgInputHelperClass();
+var MediaHelper = new mediaInputHelperClass();
