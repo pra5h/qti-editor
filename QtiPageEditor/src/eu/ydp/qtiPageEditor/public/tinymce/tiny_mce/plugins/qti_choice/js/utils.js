@@ -76,6 +76,7 @@ function switch_text_images(checkbox) {
 			if(inputs[i].type != undefined) {
 				inputs[i].type = 'hidden';
 				document.getElementById("taginsert_menu_"+inputs[i].id).style.display = 'none';
+				$(".taginsert_math").hide();
 				src = inputs[i].value.split('/');
 				src = src[src.length - 1];
 				var div = document.createElement('div');
@@ -94,6 +95,7 @@ function switch_text_images(checkbox) {
 				document.getElementById("taginsert_menu_"+inputs[i].id).style.display = 'block';
 			}
 		}
+		$(".taginsert_math").show();
 	}
 	
 	return true;
