@@ -76,7 +76,7 @@ function switch_text_images(checkbox) {
 			if(inputs[i].type != undefined) {
 				inputs[i].type = 'hidden';
 				document.getElementById("taginsert_menu_"+inputs[i].id).style.display = 'none';
-				$(".taginsert_math").hide();
+				$("#taginsert_math_"+inputs[i].id).hide();
 				src = inputs[i].value.split('/');
 				src = src[src.length - 1];
 				var div = document.createElement('div');
@@ -93,9 +93,9 @@ function switch_text_images(checkbox) {
 				inputs[i].type = 'text';
 				inputs[i].parentNode.removeChild(inputs[i].nextSibling);
 				document.getElementById("taginsert_menu_"+inputs[i].id).style.display = 'block';
+				$("#taginsert_math_"+inputs[i].id).show();
 			}
 		}
-		$(".taginsert_math").show();
 	}
 	
 	return true;

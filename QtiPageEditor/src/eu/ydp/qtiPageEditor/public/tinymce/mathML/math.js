@@ -277,6 +277,7 @@ function mathInputHelperClass() {
 		this.buttonNew = $('<div>');
 		this.buttonNew.addClass('taginsert_math');
 		this.buttonNew.css('opacity', '0.3');
+		this.buttonNew.attr('id', "taginsert_math_"+this.input.attr('id'));
 		var panel = $('#taginsert_menu_'+this.input.attr('id'));
 		//this.buttonNew.insertBefore(this.input);
 		this.buttonNew.insertAfter(panel);

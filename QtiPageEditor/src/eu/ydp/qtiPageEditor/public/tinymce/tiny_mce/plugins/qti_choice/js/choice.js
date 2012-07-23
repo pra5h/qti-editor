@@ -75,7 +75,7 @@ var choiceDialog = {
 				InputHelper.init($("#answer_"+q));
 				if (f.images.checked){
 					document.getElementById("taginsert_menu_answer_"+q).style.display = 'none';
-					$(".taginsert_math").hide();
+					$("#taginsert_math_answer_"+q).hide();
 				}
 				/*
 				if(tinyMCE.feedback == undefined) {
