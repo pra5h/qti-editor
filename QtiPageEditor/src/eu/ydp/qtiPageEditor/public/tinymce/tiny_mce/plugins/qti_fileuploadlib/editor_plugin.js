@@ -219,7 +219,7 @@
 						filePath = getRelativeFromAbsoute(fromPath, filePath);
 
 						data.div.innerHTML = '<img style="max-height: 40px; max-width: 80px;" src="' + fromPath + '/' + filePath + '">';
-						data.div.previousSibling.setAttribute('value', fromPath + '/' + filePath);
+						data.div.previousElementSibling.setAttribute('value', fromPath + '/' + filePath);
 						return true;
 					},
 					
@@ -241,6 +241,7 @@
 				}
 				
 				assetBrowser.browse(browseCallback, extensions);
+				ed.QTIWindowHelper.correctGwtWindowZIndex();
 			
 			});
 

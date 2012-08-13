@@ -1038,15 +1038,15 @@ function actionOnQTI(e) {
 					break;
 				}*/
 
-				// MediaLib
-				if((selectedNode.nodeName == 'IMG' && selectedNode.parentNode.className != 'mediaInputModule') || (selectedNode.nodeName == 'FIELDSET' && selectedNode.id == 'runFileUploadLib')) {
-					runMediaLib(selectedNode);
+				// Multiple choice
+				if ((selectedNode.nodeName == 'P' && selectedNode.id == 'choiceInteraction' && selectedNode.parentNode.id == 'choiceInteraction') || (selectedNode.nodeName == 'DIV' && selectedNode.id == 'choiceInteraction' || selectedNode.parentNode.id == 'choiceInteraction')) {
+					runChoiceInteraction(selectedNode);
 					break;
 				}
 				
-				// Multiple choice
-				if ((selectedNode.nodeName == 'P' && selectedNode.id == 'choiceInteraction' && selectedNode.parentNode.id == 'choiceInteraction') || (selectedNode.nodeName == 'DIV' && selectedNode.id == 'choiceInteraction')) {
-					runChoiceInteraction(selectedNode);
+				// MediaLib
+				if((selectedNode.nodeName == 'IMG' && selectedNode.parentNode.className != 'mediaInputModule') || (selectedNode.nodeName == 'FIELDSET' && selectedNode.id == 'runFileUploadLib')) {
+					runMediaLib(selectedNode);
 					break;
 				}
 
