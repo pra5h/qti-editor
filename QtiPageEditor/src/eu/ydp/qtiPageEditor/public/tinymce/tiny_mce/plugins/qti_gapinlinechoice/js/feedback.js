@@ -88,9 +88,9 @@ var feedbackDialog = {
 				return false;
 			}
 			tinyMCE.feedback[identifier] = {};
-			tinyMCE.feedback[identifier].onOk = stringEncode(feedback_onok);
+			tinyMCE.feedback[identifier].onOk = feedback_onok;
 			tinyMCE.feedback[identifier].sound_onOk = fdb_sound_onok;
-			tinyMCE.feedback[identifier].onWrong = stringEncode(feedback_onwrong);
+			tinyMCE.feedback[identifier].onWrong = feedback_onwrong;
 			tinyMCE.feedback[identifier].sound_onWrong = fdb_sound_onwrong;
 
 			tinyMCEPopup.close();
@@ -133,7 +133,7 @@ var feedbackDialog = {
 			if(tinyMCE.feedback[exerciseid] == undefined) {
 				tinyMCE.feedback[exerciseid] = {text: new Array, sound: new Array};
 			}
-			tinyMCE.feedback[exerciseid].text[identifier] = stringEncode(feedback);
+			tinyMCE.feedback[exerciseid].text[identifier] = feedback;
 			tinyMCE.feedback[exerciseid].sound[identifier] = feedback_sound;
 
 			tinyMCEPopup.close();
