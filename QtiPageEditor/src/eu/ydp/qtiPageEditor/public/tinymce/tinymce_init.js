@@ -44,7 +44,7 @@ tinyMCE.init({
 		+"correctResponse,value,itemBody,applink[lid|title],mapping[defaultValue],mapEntry[mapKey|mappedValue],"
 		+"qy:comment[idref],feedbackInline[identifier|showHide|outcomeIdentifier|senderIdentifier|fadeEffect|mark],modalFeedback[outcomeIdentifier|identifier|showHide|sound|senderIdentifier|style],"
 		+"math[title|xmlns],mstyle[mathsize|mathcolor|fontfamily|displaystyle],mfrac,mrow,mi,mo,mn,msup,mroot,munder,msubsup,msub,msup,munderover,munder,mover,msqrt,mroot,"
-		+"mfenced[open|close],ms[lquote|rquote],mtext,"
+		+"mfenced[open|close],ms[lquote|rquote],mtext,mmultiscripts,mprescripts,none,"
 		+"mtable,mtr,mtd,mspace[width],changesTracking[state],styleDeclaration,link[href|userAgent],qy:tag[name],audioPlayer[data|id|class],dragDropInteraction[responseIdentifier],contents,slot,sourcelist,dragElement[identifier]"
 		+"identificationInteraction[responseIdentifier|shuffle|maxSelections|separator]",
 
