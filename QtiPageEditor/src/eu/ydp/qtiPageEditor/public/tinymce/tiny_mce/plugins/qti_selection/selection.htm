@@ -33,14 +33,20 @@
 				</td>
 			</tr>
 			<tr>
-				<td colspan=2>
+				<td colspan="2">
 				<table>
 					<tr>
-						<td width="40px" align="right">
+						<td class="menuChk">
 							<input type="checkbox" id="shuffle" name="shuffle" style="margin: 0; padding: 0;"/>
 						</td>
 						<td>
 							{#selection_dlg.question_shuffle}
+						</td>
+						<td class="menuChk">
+							<input type="checkbox" id="images" name="images" style="margin: 0; padding: 0;" onchange="switch_text_images(this);"/>
+						</td>
+						<td>
+							{#selection_dlg.images_label}
 						</td>
 					</tr>
 				</table>

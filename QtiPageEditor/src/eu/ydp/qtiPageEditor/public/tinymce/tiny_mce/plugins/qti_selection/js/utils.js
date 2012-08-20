@@ -10,7 +10,12 @@ function add_answer_row(form) {
 	while(form.nodeName != 'FORM') {
 		form = form.parentNode;
 	}
-
+	
+	var answerImg = '';
+	if (form.images.checked) {
+		answerImg = '<div style="width: 80px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;" onclick="tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'\',div:this});"><img style="max-height: 40px; max-width: 80px;" src="" /></div>';
+	}
+	
 	var optionList = new Array();
 	var htmlOptionsList = $("input[name=choices_ids[]]");
 
@@ -23,7 +28,7 @@ function add_answer_row(form) {
 	var newInnerHTML = '<table class="answer" cellpadding=0 cellspacing=0><tr>\n'
 		+'<td width="260px" style="padding-right: 5px;">\n'
 		+'<input type="text" id="answer_'+last+'" name="answers[]" style="width: 100%; margin-right: 5px;" value=""/>\n'
-		+'</td>\n'
+		+answerImg+'</td>\n'
 		+'<input type="hidden" id="id_'+last+'" name="ids[]" value="' + id + '"/>\n'
 		+'<td width="400px" id="optionsSpans">';
 
@@ -43,6 +48,11 @@ function add_answer_row(form) {
 	document.getElementById('answer_list').appendChild(newDiv);
 	tagInsert.init('answer_' + last);
 	InputHelper.init($('#answer_'+last));
+	if (form.images.checked) {
+		$('#answer_'+last).hide();
+		$("#taginsert_menu_answer_"+last).hide();
+		$("#taginsert_math_answer_"+last).hide();
+	}
 }
 
 
@@ -58,18 +68,28 @@ function add_option_row(form) {
 		form = form.parentNode;
 	}
 
+	var optionImg = '';
+	if (form.images.checked) {
+		optionImg = '<div style="width: 80px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;" onclick="tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'\',div:this});"><img style="max-height: 40px; max-width: 80px;" src="" /></div>';
+	}
 	var newDiv = document.createElement('div');
-	var last = document.getElementById('option_list').lastChild.childNodes[3].innerHTML;
+	var last = $('#option_list strong:last').text(); //.childNodes[3].innerHTML;
 	last = parseInt(last.replace('.',''));
 	var next = last + 1;
 	newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
-	newDiv.innerHTML = '<br class="clr"/><strong>' + next + '.</strong>&nbsp;\n'
+	newDiv.innerHTML = '<table><tr><td><br class="clr"/><strong>' + next + '.</strong>&nbsp;\n'
 		+'<input type="hidden" name="choices_ids[]" value="' + id + '">\n'
-		+'<input type="text" name="choices[]" value="" id="choice_' + last + '">&nbsp;\n'
-		+'<input type="button" id="remove_option" name="remove_option" value="Remove" onclick="remove_option_row(this);" />';
+		+'<input type="text" name="choices[]" value="" id="choice_' + last + '">&nbsp;'+optionImg+'</td>\n'
+		+'<td><input type="button" id="remove_option" name="remove_option" value="Remove" onclick="remove_option_row(this);" /></td></tr></table>';
 	document.getElementById('option_list').appendChild(newDiv);
 	tagInsert.init('choice_' + last);
 	InputHelper.init($('#choice_'+last));
+	
+	if (form.images.checked) {
+		$('#choice_'+last).hide();
+		$("#taginsert_menu_choice_"+last).hide();
+		$("#taginsert_math_choice_"+last).hide();
+	}
 
 	var optionSpans = document.getElementsByClassName('optionSpan');
 	var ids = new Array();
@@ -113,15 +133,17 @@ function remove_answer_row(row) {
 
 function remove_option_row(row) {
 	var i = 0;
-	var fieldset = $(row).parent().parent();
-	fieldset.children('div').each(function(a,b){
+	//var fieldset = $(row).parent().parent();
+	var i = $("input[name=remove_option]").length;
+/*	fieldset.children('div').each(function(a,b){
 		i++;
 	});
-
+*/
 	if (i > 1) {
-		var div = row.parentNode;
-		div.parentNode.removeChild(div);
-		var removedId = $("input[name=choices_ids[]]", div).val(); 
+		var div = $(row).closest("div");
+		//var div = row.parentNode;
+		var removedId = $("input[name=choices_ids[]]", div).val();
+		div.remove();
 
 		var optionSpans = document.getElementsByClassName('optionSpan');
 		for(i in optionSpans) {
@@ -164,6 +186,73 @@ function feedback(row) {
 	
 }
 
+function switch_text_images(checkbox) {
+	
+	form = checkbox;
+	while(form.nodeName != 'FORM') {
+		form = form.parentNode;
+	}
+	
+	if(checkbox.checked == true) {
+		var inputs = document.getElementsByName('answers[]');
+		for (i in inputs) {
+			if(inputs[i].type != undefined) {
+				inputs[i].type = 'hidden';
+				document.getElementById("taginsert_menu_"+inputs[i].id).style.display = 'none';
+				$("#taginsert_math_"+inputs[i].id).hide();
+				src = inputs[i].value.split('/');
+				src = src[src.length - 1];
+				var div = document.createElement('div');
+				div.setAttribute('style', 'width: 80px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;');
+				div.setAttribute('onclick', 'tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'' + src + '\',div:this});');
+				div.innerHTML = '<img style="max-height: 40px; max-width: 80px;" src="' + inputs[i].value + '"/>'
+				inputs[i].parentNode.appendChild(div);
+			}
+		}
+		
+		var choices = document.getElementsByName('choices[]');
+		for (i in choices) {
+			if(choices[i].type != undefined) {
+				choices[i].type = 'hidden';
+				document.getElementById("taginsert_menu_"+choices[i].id).style.display = 'none';
+				$("#taginsert_math_"+choices[i].id).hide();
+				src = choices[i].value.split('/');
+				src = src[src.length - 1];
+				var div = document.createElement('div');
+				div.setAttribute('style', 'width: 80px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;');
+				div.setAttribute('onclick', 'tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'' + src + '\',div:this});');
+				div.innerHTML = '<img style="max-height: 40px; max-width: 80px;" src="' + choices[i].value + '"/>'
+				choices[i].parentNode.appendChild(div);
+			}
+		}
+	} else {
+		var inputs = document.getElementsByName('answers[]');
+		for (i in inputs) {
+			if(inputs[i].type != undefined) {
+				inputs[i].type = 'text';
+				inputs[i].parentNode.removeChild(inputs[i].nextElementSibling);
+				document.getElementById("taginsert_menu_"+inputs[i].id).style.display = 'block';
+				$("#taginsert_math_"+inputs[i].id).show();
+				$(inputs[i]).show();
+			}
+		}
+		
+		var choices = document.getElementsByName('choices[]');
+		for (i in choices) {
+			if(choices[i].type != undefined) {
+				choices[i].type = 'text';
+				choices[i].parentNode.removeChild(choices[i].nextElementSibling);
+				document.getElementById("taginsert_menu_"+choices[i].id).style.display = 'block';
+				$("#taginsert_math_"+choices[i].id).show();
+				$(choices[i]).show();
+			}
+		}
+	}
+	
+	return true;
+	
+}
+
 function assignSound(row) {
 	
 	tinyMCE.execCommand('mceAddFeedbackSound', false, {dest: row.previousSibling.previousSibling, src: row.previousSibling.previousSibling.value});
@@ -183,7 +272,7 @@ function validateExercise(form) {
 	var validCorrectAnswers = true;
 	
 	$('#div_points').attr('style' , 'width: 100%; font-weight: bold;');
-	$("input[name='answers[]']").attr('style' , 'width: 100%; margin-right: 5px;');
+	$("input[name='answers[]']").attr('style' , 'width: 100%; margin-right: 5px; display:'+$("input[name='answers[]']").css('display'));
 	$('#question').attr('style' , 'width: 100%;');
 	
 	while(form.elements[i] != undefined) {
@@ -226,7 +315,7 @@ function validateExercise(form) {
 	if(answers_contents.length > 0) {
 		for (i in answers_contents) {
 			if(answers_contents[i].attributes != undefined) {
-				answers_contents[i].setAttribute('style' , 'width: 100%; margin-right: 5px; border: 2px solid red;');
+				answers_contents[i].setAttribute('style' , 'width: 100%; margin-right: 5px; border: 2px solid red; display:'+answers_contents[i].style.display);
 			}
 		}
 		validator_errors.push('Fill the answers fields');
@@ -247,7 +336,7 @@ function validateExercise(form) {
 		for(i in options) {
 			
 			if (options[i] == '') {
-				$('#choice_'+i).attr('style' , 'border: 2px solid red;');
+				$('#choice_'+i).attr('style' , 'border: 2px solid red; display:'+$('#choice_'+i).css('display'));
 				validator_errors.push('Fill the option field');
 				tinyMCE.activeEditor.windowManager.resizeBy(0, 30, 'mce_0');
 				validOptions = false;

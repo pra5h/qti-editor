@@ -15,7 +15,8 @@ tinyMCE.addI18n('en.selection_dlg',{
 	add_answer_button:"Add answer",
 	remove_answer_button:"Remove",
 	add_option_button:"Add option",
-	options_label:"Options"
+	options_label:"Options",
+	images_label: "Answers and options as pictures"
 });
 
 tinyMCE.addI18n('en.feedback_dlg',{

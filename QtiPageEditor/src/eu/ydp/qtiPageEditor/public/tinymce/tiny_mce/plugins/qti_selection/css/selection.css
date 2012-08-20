@@ -31,3 +31,7 @@ hr {width: 80%;
 	border-left: 0px;
 	border-style: solid;
 	border-color: #aaa;}
+.menuChk {
+	width: 20px;
+	padding-left: 10px;
+}
