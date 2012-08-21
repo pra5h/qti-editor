@@ -242,6 +242,8 @@
 				
 				assetBrowser.browse(browseCallback, extensions);
 				ed.QTIWindowHelper.correctGwtWindowZIndex();
+				//ukrycie resource title dla uploadu samych obrazków - task 50193
+				$('.gwt-TextBox').closest('tr').parent().closest('tr').hide();
 			
 			});
 
