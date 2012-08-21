@@ -170,16 +170,18 @@ tinyMCE.init({
 			tagsString = tagsString.replace(/\[[^\]]+\]/g, '');
 			var tagsArray = tagsString.split(',');*/
 			var reg = new RegExp(/(&lt;math&gt;)([.\S\s]*)(&lt;\/math&gt;)/g);
-			s = s.replace(reg, function(a){
-				return $('<div>').html(ed.dom.decode(a)).html();
-				//console.log(d.html());
-				//return a.replace(/&lt;/g, '<').replace(/&gt;/g,'>');
-			});
-			var reg = new RegExp(/(&lt;mathText&gt;)([.\S\s]*)(&lt;\/mathText&gt;)/g);
-			s = s.replace(reg, function(a){
-				return $('<div>').html(ed.dom.decode(a)).html();
-				//return a.replace(/&lt;/g, '<').replace(/&gt;/g,'>');
-			});
+			if (s != null) {
+				s = s.replace(reg, function(a){
+					return $('<div>').html(ed.dom.decode(a)).html();
+					//console.log(d.html());
+					//return a.replace(/&lt;/g, '<').replace(/&gt;/g,'>');
+				});
+				var reg = new RegExp(/(&lt;mathText&gt;)([.\S\s]*)(&lt;\/mathText&gt;)/g);
+				s = s.replace(reg, function(a){
+					return $('<div>').html(ed.dom.decode(a)).html();
+					//return a.replace(/&lt;/g, '<').replace(/&gt;/g,'>');
+				});
+			}
 			return s;
 		};
 		
