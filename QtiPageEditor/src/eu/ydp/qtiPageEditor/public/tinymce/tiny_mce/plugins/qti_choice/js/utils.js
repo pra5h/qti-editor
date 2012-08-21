@@ -81,8 +81,10 @@ function switch_text_images(checkbox) {
 				src = src[src.length - 1];
 				var div = document.createElement('div');
 				div.setAttribute('style', 'width: 80px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;');
-				div.setAttribute('onclick', 'tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'' + src + '\',div:this});');
-				div.innerHTML = '<img style="max-height: 40px; max-width: 80px;" src="' + inputs[i].value + '"/>'
+				div.setAttribute('onclick', 'tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'\',div:this});');
+				//div.setAttribute('onclick', 'tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'' + src + '\',div:this});');
+				//div.innerHTML = '<img style="max-height: 40px; max-width: 80px;" src="' + inputs[i].value + '"/>'
+				div.innerHTML = '<img style="max-height: 40px; max-width: 80px;" src=""/>'
 				inputs[i].parentNode.appendChild(div);
 			}
 		}
@@ -94,6 +96,7 @@ function switch_text_images(checkbox) {
 				inputs[i].parentNode.removeChild(inputs[i].nextSibling);
 				document.getElementById("taginsert_menu_"+inputs[i].id).style.display = 'block';
 				$("#taginsert_math_"+inputs[i].id).show();
+				inputs[i].value = '';
 			}
 		}
 	}

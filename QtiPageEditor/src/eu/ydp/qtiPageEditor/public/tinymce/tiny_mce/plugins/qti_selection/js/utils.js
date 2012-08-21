@@ -200,12 +200,14 @@ function switch_text_images(checkbox) {
 				inputs[i].type = 'hidden';
 				document.getElementById("taginsert_menu_"+inputs[i].id).style.display = 'none';
 				$("#taginsert_math_"+inputs[i].id).hide();
-				src = inputs[i].value.split('/');
-				src = src[src.length - 1];
+				//src = inputs[i].value.split('/');
+				//src = src[src.length - 1];
 				var div = document.createElement('div');
 				div.setAttribute('style', 'width: 80px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;');
-				div.setAttribute('onclick', 'tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'' + src + '\',div:this});');
-				div.innerHTML = '<img style="max-height: 40px; max-width: 80px;" src="' + inputs[i].value + '"/>'
+				//div.setAttribute('onclick', 'tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'' + src + '\',div:this});');
+				div.setAttribute('onclick', 'tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'\',div:this});');
+				//div.innerHTML = '<img style="max-height: 40px; max-width: 80px;" src="' + inputs[i].value + '"/>'
+				div.innerHTML = '<img style="max-height: 40px; max-width: 80px;" src=""/>'
 				inputs[i].parentNode.appendChild(div);
 			}
 		}
@@ -216,12 +218,14 @@ function switch_text_images(checkbox) {
 				choices[i].type = 'hidden';
 				document.getElementById("taginsert_menu_"+choices[i].id).style.display = 'none';
 				$("#taginsert_math_"+choices[i].id).hide();
-				src = choices[i].value.split('/');
-				src = src[src.length - 1];
+				/*src = choices[i].value.split('/');
+				src = src[src.length - 1];*/
 				var div = document.createElement('div');
 				div.setAttribute('style', 'width: 80px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;');
-				div.setAttribute('onclick', 'tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'' + src + '\',div:this});');
-				div.innerHTML = '<img style="max-height: 40px; max-width: 80px;" src="' + choices[i].value + '"/>'
+				//div.setAttribute('onclick', 'tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'' + src + '\',div:this});');
+				div.setAttribute('onclick', 'tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'\',div:this});');
+				//div.innerHTML = '<img style="max-height: 40px; max-width: 80px;" src="' + choices[i].value + '"/>'
+				div.innerHTML = '<img style="max-height: 40px; max-width: 80px;" src=""/>'
 				choices[i].parentNode.appendChild(div);
 			}
 		}
@@ -233,7 +237,8 @@ function switch_text_images(checkbox) {
 				inputs[i].parentNode.removeChild(inputs[i].nextElementSibling);
 				document.getElementById("taginsert_menu_"+inputs[i].id).style.display = 'block';
 				$("#taginsert_math_"+inputs[i].id).show();
-				$(inputs[i]).show();
+				//$(inputs[i]).show();
+				inputs[i].value = '';
 			}
 		}
 		
@@ -244,7 +249,8 @@ function switch_text_images(checkbox) {
 				choices[i].parentNode.removeChild(choices[i].nextElementSibling);
 				document.getElementById("taginsert_menu_"+choices[i].id).style.display = 'block';
 				$("#taginsert_math_"+choices[i].id).show();
-				$(choices[i]).show();
+				//$(choices[i]).show();
+				choices[i].value = '';
 			}
 		}
 	}

@@ -58,7 +58,7 @@ var selectionDialog = {
 				tagInsert.init("choice_"+q);
 				InputHelper.init($("#choice_"+q));
 				if (f.images.checked) {
-					$('#choice_'+q).hide();
+					$('#choice_'+q).get(0).type = 'hidden';
 					$("#taginsert_menu_choice_"+q).hide();
 					$("#taginsert_math_choice_"+q).hide();
 				}
@@ -121,7 +121,7 @@ var selectionDialog = {
 				InputHelper.init($("#answer_"+q));
 
 				if (f.images.checked) {
-					$('#answer_'+q).hide();
+					$('#answer_'+q).get(0).type = 'hidden';
 					$("#taginsert_menu_answer_"+q).hide();
 					$("#taginsert_math_answer_"+q).hide();
 				}
