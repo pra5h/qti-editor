@@ -41,26 +41,29 @@ var selectionDialog = {
 				
 				var opt = data.choices[q];
 				var optImg = '';
+				var optionType = 'text';
 				if(opt.match(/^<img[^>]*\/?>$/i)) {
 					f.images.checked = true;
 					opt = opt.replace(/^<img src="([^"]*)"[^>]*\/?>$/, '$1');
 					src = opt.split('/');
 					src = src[src.length - 1];
-					optImg = '<div style="width: 80px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;" onclick="tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'' + src + '\',div:this});"><img style="max-height: 40px; max-width: 80px;" src="' + opt + '" /></div>';
+					optImg = '<div id="mediaOption_choice_'+q+'" style="width: 80px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;" onclick="tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'' + src + '\',div:this});"><img style="max-height: 40px; max-width: 80px;" src="' + opt + '" /></div>';
+					optionType = 'hidden';
 				}				
 				newDiv.innerHTML = '<table><tr><td><br class="clr"/><strong>' + ct + '.</strong>&nbsp;\n\
 					<input type="hidden" name="choices_ids[]" value="' + data.ids_ch[q] + '">\n\
-					<input type="text" name="choices[]" value="" id="choice_'+q+'"/>&nbsp;'+optImg+'</td>\n\
+					<input type="'+optionType+'" name="choices[]" value="" id="choice_'+q+'"/>&nbsp;'+optImg+'</td>\n\
 					<td><input type="button" id="remove_option" name="remove_option" value="Remove" onclick="remove_option_row(this);" /></td></tr></table>';
 				document.getElementById('option_list').appendChild(newDiv);
-				// &lt vs <
-				$('#choice_'+q).val(opt); //data.choices[q]
+
 				tagInsert.init("choice_"+q);
 				InputHelper.init($("#choice_"+q));
 				if (f.images.checked) {
-					$('#choice_'+q).get(0).type = 'hidden';
 					$("#taginsert_menu_choice_"+q).hide();
 					$("#taginsert_math_choice_"+q).hide();
+				} else {
+					// &lt vs <
+					$('#choice_'+q).val(opt); //data.choices[q]					
 				}
 			}
 
@@ -74,12 +77,14 @@ var selectionDialog = {
 					var fixed = '';
 				}
 				var odp = data.answers[q];
+				var answerType = 'text';
 				if(odp.match(/^<img[^>]*\/?>$/i)) {
 					f.images.checked = true;
 					odp = odp.replace(/^<img src="([^"]*)"[^>]*\/?>$/, '$1');
 					src = odp.split('/');
 					src = src[src.length - 1];
-					img = '<div style="width: 80px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;" onclick="tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'' + src + '\',div:this});"><img style="max-height: 40px; max-width: 80px;" src="' + odp + '" /></div>';
+					img = '<div id="mediaAnswer_answer_'+q+'" style="width: 80px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;" onclick="tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'' + src + '\',div:this});"><img style="max-height: 40px; max-width: 80px;" src="' + odp + '" /></div>';
+					answerType = 'hidden';
 				} else {
 					f.images.checked = false;
 					img = '';
@@ -87,7 +92,7 @@ var selectionDialog = {
 
 				var newInnerHTML = '<table class="answer" cellpadding=0 cellspacing=0><tr>\n\
 					<td width="260px" style="padding-right: 5px;">\n\
-					<input type="text" id="answer_'+q+'" name="answers[]" style="width: 100%; margin-right: 5px;" value=""/>\n\
+					<input type="'+answerType+'" id="answer_'+q+'" name="answers[]" style="width: 100%; margin-right: 5px;" value=""/>\n\
 					'+img+'\
 					</td>\n\
 					<input type="hidden" id="id_0" name="ids[]" value="' + data.ids_ans[q] + '"/>\n\
@@ -114,16 +119,16 @@ var selectionDialog = {
 				newDiv.innerHTML = newInnerHTML;
 
 				document.getElementById('answer_list').appendChild(newDiv);
-				// &lt vs <
-				$('#answer_'+q).val(odp);
 				
 				tagInsert.init("answer_"+q);
 				InputHelper.init($("#answer_"+q));
 
 				if (f.images.checked) {
-					$('#answer_'+q).get(0).type = 'hidden';
 					$("#taginsert_menu_answer_"+q).hide();
 					$("#taginsert_math_answer_"+q).hide();
+				} else {
+					// &lt vs <
+					$('#answer_'+q).val(odp);
 				}
 				
 				if(tinyMCE.feedback == undefined) {
@@ -273,23 +278,37 @@ var selectionDialog = {
 				dataobj.shuffle = element.checked;
 			}
 			if(element.getAttribute('name') == 'answers[]') {
-				if(element.value != '') {
-					if (!ed.validateHtml(element.value, 'answer')) {
-						return false;
-					}
-					dataobj.answers.push(element.value);
+
+				if (dataobj.isAnswersAsImage == true) {
+					var src = $('img', $('#mediaAnswer_'+element.getAttribute('id'))).attr('src');
+					dataobj.answers.push(src);
 				} else {
-					skip_point = 1;
+
+					if(element.value != '') {
+						if (!ed.validateHtml(element.value, 'answer')) {
+							return false;
+						}
+						dataobj.answers.push(element.value);
+					} else {
+						skip_point = 1;
+					}
 				}
 			}
+			
 			if(element.getAttribute('name') == 'choices[]') {
-				if(element.value != '') {
-					if (!ed.validateHtml(element.value, 'option')) {
-						return false;
-					}
-					dataobj.options.push(element.value);
+				if (dataobj.isAnswersAsImage == true) {
+					var src = $('img', $('#mediaOption_'+element.getAttribute('id'))).attr('src');
+					dataobj.options.push(src);
 				} else {
-					skip_point = 1;
+
+					if(element.value != '') {
+						if (!ed.validateHtml(element.value, 'option')) {
+							return false;
+						}
+						dataobj.options.push(element.value);
+					} else {
+						skip_point = 1;
+					}
 				}
 			}
 			if(element.getAttribute('name') == 'choices_ids[]') {

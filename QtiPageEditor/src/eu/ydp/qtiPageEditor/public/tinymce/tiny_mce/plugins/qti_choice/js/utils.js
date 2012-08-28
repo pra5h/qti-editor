@@ -86,15 +86,15 @@ function switch_text_images(checkbox) {
 				//src = inputs[i].value.split('/');
 				//src = src[src.length - 1];
 				if ($('#media_'+inputs[i].id).length == 0) {
-				var div = document.createElement('div');
-				div.setAttribute('id', 'media_'+inputs[i].id);
-				div.setAttribute('style', 'width: 80px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;');
-				div.setAttribute('onclick', 'tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'\',div:this});');
-				div.setAttribute('class', 'exerciseMedia');
-				//div.setAttribute('onclick', 'tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'' + src + '\',div:this});');
-				//div.innerHTML = '<img style="max-height: 40px; max-width: 80px;" src="' + inputs[i].value + '"/>'
-				div.innerHTML = '<img style="max-height: 40px; max-width: 80px;" src=""/>'
-				inputs[i].parentNode.appendChild(div);
+					var div = document.createElement('div');
+					div.setAttribute('id', 'media_'+inputs[i].id);
+					div.setAttribute('style', 'width: 80px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;');
+					div.setAttribute('onclick', 'tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'\',div:this});');
+					div.setAttribute('class', 'exerciseMedia');
+					//div.setAttribute('onclick', 'tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'' + src + '\',div:this});');
+					//div.innerHTML = '<img style="max-height: 40px; max-width: 80px;" src="' + inputs[i].value + '"/>'
+					div.innerHTML = '<img style="max-height: 40px; max-width: 80px;" src=""/>';
+					inputs[i].parentNode.appendChild(div);
 				} else {
 					$('#media_'+inputs[i].id).show();
 				}

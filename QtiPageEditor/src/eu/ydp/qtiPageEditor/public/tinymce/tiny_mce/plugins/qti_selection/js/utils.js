@@ -12,8 +12,10 @@ function add_answer_row(form) {
 	}
 	
 	var answerImg = '';
+	var answerType = 'text';
 	if (form.images.checked) {
-		answerImg = '<div style="width: 80px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;" onclick="tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'\',div:this});"><img style="max-height: 40px; max-width: 80px;" src="" /></div>';
+		answerImg = '<div id="mediaAnswer_answer_'+last+'" style="width: 80px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;" onclick="tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'\',div:this});"><img style="max-height: 40px; max-width: 80px;" src="" /></div>';
+		answerType = 'hidden';
 	}
 	
 	var optionList = new Array();
@@ -27,7 +29,7 @@ function add_answer_row(form) {
 	newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
 	var newInnerHTML = '<table class="answer" cellpadding=0 cellspacing=0><tr>\n'
 		+'<td width="260px" style="padding-right: 5px;">\n'
-		+'<input type="text" id="answer_'+last+'" name="answers[]" style="width: 100%; margin-right: 5px;" value=""/>\n'
+		+'<input type="'+answerType+'" id="answer_'+last+'" name="answers[]" style="width: 100%; margin-right: 5px;" value=""/>\n'
 		+answerImg+'</td>\n'
 		+'<input type="hidden" id="id_'+last+'" name="ids[]" value="' + id + '"/>\n'
 		+'<td width="400px" id="optionsSpans">';
@@ -49,7 +51,7 @@ function add_answer_row(form) {
 	tagInsert.init('answer_' + last);
 	InputHelper.init($('#answer_'+last));
 	if (form.images.checked) {
-		$('#answer_'+last).hide();
+		//$('#answer_'+last).hide();
 		$("#taginsert_menu_answer_"+last).hide();
 		$("#taginsert_math_answer_"+last).hide();
 	}
@@ -68,25 +70,27 @@ function add_option_row(form) {
 		form = form.parentNode;
 	}
 
-	var optionImg = '';
-	if (form.images.checked) {
-		optionImg = '<div style="width: 80px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;" onclick="tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'\',div:this});"><img style="max-height: 40px; max-width: 80px;" src="" /></div>';
-	}
-	var newDiv = document.createElement('div');
 	var last = $('#option_list strong:last').text(); //.childNodes[3].innerHTML;
 	last = parseInt(last.replace('.',''));
 	var next = last + 1;
+	
+	var optionImg = '';
+	var optionType = 'text';
+	if (form.images.checked) {
+		optionImg = '<div id="mediaOption_choice_'+last+'" style="width: 80px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;" onclick="tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'\',div:this});"><img style="max-height: 40px; max-width: 80px;" src="" /></div>';
+		optionType = 'hidden';
+	}
+	var newDiv = document.createElement('div');	
 	newDiv.setAttribute('style', 'width: 100%; margin: 3px;');
 	newDiv.innerHTML = '<table><tr><td><br class="clr"/><strong>' + next + '.</strong>&nbsp;\n'
 		+'<input type="hidden" name="choices_ids[]" value="' + id + '">\n'
-		+'<input type="text" name="choices[]" value="" id="choice_' + last + '">&nbsp;'+optionImg+'</td>\n'
+		+'<input type="'+optionType+'" name="choices[]" value="" id="choice_' + last + '">&nbsp;'+optionImg+'</td>\n'
 		+'<td><input type="button" id="remove_option" name="remove_option" value="Remove" onclick="remove_option_row(this);" /></td></tr></table>';
 	document.getElementById('option_list').appendChild(newDiv);
 	tagInsert.init('choice_' + last);
 	InputHelper.init($('#choice_'+last));
 	
 	if (form.images.checked) {
-		$('#choice_'+last).hide();
 		$("#taginsert_menu_choice_"+last).hide();
 		$("#taginsert_math_choice_"+last).hide();
 	}
@@ -202,13 +206,18 @@ function switch_text_images(checkbox) {
 				$("#taginsert_math_"+inputs[i].id).hide();
 				//src = inputs[i].value.split('/');
 				//src = src[src.length - 1];
-				var div = document.createElement('div');
-				div.setAttribute('style', 'width: 80px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;');
-				//div.setAttribute('onclick', 'tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'' + src + '\',div:this});');
-				div.setAttribute('onclick', 'tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'\',div:this});');
-				//div.innerHTML = '<img style="max-height: 40px; max-width: 80px;" src="' + inputs[i].value + '"/>'
-				div.innerHTML = '<img style="max-height: 40px; max-width: 80px;" src=""/>'
-				inputs[i].parentNode.appendChild(div);
+				if ($('#mediaAnswer_'+inputs[i].id).length == 0) {
+					var div = document.createElement('div');
+					div.setAttribute('id', 'mediaAnswer_'+inputs[i].id);
+					div.setAttribute('style', 'width: 80px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;');
+					//div.setAttribute('onclick', 'tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'' + src + '\',div:this});');
+					div.setAttribute('onclick', 'tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'\',div:this});');
+					//div.innerHTML = '<img style="max-height: 40px; max-width: 80px;" src="' + inputs[i].value + '"/>'
+					div.innerHTML = '<img style="max-height: 40px; max-width: 80px;" src=""/>';
+					inputs[i].parentNode.appendChild(div);
+				} else {
+					$('#mediaAnswer_'+inputs[i].id).show();
+				}
 			}
 		}
 		
@@ -220,13 +229,18 @@ function switch_text_images(checkbox) {
 				$("#taginsert_math_"+choices[i].id).hide();
 				/*src = choices[i].value.split('/');
 				src = src[src.length - 1];*/
-				var div = document.createElement('div');
-				div.setAttribute('style', 'width: 80px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;');
-				//div.setAttribute('onclick', 'tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'' + src + '\',div:this});');
-				div.setAttribute('onclick', 'tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'\',div:this});');
-				//div.innerHTML = '<img style="max-height: 40px; max-width: 80px;" src="' + choices[i].value + '"/>'
-				div.innerHTML = '<img style="max-height: 40px; max-width: 80px;" src=""/>'
-				choices[i].parentNode.appendChild(div);
+				if ($('#mediaOption_'+choices[i].id).length == 0) {
+					var div = document.createElement('div');
+					div.setAttribute('id', 'mediaOption_'+choices[i].id);
+					div.setAttribute('style', 'width: 80px; height: 40px; cursor: pointer; border: 1px solid #b0b0b0;');
+					//div.setAttribute('onclick', 'tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'' + src + '\',div:this});');
+					div.setAttribute('onclick', 'tinyMCE.execCommand(\'mceAppendImageToExercise\', false, {src:\'\',div:this});');
+					//div.innerHTML = '<img style="max-height: 40px; max-width: 80px;" src="' + choices[i].value + '"/>'
+					div.innerHTML = '<img style="max-height: 40px; max-width: 80px;" src=""/>'
+						choices[i].parentNode.appendChild(div);
+				} else {
+					$('#mediaOption_'+choices[i].id).show();
+				}
 			}
 		}
 	} else {
@@ -234,11 +248,12 @@ function switch_text_images(checkbox) {
 		for (i in inputs) {
 			if(inputs[i].type != undefined) {
 				inputs[i].type = 'text';
-				inputs[i].parentNode.removeChild(inputs[i].nextElementSibling);
+				//inputs[i].parentNode.removeChild(inputs[i].nextElementSibling);
+				$('#mediaAnswer_'+inputs[i].id).hide();
 				document.getElementById("taginsert_menu_"+inputs[i].id).style.display = 'block';
 				$("#taginsert_math_"+inputs[i].id).show();
 				//$(inputs[i]).show();
-				inputs[i].value = '';
+				//inputs[i].value = '';
 			}
 		}
 		
@@ -246,11 +261,12 @@ function switch_text_images(checkbox) {
 		for (i in choices) {
 			if(choices[i].type != undefined) {
 				choices[i].type = 'text';
-				choices[i].parentNode.removeChild(choices[i].nextElementSibling);
+				//choices[i].parentNode.removeChild(choices[i].nextElementSibling);
+				$('#mediaOption_'+choices[i].id).hide();
 				document.getElementById("taginsert_menu_"+choices[i].id).style.display = 'block';
 				$("#taginsert_math_"+choices[i].id).show();
 				//$(choices[i]).show();
-				choices[i].value = '';
+				//choices[i].value = '';
 			}
 		}
 	}
@@ -289,8 +305,10 @@ function validateExercise(form) {
 			}
 		}
 		if(form.elements[i].getAttribute('name') == 'answers[]') {
-			if(form.elements[i].value == '') {
-				answers_contents.push(form.elements[i]);
+			if (!form.images.checked) {
+				if(form.elements[i].value == '') {
+					answers_contents.push(form.elements[i]);
+				}
 			}
 		}
 		if(form.elements[i].getAttribute('name') == 'ids[]') {
@@ -338,15 +356,15 @@ function validateExercise(form) {
 		tinyMCE.activeEditor.windowManager.resizeBy(0, 30, 'mce_0');
 		validOptions = false;
 	} else {
-		
-		for(i in options) {
-			
-			if (options[i] == '') {
-				$('#choice_'+i).attr('style' , 'border: 2px solid red; display:'+$('#choice_'+i).css('display'));
-				validator_errors.push('Fill the option field');
-				tinyMCE.activeEditor.windowManager.resizeBy(0, 30, 'mce_0');
-				validOptions = false;
-				break;
+		if (!form.images.checked) {		
+			for(i in options) {
+				if (options[i] == '') {
+					$('#choice_'+i).attr('style' , 'border: 2px solid red; display:'+$('#choice_'+i).css('display'));
+					validator_errors.push('Fill the option field');
+					tinyMCE.activeEditor.windowManager.resizeBy(0, 30, 'mce_0');
+					validOptions = false;
+					break;
+				}
 			}
 		}
 	}
