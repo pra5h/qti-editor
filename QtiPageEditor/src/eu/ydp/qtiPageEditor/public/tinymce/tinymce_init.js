@@ -378,7 +378,7 @@ tinyMCE.init({
 				prepareNode: function(node) {
 					var text = '';
 					if (1 == node.nodeType) {
-						
+
 						if ('math' == node.nodeName) {
 							var a = new XMLSerializer();
 							text += a.serializeToString(node);
@@ -390,6 +390,11 @@ tinyMCE.init({
 						}
 					}
 					return text;
+				},
+				
+				correctImg: function(html) {
+					html = html.replace(/ mce_src=\"[^\"]+\"/gi, '');
+					return html.replace(/(<img[^>]+?)[\/]?>/gi, "$1/>");
 				}
 		};
 		

@@ -559,7 +559,7 @@ function selectionInteractionToHTML(si) {
 	
 	text += '<table class="selectionTable"><tbody><tr><td>&nbsp;</td>';
 	for (var i = 0; i < options.length; i++) {
-		text += '<td><!-- '+parseMathQTI2HTML(xh.prepareNode(options[i]))+' -->'+parseMathQTI2HTML(options[i].innerHTML)+'</td>';
+		text += '<td><!-- '+parseMathQTI2HTML(xh.correctImg(xh.prepareNode(options[i])))+' -->'+parseMathQTI2HTML(options[i].innerHTML)+'</td>';
 	}
 	text += '</tr>';
 	
@@ -581,7 +581,7 @@ function selectionInteractionToHTML(si) {
 				item.removeChild(feedback);
 			}
 		}
-		text += parseMathQTI2HTML(item.innerHTML);
+		text += parseMathQTI2HTML(xh.correctImg(item.innerHTML));
 		text += feedbacksText;
 		text += xh.prepareNodeEnd(item)+' -->'+parseMathQTI2HTML(item.innerHTML)+'</td>';
 		feedbacksText = '';
