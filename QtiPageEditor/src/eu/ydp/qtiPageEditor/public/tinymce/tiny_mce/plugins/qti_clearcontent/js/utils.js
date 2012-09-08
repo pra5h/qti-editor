@@ -24,15 +24,19 @@ templateFactory = {
 				case "exercise":
 					return this.getExerciseTemplate();
 					break;
+				
 				case "text":
 					return this.getTextTemplate();
 					break;
+				
 				case "text_exercise":
 					return this.getTextExerciseTemplate();
 					break;
+				
 				case "media_exercise":
 					return this.getMediaExerciseTemplate();
 					break;
+				
 				case "text_media_exercise":
 					return this.getTextMediaExerciseTemplate();
 					break;
