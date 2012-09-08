@@ -14,7 +14,7 @@ tinyMCE.init({
 		+"insertdatetime,qti_empiriapreview,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,"
 		+"visualchars,nonbreaking,xhtmlxtras,template,imagemanager,filemanager,asciisvg,"
 		+"qti_pagetitle,qti_choice,qti_gapinlinechoice,qti_fileuploadlib,"
-		+"qti_addvideo,qti_copyqti,qti_selection,qti_newline,qti_science",
+		+"qti_addvideo,qti_copyqti,qti_selection,qti_newline,qti_science,qti_clearcontent",
 		
 	/*
 	plugins : "safari,spellchecker,pagebreak,style,layer,table,save,advhr,advlink,emotions,iespell,inlinepopups,"
@@ -30,7 +30,7 @@ tinyMCE.init({
 	theme_advanced_resizing : true,
 	//,formatselect   ,anchor,|
 	//,justifyleft,justifycenter,justifyright,justifyfull,|
-	theme_advanced_buttons1 : "save,newdocument,print,empiriapreview,|,fontselect,fontsizeselect,|,bold,italic,underline,strikethrough,|,help",
+	theme_advanced_buttons1 : "save,clearcontent,print,empiriapreview,|,fontselect,fontsizeselect,|,bold,italic,underline,strikethrough,|,help",
 	//pastetext,pasteword,    ,spellchecker  ,asciimath,asciimathcharmap,|   |,outdent,indent,|,link,unlink,
 	//,bullist,numlist,|
 	//,science
