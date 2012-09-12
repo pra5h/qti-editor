@@ -1,0 +1,22 @@
+html, body {
+	background-color: #E4F1FE;
+}
+
+td {
+	border-radius: 20px;
+	padding: 0px;
+	margin: 0px;
+}
+
+td > img {
+	border-radius: 20px;
+	cursor: pointer;
+}
+
+td.selected {
+	background-color: #72A9D3;
+}
+
+td.selected > img {
+	opacity: 0.8;
+}

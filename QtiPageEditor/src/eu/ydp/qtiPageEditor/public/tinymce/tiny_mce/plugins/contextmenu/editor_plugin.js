@@ -326,13 +326,17 @@
 			*/
 			
 			m.addSeparator();
-			/*	
+
 			if(node == 'gapinlinechoice' || node == 'multiplechoice' || node == 'order' || node == 'match' || node == 'selection' || node == 'draggable' || node == 'identification') {
 				m.add({title : 'Copy QTI activity', icon : 'copyqtibutton', cmd : 'mceCopyQTI', ui: selectedNode});
-			} else if (tinyMCE.clipboard != undefined && ed.selection.getContent() == '') {
+				m.add({title : 'Cut QTI activity', icon : 'cutqtibutton', cmd : 'mceCutQTI', ui: selectedNode});
+			/*} else if (tinyMCE.clipboard != undefined && ed.selection.getContent() == '') {
+				m.add({title : 'Paste QTI activity', icon : 'pasteqtibutton', cmd : 'mcePasteQTI'});
+			}*/
+			} else if (!ed.qtiClipboard.isEmpty()) {
 				m.add({title : 'Paste QTI activity', icon : 'pasteqtibutton', cmd : 'mcePasteQTI'});
 			}
-			*/
+			
 			for (var itemName in m.items) {
 				if ('Alignment' == m.items[itemName].settings.title && node != '') {
 					for (item in m.items[itemName].items) {
