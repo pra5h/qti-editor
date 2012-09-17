@@ -39,7 +39,7 @@ function qti2htmlParseProcess(tree) {
 		} else if ('SIMPLETEXT' == tree.tagName) {
 			text += xh.prepareNodeBegin(tree);
 			if ($.trim(tree.textContent) == ''){
-				text += '<br/>';
+				text += '';
 			}
 		} else if ('GROUP' == tree.tagName) {
 			text += xh.prepareNodeBegin(tree);
@@ -133,6 +133,9 @@ function html2qtiParseProcess(tree) {
                 text += xh.prepareNodeBegin(tree);
             } else if ('P' == tree.tagName) {
                 text += '<section name="text">'+xh.prepareNodeBegin(tree);
+                if ($.trim(tree.textContent) == '') {
+                	text += '&#160;';
+                }
             } else if (-1 != baseTags.indexOf(tree.tagName.toLowerCase())) {
             	text += '<'+tree.tagName.toLowerCase()+xh.prepareAttributes(tree)+'>';
             	
@@ -145,7 +148,7 @@ function html2qtiParseProcess(tree) {
             	}
             }
     }
-    
+
     if(tree.hasChildNodes()) {
             var nodes=tree.childNodes.length;
             for(var i=0; i<tree.childNodes.length; i++) {
@@ -1088,6 +1091,25 @@ function actionOnQTI(e) {
 			selectedNode = selectedNode.parentNode;
 		}
 		
+	}
+	
+	//backspace
+	if (e.keyCode == 8) {
+		var dsc, dec;
+        
+	    if(e.keyCode == 8 || e.keyCode == 46) {
+	        dsc = ed.dom.getParent(ed.selection.getStart(), function(n) {
+	            return ed.dom.hasClass(n, 'mceNonEditable');
+	        });
+	   
+	        dec = ed.dom.getParent(ed.selection.getEnd(), function(n) {
+	            return ed.dom.hasClass(n, 'mceNonEditable');
+	        });
+	                   
+	        if (dsc || dec) {
+	            return false;
+	        }
+	    }
 	}
 	return true;
 	
